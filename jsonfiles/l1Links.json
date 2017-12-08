@@ -1,0 +1,44 @@
+{
+    "Link1": {
+        "Nodes": [
+            "NCS2K-Site4",
+            "NCS2K-Site3"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.34:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-A]"
+    },
+    "Link2": {
+        "Nodes": [
+            "NCS2K-Site3",
+            "NCS2K-Site2"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-B]--10.135.7.34:[WDMSIDE-A]"
+    },
+    "Link3": {
+        "Nodes": [
+            "NCS2K-Site4",
+            "NCS2K-Site1"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-B]"
+    },
+    "Link4": {
+        "Nodes": [
+            "NCS2K-Site1",
+            "NCS2K-Site3"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-A]--10.135.7.34:[WDMSIDE-B]"
+    },
+    "Link5": {
+        "Nodes": [
+            "NCS2K-Site2",
+            "NCS2K-Site1"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
+    },
+    "Link6": {
+        "Nodes": [
+            "NCS2K-Site4",
+            "NCS2K-Site2"
+        ],
+        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-C]"
+    }
+}
