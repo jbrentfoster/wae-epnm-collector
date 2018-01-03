@@ -78,18 +78,18 @@ def main():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
                     # print "***************Linkname is: " + k3
-                    lastnode = v3.get('Neighbor')
-                    discoveredname = v3.get('discoveredname')
-                    rsvpbw = float(v3.get('RSVP BW').split(' ')[0])
+                    lastnode = v3['Neighbor']
+                    discoveredname = v3['discoveredname']
+                    rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if 'Ordered L1 Hops' in v3 and not duplicatelink:
-                        if len(v3.get('Ordered L1 Hops')) > 0:
+                        if len(v3['Ordered L1 Hops']) > 0:
                             linkslist.append(discoveredname)
                             c += 1
                             i += 1
-                            l1hops, firstl1node, lastl1node = getfirstlastl1node(v3.get('Ordered L1 Hops'), firstnode,
+                            l1hops, firstl1node, lastl1node = getfirstlastl1node(v3['Ordered L1 Hops'], firstnode,
                                                                                  lastnode)
 
                             name = "L1_circuit_" + str(c)
@@ -140,7 +140,7 @@ def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
     for l1hop in orderedl1hops:
         nodelist = []
         firstlasthop = False
-        for k5, v5 in l1hop.get('Nodes').items():
+        for k5, v5 in l1hop['Nodes'].items():
             if k5 == firstnode or k5 == lastnode: firstlasthop = True
             nodelist.append(k5)
         if not firstlasthop:

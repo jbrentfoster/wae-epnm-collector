@@ -118,16 +118,21 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB):
 
     return circuit
 
-def generate_lsps(plan,lsps,l3nodeloopbacks):
+
+def generate_lsps(plan, lsps, l3nodeloopbacks):
     for lsp in lsps:
-        lspBW = int(int(lsp.get('signalled-bw'))/1000)
+        lspBW = int(int(lsp['signalled-bw']) / 1000)
+        direction = lsp['direction']
         if lspBW > 0:
-            lspName = lsp.get('fdn').split('!')[1].split('=')[1]
+            lspName = lsp['fdn'].split('!')[1].split('=')[1]
             demandName = "Demand for " + lspName
-            src=getnodename(lsp.get('Tunnel Source'),l3nodeloopbacks)
-            dest = getnodename(lsp.get('Tunnel Destination'), l3nodeloopbacks)
+            src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
+            dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             new_private_lsp(plan, src, dest, lspName)
             new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
+            if direction == "ns4:bi-direction":
+                new_private_lsp(plan, dest, src, lspName)
+                new_demand_for_LSP(plan, dest, src, lspName, demandName, lspBW)
 
 
 def new_demand_for_LSP(id, src, dest, lspName, demandName, val):
@@ -179,8 +184,8 @@ def new_private_lsp(id, src, dest, name):
     lspMgr.newLSP(lspRec)
 
 
-def getnodename(loopback,nodelist):
+def getnodename(loopback, nodelist):
     for node in nodelist:
-        for k,v in node.items():
+        for k, v in node.items():
             if v == loopback:
                 return k
