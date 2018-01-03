@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="" />
+    <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/waecode/node_coordinates.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/lsps.json" afterPath="$PROJECT_DIR$/jsonfiles/lsps.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/planfiles/test.pln" afterPath="$PROJECT_DIR$/planfiles/test.pln" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wae_api.py" afterPath="$PROJECT_DIR$/wae_api.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,8 +20,8 @@
       <file leaf-file-name="wae_api.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wae_api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1320">
-              <caret line="62" column="35" lean-forward="true" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+            <state relative-caret-position="1276">
+              <caret line="60" column="0" lean-forward="true" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
               <folding>
                 <element signature="e#204#251#0" expanded="false" />
               </folding>
@@ -23,42 +29,38 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="node_coordinates.csv" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/waecode/node_coordinates.csv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="16" lean-forward="false" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="l3Links_reordered_l1hops.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="1411" column="43" lean-forward="true" selection-start-line="1411" selection-start-column="43" selection-end-line="1411" selection-end-column="43" />
+            <state relative-caret-position="22">
+              <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="16" />
               <folding>
+                <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+                <element signature="e#425#2314#0" expanded="false" />
                 <element signature="e#7276#9161#0" expanded="false" />
                 <element signature="e#9867#11756#0" expanded="false" />
+                <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
                 <element signature="e#25904#27794#0" expanded="false" />
+                <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
                 <element signature="e#29127#30545#0" expanded="false" />
                 <element signature="e#31257#33146#0" expanded="false" />
                 <element signature="e#33856#35746#0" expanded="false" />
                 <element signature="e#36455#37875#0" expanded="false" />
                 <element signature="e#38584#39999#0" expanded="false" />
                 <element signature="e#40709#42595#0" expanded="false" />
+                <element signature="e#51419#52834#0" expanded="false" />
+                <element signature="e#53544#54963#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="l1Links.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="l1Nodes.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsonfiles/l1Nodes.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -66,11 +68,19 @@
       <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1804">
-              <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="198">
+              <caret line="38" column="44" lean-forward="false" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lsps.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -97,6 +107,11 @@
       <find>MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC15P11</find>
       <find>Ordered L1 Hops</find>
       <find>4216-5</find>
+      <find>roundUpToMultiple</find>
+      <find>roundit</find>
+      <find>lsp</find>
+      <find>l3nodes</find>
+      <find>l1hops</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\brfoster\Desktop\DesktopSweep.2016.05.25\SDN\Cariden\WAE-Design-k9-6.4.10-Windows-x86_64\lib\python2.7\com\cisco</dir>
@@ -104,11 +119,16 @@
       <dir>C:\Users\brfoster\Desktop\DesktopSweep.2016.05.25\SDN\Cariden\WAE-Design-k9-6.4.10-Windows-x86_64\lib\python2.7</dir>
     </dirStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
+        <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/wae_api.py" />
+        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
+        <option value="$PROJECT_DIR$/waecode/node_coordinates.csv" />
       </list>
     </option>
   </component>
@@ -118,6 +138,7 @@
     <option name="width" value="1618" />
     <option name="height" value="870" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -133,8 +154,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -169,14 +188,18 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/wae_api.py" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/waecode" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\brfoster\PycharmProjects\WAE_Python_API\waecode" />
+      <recent name="C:\Users\brfoster\PycharmProjects\WAE_Python_API" />
       <recent name="C:\Users\brfoster\PycharmProjects\WAE_Python_API\planfiles" />
       <recent name="C:\Users\brfoster\PycharmProjects\WAE_Python_API\jsonfiles" />
     </key>
@@ -227,22 +250,42 @@
       <option name="presentableId" value="Default" />
       <updated>1510255692121</updated>
     </task>
+    <task id="LOCAL-00001" summary="Updating readme">
+      <created>1512752683724</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1512752683725</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Adding LSPs JSON file">
+      <created>1513339308519</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1513339308519</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added LSP's and cleanded up code.  Also added node coordinates.">
+      <created>1515001413292</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1515001413293</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26505375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23064516" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29939395" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66909975" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6690909" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6630303" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66301703" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295699" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -250,24 +293,52 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Updating readme" />
+    <MESSAGE value="Adding LSPs JSON file" />
+    <MESSAGE value="Added LSP's and cleanded up code.  Also added node coordinates." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added LSP's and cleanded up code.  Also added node coordinates." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/waecode/planbuild.py</url>
-          <line>73</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/waecode/planbuild.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="29" />
+          <url>file://$PROJECT_DIR$/wae_api.py</url>
+          <line>42</line>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -277,11 +348,279 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="30" />
+      <option name="time" value="51" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="v2" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="858">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding>
+            <element signature="e#204#251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="16" />
+          <folding>
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+            <element signature="e#425#2314#0" expanded="false" />
+            <element signature="e#7276#9161#0" expanded="false" />
+            <element signature="e#9867#11756#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
+            <element signature="e#25904#27794#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
+            <element signature="e#29127#30545#0" expanded="false" />
+            <element signature="e#31257#33146#0" expanded="false" />
+            <element signature="e#33856#35746#0" expanded="false" />
+            <element signature="e#36455#37875#0" expanded="false" />
+            <element signature="e#38584#39999#0" expanded="false" />
+            <element signature="e#40709#42595#0" expanded="false" />
+            <element signature="e#51419#52834#0" expanded="false" />
+            <element signature="e#53544#54963#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Nodes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2178">
+          <caret line="128" column="0" lean-forward="false" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/node_coordinates.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#204#251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20372">
+          <caret line="1411" column="43" lean-forward="false" selection-start-line="1411" selection-start-column="43" selection-end-line="1411" selection-end-column="43" />
+          <folding>
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+            <element signature="e#425#2314#0" expanded="false" />
+            <element signature="e#7276#9161#0" expanded="false" />
+            <element signature="e#9867#11756#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
+            <element signature="e#25904#27794#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
+            <element signature="e#29127#30545#0" expanded="false" />
+            <element signature="e#31257#33146#0" expanded="false" />
+            <element signature="e#33856#35746#0" expanded="false" />
+            <element signature="e#36455#37875#0" expanded="false" />
+            <element signature="e#38584#39999#0" expanded="false" />
+            <element signature="e#40709#42595#0" expanded="false" />
+            <element signature="e#51419#52834#0" expanded="false" />
+            <element signature="e#53544#54963#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Nodes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="22" column="40" lean-forward="false" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#204#251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31042">
+          <caret line="1411" column="43" lean-forward="false" selection-start-line="1411" selection-start-column="43" selection-end-line="1411" selection-end-column="43" />
+          <folding>
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+            <element signature="e#425#2314#0" expanded="false" />
+            <element signature="e#7276#9161#0" expanded="false" />
+            <element signature="e#9867#11756#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
+            <element signature="e#25904#27794#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
+            <element signature="e#29127#30545#0" expanded="false" />
+            <element signature="e#31257#33146#0" expanded="false" />
+            <element signature="e#33856#35746#0" expanded="false" />
+            <element signature="e#36455#37875#0" expanded="false" />
+            <element signature="e#38584#39999#0" expanded="false" />
+            <element signature="e#40709#42595#0" expanded="false" />
+            <element signature="e#51419#52834#0" expanded="false" />
+            <element signature="e#53544#54963#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1804">
+          <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Nodes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#204#251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31042">
+          <caret line="1411" column="43" lean-forward="true" selection-start-line="1411" selection-start-column="43" selection-end-line="1411" selection-end-column="43" />
+          <folding>
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+            <element signature="e#425#2314#0" expanded="false" />
+            <element signature="e#7276#9161#0" expanded="false" />
+            <element signature="e#9867#11756#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
+            <element signature="e#25904#27794#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
+            <element signature="e#29127#30545#0" expanded="false" />
+            <element signature="e#31257#33146#0" expanded="false" />
+            <element signature="e#33856#35746#0" expanded="false" />
+            <element signature="e#36455#37875#0" expanded="false" />
+            <element signature="e#38584#39999#0" expanded="false" />
+            <element signature="e#40709#42595#0" expanded="false" />
+            <element signature="e#51419#52834#0" expanded="false" />
+            <element signature="e#53544#54963#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/l1Nodes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1804">
+          <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wae_api.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -333,7 +672,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -341,7 +679,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
           <caret line="422" column="24" lean-forward="true" selection-start-line="422" selection-start-column="24" selection-end-line="422" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -349,7 +686,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="104">
           <caret line="24" column="33" lean-forward="false" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -357,7 +693,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="4" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -365,7 +700,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="4" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -373,7 +707,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -381,7 +714,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
           <caret line="184" column="47" lean-forward="false" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="47" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/planfiles/added_node_2nodes.pln">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="14" column="5" lean-forward="false" selection-start-line="13" selection-start-column="2" selection-end-line="14" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="22">
+            <caret line="1" column="53" lean-forward="false" selection-start-line="1" selection-start-column="53" selection-end-line="1" selection-end-column="53" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/DesktopSweep.2016.05.25/SDN/Cariden/WAE-Design-k9-6.4.10-Windows-x86_64/lib/python2.7/com_cisco_wae_design_model_net_Iface_ice.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="853" column="0" lean-forward="false" selection-start-line="853" selection-start-column="0" selection-end-line="853" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -389,6 +745,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
           <caret line="19" column="28" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="1598" column="0" lean-forward="false" selection-start-line="1598" selection-start-column="0" selection-end-line="1598" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/node_coordinates.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="16" lean-forward="false" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -401,46 +773,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/planfiles/added_node_2nodes.pln">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="5" lean-forward="false" selection-start-line="13" selection-start-column="2" selection-end-line="14" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="1411" column="43" lean-forward="true" selection-start-line="1411" selection-start-column="43" selection-end-line="1411" selection-end-column="43" />
+        <state relative-caret-position="22">
+          <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="16" />
           <folding>
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site1#0;n#!!top" expanded="false" />
+            <element signature="e#425#2314#0" expanded="false" />
             <element signature="e#7276#9161#0" expanded="false" />
             <element signature="e#9867#11756#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site2#0;n#!!top" expanded="false" />
             <element signature="e#25904#27794#0" expanded="false" />
+            <element signature="n#!!block;n#Links#0;n#!!block;n#NCS4K-Site3#0;n#!!top" expanded="false" />
             <element signature="e#29127#30545#0" expanded="false" />
             <element signature="e#31257#33146#0" expanded="false" />
             <element signature="e#33856#35746#0" expanded="false" />
             <element signature="e#36455#37875#0" expanded="false" />
             <element signature="e#38584#39999#0" expanded="false" />
             <element signature="e#40709#42595#0" expanded="false" />
+            <element signature="e#51419#52834#0" expanded="false" />
+            <element signature="e#53544#54963#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1804">
-          <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="198">
+          <caret line="38" column="44" lean-forward="false" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wae_api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1320">
-          <caret line="62" column="35" lean-forward="true" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+        <state relative-caret-position="1276">
+          <caret line="60" column="0" lean-forward="true" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
           <folding>
             <element signature="e#204#251#0" expanded="false" />
           </folding>
