@@ -1,18 +1,27 @@
 import os
-
-oldPATH = os.getenv('PATH')
-newPATH = oldPATH + ";" + "C:\Users\\brfoster\Desktop\DesktopSweep.2016.05.25\SDN\Cariden\WAE-Design-k9-6.4.10-Windows-x86_64\lib\exec"
-os.environ['PATH'] = newPATH
-# print "PYTHONPATH=" + os.getenv('PYTHONPATH')
-# print "PATH=" + os.getenv('PATH')
-# print "CARDEN_HOME=" + os.getenv('CARIDEN_HOME')
 import com.cisco.wae.design
 import waecode.planbuild
 import json
 import csv
+import xmlcode.collect
 
 
 def main():
+    # EPNM server details for data collection...
+    epnmipaddr = "10.135.7.222"
+    baseURL = "https://" + epnmipaddr + "/restconf"
+    epnmuser = "root"
+    epnmpassword = "Epnm1234"
+
+    # Run the collector...
+    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+
+    # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
+    # print "PATH=" + os.getenv('PATH')
+    # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
+
+    print "Building plan file..."
+
     # Create a service to be used by this script
     conn = com.cisco.wae.design.ServiceConnectionManager.newService()
 
@@ -32,33 +41,28 @@ def main():
     with open("jsonfiles/l1Nodes.json", 'rb') as f:
         l1nodesdict = json.load(f)
         f.close()
-
     l1nodes = []
     for k1, v1 in l1nodesdict.items():
         for node in nodecoordinates:
             if node['Node'] == v1['Name']:
                 tmpnode = {'Name': v1['Name'], 'X': node['X'], 'Y': node['Y']}
+                # TODO Add code to catch case where node name is not in the file with the coordinates (set to 0,0)
         l1nodes.append(tmpnode)
-
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan
-
     with open("jsonfiles/l1Links.json", 'rb') as f:
         l1linksdict = json.load(f)
         f.close()
-
     l1links = []
     for k1, v1 in l1linksdict.items():
         l1links.append(v1['Nodes'])
-
     waecode.planbuild.generateL1links(plan, l1linklist=l1links)
 
     # Add L3 nodes to plan
-    with open("jsonfiles/l3Links_reordered_l1hops.json", 'rb') as f:
+    with open("jsonfiles/l3Links_final.json", 'rb') as f:
         l3linksdict = json.load(f)
         f.close()
-
     l3nodes = []
     for k1, v1 in l3linksdict.items():
         for node in nodecoordinates:
@@ -130,7 +134,7 @@ def main():
     plan.serializeToFileSystem('planfiles/test.pln')
 
     # Script completed
-    print "done"
+    print "Plan file created.  See planfiles/test.pln"
 
 
 def getfirstlastl1node(orderedl1hops, firstnode, lastnode):

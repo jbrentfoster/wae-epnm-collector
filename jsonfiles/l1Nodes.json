@@ -2,7 +2,7 @@
     "Node1": {
         "Latitude": "38.21666666666667",
         "Longitude": "-122.63333333333334",
-        "Name": "NCS2K-Site3"
+        "Name": "NCS2K-Site1"
     },
     "Node2": {
         "Latitude": "38.21666666666667",
@@ -12,11 +12,11 @@
     "Node3": {
         "Latitude": "38.21666666666667",
         "Longitude": "-122.63333333333334",
-        "Name": "NCS2K-Site2"
+        "Name": "NCS2K-Site3"
     },
     "Node4": {
         "Latitude": "38.21666666666667",
         "Longitude": "-122.63333333333334",
-        "Name": "NCS2K-Site1"
+        "Name": "NCS2K-Site2"
     }
 }

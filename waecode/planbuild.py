@@ -1,4 +1,3 @@
-import sys
 import com.cisco.wae.design
 from com.cisco.wae.design.model.net import HopType
 from com.cisco.wae.design.model.net import LSPType

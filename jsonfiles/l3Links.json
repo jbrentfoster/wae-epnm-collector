@@ -1,0 +1,590 @@
+{
+    "NCS4K-Site1": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.41",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.42",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388613",
+                    "[1]": "12583106",
+                    "[2]": "12583306",
+                    "[3]": "25166108"
+                }
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.45",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.46",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388614",
+                    "[2]": "8388634",
+                    "[3]": "12583112"
+                }
+            },
+            "Link3": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.17",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.18",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388612",
+                    "[1]": "12583106",
+                    "[2]": "12583206",
+                    "[3]": "25166100"
+                }
+            },
+            "Link4": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.1",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.2",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388614",
+                    "[2]": "8388624",
+                    "[3]": "12583112"
+                }
+            },
+            "Link5": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.38",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.37",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388614",
+                    "[1]": "12583106",
+                    "[2]": "12583406",
+                    "[3]": "25166102"
+                }
+            },
+            "Link6": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.5",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.6",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194403",
+                    "[1]": "8388613",
+                    "[2]": "8388634",
+                    "[3]": "12583112"
+                }
+            },
+            "Link7": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.45",
+                "Metric": "100",
+                "Neighbor": "ncs4206-1",
+                "Neighbor IP": "10.0.1.46",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166100",
+                    "[1]": "25172105"
+                }
+            },
+            "Link8": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.49",
+                "Metric": "100",
+                "Neighbor": "ncs4206-1",
+                "Neighbor IP": "10.0.1.50",
+                "RSVP BW": "10000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166107"
+                }
+            }
+        },
+        "Loopback Address": "1.1.1.11"
+    },
+    "NCS4K-Site2": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.18",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.17",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388612",
+                    "[1]": "12583106",
+                    "[2]": "12583206",
+                    "[3]": "25166100"
+                }
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.2",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.1",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388614",
+                    "[2]": "8388624",
+                    "[3]": "12583112"
+                }
+            },
+            "Link3": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.33",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.34",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388623",
+                    "[1]": "12583206",
+                    "[2]": "12583306",
+                    "[3]": "25166202"
+                }
+            },
+            "Link4": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.9",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.10",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388624",
+                    "[2]": "8388634",
+                    "[3]": "12583212"
+                }
+            },
+            "Link5": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.25",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.26",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388624",
+                    "[1]": "12583206",
+                    "[2]": "12583406",
+                    "[3]": "25166208"
+                }
+            },
+            "Link6": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.29",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.30",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194401",
+                    "[1]": "8388612",
+                    "[2]": "8388614",
+                    "[3]": "12583212"
+                }
+            },
+            "Link7": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.22",
+                "Metric": "100",
+                "Neighbor": "ncs4216-2",
+                "Neighbor IP": "10.0.1.21",
+                "RSVP BW": "40000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166200"
+                }
+            }
+        },
+        "Loopback Address": "1.1.1.21"
+    },
+    "NCS4K-Site3": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.42",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.41",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388613",
+                    "[1]": "12583106",
+                    "[2]": "12583306",
+                    "[3]": "25166108"
+                }
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.46",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.45",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388614",
+                    "[2]": "8388634",
+                    "[3]": "12583112"
+                }
+            },
+            "Link3": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.34",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.33",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388623",
+                    "[1]": "12583206",
+                    "[2]": "12583306",
+                    "[3]": "25166202"
+                }
+            },
+            "Link4": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.10",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.9",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194404",
+                    "[1]": "8388624",
+                    "[2]": "8388634",
+                    "[3]": "12583212"
+                }
+            },
+            "Link5": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.21",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.22",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388634",
+                    "[1]": "12583306",
+                    "[2]": "12583406",
+                    "[3]": "25166300"
+                }
+            },
+            "Link6": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.13",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.0.14",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194401",
+                    "[1]": "8388613",
+                    "[2]": "8388614",
+                    "[3]": "12583312"
+                }
+            },
+            "Link7": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.14",
+                "Metric": "100",
+                "Neighbor": "ncs4216-5",
+                "Neighbor IP": "10.0.1.13",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166308"
+                }
+            },
+            "Link8": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.38",
+                "Metric": "100",
+                "Neighbor": "ncs4206-3",
+                "Neighbor IP": "10.0.1.37",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166300"
+                }
+            },
+            "Link9": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.42",
+                "Metric": "100",
+                "Neighbor": "ncs4206-3",
+                "Neighbor IP": "10.0.1.41",
+                "RSVP BW": "10000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166315"
+                }
+            }
+        },
+        "Loopback Address": "1.1.1.31"
+    },
+    "NCS4K-Site4": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.37",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.38",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388614",
+                    "[1]": "12583106",
+                    "[2]": "12583406",
+                    "[3]": "25166102"
+                }
+            },
+            "Link10": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.26",
+                "Metric": "100",
+                "Neighbor": "ncs4216-2",
+                "Neighbor IP": "10.0.1.25",
+                "RSVP BW": "40000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166415"
+                }
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.6",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.0.5",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194403",
+                    "[1]": "8388613",
+                    "[2]": "8388634",
+                    "[3]": "12583112"
+                }
+            },
+            "Link3": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.22",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.21",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388634",
+                    "[1]": "12583306",
+                    "[2]": "12583406",
+                    "[3]": "25166300"
+                }
+            },
+            "Link4": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.14",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.0.13",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194401",
+                    "[1]": "8388613",
+                    "[2]": "8388614",
+                    "[3]": "12583312"
+                }
+            },
+            "Link5": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.0.26",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.25",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "8388624",
+                    "[1]": "12583206",
+                    "[2]": "12583406",
+                    "[3]": "25166208"
+                }
+            },
+            "Link6": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.0.30",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.0.29",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "4194401",
+                    "[1]": "8388612",
+                    "[2]": "8388614",
+                    "[3]": "12583212"
+                }
+            },
+            "Link7": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.18",
+                "Metric": "100",
+                "Neighbor": "ncs4216-5",
+                "Neighbor IP": "10.0.1.17",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166407"
+                }
+            },
+            "Link8": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.30",
+                "Metric": "100",
+                "Neighbor": "ncs4216-4",
+                "Neighbor IP": "10.0.1.29",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166400"
+                }
+            },
+            "Link9": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.34",
+                "Metric": "100",
+                "Neighbor": "ncs4216-4",
+                "Neighbor IP": "10.0.1.33",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25166415"
+                }
+            }
+        },
+        "Loopback Address": "1.1.1.41"
+    },
+    "ncs4206-1": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.50",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.1.49",
+                "RSVP BW": "10000000 kbits/sec"
+            },
+            "Link2": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.46",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.1.45",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172105",
+                    "[1]": "25166100"
+                }
+            }
+        },
+        "Loopback Address": "192.168.0.15"
+    },
+    "ncs4206-3": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.41",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.1.42",
+                "RSVP BW": "10000000 kbits/sec"
+            },
+            "Link2": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.37",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.1.38",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172305"
+                }
+            }
+        },
+        "Loopback Address": "192.168.0.35"
+    },
+    "ncs4216-2": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.21",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site2",
+                "Neighbor IP": "10.0.1.22",
+                "RSVP BW": "40000000 kbits/sec"
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.25",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.1.26",
+                "RSVP BW": "40000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172208"
+                }
+            }
+        },
+        "Loopback Address": "192.168.0.25"
+    },
+    "ncs4216-4": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.33",
+                "Metric": "10",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.1.34",
+                "RSVP BW": "99999998 kbits/sec"
+            },
+            "Link2": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.29",
+                "Metric": "50",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.1.30",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172407"
+                }
+            }
+        },
+        "Loopback Address": "192.168.0.45"
+    },
+    "ncs4216-5": {
+        "Links": {
+            "Link1": {
+                "Affinity": "0x00000013",
+                "Local IP": "10.0.1.13",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site3",
+                "Neighbor IP": "10.0.1.14",
+                "RSVP BW": "99999998 kbits/sec"
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.17",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site4",
+                "Neighbor IP": "10.0.1.18",
+                "RSVP BW": "99999998 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172508"
+                }
+            }
+        },
+        "Loopback Address": "192.168.0.55"
+    }
+}
