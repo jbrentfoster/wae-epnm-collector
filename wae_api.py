@@ -120,7 +120,7 @@ def main():
                     duplicatelink = False
 
     # read FlexLSP add-on options
-    with open("options.json", 'rb') as f:
+    with open("waecode/options.json", 'rb') as f:
         options = json.load(f)
         f.close()
 

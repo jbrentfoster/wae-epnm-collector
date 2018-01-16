@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="Merged FlexLSP code for bi-directional LSP's.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cs_common.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/flexlsp_creator.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/options.json" />
+    <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/cs_common.py" afterPath="$PROJECT_DIR$/waecode/cs_common.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/flexlsp_creator.py" afterPath="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/options.json" afterPath="$PROJECT_DIR$/waecode/options.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/planfiles/test.pln" afterPath="$PROJECT_DIR$/planfiles/test.pln" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wae_api.py" afterPath="$PROJECT_DIR$/wae_api.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/planbuild.py" afterPath="$PROJECT_DIR$/waecode/planbuild.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,8 +21,8 @@
       <file leaf-file-name="wae_api.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wae_api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="135" column="0" lean-forward="false" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
+            <state relative-caret-position="379">
+              <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -43,18 +42,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="options.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/options.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="cs_common.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cs_common.py">
+        <entry file="file://$PROJECT_DIR$/waecode/cs_common.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
               <caret line="8" column="49" lean-forward="true" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
@@ -73,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="587">
-              <caret line="134" column="76" lean-forward="true" selection-start-line="134" selection-start-column="76" selection-end-line="134" selection-end-column="76" />
+            <state relative-caret-position="2508">
+              <caret line="114" column="38" lean-forward="true" selection-start-line="114" selection-start-column="38" selection-end-line="114" selection-end-column="38" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -86,12 +75,12 @@
         </entry>
       </file>
       <file leaf-file-name="flexlsp_creator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/flexlsp_creator.py">
+        <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8">
-              <caret line="87" column="19" lean-forward="true" selection-start-line="87" selection-start-column="19" selection-end-line="87" selection-end-column="19" />
+            <state relative-caret-position="-209">
+              <caret line="85" column="19" lean-forward="true" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
               <folding>
-                <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -158,10 +147,10 @@
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/waecode/node_coordinates.csv" />
         <option value="$PROJECT_DIR$/xmlcode/collect.py" />
-        <option value="$PROJECT_DIR$/wae_api.py" />
-        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
         <option value="$PROJECT_DIR$/flexlsp_creator.py" />
         <option value="$PROJECT_DIR$/options.json" />
+        <option value="$PROJECT_DIR$/wae_api.py" />
+        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
       </list>
     </option>
   </component>
@@ -204,25 +193,7 @@
               <item name="WAE_Python_API" type="b2602c69:ProjectViewProjectNode" />
               <item name="WAE_Python_API" type="47feb1d3:ProjectViewModuleNode" />
               <item name="WAE_Python_API" type="462c0819:PsiDirectoryNode" />
-              <item name="jsonfiles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WAE_Python_API" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WAE_Python_API" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="WAE_Python_API" type="462c0819:PsiDirectoryNode" />
-              <item name="planfiles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WAE_Python_API" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WAE_Python_API" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="WAE_Python_API" type="462c0819:PsiDirectoryNode" />
               <item name="waecode" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WAE_Python_API" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WAE_Python_API" type="47feb1d3:ProjectViewModuleNode" />
-              <item name="WAE_Python_API" type="462c0819:PsiDirectoryNode" />
-              <item name="xmlcode" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -335,7 +306,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515703402746</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Merged FlexLSP code for bi-directional LSP's.">
+      <created>1516138223529</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1516138223530</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -426,7 +404,8 @@
     <MESSAGE value="Added LSP's and cleanded up code.  Also added node coordinates." />
     <MESSAGE value="More minor updates and added handling for bi-directional LSPs." />
     <MESSAGE value="Merged collector and plan file builder into single code base." />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged collector and plan file builder into single code base." />
+    <MESSAGE value="Merged FlexLSP code for bi-directional LSP's." />
+    <option name="LAST_COMMIT_MESSAGE" value="Merged FlexLSP code for bi-directional LSP's." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -733,6 +712,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -754,13 +734,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wae_api.py">
+    <entry file="file://$PROJECT_DIR$/waecode/cs_common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="135" column="0" lean-forward="false" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="176">
+          <caret line="8" column="49" lean-forward="true" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/options.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -774,39 +760,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-209">
+          <caret line="85" column="19" lean-forward="true" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="587">
-          <caret line="134" column="76" lean-forward="true" selection-start-line="134" selection-start-column="76" selection-end-line="134" selection-end-column="76" />
+        <state relative-caret-position="2508">
+          <caret line="114" column="38" lean-forward="true" selection-start-line="114" selection-start-column="38" selection-end-line="114" selection-end-column="38" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="49" lean-forward="true" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/flexlsp_creator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8">
-          <caret line="87" column="19" lean-forward="true" selection-start-line="87" selection-start-column="19" selection-end-line="87" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/options.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
