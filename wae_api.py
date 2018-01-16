@@ -14,7 +14,7 @@ def main():
     epnmpassword = "Epnm1234"
 
     # Run the collector...
-    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -119,6 +119,11 @@ def main():
 
                     duplicatelink = False
 
+    # read FlexLSP add-on options
+    with open("options.json", 'rb') as f:
+        options = json.load(f)
+        f.close()
+
     # Add LSPs to plan
     l3nodeloopbacks = []
     for k1, v1 in l3linksdict.items():
@@ -128,7 +133,7 @@ def main():
     with open("jsonfiles/lsps.json", 'rb') as f:
         lsps = json.load(f)
         f.close()
-    waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks)
+    waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
     # Save the plan file
     plan.serializeToFileSystem('planfiles/test.pln')
