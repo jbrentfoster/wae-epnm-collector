@@ -7,8 +7,6 @@ import cs_common
 import com.cisco.wae.design
 from com.cisco.wae.design.model.net import NodeKey
 
-# from com.cisco.wae.design.model.net import HopType
-
 _FLAG_RE = re.compile(r'\A--?([-\w]+)\Z')
 _HELP_RE = re.compile(r'\A-h(?:elp)?\Z', re.IGNORECASE)
 _VERSION_RE = re.compile(r'\A-v(?:ersion)?\Z', re.IGNORECASE)
@@ -17,31 +15,6 @@ reportLogText = ""
 
 
 def createflexlsp(options, conn, plan, nodes, name, lspBW):
-    '''
-    main()
-    '''
-
-    #  get addon options
-    # options = get_cli_options()
-    #	print "[addon-print] options:", options
-    #	print "[addon-print] plan-file:", options['plan-file']
-
-    #	rprint("received Addon Options:")
-    #	rprint(options)
-    #	rprint("")
-
-    #	rprint(options['nodes'])
-    # with open(options['nodes']) as filehandle:
-    #     rawNodeData = filehandle.read()
-    #     filehandle.close()
-    # #	rprint("raw Node Data:")
-    # #	rprint(rawNodeData)
-    # #	rprint("")
-    # is_addon = 'CARIDEN_GUI' in os.environ
-
-    # spin up WAE API instance
-    # conn = com.cisco.wae.design.ServiceConnectionManager.newService()
-    # plan = conn.getPlanManager().newPlanFromFileSystem(options['plan-file'])
 
     # get all necessary Managers
     network = plan.getNetwork()
@@ -57,42 +30,18 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
     interfaceManager = network.getInterfaceManager()
 
-    # find selected Nodes
-    # nkl = nodeManager.getAllNodeKeys()
-    newnkl = []
+    nodeKeyList = []
     for node in nodes:
-        newnkl.append(NodeKey(node))
-
-    # nodeMap = nodeManager.getNodes(newnkl)
-    # nodeMap = nodeManager.getNodesFromTable(rawNodeData)
-    #	rprint("NodeMap:")
-    #	rprint(nodeMap)
-
-    # nodeList = []
-    # nodeKeyList = []
-    # for nodeKey in nodeMap:
-    #     nodeKeyList.append(nodeKey)
-    #     nodeList.append(nodeMap[nodeKey])
-    # rprint("SourceNodeKey")
-    #	rprint(nodeKeyList[0])
-    #	rprint("SourceNode")
-    #	rprint(nodeList[0])
-    #	rprint("DestinationNodeKey")
-    #	rprint(nodeKeyList[1])
-    #	rprint("DestinationNode")
-    #	rprint(nodeList[1])
-    #	rprint("")
+        nodeKeyList.append(NodeKey(node))
 
     rprint("Retrieved and parsed Options:")
     rprint("-----")
     rprint("")
-    text = "LSP Endpoint A = " + newnkl[0].name
+    text = "LSP Endpoint A = " + nodeKeyList[0].name
     rprint(text)
-    text = "LSP Endpoint B = " + newnkl[1].name
+    text = "LSP Endpoint B = " + nodeKeyList[1].name
     rprint(text)
 
-    # lspIndex = options
-    # lspIndex = str(index)
     text = "LSP Name = " + name
     rprint(text)
 
@@ -117,7 +66,7 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
     # add the LSPs
     rprint("1. Creating forward LSP")
-    lsp = cs_common.createLsp(lspManager, name + "_forward", newnkl[0], newnkl[1], lspBandwidth, "Forward")
+    lsp = cs_common.createLsp(lspManager, name + "_forward", nodeKeyList[0], nodeKeyList[1], lspBandwidth, "Forward")
     text = "LSP called " + lsp.getName() + " with Bandwidth of " + str(
         lsp.getSetupBW()) + "Mbps created from Node " + lsp.getSource().getName() + " to Node " + lsp.getDestination().getName()
     rprint(text)
@@ -164,7 +113,7 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     rprint("")
 
     rprint("2. Creating Reverse LSP")
-    rlsp = cs_common.createLsp(lspManager, name + "_reverse", newnkl[1], newnkl[0], lspBandwidth, "Reverse")
+    rlsp = cs_common.createLsp(lspManager, name + "_reverse", nodeKeyList[1], nodeKeyList[0], lspBandwidth, "Reverse")
     text = "LSP called " + rlsp.getName() + " with Bandwidth of " + str(
         rlsp.getSetupBW()) + "Mbps created from Node " + rlsp.getSource().getName() + " to Node " + rlsp.getDestination().getName()
     rprint(text)
@@ -175,8 +124,8 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
     # add dynamic forward LSP Paths
     rprint("3. Adding dynamic Forward Paths")
-    workingLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, newnkl[0], 1, False, True)
-    protectLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, newnkl[0], 2, True, True)
+    workingLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, nodeKeyList[0], 1, False, True)
+    protectLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, nodeKeyList[0], 2, True, True)
     standbyString = cs_common.lspStandbyToString(workingLspPath.getStandby())
     text = "working LSP using path-option " + str(
         workingLspPath.getPathOption()) + " with named Path " + workingLspPath.getNamedPath().getName() + " created (" + standbyString + ")"
@@ -263,8 +212,8 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     rprint("7. Calculating and adding co-routed & sticky reverse Paths")
 
     # add paths to reverse LSP
-    rWorkingLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, newnkl[1], 1, False, True)
-    rProtectLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, newnkl[1], 2, True, True)
+    rWorkingLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, nodeKeyList[1], 1, False, True)
+    rProtectLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, nodeKeyList[1], 2, True, True)
 
     # calculate reverse paths to be used
     workingReverseNamedPathHopRecordList = cs_common.calculateReverseNamedPathHopRecordList(workingLspPath,
@@ -311,212 +260,6 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     rprint("---")
     rprint("")
 
-    # create report
-    # rprint("8. Creating Report")
-    # reportManager = network.getReportManager()
-    # reportKeyName = "FlexLSP Creator"
-    #
-    # textReportList = []
-    # textSection = com.cisco.wae.design.model.net.ReportTextSection(title='Log', content=reportLogText, displayIndex=1)
-    # textReportList.append(textSection)
-    #
-    # reportKey = com.cisco.wae.design.model.net.ReportKey(reportKeyName)
-    # if reportManager.hasReport(reportKey):
-    #     reportManager.removeReport(reportKey)
-    #
-    # reportRecord = com.cisco.wae.design.model.net.ReportRecord(name=reportKeyName, textSections=textReportList)
-    # newReport = reportManager.newReport(reportRecord)
-
-    # if is_addon:
-    #     generate_return_config_file(options, reportKeyName)
-
-    # save the new plan-file with the created report
-    # try:
-    #     plan.serializeToFileSystem(options['out-file'])
-    # except Exception as exception:
-    #     sys.stderr.write("Fatal[0]: Unable to write: " + options['out-file'] + " (" + exception.reason + ")\n")
-    #     sys.exit(1)
-    #
-    # return 0
-
-
-# do not need anymore?
-
-def do_not_need():
-    # run simulation
-    rprint("6. Running Simulation again")
-    failureScenarioRecord = com.cisco.wae.design.sim.FailureScenarioRecord()
-    routeSimulation = simulationManager.newRouteSimulation(plan, failureScenarioRecord)
-    routeOptions = com.cisco.wae.design.sim.RouteOptions()
-    lspRouteRecords = routeSimulation.getAllLSPRouteRecords(routeOptions)
-    lspPathRouteRecords = routeSimulation.getAllLSPPathRouteRecords(routeOptions)
-
-    # retrieve dynamic forward Paths
-    rprint("working forward LSP Path:")
-    indent = " "
-    workingRouteInterfaceList = cs_common.getRouteInterfaceList(workingLspPath, routeSimulation, routeOptions)
-    text = cs_common.printInterfaceList(workingRouteInterfaceList, True)
-    text = indent + text
-    rprint(text)
-    rprint("protect forward LSP Path:")
-    indent = " "
-    lspPathRouteRecord = routeSimulation.getLSPPathRouteRecord(protectLspPath, routeOptions)
-    #	rprint(lspPathRouteRecord)
-    protectRouteInterfaceList = cs_common.getRouteInterfaceList(protectLspPath, routeSimulation, routeOptions)
-    text = cs_common.printInterfaceList(protectRouteInterfaceList, True)
-    text = indent + text
-    rprint(text)
-    #	rprint(protectLspPath.getNamedPath().getHops())
-
-    rprint("")
-    rprint("---")
-    rprint("")
-
-    # calculating reverse path
-    rprint("7. Calculating explicit&sticky Reverse Paths")
-    rprint("working LSP Path:")
-    rprint("---")
-    rWorkingHopInterfaceHopList = workingRouteInterfaceList
-    rWorkingHopInterfaceHopList.reverse()
-    indent = " "
-    text = cs_common.printInterfaceList(rWorkingHopInterfaceHopList, False)
-    text = indent + text
-    rprint(text)
-    rprint("protect LSP Path:")
-    rProtectHopInterfaceHopList = protectRouteInterfaceList
-    rProtectHopInterfaceHopList.reverse()
-    indent = " "
-    text = cs_common.printInterfaceList(rProtectHopInterfaceHopList, False)
-    text = indent + text
-    rprint(text)
-
-    rprint("")
-    rprint("---")
-    rprint("")
-
-    # calculate explicit forward paths
-    rprint("5. Calculating sticky forward Paths")
-    rprint("working LSP Path:")
-    workingHopInterfaceHopList = cs_common.getHopInterfaceList(circuitManager, workingLspPath, routeSimulation,
-                                                               routeOptions)
-    indent = " "
-    text = cs_common.printInterfaceList(workingHopInterfaceHopList, False)
-    text = indent + text
-    rprint(text)
-    rprint("protect LSP Path:")
-    protectHopInterfaceHopList = cs_common.getHopInterfaceList(circuitManager, protectLspPath, routeSimulation,
-                                                               routeOptions)
-    indent = " "
-    text = cs_common.printInterfaceList(protectHopInterfaceHopList, False)
-    text = indent + text
-    rprint(text)
-
-    rprint("")
-    rprint("---")
-    rprint("")
-
-    rprint("7. Calculating co-routed & sticky reverse Paths")
-    rprint("calculating reverse working")
-    #	rprint(workingReverseNamedPathHopRecordList)
-    indent = " "
-    workingRouteInterfaceList = cs_common.getRouteInterfaceList(workingLspPath, routeSimulation, routeOptions)
-    text = cs_common.printInterfaceList(workingRouteInterfaceList, True)
-    text = indent + text
-    rprint(text)
-
-    rprint("calculating reverse protect")
-    #	rprint(protectReverseNamedPathHopRecordList)
-    indent = " "
-    lspPathRouteRecord = routeSimulation.getLSPPathRouteRecord(protectLspPath, routeOptions)
-    #	rprint(lspPathRouteRecord)
-    protectRouteInterfaceList = cs_common.getRouteInterfaceList(protectLspPath, routeSimulation, routeOptions)
-    text = cs_common.printInterfaceList(protectRouteInterfaceList, True)
-    text = indent + text
-    rprint(text)
-
-
-# do not need end
 
 def rprint(input):
     print input
-
-# def rprint(input):
-#     global reportLogText
-#     reportLogText = reportLogText + str(input) + "\n"
-
-
-# def get_cli_options():
-#     '''
-#         Captures and validates the CLI options
-#     '''
-#     options = process_argv()
-#     # options = validate_options(options)
-#     return options
-#
-#
-# def process_argv():
-#     '''
-#         Returns the cli arguments in a dictionary
-#     '''
-#     argv = list(sys.argv)
-#     options = {}
-#     argv.pop(0)
-#     while len(argv) > 0:
-#         item = argv.pop(0)
-#         next_item = argv.pop(0)
-#         options[re.sub(r'^-', '', item)] = next_item
-#     return options
-
-
-# def validate_options(options):
-#     '''
-#         Validates the CLI options
-#     '''
-#     # Ensure we fill out any defined defaults
-#     for option in valid_options.keys():
-#         if 'default' in valid_options[option]:
-#             default = valid_options[option]['default']
-#             option = re.sub(r'^-', '', option)
-#             if option not in options:
-#                 options[option] = default
-#
-#     # Ensure we check our allowed values
-#     for option in valid_options.keys():
-#         if 'allowed' in valid_options[option]:
-#             allowed_values = valid_options[option]['allowed']
-#             option = re.sub(r'^-', '', option)
-#             if option in options:
-#                 if options[option] not in allowed_values:
-#                     do_help()
-#
-#     # Ensure we have our required options
-#     for option in valid_options.keys():
-#         if 'REQUIRED' in valid_options[option]:
-#             if valid_options[option]['REQUIRED'] == 1:
-#                 option = re.sub(r'^-', '', option)
-#                 if option not in options:
-#                     do_help()
-#
-#     return options
-
-
-# def generate_return_config_file(options, reportKey):
-#     '''
-#         Generate a return-config-file so the WAE GUI will display the report
-#     '''
-#     with open(options['return-config-file'], "w") as filehandle:
-#         filehandle.write("<AddOnReturnConfig>\n")
-#         filehandle.write("Property\tValue\n")
-#         filehandle.write("ShowReport\t" + reportKey + "\n")
-#         filehandle.close()
-#     return
-
-
-# if __name__ == '__main__':
-#     try:
-#         sys.exit(main())
-#     except Exception as exception:
-#         import traceback
-#
-#         print traceback.print_exc()
-#         sys.stderr.write('Fatal [0]: ' + str(exception) + '\n')
