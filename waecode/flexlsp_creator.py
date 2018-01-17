@@ -6,6 +6,7 @@ import cs_common
 
 import com.cisco.wae.design
 from com.cisco.wae.design.model.net import NodeKey
+
 # from com.cisco.wae.design.model.net import HopType
 
 _FLAG_RE = re.compile(r'\A--?([-\w]+)\Z')
@@ -15,7 +16,7 @@ _VERSION_RE = re.compile(r'\A-v(?:ersion)?\Z', re.IGNORECASE)
 reportLogText = ""
 
 
-def createflexlsp(options,conn,plan,nodes,index):
+def createflexlsp(options, conn, plan, nodes, name, lspBW):
     '''
     main()
     '''
@@ -62,17 +63,17 @@ def createflexlsp(options,conn,plan,nodes,index):
     for node in nodes:
         newnkl.append(NodeKey(node))
 
-    nodeMap = nodeManager.getNodes(newnkl)
+    # nodeMap = nodeManager.getNodes(newnkl)
     # nodeMap = nodeManager.getNodesFromTable(rawNodeData)
     #	rprint("NodeMap:")
     #	rprint(nodeMap)
 
-    nodeList = []
-    nodeKeyList = []
-    for nodeKey in nodeMap:
-        nodeKeyList.append(nodeKey)
-        nodeList.append(nodeMap[nodeKey])
-    #	rprint("SourceNodeKey")
+    # nodeList = []
+    # nodeKeyList = []
+    # for nodeKey in nodeMap:
+    #     nodeKeyList.append(nodeKey)
+    #     nodeList.append(nodeMap[nodeKey])
+    # rprint("SourceNodeKey")
     #	rprint(nodeKeyList[0])
     #	rprint("SourceNode")
     #	rprint(nodeList[0])
@@ -85,14 +86,14 @@ def createflexlsp(options,conn,plan,nodes,index):
     rprint("Retrieved and parsed Options:")
     rprint("-----")
     rprint("")
-    text = "LSP Endpoint A = " + nodeKeyList[0].name
+    text = "LSP Endpoint A = " + newnkl[0].name
     rprint(text)
-    text = "LSP Endpoint B = " + nodeKeyList[1].name
+    text = "LSP Endpoint B = " + newnkl[1].name
     rprint(text)
 
     # lspIndex = options
-    lspIndex = str(index)
-    text = "LSP Index = " + str(lspIndex)
+    # lspIndex = str(index)
+    text = "LSP Name = " + name
     rprint(text)
 
     sticky = options['sticky']
@@ -112,11 +113,11 @@ def createflexlsp(options,conn,plan,nodes,index):
     rprint(text)
     rprint("")
 
-    lspBandwidth = 23
+    lspBandwidth = lspBW
 
     # add the LSPs
     rprint("1. Creating forward LSP")
-    lsp = cs_common.createLsp(lspManager, lspIndex, nodeKeyList[0], nodeKeyList[1], lspBandwidth, "Forward")
+    lsp = cs_common.createLsp(lspManager, name + "_forward", newnkl[0], newnkl[1], lspBandwidth, "Forward")
     text = "LSP called " + lsp.getName() + " with Bandwidth of " + str(
         lsp.getSetupBW()) + "Mbps created from Node " + lsp.getSource().getName() + " to Node " + lsp.getDestination().getName()
     rprint(text)
@@ -163,7 +164,7 @@ def createflexlsp(options,conn,plan,nodes,index):
     rprint("")
 
     rprint("2. Creating Reverse LSP")
-    rlsp = cs_common.createLsp(lspManager, lspIndex, nodeKeyList[1], nodeKeyList[0], lspBandwidth, "Reverse")
+    rlsp = cs_common.createLsp(lspManager, name + "_reverse", newnkl[1], newnkl[0], lspBandwidth, "Reverse")
     text = "LSP called " + rlsp.getName() + " with Bandwidth of " + str(
         rlsp.getSetupBW()) + "Mbps created from Node " + rlsp.getSource().getName() + " to Node " + rlsp.getDestination().getName()
     rprint(text)
@@ -174,8 +175,8 @@ def createflexlsp(options,conn,plan,nodes,index):
 
     # add dynamic forward LSP Paths
     rprint("3. Adding dynamic Forward Paths")
-    workingLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, nodeKeyList[0], 1, False, True)
-    protectLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, nodeKeyList[0], 2, True, True)
+    workingLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, newnkl[0], 1, False, True)
+    protectLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, newnkl[0], 2, True, True)
     standbyString = cs_common.lspStandbyToString(workingLspPath.getStandby())
     text = "working LSP using path-option " + str(
         workingLspPath.getPathOption()) + " with named Path " + workingLspPath.getNamedPath().getName() + " created (" + standbyString + ")"
@@ -262,8 +263,8 @@ def createflexlsp(options,conn,plan,nodes,index):
     rprint("7. Calculating and adding co-routed & sticky reverse Paths")
 
     # add paths to reverse LSP
-    rWorkingLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, nodeKeyList[1], 1, False, True)
-    rProtectLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, nodeKeyList[1], 2, True, True)
+    rWorkingLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, newnkl[1], 1, False, True)
+    rProtectLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, newnkl[1], 2, True, True)
 
     # calculate reverse paths to be used
     workingReverseNamedPathHopRecordList = cs_common.calculateReverseNamedPathHopRecordList(workingLspPath,
@@ -311,20 +312,20 @@ def createflexlsp(options,conn,plan,nodes,index):
     rprint("")
 
     # create report
-    rprint("8. Creating Report")
-    reportManager = network.getReportManager()
-    reportKeyName = "FlexLSP Creator"
-
-    textReportList = []
-    textSection = com.cisco.wae.design.model.net.ReportTextSection(title='Log', content=reportLogText, displayIndex=1)
-    textReportList.append(textSection)
-
-    reportKey = com.cisco.wae.design.model.net.ReportKey(reportKeyName)
-    if reportManager.hasReport(reportKey):
-        reportManager.removeReport(reportKey)
-
-    reportRecord = com.cisco.wae.design.model.net.ReportRecord(name=reportKeyName, textSections=textReportList)
-    newReport = reportManager.newReport(reportRecord)
+    # rprint("8. Creating Report")
+    # reportManager = network.getReportManager()
+    # reportKeyName = "FlexLSP Creator"
+    #
+    # textReportList = []
+    # textSection = com.cisco.wae.design.model.net.ReportTextSection(title='Log', content=reportLogText, displayIndex=1)
+    # textReportList.append(textSection)
+    #
+    # reportKey = com.cisco.wae.design.model.net.ReportKey(reportKeyName)
+    # if reportManager.hasReport(reportKey):
+    #     reportManager.removeReport(reportKey)
+    #
+    # reportRecord = com.cisco.wae.design.model.net.ReportRecord(name=reportKeyName, textSections=textReportList)
+    # newReport = reportManager.newReport(reportRecord)
 
     # if is_addon:
     #     generate_return_config_file(options, reportKeyName)

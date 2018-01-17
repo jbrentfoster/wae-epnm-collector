@@ -126,17 +126,18 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
         direction = lsp['direction']
         index += 1
         if lspBW > 0:
+            tuID = lsp['Tunnel ID']
             lspName = lsp['fdn'].split('!')[1].split('=')[1]
             demandName = "Demand for " + lspName
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             if direction == "ns4:bi-direction":
                 nodes = [src, dest]
-                flexlsp_creator.createflexlsp(options,conn,plan,nodes,index)
-                # new_private_lsp(plan, dest, src, lspName)
-                # new_demand_for_LSP(plan, dest, src, lspName, demandName, lspBW)
+                flexlsp_creator.createflexlsp(options,conn,plan,nodes,lspName,lspBW)
+                new_demand_for_LSP(plan, src, dest, lspName+"_forward", demandName+"_forward", lspBW)
+                new_demand_for_LSP(plan, dest, src, lspName+"_reverse", demandName+"_reverse", lspBW)
             else:
-                new_private_lsp(plan, src, dest, lspName)
+                new_private_lsp(plan, src, dest, lspName, lspBW)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 
 
@@ -174,15 +175,18 @@ def new_demand_for_LSP(id, src, dest, lspName, demandName, val):
     )
     dmdTrafficMgr = id.getTrafficManager().getDemandTrafficManager()
     dmdTrafficMgr.setTraffic(dmdTraffKey, val)
+    traffic = dmdTrafficMgr.getTraffic(dmdTraffKey)
+    print "traffic..."
 
 
-def new_private_lsp(id, src, dest, name):
+def new_private_lsp(id, src, dest, name, lspBW):
     lspRec = LSPRecord(
         sourceKey=NodeKey(name=src),
         name=name,
         destinationKey=NodeKey(name=dest),
         isActive=True,
         isPrivate=True,
+        setupBW=lspBW,
         type=LSPType.RSVP
     )
     lspMgr = id.getNetwork().getLSPManager()
