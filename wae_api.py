@@ -76,6 +76,7 @@ def main():
     i = 0
     linkslist = []
     duplicatelink = False
+    circ_srlgs = {}
     for k1, v1 in l3linksdict.items():
         firstnode = k1
         for k2, v2 in v1.items():
@@ -84,8 +85,13 @@ def main():
                     # print "***************Linkname is: " + k3
                     lastnode = v3['Neighbor']
                     discoveredname = v3['discoveredname']
+                    affinity = v3['Affinity']
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
+                    srlgs = []
+                    if 'SRLGs' in v3:
+                        for k4, v4 in v3['SRLGs'].items():
+                            srlgs.append(v4)
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if 'Ordered L1 Hops' in v3 and not duplicatelink:
@@ -100,24 +106,35 @@ def main():
                             l1circuit = waecode.planbuild.generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
                                                                             intfbw)
                             name = "L3_circuit_" + str(i)
-                            l3circuit = waecode.planbuild.generateL3circuit(plan, name, firstnode, lastnode)
+                            l3circuit = waecode.planbuild.generateL3circuit(plan, name, firstnode, lastnode, affinity)
                             l3circuit.setL1Circuit(l1circuit)
                             l3circuit.setCapacity(l1circuit.getBandwidth())
                             intfdict = l3circuit.getAllInterfaces()
                             for k6, v6 in intfdict.items():
                                 v6.setResvBW(int(rsvpbw / 1000))
+                            circ_name = l3circuit.getName()
+                            circ_key = l3circuit.getKey()
+                            circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                            circ_srlgs[circ_name] = circ_dict
 
                     elif not duplicatelink:
                         i += 1
                         name = "L3_circuit_" + str(i)
                         linkslist.append(discoveredname)
-                        l3circuit = waecode.planbuild.generateL3circuit(plan, name, firstnode, lastnode)
+                        l3circuit = waecode.planbuild.generateL3circuit(plan, name, firstnode, lastnode, affinity)
                         l3circuit.setCapacity(intfbw)
                         intfdict = l3circuit.getAllInterfaces()
                         for k6, v6 in intfdict.items():
                             v6.setResvBW(int(rsvpbw / 1000))
+                        circ_name = l3circuit.getName()
+                        circ_key = l3circuit.getKey()
+                        circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                        circ_srlgs[circ_name] = circ_dict
 
                     duplicatelink = False
+
+    # process SRLG's
+    waecode.planbuild.process_srlgs(plan, circ_srlgs)
 
     # read FlexLSP add-on options
     with open("waecode/options.json", 'rb') as f:

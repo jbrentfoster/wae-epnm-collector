@@ -2,9 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/isisdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l1Links.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l1Nodes.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l3Links.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_l1hops.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_tl.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_vc.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_final.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jsonfiles/lsps.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/l1-links-xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/l1-nodes-xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/multilayerroute" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/tl-mpls-link-layer-xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/vc-mpls-te-tunnel-xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xmlgets/vc-optical" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/planfiles/test.pln" afterPath="$PROJECT_DIR$/planfiles/test.pln" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/flexlsp_creator.py" afterPath="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wae_api.py" afterPath="$PROJECT_DIR$/wae_api.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/cs_common.py" afterPath="$PROJECT_DIR$/waecode/cs_common.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/planbuild.py" afterPath="$PROJECT_DIR$/waecode/planbuild.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,10 +35,35 @@
       <file leaf-file-name="wae_api.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wae_api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
+            <state relative-caret-position="802">
+              <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lsps.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19492">
+              <caret line="892" column="29" lean-forward="false" selection-start-line="892" selection-start-column="29" selection-end-line="892" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="l3Links_final.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_final.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="95">
+              <caret line="1040" column="36" lean-forward="false" selection-start-line="1040" selection-start-column="28" selection-end-line="1040" selection-end-column="36" />
+              <folding>
+                <element signature="e#423#1841#0" expanded="false" />
+                <element signature="e#2630#4519#0" expanded="false" />
+                <element signature="e#10173#11593#0" expanded="false" />
+                <element signature="e#41253#42668#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -31,8 +72,8 @@
       <file leaf-file-name="collect.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/xmlcode/collect.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="46" column="9" lean-forward="true" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
+            <state relative-caret-position="425">
+              <caret line="217" column="50" lean-forward="true" selection-start-line="217" selection-start-column="8" selection-end-line="217" selection-end-column="50" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -43,28 +84,18 @@
       <file leaf-file-name="cs_common.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/waecode/cs_common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <state relative-caret-position="76">
+              <caret line="31" column="70" lean-forward="true" selection-start-line="31" selection-start-column="70" selection-end-line="31" selection-end-column="70" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="l3Links_final.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_final.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="142" column="0" lean-forward="true" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+            <state relative-caret-position="-15">
+              <caret line="131" column="18" lean-forward="false" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -72,24 +103,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lsps.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <file leaf-file-name="flexlsp_creator.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16758">
-              <caret line="892" column="29" lean-forward="true" selection-start-line="892" selection-start-column="29" selection-end-line="892" selection-end-column="29" />
-              <folding />
+            <state relative-caret-position="518">
+              <caret line="170" column="14" lean-forward="true" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="flexlsp_creator.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
+      <file leaf-file-name="options.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/waecode/options.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="48" column="14" lean-forward="true" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="88">
+              <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -105,11 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC15P11</find>
-      <find>Ordered L1 Hops</find>
-      <find>4216-5</find>
-      <find>roundUpToMultiple</find>
-      <find>roundit</find>
       <find>lsp</find>
       <find>l3nodes</find>
       <find>l1hops</find>
@@ -135,6 +161,11 @@
       <find>nodeList</find>
       <find>lspIndex</find>
       <find>do_not_need</find>
+      <find>parse</find>
+      <find>10.0.1.22</find>
+      <find>could not parse</find>
+      <find>25166300</find>
+      <find>manager</find>
     </findStrings>
     <replaceStrings>
       <replace>xmlgets</replace>
@@ -157,10 +188,11 @@
         <option value="$PROJECT_DIR$/xmlcode/collect.py" />
         <option value="$PROJECT_DIR$/flexlsp_creator.py" />
         <option value="$PROJECT_DIR$/options.json" />
-        <option value="$PROJECT_DIR$/wae_api.py" />
-        <option value="$PROJECT_DIR$/waecode/cs_common.py" />
-        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
         <option value="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
+        <option value="$PROJECT_DIR$/xmlgets/tl-mpls-link-layer-xml" />
+        <option value="$PROJECT_DIR$/waecode/cs_common.py" />
+        <option value="$PROJECT_DIR$/wae_api.py" />
+        <option value="$PROJECT_DIR$/waecode/planbuild.py" />
       </list>
     </option>
   </component>
@@ -185,8 +217,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -215,6 +245,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -343,7 +375,14 @@
       <option name="project" value="LOCAL" />
       <updated>1516207701139</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Misc code cleanup.">
+      <created>1516208971766</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1516208971766</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView">
@@ -358,16 +397,16 @@
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24139784" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2451613" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66909975" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32846716" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6690909" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66301703" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5218978" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295699" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -437,10 +476,31 @@
     <MESSAGE value="Merged FlexLSP code for bi-directional LSP's." />
     <MESSAGE value="Re-organized file structure." />
     <MESSAGE value="Fixed some bugs and corrected demand to LSP mapping for FlexLSP." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed some bugs and corrected demand to LSP mapping for FlexLSP." />
+    <MESSAGE value="Misc code cleanup." />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc code cleanup." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/waecode/flexlsp_creator.py</url>
+          <line>79</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/waecode/flexlsp_creator.py</url>
+          <line>98</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/waecode/planbuild.py</url>
+          <line>154</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -448,12 +508,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="66" />
+      <option name="time" value="87" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_reordered_l1hops.json" />
     <entry file="file://$PROJECT_DIR$/jsonfiles/l1Links.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -678,13 +737,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="1598" column="0" lean-forward="false" selection-start-line="1598" selection-start-column="0" selection-end-line="1598" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jsonfilescopy/lsps.json" />
     <entry file="file://$PROJECT_DIR$/xmlcode/post-cli-template">
       <provider selected="true" editor-type-id="text-editor">
@@ -729,7 +781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="9" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -737,9 +788,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="false" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/DesktopSweep.2016.05.25/SDN/Cariden/WAE-Design-k9-6.4.10-Windows-x86_64/lib/python2.7/com_cisco_wae_design_model_traffic_DemandTrafficManager_ice.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xmlgets/tl-mpls-link-layer-xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="29" lean-forward="true" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -751,74 +814,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="170" column="14" lean-forward="true" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19492">
+          <caret line="892" column="29" lean-forward="false" selection-start-line="892" selection-start-column="29" selection-end-line="892" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/xmlcode/collect.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="46" column="9" lean-forward="true" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
+        <state relative-caret-position="425">
+          <caret line="217" column="50" lean-forward="true" selection-start-line="217" selection-start-column="8" selection-end-line="217" selection-end-column="50" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wae_api.py">
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/DesktopSweep.2016.05.25/SDN/Cariden/WAE-Design-k9-6.4.10-Windows-x86_64/lib/python2.7/com_cisco_wae_design_model_traffic_DemandTrafficManager_ice.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+        <state relative-caret-position="494">
+          <caret line="1598" column="0" lean-forward="false" selection-start-line="1598" selection-start-column="0" selection-end-line="1598" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/waecode/cs_common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state relative-caret-position="76">
+          <caret line="31" column="70" lean-forward="true" selection-start-line="31" selection-start-column="70" selection-end-line="31" selection-end-column="70" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jsonfiles/l3Links_final.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="95">
+          <caret line="1040" column="36" lean-forward="false" selection-start-line="1040" selection-start-column="28" selection-end-line="1040" selection-end-column="36" />
+          <folding>
+            <element signature="e#423#1841#0" expanded="false" />
+            <element signature="e#2630#4519#0" expanded="false" />
+            <element signature="e#10173#11593#0" expanded="false" />
+            <element signature="e#41253#42668#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jsonfiles/lsps.json">
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16758">
-          <caret line="892" column="29" lean-forward="true" selection-start-line="892" selection-start-column="29" selection-end-line="892" selection-end-column="29" />
-          <folding />
+        <state relative-caret-position="802">
+          <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="142" column="0" lean-forward="true" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+        <state relative-caret-position="-15">
+          <caret line="131" column="18" lean-forward="false" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="48" column="14" lean-forward="true" selection-start-line="48" selection-start-column="14" selection-end-line="48" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

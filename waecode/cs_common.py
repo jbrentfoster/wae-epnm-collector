@@ -20,10 +20,14 @@ def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOptio
     lspRecord = lsp.getRecord()
     lspKey = lsp.getKey()
 
+
+
     if standby:
         standbyEnum = com.cisco.wae.design.model.net.LSPStandbyType.Standby
+        affinity = "0x21"
     else:
         standbyEnum = com.cisco.wae.design.model.net.LSPStandbyType.NotStandby
+        affinity = "0x11"
 
     namedPathRecord = com.cisco.wae.design.model.net.NamedPathRecord()
     namedPathRecord.sourceKey = sourceNodeKey
@@ -36,9 +40,22 @@ def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOptio
     lspPathRecord.npKey = namedPathKey
     lspPathRecord.pathOption = pathOption
 
+    scale = 16  ## equals to hexadecimal
+    num_of_bits = 32
+    # print bin(int(affinity, scale))[2:].zfill(num_of_bits)
+    affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
+
+    affinities = []
+    c = 0
+    for afbit in reversed(affinitylist):
+        if afbit == '1':
+            affinities.append(c)
+        c += 1
+
     lspPath = lspPathManager.newLSPPath(lspPathRecord)
     lspPath.setActive(active)
     lspPath.setStandby(standbyEnum)
+    lspPath.setIncludeAffinities(affinities)
 
     return lspPath
 

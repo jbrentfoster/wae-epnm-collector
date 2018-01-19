@@ -28,6 +28,7 @@ from com.cisco.wae.design.model.net import CircuitRecord
 from com.cisco.wae.design.model.net import DemandRecord
 from com.cisco.wae.design.model.net import ServiceClassRecord
 from com.cisco.wae.design.model.net import LSPRecord
+from com.cisco.wae.design.model.net import SRLGRecord
 
 
 def generateL1nodes(plan, l1nodelist):
@@ -105,18 +106,53 @@ def generateL3nodes(plan, l3nodelist):
         newl3node.setLongitude(int(l3node['X']))
 
 
-def generateL3circuit(plan, name, l3nodeA, l3nodeB):
+def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
     nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
     nodeBintfname = "L3_intf_" + name + "_to_" + l3nodeA
-    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2)
-    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2)
+
+    scale = 16  ## equals to hexadecimal
+    num_of_bits = 32
+    # print bin(int(affinity, scale))[2:].zfill(num_of_bits)
+    affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
+
+    affinities = []
+    c = 0
+    for afbit in reversed(affinitylist):
+        if afbit == '1':
+            affinities.append(c)
+        c += 1
+    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities)
+    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
     circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
 
     return circuit
+
+
+def process_srlgs(plan, circ_srlgs):
+    srlg_mgr = plan.getNetwork().getSRLGManager()
+    circ_mgr = plan.getNetwork().getCircuitManager()
+    circ_recs = circ_mgr.getAllCircuitRecords()
+
+    srlg_list = []
+    for circ, circ_dict in circ_srlgs.items():
+        for srlg in circ_dict['SRLGs']:
+            if not srlg in srlg_list:
+                print "Processing SRLG: " + srlg
+                circ_list = []
+                circ_keys_list = []
+                srlg_list.append(srlg)
+                for circ2, circ_dict2 in circ_srlgs.items():
+                    for srlg2 in circ_dict2['SRLGs']:
+                        if srlg2 == srlg:
+                            circ_list.append(circ_dict2)
+                            circ_keys_list.append(circ_dict2['Circuit Key'])
+                            break
+                srlg_rec = SRLGRecord(circuitKeys=circ_keys_list, name=hex(int(srlg)), description="Foo")
+                srlg_mgr.newSRLG(srlg_rec)
 
 
 def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
