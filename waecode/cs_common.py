@@ -20,8 +20,6 @@ def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOptio
     lspRecord = lsp.getRecord()
     lspKey = lsp.getKey()
 
-
-
     if standby:
         standbyEnum = com.cisco.wae.design.model.net.LSPStandbyType.Standby
         affinity = "0x21"

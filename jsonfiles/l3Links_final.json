@@ -46,10 +46,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388613",
-                    "[1]": "12583106",
-                    "[2]": "12583306",
-                    "[3]": "25166108"
+                    "[0]": "18874387",
+                    "[1]": "20054278",
+                    "[2]": "20054790",
+                    "[3]": "23331080"
                 },
                 "discoveredname": "10.0.0.41-10.0.0.42",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC08P11"
@@ -110,10 +110,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388614",
-                    "[2]": "8388634",
-                    "[3]": "12583112"
+                    "[0]": "17825796",
+                    "[1]": "18874388",
+                    "[2]": "18874420",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.45-10.0.0.46",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC15P11"
@@ -163,10 +163,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388612",
-                    "[1]": "12583106",
-                    "[2]": "12583206",
-                    "[3]": "25166100"
+                    "[0]": "18874386",
+                    "[1]": "20054278",
+                    "[2]": "20054534",
+                    "[3]": "23331072"
                 },
                 "discoveredname": "10.0.0.17-10.0.0.18",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site2_LC00P11"
@@ -227,10 +227,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388614",
-                    "[2]": "8388624",
-                    "[3]": "12583112"
+                    "[0]": "17825796",
+                    "[1]": "18874388",
+                    "[2]": "18874404",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.1-10.0.0.2",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site2_LC07P11"
@@ -280,10 +280,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388614",
-                    "[1]": "12583106",
-                    "[2]": "12583406",
-                    "[3]": "25166102"
+                    "[0]": "18874388",
+                    "[1]": "20054278",
+                    "[2]": "20055046",
+                    "[3]": "23331074"
                 },
                 "discoveredname": "10.0.0.37-10.0.0.38",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site4_LC02P11"
@@ -344,10 +344,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194403",
-                    "[1]": "8388613",
-                    "[2]": "8388634",
-                    "[3]": "12583112"
+                    "[0]": "17825795",
+                    "[1]": "18874387",
+                    "[2]": "18874420",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.6-10.0.0.5",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site4_LC05P11"
@@ -362,7 +362,7 @@
                 "Neighbor Intf": "BDI1000",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166100",
+                    "[0]": "23331072",
                     "[1]": "25172105"
                 },
                 "discoveredname": "10.0.1.45-10.0.1.46"
@@ -377,7 +377,7 @@
                 "Neighbor Intf": "BDI1001",
                 "RSVP BW": "10000000 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166107"
+                    "[0]": "23331079"
                 },
                 "discoveredname": "10.0.1.49-10.0.1.50"
             }
@@ -431,10 +431,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388612",
-                    "[1]": "12583106",
-                    "[2]": "12583206",
-                    "[3]": "25166100"
+                    "[0]": "18874386",
+                    "[1]": "20054278",
+                    "[2]": "20054534",
+                    "[3]": "23331072"
                 },
                 "discoveredname": "10.0.0.17-10.0.0.18",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site2_LC00P11"
@@ -495,10 +495,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388614",
-                    "[2]": "8388624",
-                    "[3]": "12583112"
+                    "[0]": "17825796",
+                    "[1]": "18874388",
+                    "[2]": "18874404",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.1-10.0.0.2",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site2_LC07P11"
@@ -548,12 +548,12 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388623",
-                    "[1]": "12583206",
-                    "[2]": "12583306",
-                    "[3]": "25166202"
+                    "[0]": "18874403",
+                    "[1]": "20054534",
+                    "[2]": "20054790",
+                    "[3]": "23331330"
                 },
-                "discoveredname": "10.0.0.33-10.0.0.34",
+                "discoveredname": "10.0.0.34-10.0.0.33",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site3_LC02P11"
             },
             "Link4": {
@@ -578,25 +578,25 @@
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site2": {
-                                "Port": "LINE-1-7-3-TX"
+                            "NCS2K-Site1": {
+                                "Port": "LINE-1-10-3-RX"
                             },
-                            "NCS2K-Site4": {
-                                "Port": "LINE-1-7-3-RX"
+                            "NCS2K-Site2": {
+                                "Port": "LINE-1-8-3-RX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-C]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site3": {
-                                "Port": "LINE-1-7-3-TX"
-                            },
-                            "NCS2K-Site4": {
+                            "NCS2K-Site1": {
                                 "Port": "LINE-1-8-3-TX"
+                            },
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-10-3-RX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-C]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
@@ -612,12 +612,12 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388624",
-                    "[2]": "8388634",
-                    "[3]": "12583212"
+                    "[0]": "17825793",
+                    "[1]": "18874386",
+                    "[2]": "18874387",
+                    "[3]": "20054546"
                 },
-                "discoveredname": "10.0.0.9-10.0.0.10",
+                "discoveredname": "10.0.0.10-10.0.0.9",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site3_LC05P11"
             },
             "Link5": {
@@ -665,10 +665,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388624",
-                    "[1]": "12583206",
-                    "[2]": "12583406",
-                    "[3]": "25166208"
+                    "[0]": "18874404",
+                    "[1]": "20054534",
+                    "[2]": "20055046",
+                    "[3]": "23331336"
                 },
                 "discoveredname": "10.0.0.26-10.0.0.25",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site4_LC08P11"
@@ -695,25 +695,25 @@
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site1": {
+                            "NCS2K-Site2": {
                                 "Port": "LINE-1-10-3-RX"
                             },
-                            "NCS2K-Site2": {
-                                "Port": "LINE-1-8-3-RX"
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-8-3-TX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-B]--10.135.7.34:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site1": {
-                                "Port": "LINE-1-7-3-RX"
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-7-3-TX"
                             },
                             "NCS2K-Site4": {
-                                "Port": "LINE-1-10-3-RX"
+                                "Port": "LINE-1-8-3-TX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-B]--10.135.7.34:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
@@ -729,10 +729,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194401",
-                    "[1]": "8388612",
-                    "[2]": "8388614",
-                    "[3]": "12583212"
+                    "[0]": "17825795",
+                    "[1]": "18874403",
+                    "[2]": "18874420",
+                    "[3]": "20054546"
                 },
                 "discoveredname": "10.0.0.30-10.0.0.29",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site4_LC15P11"
@@ -747,9 +747,9 @@
                 "Neighbor Intf": "BDI1000",
                 "RSVP BW": "40000000 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166200"
+                    "[0]": "23331328"
                 },
-                "discoveredname": "10.0.1.21-10.0.1.22"
+                "discoveredname": "10.0.1.22-10.0.1.21"
             }
         },
         "Loopback Address": "1.1.1.21"
@@ -801,10 +801,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388613",
-                    "[1]": "12583106",
-                    "[2]": "12583306",
-                    "[3]": "25166108"
+                    "[0]": "18874387",
+                    "[1]": "20054278",
+                    "[2]": "20054790",
+                    "[3]": "23331080"
                 },
                 "discoveredname": "10.0.0.41-10.0.0.42",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC08P11"
@@ -865,10 +865,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388614",
-                    "[2]": "8388634",
-                    "[3]": "12583112"
+                    "[0]": "17825796",
+                    "[1]": "18874388",
+                    "[2]": "18874420",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.45-10.0.0.46",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site3_LC15P11"
@@ -918,12 +918,12 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388623",
-                    "[1]": "12583206",
-                    "[2]": "12583306",
-                    "[3]": "25166202"
+                    "[0]": "18874403",
+                    "[1]": "20054534",
+                    "[2]": "20054790",
+                    "[3]": "23331330"
                 },
-                "discoveredname": "10.0.0.33-10.0.0.34",
+                "discoveredname": "10.0.0.34-10.0.0.33",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site3_LC02P11"
             },
             "Link4": {
@@ -948,25 +948,25 @@
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site3": {
-                                "Port": "LINE-1-7-3-TX"
-                            },
-                            "NCS2K-Site4": {
+                            "NCS2K-Site1": {
                                 "Port": "LINE-1-8-3-TX"
+                            },
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-10-3-RX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-C]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site2": {
-                                "Port": "LINE-1-7-3-TX"
+                            "NCS2K-Site1": {
+                                "Port": "LINE-1-10-3-RX"
                             },
-                            "NCS2K-Site4": {
-                                "Port": "LINE-1-7-3-RX"
+                            "NCS2K-Site2": {
+                                "Port": "LINE-1-8-3-RX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-C]--10.135.7.44:[WDMSIDE-C]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
@@ -982,12 +982,12 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194404",
-                    "[1]": "8388624",
-                    "[2]": "8388634",
-                    "[3]": "12583212"
+                    "[0]": "17825793",
+                    "[1]": "18874386",
+                    "[2]": "18874387",
+                    "[3]": "20054546"
                 },
-                "discoveredname": "10.0.0.9-10.0.0.10",
+                "discoveredname": "10.0.0.10-10.0.0.9",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site3_LC05P11"
             },
             "Link5": {
@@ -1035,10 +1035,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388634",
-                    "[1]": "12583306",
-                    "[2]": "12583406",
-                    "[3]": "25166300"
+                    "[0]": "18874420",
+                    "[1]": "20054790",
+                    "[2]": "20055046",
+                    "[3]": "23331584"
                 },
                 "discoveredname": "10.0.0.22-10.0.0.21",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site3_to_Site4_LC00P11"
@@ -1099,10 +1099,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194401",
-                    "[1]": "8388613",
-                    "[2]": "8388614",
-                    "[3]": "12583312"
+                    "[0]": "17825793",
+                    "[1]": "18874387",
+                    "[2]": "18874388",
+                    "[3]": "20054802"
                 },
                 "discoveredname": "10.0.0.14-10.0.0.13",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site3_to_Site4_LC07P11"
@@ -1117,7 +1117,7 @@
                 "Neighbor Intf": "BDI1002",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166308"
+                    "[0]": "23331592"
                 },
                 "discoveredname": "10.0.1.13-10.0.1.14"
             },
@@ -1131,9 +1131,9 @@
                 "Neighbor Intf": "BDI1000",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166300"
+                    "[0]": "20054790"
                 },
-                "discoveredname": "10.0.1.37-10.0.1.38"
+                "discoveredname": "10.0.1.38-10.0.1.37"
             },
             "Link9": {
                 "Affinity": "0x00000023",
@@ -1145,9 +1145,9 @@
                 "Neighbor Intf": "BDI1001",
                 "RSVP BW": "10000000 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166315"
+                    "[0]": "23331605"
                 },
-                "discoveredname": "10.0.1.41-10.0.1.42"
+                "discoveredname": "10.0.1.42-10.0.1.41"
             }
         },
         "Loopback Address": "1.1.1.31"
@@ -1199,10 +1199,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388614",
-                    "[1]": "12583106",
-                    "[2]": "12583406",
-                    "[3]": "25166102"
+                    "[0]": "18874388",
+                    "[1]": "20054278",
+                    "[2]": "20055046",
+                    "[3]": "23331074"
                 },
                 "discoveredname": "10.0.0.37-10.0.0.38",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site4_LC02P11"
@@ -1217,7 +1217,7 @@
                 "Neighbor Intf": "BDI1001",
                 "RSVP BW": "40000000 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166415"
+                    "[0]": "23331861"
                 },
                 "discoveredname": "10.0.1.26-10.0.1.25"
             },
@@ -1277,10 +1277,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194403",
-                    "[1]": "8388613",
-                    "[2]": "8388634",
-                    "[3]": "12583112"
+                    "[0]": "17825795",
+                    "[1]": "18874387",
+                    "[2]": "18874420",
+                    "[3]": "20054290"
                 },
                 "discoveredname": "10.0.0.6-10.0.0.5",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site1_to_Site4_LC05P11"
@@ -1330,10 +1330,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388634",
-                    "[1]": "12583306",
-                    "[2]": "12583406",
-                    "[3]": "25166300"
+                    "[0]": "18874420",
+                    "[1]": "20054790",
+                    "[2]": "20055046",
+                    "[3]": "23331584"
                 },
                 "discoveredname": "10.0.0.22-10.0.0.21",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site3_to_Site4_LC00P11"
@@ -1394,10 +1394,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194401",
-                    "[1]": "8388613",
-                    "[2]": "8388614",
-                    "[3]": "12583312"
+                    "[0]": "17825793",
+                    "[1]": "18874387",
+                    "[2]": "18874388",
+                    "[3]": "20054802"
                 },
                 "discoveredname": "10.0.0.14-10.0.0.13",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site3_to_Site4_LC07P11"
@@ -1447,10 +1447,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "8388624",
-                    "[1]": "12583206",
-                    "[2]": "12583406",
-                    "[3]": "25166208"
+                    "[0]": "18874404",
+                    "[1]": "20054534",
+                    "[2]": "20055046",
+                    "[3]": "23331336"
                 },
                 "discoveredname": "10.0.0.26-10.0.0.25",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site4_LC08P11"
@@ -1477,25 +1477,25 @@
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site1": {
-                                "Port": "LINE-1-7-3-RX"
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-7-3-TX"
                             },
                             "NCS2K-Site4": {
-                                "Port": "LINE-1-10-3-RX"
+                                "Port": "LINE-1-8-3-TX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-B]--10.135.7.34:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
-                            "NCS2K-Site1": {
+                            "NCS2K-Site2": {
                                 "Port": "LINE-1-10-3-RX"
                             },
-                            "NCS2K-Site2": {
-                                "Port": "LINE-1-8-3-RX"
+                            "NCS2K-Site3": {
+                                "Port": "LINE-1-8-3-TX"
                             }
                         },
-                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.14:[WDMSIDE-B]--10.135.7.24:[WDMSIDE-A]"
+                        "fdn": "MD=CISCO_EPNM!TL=10.135.7.24:[WDMSIDE-B]--10.135.7.34:[WDMSIDE-A]"
                     },
                     {
                         "Nodes": {
@@ -1511,10 +1511,10 @@
                 ],
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "4194401",
-                    "[1]": "8388612",
-                    "[2]": "8388614",
-                    "[3]": "12583212"
+                    "[0]": "17825795",
+                    "[1]": "18874403",
+                    "[2]": "18874420",
+                    "[3]": "20054546"
                 },
                 "discoveredname": "10.0.0.30-10.0.0.29",
                 "vc-fdn": "MD=CISCO_EPNM!VC=OCHTrail_NCS4K-Site2_to_Site4_LC15P11"
@@ -1529,9 +1529,9 @@
                 "Neighbor Intf": "BDI1003",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166407"
+                    "[0]": "23331847"
                 },
-                "discoveredname": "10.0.1.18-10.0.1.17"
+                "discoveredname": "10.0.1.17-10.0.1.18"
             },
             "Link8": {
                 "Affinity": "0x00000013",
@@ -1543,7 +1543,7 @@
                 "Neighbor Intf": "BDI1000",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166400"
+                    "[0]": "23331840"
                 },
                 "discoveredname": "10.0.1.30-10.0.1.29"
             },
@@ -1557,7 +1557,7 @@
                 "Neighbor Intf": "BDI1001",
                 "RSVP BW": "99999998 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25166415"
+                    "[0]": "23331861"
                 },
                 "discoveredname": "10.0.1.34-10.0.1.33"
             }
@@ -1567,17 +1567,6 @@
     "ncs4206-1": {
         "Links": {
             "Link1": {
-                "Affinity": "0x00000023",
-                "Local IP": "10.0.1.50",
-                "Local Intf": "BDI1001",
-                "Metric": "100",
-                "Neighbor": "NCS4K-Site1",
-                "Neighbor IP": "10.0.1.49",
-                "Neighbor Intf": "TenGigE0/7/0/0/1.1001",
-                "RSVP BW": "10000000 kbits/sec",
-                "discoveredname": "10.0.1.49-10.0.1.50"
-            },
-            "Link2": {
                 "Affinity": "0x00000013",
                 "Local IP": "10.0.1.46",
                 "Local Intf": "BDI1000",
@@ -1586,11 +1575,21 @@
                 "Neighbor IP": "10.0.1.45",
                 "Neighbor Intf": "HundredGigE0/0/0/0.1000",
                 "RSVP BW": "99999998 kbits/sec",
-                "SRLGs": {
-                    "[0]": "25172105",
-                    "[1]": "25166100"
-                },
                 "discoveredname": "10.0.1.45-10.0.1.46"
+            },
+            "Link2": {
+                "Affinity": "0x00000023",
+                "Local IP": "10.0.1.50",
+                "Local Intf": "BDI1001",
+                "Metric": "100",
+                "Neighbor": "NCS4K-Site1",
+                "Neighbor IP": "10.0.1.49",
+                "Neighbor Intf": "TenGigE0/7/0/0/1.1001",
+                "RSVP BW": "10000000 kbits/sec",
+                "SRLGs": {
+                    "[0]": "25172100"
+                },
+                "discoveredname": "10.0.1.49-10.0.1.50"
             }
         },
         "Loopback Address": "192.168.0.15"
@@ -1606,7 +1605,7 @@
                 "Neighbor IP": "10.0.1.42",
                 "Neighbor Intf": "TenGigE0/15/0/1/1.1001",
                 "RSVP BW": "10000000 kbits/sec",
-                "discoveredname": "10.0.1.41-10.0.1.42"
+                "discoveredname": "10.0.1.42-10.0.1.41"
             },
             "Link2": {
                 "Affinity": "0x00000013",
@@ -1620,7 +1619,7 @@
                 "SRLGs": {
                     "[0]": "25172305"
                 },
-                "discoveredname": "10.0.1.37-10.0.1.38"
+                "discoveredname": "10.0.1.38-10.0.1.37"
             }
         },
         "Loopback Address": "192.168.0.35"
@@ -1636,7 +1635,7 @@
                 "Neighbor IP": "10.0.1.22",
                 "Neighbor Intf": "FortyGigE0/0/0/0.1000",
                 "RSVP BW": "40000000 kbits/sec",
-                "discoveredname": "10.0.1.21-10.0.1.22"
+                "discoveredname": "10.0.1.22-10.0.1.21"
             },
             "Link2": {
                 "Affinity": "0x00000023",
@@ -1648,7 +1647,8 @@
                 "Neighbor Intf": "FortyGigE0/15/0/1.1001",
                 "RSVP BW": "40000000 kbits/sec",
                 "SRLGs": {
-                    "[0]": "25172208"
+                    "[0]": "25172208",
+                    "[1]": "17825796"
                 },
                 "discoveredname": "10.0.1.26-10.0.1.25"
             }
@@ -1710,7 +1710,7 @@
                 "SRLGs": {
                     "[0]": "25172508"
                 },
-                "discoveredname": "10.0.1.18-10.0.1.17"
+                "discoveredname": "10.0.1.17-10.0.1.18"
             }
         },
         "Loopback Address": "192.168.0.55"

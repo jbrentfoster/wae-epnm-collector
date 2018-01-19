@@ -26,19 +26,6 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4206-3!CTP=name=Tunnel3501;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.25",
-        "FRR": "false",
-        "Tunnel Destination": "192.168.0.25",
-        "Tunnel ID": "1202",
-        "Tunnel Source": "192.168.0.15",
-        "affinitybits": "0x11",
-        "co-routed": "true",
-        "direction": "ns4:bi-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link 1202_192.168.0.15_1202",
-        "signalled-bw": "1000000",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel1202;lr=lr-mpls-tnl"
-    },
-    {
         "Destination IP": "192.168.0.15",
         "FRR": "true",
         "Tunnel Destination": "192.168.0.15",
@@ -48,21 +35,8 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.55_1501_192.168.0.15",
-        "signalled-bw": "20",
+        "signalled-bw": "1",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel1501;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "1.1.1.31",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.31",
-        "Tunnel ID": "11457",
-        "Tunnel Source": "1.1.1.11",
-        "affinitybits": "0x13",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11457_1.1.1.31",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11457;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "1.1.1.41",
@@ -83,7 +57,7 @@
         "Tunnel Destination": "192.168.0.45",
         "Tunnel ID": "2402",
         "Tunnel Source": "192.168.0.25",
-        "affinitybits": "0x21",
+        "affinitybits": "0x11",
         "co-routed": "true",
         "direction": "ns4:bi-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link 2402_192.168.0.45_2402",
@@ -117,30 +91,30 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6001;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.45",
-        "FRR": "true",
-        "Tunnel Destination": "192.168.0.45",
-        "Tunnel ID": "3401",
-        "Tunnel Source": "192.168.0.35",
-        "affinitybits": "0x2",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.35_3401_192.168.0.45",
-        "signalled-bw": "2328",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-3!CTP=name=Tunnel3401;lr=lr-mpls-tnl"
-    },
-    {
         "Destination IP": "192.168.0.55",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.55",
-        "Tunnel ID": "11639",
+        "Tunnel ID": "11656",
         "Tunnel Source": "1.1.1.11",
         "affinitybits": "0x23",
         "co-routed": "false",
         "direction": "ns4:bi-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link 1202_192.168.0.15_0",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11639;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11656;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.45",
+        "FRR": "false",
+        "Tunnel Destination": "192.168.0.45",
+        "Tunnel ID": "11655",
+        "Tunnel Source": "1.1.1.11",
+        "affinitybits": "0x23",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11655_192.168.0.45",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11655;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.45",
@@ -169,7 +143,7 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel6001;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.35",
+        "Destination IP": "192.168.0.15",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.35",
         "Tunnel ID": "1302",
@@ -179,7 +153,7 @@
         "direction": "ns4:bi-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link 1302_192.168.0.15_1302",
         "signalled-bw": "100000",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-3!CTP=name=Tunnel1302;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-1!CTP=name=Tunnel1302;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.15",
@@ -198,14 +172,14 @@
         "Destination IP": "1.1.1.11",
         "FRR": "false",
         "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "6001",
-        "Tunnel Source": "192.168.0.35",
+        "Tunnel ID": "6002",
+        "Tunnel Source": "192.168.0.55",
         "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.35_6001_1.1.1.11",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.55_6002_1.1.1.11",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-3!CTP=name=Tunnel6001;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel6002;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.15",
@@ -219,19 +193,6 @@
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_11401_192.168.0.15",
         "signalled-bw": "0",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel11401;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "192.168.0.25",
-        "FRR": "false",
-        "Tunnel Destination": "192.168.0.35",
-        "Tunnel ID": "2302",
-        "Tunnel Source": "192.168.0.25",
-        "affinitybits": "0x11",
-        "co-routed": "true",
-        "direction": "ns4:bi-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link 2302_192.168.0.35_2302",
-        "signalled-bw": "1000000",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel2302;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.35",
@@ -260,15 +221,15 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6004;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "1.1.1.31",
+        "Destination IP": "1.1.1.11",
         "FRR": "false",
-        "Tunnel Destination": "1.1.1.31",
+        "Tunnel Destination": "1.1.1.11",
         "Tunnel ID": "6000",
         "Tunnel Source": "192.168.0.25",
         "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_6000_1.1.1.31",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_6000_1.1.1.11",
         "signalled-bw": "0",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6000;lr=lr-mpls-tnl"
     },
@@ -312,32 +273,6 @@
         "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11449;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "1.1.1.41",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.41",
-        "Tunnel ID": "11744",
-        "Tunnel Source": "1.1.1.31",
-        "affinitybits": "0x23",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11744_1.1.1.41",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11744;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "1.1.1.21",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.21",
-        "Tunnel ID": "11894",
-        "Tunnel Source": "1.1.1.31",
-        "affinitybits": "0x13",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11894_1.1.1.21",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11894;lr=lr-mpls-tnl"
-    },
-    {
         "Destination IP": "1.1.1.21",
         "FRR": "false",
         "Tunnel Destination": "1.1.1.21",
@@ -360,34 +295,73 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_3401_192.168.0.35",
-        "signalled-bw": "91",
+        "signalled-bw": "455",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel3401;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.45",
+        "FRR": "true",
+        "Tunnel Destination": "192.168.0.45",
+        "Tunnel ID": "4501",
+        "Tunnel Source": "192.168.0.55",
+        "affinitybits": "0x2",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.55_4501_192.168.0.45",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel4501;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "1.1.1.11",
         "FRR": "false",
         "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "6004",
-        "Tunnel Source": "192.168.0.55",
-        "affinitybits": "0x2",
+        "Tunnel ID": "11299",
+        "Tunnel Source": "1.1.1.21",
+        "affinitybits": "0x23",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.55_6004_1.1.1.11",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.21_11299_1.1.1.11",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel6004;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site2!CTP=name=tunnel-te11299;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.15",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.15",
-        "Tunnel ID": "11931",
+        "Tunnel ID": "11505",
         "Tunnel Source": "1.1.1.31",
-        "affinitybits": "0x13",
+        "affinitybits": "0x23",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11931_192.168.0.15",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11505_192.168.0.15",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11931;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11505;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.25",
+        "FRR": "false",
+        "Tunnel Destination": "192.168.0.25",
+        "Tunnel ID": "11506",
+        "Tunnel Source": "1.1.1.31",
+        "affinitybits": "0x23",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11506_192.168.0.25",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11506;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.45",
+        "FRR": "false",
+        "Tunnel Destination": "192.168.0.45",
+        "Tunnel ID": "11504",
+        "Tunnel Source": "1.1.1.31",
+        "affinitybits": "0x23",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11504_192.168.0.45",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11504;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.25",
@@ -401,32 +375,6 @@
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.35_2301_192.168.0.25",
         "signalled-bw": "44436",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4206-3!CTP=name=Tunnel2301;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "192.168.0.25",
-        "FRR": "false",
-        "Tunnel Destination": "192.168.0.25",
-        "Tunnel ID": "11208",
-        "Tunnel Source": "1.1.1.21",
-        "affinitybits": "0x23",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.21_11208_192.168.0.25",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site2!CTP=name=tunnel-te11208;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "1.1.1.11",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "6002",
-        "Tunnel Source": "192.168.0.55",
-        "affinitybits": "0x2",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.55_6002_1.1.1.11",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel6002;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "1.1.1.31",
@@ -464,7 +412,7 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_2401_192.168.0.25",
-        "signalled-bw": "0",
+        "signalled-bw": "608",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel2401;lr=lr-mpls-tnl"
     },
     {
@@ -520,19 +468,6 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-5!CTP=name=Tunnel1502;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.45",
-        "FRR": "false",
-        "Tunnel Destination": "192.168.0.45",
-        "Tunnel ID": "11104",
-        "Tunnel Source": "1.1.1.41",
-        "affinitybits": "0x23",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.41_11104_192.168.0.45",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11104;lr=lr-mpls-tnl"
-    },
-    {
         "Destination IP": "192.168.0.55",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.55",
@@ -583,19 +518,6 @@
         "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.21_5001_1.1.1.11",
         "signalled-bw": "0",
         "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site2!CTP=name=tunnel-te5001;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "192.168.0.15",
-        "FRR": "false",
-        "Tunnel Destination": "192.168.0.15",
-        "Tunnel ID": "11129",
-        "Tunnel Source": "1.1.1.41",
-        "affinitybits": "0x23",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.41_11129_192.168.0.15",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11129;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "1.1.1.31",
@@ -650,17 +572,17 @@
         "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11971;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.35",
+        "Destination IP": "1.1.1.31",
         "FRR": "false",
-        "Tunnel Destination": "192.168.0.35",
-        "Tunnel ID": "11637",
-        "Tunnel Source": "1.1.1.11",
-        "affinitybits": "0x13",
+        "Tunnel Destination": "1.1.1.31",
+        "Tunnel ID": "6005",
+        "Tunnel Source": "192.168.0.25",
+        "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11637_192.168.0.35",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_6005_1.1.1.31",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11637;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6005;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.25",
@@ -689,56 +611,56 @@
         "tufdn": "MD=CISCO_EPNM!ND=ncs4206-1!CTP=name=Tunnel1402;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "1.1.1.21",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.21",
-        "Tunnel ID": "11448",
-        "Tunnel Source": "1.1.1.11",
-        "affinitybits": "0x13",
+        "Destination IP": "192.168.0.35",
+        "FRR": "true",
+        "Tunnel Destination": "192.168.0.35",
+        "Tunnel ID": "1301",
+        "Tunnel Source": "192.168.0.15",
+        "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11448_1.1.1.21",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11448;lr=lr-mpls-tnl"
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.15_1301_192.168.0.35",
+        "signalled-bw": "109",
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-1!CTP=name=Tunnel1301;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "192.168.0.45",
+        "Destination IP": "192.168.0.25",
         "FRR": "false",
-        "Tunnel Destination": "192.168.0.45",
-        "Tunnel ID": "11638",
-        "Tunnel Source": "1.1.1.11",
+        "Tunnel Destination": "192.168.0.35",
+        "Tunnel ID": "2302",
+        "Tunnel Source": "192.168.0.25",
+        "affinitybits": "0x11",
+        "co-routed": "true",
+        "direction": "ns4:bi-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link 2302_192.168.0.35_2302",
+        "signalled-bw": "1000000",
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel2302;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.15",
+        "FRR": "false",
+        "Tunnel Destination": "192.168.0.15",
+        "Tunnel ID": "11513",
+        "Tunnel Source": "1.1.1.41",
         "affinitybits": "0x23",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11638_192.168.0.45",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.41_11513_192.168.0.15",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11638;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11513;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.25",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.25",
-        "Tunnel ID": "11930",
-        "Tunnel Source": "1.1.1.31",
-        "affinitybits": "0x13",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11930_192.168.0.25",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11930;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "1.1.1.11",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "6001",
-        "Tunnel Source": "192.168.0.45",
+        "Tunnel ID": "1201",
+        "Tunnel Source": "192.168.0.15",
         "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_6001_1.1.1.11",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.15_1201_192.168.0.25",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel6001;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-1!CTP=name=Tunnel1201;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.35",
@@ -750,7 +672,7 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_2301_192.168.0.35",
-        "signalled-bw": "48272",
+        "signalled-bw": "48279",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel2301;lr=lr-mpls-tnl"
     },
     {
@@ -789,47 +711,47 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_1401_192.168.0.15",
-        "signalled-bw": "110",
+        "signalled-bw": "0",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel1401;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "1.1.1.11",
+        "Destination IP": "1.1.1.21",
         "FRR": "false",
-        "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "11748",
-        "Tunnel Source": "1.1.1.31",
-        "affinitybits": "0x13",
-        "co-routed": "false",
-        "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.31_11748_1.1.1.11",
-        "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site3!CTP=name=tunnel-te11748;lr=lr-mpls-tnl"
-    },
-    {
-        "Destination IP": "1.1.1.11",
-        "FRR": "false",
-        "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "6005",
+        "Tunnel Destination": "1.1.1.21",
+        "Tunnel ID": "6003",
         "Tunnel Source": "192.168.0.25",
         "affinitybits": "0x2",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_6005_1.1.1.11",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.25_6003_1.1.1.21",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6005;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4216-2!CTP=name=Tunnel6003;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "192.168.0.35",
         "FRR": "false",
         "Tunnel Destination": "192.168.0.35",
-        "Tunnel ID": "11128",
+        "Tunnel ID": "11512",
         "Tunnel Source": "1.1.1.41",
         "affinitybits": "0x23",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.41_11128_192.168.0.35",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.41_11512_192.168.0.35",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11128;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site4!CTP=name=tunnel-te11512;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "1.1.1.21",
+        "FRR": "false",
+        "Tunnel Destination": "1.1.1.21",
+        "Tunnel ID": "1201",
+        "Tunnel Source": "1.1.1.11",
+        "affinitybits": "0x1",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_1201_1.1.1.21",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te1201;lr=lr-mpls-tnl"
     },
     {
         "Destination IP": "0.0.0.0",
@@ -893,20 +815,46 @@
         "co-routed": "false",
         "direction": "ns4:uni-direction",
         "fdn": "MD=CISCO_EPNM!VC=TE Link _192.168.0.45_4501_192.168.0.55",
-        "signalled-bw": "540",
+        "signalled-bw": "406",
         "tufdn": "MD=CISCO_EPNM!ND=ncs4216-4!CTP=name=Tunnel4501;lr=lr-mpls-tnl"
     },
     {
-        "Destination IP": "1.1.1.11",
+        "Destination IP": "192.168.0.25",
         "FRR": "false",
-        "Tunnel Destination": "1.1.1.11",
-        "Tunnel ID": "11195",
+        "Tunnel Destination": "192.168.0.25",
+        "Tunnel ID": "1202",
+        "Tunnel Source": "192.168.0.15",
+        "affinitybits": "0x11",
+        "co-routed": "false",
+        "direction": "ns4:bi-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link 1202_192.168.0.15_1202",
+        "signalled-bw": "1000000",
+        "tufdn": "MD=CISCO_EPNM!ND=ncs4206-1!CTP=name=Tunnel1202;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "1.1.1.31",
+        "FRR": "false",
+        "Tunnel Destination": "1.1.1.31",
+        "Tunnel ID": "11304",
         "Tunnel Source": "1.1.1.21",
         "affinitybits": "0x13",
         "co-routed": "false",
         "direction": "ns4:uni-direction",
-        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.21_11195_1.1.1.11",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.21_11304_1.1.1.31",
         "signalled-bw": "0",
-        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site2!CTP=name=tunnel-te11195;lr=lr-mpls-tnl"
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site2!CTP=name=tunnel-te11304;lr=lr-mpls-tnl"
+    },
+    {
+        "Destination IP": "192.168.0.35",
+        "FRR": "false",
+        "Tunnel Destination": "192.168.0.35",
+        "Tunnel ID": "11654",
+        "Tunnel Source": "1.1.1.11",
+        "affinitybits": "0x23",
+        "co-routed": "false",
+        "direction": "ns4:uni-direction",
+        "fdn": "MD=CISCO_EPNM!VC=TE Link _1.1.1.11_11654_192.168.0.35",
+        "signalled-bw": "0",
+        "tufdn": "MD=CISCO_EPNM!ND=NCS4K-Site1!CTP=name=tunnel-te11654;lr=lr-mpls-tnl"
     }
 ]

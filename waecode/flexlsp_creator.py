@@ -15,7 +15,6 @@ reportLogText = ""
 
 
 def createflexlsp(options, conn, plan, nodes, name, lspBW):
-
     # get all necessary Managers
     network = plan.getNetwork()
     nodeManager = network.getNodeManager()

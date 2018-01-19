@@ -106,6 +106,71 @@ def generateL3nodes(plan, l3nodelist):
         newl3node.setLongitude(int(l3node['X']))
 
 
+def generateL3circuits(plan, l3linksdict):
+    c = 0
+    i = 0
+    linkslist = []
+    duplicatelink = False
+    circ_srlgs = {}
+    for k1, v1 in l3linksdict.items():
+        firstnode = k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # print "***************Linkname is: " + k3
+                    lastnode = v3['Neighbor']
+                    discoveredname = v3['discoveredname']
+                    affinity = v3['Affinity']
+                    rsvpbw = float(v3['RSVP BW'].split(' ')[0])
+                    intfbw = getintfbw(rsvpbw)
+                    srlgs = []
+                    if 'SRLGs' in v3:
+                        for k4, v4 in v3['SRLGs'].items():
+                            srlgs.append(v4)
+                    for linkdiscoveredname in linkslist:
+                        if discoveredname == linkdiscoveredname: duplicatelink = True
+                    if 'Ordered L1 Hops' in v3 and not duplicatelink:
+                        if len(v3['Ordered L1 Hops']) > 0:
+                            linkslist.append(discoveredname)
+                            c += 1
+                            i += 1
+                            l1hops, firstl1node, lastl1node = getfirstlastl1node(v3['Ordered L1 Hops'], firstnode,
+                                                                                 lastnode)
+
+                            name = "L1_circuit_" + str(c)
+                            l1circuit = generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
+                                                          intfbw)
+                            name = "L3_circuit_" + str(i)
+                            l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity)
+                            l3circuit.setL1Circuit(l1circuit)
+                            l3circuit.setCapacity(l1circuit.getBandwidth())
+                            intfdict = l3circuit.getAllInterfaces()
+                            for k6, v6 in intfdict.items():
+                                v6.setResvBW(int(rsvpbw / 1000))
+                            circ_name = l3circuit.getName()
+                            circ_key = l3circuit.getKey()
+                            circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                            circ_srlgs[circ_name] = circ_dict
+
+                    elif not duplicatelink:
+                        i += 1
+                        name = "L3_circuit_" + str(i)
+                        linkslist.append(discoveredname)
+                        l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity)
+                        l3circuit.setCapacity(intfbw)
+                        intfdict = l3circuit.getAllInterfaces()
+                        for k6, v6 in intfdict.items():
+                            v6.setResvBW(int(rsvpbw / 1000))
+                        circ_name = l3circuit.getName()
+                        circ_key = l3circuit.getKey()
+                        circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                        circ_srlgs[circ_name] = circ_dict
+
+                    duplicatelink = False
+
+    process_srlgs(plan, circ_srlgs)
+
+
 def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
@@ -232,3 +297,41 @@ def getnodename(loopback, nodelist):
         for k, v in node.items():
             if v == loopback:
                 return k
+
+
+def getintfbw(rsvpbw):
+    intfbw = 0
+    if rsvpbw > 0 and rsvpbw <= 1000000:
+        intfbw = 1000
+    elif rsvpbw > 1000000 and rsvpbw <= 10000000:
+        intfbw = 10000
+    elif rsvpbw > 10000000 and rsvpbw <= 40000000:
+        intfbw = 40000
+    elif rsvpbw > 40000000 and rsvpbw <= 100000000:
+        intfbw = 100000
+    else:
+        print "Error determining interface bandwidth!!!"
+    return intfbw
+
+
+def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
+    l1hops = []
+    firstl1node = ""
+    lastl1node = ""
+    for l1hop in orderedl1hops:
+        nodelist = []
+        firstlasthop = False
+        for k5, v5 in l1hop['Nodes'].items():
+            if k5 == firstnode or k5 == lastnode: firstlasthop = True
+            nodelist.append(k5)
+        if not firstlasthop:
+            l1hops.append(nodelist)
+        elif nodelist[0] == firstnode:
+            firstl1node = nodelist[1]
+        elif nodelist[1] == firstnode:
+            firstl1node = nodelist[0]
+        elif nodelist[0] == lastnode:
+            lastl1node = nodelist[1]
+        elif nodelist[1] == lastnode:
+            lastl1node = nodelist[0]
+    return l1hops, firstl1node, lastl1node
