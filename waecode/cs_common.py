@@ -9,6 +9,8 @@ def createLsp(lspManager, lspIndex, sourceNodeKey, destinationNodeKey, lspBandwi
     lspRecord.destinationKey = destinationNodeKey
     lspRecord.setupBW = lspBandwidth
     lspRecord.isPrivate = True
+    lspRecord.setupPriority = 0
+    lspRecord.holdPriority = 0
     lsp = lspManager.newLSP(lspRecord)
 
     return lsp

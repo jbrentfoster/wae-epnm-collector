@@ -3,6 +3,9 @@ import com.cisco.wae.design
 import waecode.planbuild
 import json
 import csv
+import shutil
+from datetime import datetime
+from distutils.dir_util import copy_tree
 import xmlcode.collect
 
 
@@ -12,6 +15,14 @@ def main():
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"
     epnmpassword = "Epnm1234"
+
+    # Backup current output files
+    current_time = str(datetime.now().strftime('%Y-%m-%d%H%M%S'))
+    archive_root = "C:\Users\\brfoster\Temp\\" + current_time
+    copy_tree('jsonfiles',archive_root+'\jsonfiles')
+    copy_tree('planfiles', archive_root + '\planfiles')
+    copy_tree('xmlgets', archive_root + '\\xmlgets')
+
 
     # Run the collector...
     xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)

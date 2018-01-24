@@ -47,8 +47,7 @@ def collectL1Nodes(baseURL, epnmuser, epnmpassword):
     i = 1
     with open("jsonfiles/l1Nodes.json", 'wb') as f:
         for item in thexml.getElementsByTagName("ns31:node"):
-            if item.getElementsByTagName("ns31:product-series")[
-                0].firstChild.nodeValue == "Cisco Network Convergence System 2000 Series":
+            if item.getElementsByTagName("ns31:product-series")[0].firstChild.nodeValue == "Cisco Network Convergence System 2000 Series":
                 nodeName = item.getElementsByTagName("ns31:name")[0].firstChild.nodeValue
                 latitude = item.getElementsByTagName("ns31:latitude")[0].getElementsByTagName("ns32:double-amount")[
                     0].firstChild.nodeValue
@@ -148,7 +147,9 @@ def processISIS():
     nodes = {}
     with open("jsonfiles/isisdb", 'rb') as f:
         lines = f.read().splitlines()
-        ilines = iter(lines)
+        # ilines = iter(lines)
+        ilines = lines
+        c = 0
         for line in ilines:
             if "00-00 " in line:
                 node = line.split('.')[0]
@@ -184,9 +185,21 @@ def processISIS():
                 nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
             elif "SRLGs" in line:
                 nodes[node]['Links'][linkid]['SRLGs'] = dict()
-                srlgs = next(ilines).strip().split(',')
+                d = 1
+                srlgs = []
+                while True:
+                    tline = ilines[c + d]
+                    if "[" in tline:
+                        srlgs = srlgs + tline.strip().split(',')
+                        d += 1
+                    else:
+                        break
                 for srlg in srlgs:
-                    nodes[node]['Links'][linkid]['SRLGs'][srlg.split(':')[0].strip()] = srlg.split(":")[1].strip()
+                    if ":" in srlg:
+                        nodes[node]['Links'][linkid]['SRLGs'][srlg.split(':')[0].strip()] = srlg.split(":")[1].strip()
+                    else:
+                        print "Errored SRLG list found while processing isis db line " + str(c)
+            c += 1
         f.close()
 
     with open("jsonfiles/l3Links.json", "wb") as f:

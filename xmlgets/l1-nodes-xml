@@ -8,7 +8,7 @@
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:25:17.429Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T06:58:11.139Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.769Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.4vS, RELEASE SOFTWARE (fc4)
@@ -1355,7 +1355,7 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-12-13T11:22:17.431Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-12-13T11:23:11.141Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.15</ns31:management-address>
 			<ns31:name>ncs4206-1</ns31:name>
@@ -1366,12 +1366,12 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.4vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2328</ns31:sys-object-id>
-			<ns31:sys-up-time>37 days, 0:03:03.70</ns31:sys-up-time>
+			<ns31:sys-up-time>41 days, 19:35:49.25</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:14:10.098Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T08:25:26.879Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.601Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.4vS, RELEASE SOFTWARE (fc4)
@@ -3099,7 +3099,7 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-11-30T07:48:10.100Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-11-30T07:48:26.881Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.35</ns31:management-address>
 			<ns31:name>ncs4206-3</ns31:name>
@@ -3110,12 +3110,12 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.4vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2328</ns31:sys-object-id>
-			<ns31:sys-up-time>50 days, 3:26:31.68</ns31:sys-up-time>
+			<ns31:sys-up-time>55 days, 0:37:40.46</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
-			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;FAILED_FEAT&quot;/&gt;&lt;failed_features names=&quot;optical_feature_iosxr_stacking,feature_mplste&quot; code=&quot;ERROR_CONNECTION&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-18T22:08:31.188Z</ns31:collection-time>
+			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
+			<ns31:collection-time>2018-01-24T08:25:53.225Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.583Z</ns31:creation-time>
 			<ns31:description>Cisco IOS XR Software (NCS-4000), Version 6.1.42.14I
@@ -5918,8 +5918,8 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2018-01-08T09:02:35.845Z</ns31:last-boot-time>
-			<ns31:lifecycle-state>MANAGED_BUT_OUTOFSYNC</ns31:lifecycle-state>
+			<ns31:last-boot-time>2018-01-08T09:01:53.227Z</ns31:last-boot-time>
+			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.32</ns31:management-address>
 			<ns31:name>NCS4K-Site3</ns31:name>
 			<ns31:product-family>Optical Networking</ns31:product-family>
@@ -5929,12 +5929,12 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:software-type>IOS XR</ns31:software-type>
 			<ns31:software-version>6.1.42.14I</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.1939</ns31:sys-object-id>
-			<ns31:sys-up-time>11 days, 2:08:59.39</ns31:sys-up-time>
+			<ns31:sys-up-time>15 days, 23:24:00.46</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
-			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;FAILED_FEAT&quot;/&gt;&lt;failed_features names=&quot;optical_feature_iosxr_ochtrailuni_endpoint,optical_feature_iosxr_stacking,feature_mplste&quot; code=&quot;ERROR_CONNECTION&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-18T23:20:34.146Z</ns31:collection-time>
+			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;FAILED_FEAT&quot;/&gt;&lt;failed_features names=&quot;optical_feature_iosxr_ochtrailuni_endpoint,feature_mplste&quot; code=&quot;ERROR_CONNECTION&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
+			<ns31:collection-time>2018-01-24T07:20:48.288Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.557Z</ns31:creation-time>
 			<ns31:description>Cisco IOS XR Software (NCS-4000), Version 6.1.42.14I
@@ -8822,7 +8822,7 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2018-01-08T09:03:34.822Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2018-01-08T09:03:55.561Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_BUT_OUTOFSYNC</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.42</ns31:management-address>
 			<ns31:name>NCS4K-Site4</ns31:name>
@@ -8833,12 +8833,12 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:software-type>IOS XR</ns31:software-type>
 			<ns31:software-version>6.1.42.14I</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.1939</ns31:sys-object-id>
-			<ns31:sys-up-time>11 days, 2:22:28.27</ns31:sys-up-time>
+			<ns31:sys-up-time>15 days, 23:22:33.00</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:26:10.691Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T08:31:49.564Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.601Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.3vS, RELEASE SOFTWARE (fc2)
@@ -10943,7 +10943,7 @@ Compiled Wed 13-Sep-17 10:37 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-11-19T19:00:10.693Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-11-19T18:59:49.566Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.45</ns31:management-address>
 			<ns31:name>ncs4216-4</ns31:name>
@@ -10954,15 +10954,15 @@ Compiled Wed 13-Sep-17 10:37 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.3vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2434</ns31:sys-object-id>
-			<ns31:sys-up-time>60 days, 16:26:36.47</ns31:sys-up-time>
+			<ns31:sys-up-time>65 days, 13:32:08.70</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T09:04:00.648Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T06:26:15.963Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.601Z</ns31:creation-time>
-			<ns31:description>IPADDR=10.135.7.14,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site1\&quot;,SWVER=10.6.1,LOAD=10.61-016J-20.19-F-SPA,PROTSWVER=10.5.21,PROTLOAD=10.521-016-C0113-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD902EA000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3940,LONGITUDE=W11224,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902EA0,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-2e-a0,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,,SOFTWARE=ONS</ns31:description>
+			<ns31:description>IPADDR=10.135.7.14,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site1\&quot;,SWVER=10.8.0,LOAD=10.80-017K-29.15-F-SPA,PROTSWVER=10.6.1,PROTLOAD=10.61-016J-20.19-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD902EA000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3940,LONGITUDE=W11224,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902EA0,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-2e-a0,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,UPTIME=\&quot;0days/21hours/54mins/52secs\&quot;,DISCARDOTDRALARM=YES,SOFTWARE=ONS</ns31:description>
 			<ns31:equipment-list>
 				<ns34:equipment>
 					<ns32:description>RACK</ns32:description>
@@ -14409,13 +14409,13 @@ Compiled Wed 13-Sep-17 10:37 </ns31:description>
 			<ns31:product-type>Cisco NCS 2015</ns31:product-type>
 			<ns31:satellite-count>0</ns31:satellite-count>
 			<ns31:software-type>NCS SONET</ns31:software-type>
-			<ns31:software-version>10.6.1</ns31:software-version>
+			<ns31:software-version>10.8.0</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.3607.1.20.10.90</ns31:sys-object-id>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-18T22:05:21.562Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-23T22:05:35.119Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.243Z</ns31:creation-time>
 			<ns31:description>ME1200 GigaBit Ethernet Switch, version ME1200 OS Software Build 15.6-4.SN</ns31:description>
@@ -14478,7 +14478,7 @@ Compiled Wed 13-Sep-17 10:37 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=Cisco ME 1200 Series Carrier Ethernet Access Devices</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-11-15T13:48:21.564Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-11-15T13:48:35.120Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.37</ns31:management-address>
 			<ns31:name>ME1200-37</ns31:name>
@@ -14489,12 +14489,12 @@ Compiled Wed 13-Sep-17 10:37 </ns31:description>
 			<ns31:software-type>ME1200 OS</ns31:software-type>
 			<ns31:software-version>15.6-4.SN</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.1899</ns31:sys-object-id>
-			<ns31:sys-up-time>64 days, 8:17:14.63</ns31:sys-up-time>
+			<ns31:sys-up-time>69 days, 8:17:20.59</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T10:24:18.340Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-23T22:24:13.193Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.601Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Fuji], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1, RELEASE SOFTWARE (fc6)
@@ -15263,7 +15263,7 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2018-01-11T14:23:18.342Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2018-01-11T14:24:13.196Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>172.16.0.16</ns31:management-address>
 			<ns31:name>ncs4202-16</ns31:name>
@@ -15274,15 +15274,15 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.7.1</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2327</ns31:sys-object-id>
-			<ns31:sys-up-time>7 days, 20:01:05.26</ns31:sys-up-time>
+			<ns31:sys-up-time>12 days, 8:00:54.34</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T10:25:45.598Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T06:55:46.483Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.669Z</ns31:creation-time>
-			<ns31:description>IPADDR=10.135.7.44,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site4\&quot;,SWVER=10.6.1,LOAD=10.61-016J-20.19-F-SPA,PROTSWVER=10.5.21,PROTLOAD=10.521-016-C0113-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD90296000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3834,LONGITUDE=W11341,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902960,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-29-60,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,,SOFTWARE=ONS</ns31:description>
+			<ns31:description>IPADDR=10.135.7.44,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site4\&quot;,SWVER=10.8.0,LOAD=10.80-017K-29.15-F-SPA,PROTSWVER=10.6.1,PROTLOAD=10.61-016J-20.19-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD90296000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3834,LONGITUDE=W11341,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902960,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-29-60,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,UPTIME=\&quot;0days/19hours/55mins/13secs\&quot;,DISCARDOTDRALARM=YES,SOFTWARE=ONS</ns31:description>
 			<ns31:equipment-list>
 				<ns34:equipment>
 					<ns32:description>RACK</ns32:description>
@@ -18729,16 +18729,16 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 			<ns31:product-type>Cisco NCS 2015</ns31:product-type>
 			<ns31:satellite-count>0</ns31:satellite-count>
 			<ns31:software-type>NCS SONET</ns31:software-type>
-			<ns31:software-version>10.6.1</ns31:software-version>
+			<ns31:software-version>10.8.0</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.3607.1.20.10.90</ns31:sys-object-id>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:17:26.521Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T06:23:20.489Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.311Z</ns31:creation-time>
-			<ns31:description>IPADDR=10.135.7.34,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site3\&quot;,SWVER=10.6.1,LOAD=10.61-016J-20.19-F-SPA,PROTSWVER=10.5.21,PROTLOAD=10.521-016-C0113-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD90288000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3813,LONGITUDE=W12238,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902880,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-28-80,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,,SOFTWARE=ONS</ns31:description>
+			<ns31:description>IPADDR=10.135.7.34,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site3\&quot;,SWVER=10.8.0,LOAD=10.80-017K-29.15-F-SPA,PROTSWVER=10.6.1,PROTLOAD=10.61-016J-20.19-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD90288000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3813,LONGITUDE=W12238,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902880,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=TRUE,PROXYTYPE=SOCKS-PROXY,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-28-80,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,UPTIME=\&quot;0days/1hours/35mins/55secs\&quot;,DISCARDOTDRALARM=YES,SOFTWARE=ONS</ns31:description>
 			<ns31:equipment-list>
 				<ns34:equipment>
 					<ns32:description>RACK</ns32:description>
@@ -20722,7 +20722,7 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 				<ns34:equipment>
 					<ns32:description>TNCS-O</ns32:description>
 					<ns32:name>TNC</ns32:name>
-					<ns34:assembly-revision>A0</ns34:assembly-revision>
+					<ns34:assembly-revision>C0</ns34:assembly-revision>
 					<ns34:clei-code>WOCUA7ZRAA</ns34:clei-code>
 					<ns34:connectors/>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=NCS2K-Site3!EQ=name=PPM-1-17-2;partnumber=OSC_OTDR_1518nm</ns34:contained-equipment>
@@ -20734,12 +20734,12 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 					<ns34:hardware-version>V01</ns34:hardware-version>
 					<ns34:is-physically-present>true</ns34:is-physically-present>
 					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>Disabled</ns34:operational-state-code>
+					<ns34:operational-state-code>Enabled</ns34:operational-state-code>
 					<ns34:part-number>NCS2K-TNCS-O-K9</ns34:part-number>
 					<ns34:product-id>NCS2K-TNCS-O-K9</ns34:product-id>
 					<ns34:product-name>TNCS-O</ns34:product-name>
-					<ns34:serial-number>CAT1945B1JC</ns34:serial-number>
-					<ns34:service-state>OUTOFSERVICE</ns34:service-state>
+					<ns34:serial-number>CAT2125B0RH</ns34:serial-number>
+					<ns34:service-state>INSERVICE</ns34:service-state>
 					<ns34:vendor-equipment-type>WOCUA7ZRAA</ns34:vendor-equipment-type>
 				</ns34:equipment>
 				<ns34:equipment>
@@ -20766,7 +20766,7 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 					<ns34:part-number>OSC_OTDR_1518nm</ns34:part-number>
 					<ns34:product-id>OSC_OTDR_1518nm</ns34:product-id>
 					<ns34:product-name>FE-OSC-OTDR-ULH-LX-1518nm</ns34:product-name>
-					<ns34:serial-number>IIF15440044</ns34:serial-number>
+					<ns34:serial-number>IIF21020017</ns34:serial-number>
 					<ns34:service-state>INSERVICE</ns34:service-state>
 					<ns34:vendor-equipment-type>NOCLEICODE</ns34:vendor-equipment-type>
 				</ns34:equipment>
@@ -20794,7 +20794,7 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 					<ns34:part-number>OSC_OTDR_1518nm</ns34:part-number>
 					<ns34:product-id>OSC_OTDR_1518nm</ns34:product-id>
 					<ns34:product-name>FE-OSC-OTDR-ULH-LX-1518nm</ns34:product-name>
-					<ns34:serial-number>IIF15440044</ns34:serial-number>
+					<ns34:serial-number>IIF21020017</ns34:serial-number>
 					<ns34:service-state>INSERVICE</ns34:service-state>
 					<ns34:vendor-equipment-type>NOCLEICODE</ns34:vendor-equipment-type>
 				</ns34:equipment>
@@ -22185,13 +22185,13 @@ Compiled Mon 20-Nov-17 17:28 by mcpre</ns31:description>
 			<ns31:product-type>Cisco NCS 2015</ns31:product-type>
 			<ns31:satellite-count>0</ns31:satellite-count>
 			<ns31:software-type>NCS SONET</ns31:software-type>
-			<ns31:software-version>10.6.1</ns31:software-version>
+			<ns31:software-version>10.8.0</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.3607.1.20.10.90</ns31:sys-object-id>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
-			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:00:00.943Z</ns31:collection-time>
+			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;UNKNOWN&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
+			<ns31:collection-time>2018-01-24T06:58:15.198Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.585Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.4vS, RELEASE SOFTWARE (fc4)
@@ -24330,8 +24330,8 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-12-18T08:09:00.945Z</ns31:last-boot-time>
-			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
+			<ns31:last-boot-time>2017-12-18T08:09:38.642Z</ns31:last-boot-time>
+			<ns31:lifecycle-state>MANAGED_BUT_OUTOFSYNC</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.25</ns31:management-address>
 			<ns31:name>ncs4216-2</ns31:name>
 			<ns31:product-family>Optical Networking</ns31:product-family>
@@ -24341,12 +24341,12 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.4vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2329</ns31:sys-object-id>
-			<ns31:sys-up-time>32 days, 2:51:44.88</ns31:sys-up-time>
+			<ns31:sys-up-time>36 days, 23:14:50.20</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-18T22:00:20.247Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-23T22:00:21.528Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.558Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.3vS, RELEASE SOFTWARE (fc2)
@@ -25175,7 +25175,7 @@ Compiled Wed 13-Sep-17 10:35 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-11-19T09:44:20.249Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-11-19T09:44:21.530Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>172.16.0.56</ns31:management-address>
 			<ns31:name>ncs4202-56</ns31:name>
@@ -25186,12 +25186,12 @@ Compiled Wed 13-Sep-17 10:35 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.3vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2327</ns31:sys-object-id>
-			<ns31:sys-up-time>60 days, 12:16:40.35</ns31:sys-up-time>
+			<ns31:sys-up-time>65 days, 12:16:40.90</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
-			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;FAILED_FEAT&quot;/&gt;&lt;failed_features names=&quot;optical_feature_iosxr_ochtrailuni_endpoint&quot; code=&quot;ERROR_CONNECTION&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-18T23:18:47.525Z</ns31:collection-time>
+			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
+			<ns31:collection-time>2018-01-24T07:13:52.586Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T17:58:56.055Z</ns31:creation-time>
 			<ns31:description>Cisco IOS XR Software (NCS-4000), Version 6.1.42.14I
@@ -27992,8 +27992,8 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2018-01-08T08:42:34.214Z</ns31:last-boot-time>
-			<ns31:lifecycle-state>MANAGED_BUT_OUTOFSYNC</ns31:lifecycle-state>
+			<ns31:last-boot-time>2018-01-08T08:47:52.588Z</ns31:last-boot-time>
+			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.11</ns31:management-address>
 			<ns31:name>NCS4K-Site1</ns31:name>
 			<ns31:product-family>Optical Networking</ns31:product-family>
@@ -28003,12 +28003,12 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:software-type>IOS XR</ns31:software-type>
 			<ns31:software-version>6.1.42.14I</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.1939</ns31:sys-object-id>
-			<ns31:sys-up-time>11 days, 2:43:06.83</ns31:sys-up-time>
+			<ns31:sys-up-time>15 days, 22:26:43.49</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T10:42:36.891Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T07:13:54.505Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-19T10:39:29.091Z</ns31:creation-time>
 			<ns31:description>Cisco IOS XR Software (NCS-4000), Version 6.1.42.14I
@@ -30720,7 +30720,7 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2018-01-08T08:53:36.892Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2018-01-08T08:55:54.506Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.22</ns31:management-address>
 			<ns31:name>NCS4K-Site2</ns31:name>
@@ -30731,12 +30731,12 @@ Copyright (c) 2013-2017 by Cisco Systems, Inc.</ns31:description>
 			<ns31:software-type>IOS XR</ns31:software-type>
 			<ns31:software-version>6.1.42.14I</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.1939</ns31:sys-object-id>
-			<ns31:sys-up-time>11 days, 1:49:32.53</ns31:sys-up-time>
+			<ns31:sys-up-time>15 days, 22:18:58.76</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T11:28:10.569Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T08:05:26.778Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:17.601Z</ns31:creation-time>
 			<ns31:description>Cisco IOS Software [Everest], NCS4200 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.6.4vS, RELEASE SOFTWARE (fc4)
@@ -30753,10 +30753,10 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/7;partnumber=NCS4200-1H-PK</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/10;partnumber=NCS4200-48T3E3-CE</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/9;partnumber=cevContainerNCSLineCardSlot</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12;partnumber=cevContainerNCSLineCardSlot</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/11;partnumber=NCS4200-48T1E1-CE</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=Fan Tray Bay 4;partnumber=cevContainerNCSFanTraySlot</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14;partnumber=cevContainerNCSLineCardSlot</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/13;partnumber=cevContainerNCSLineCardSlot</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/5;partnumber=cevContainerNCSLineCardSlot</ns34:contained-equipment>
 					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/4;partnumber=NCS4200-1T8S-10CS</ns34:contained-equipment>
@@ -31507,17 +31507,401 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 					<ns32:description>IM Bay</ns32:description>
 					<ns32:name>subslot 0/12</ns32:name>
 					<ns34:connectors/>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:contained-equipment>
 					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=Chassis;partnumber=NCS4216-F2B-SA</ns34:containing-equipment>
 					<ns34:ent-physical-index>16</ns34:ent-physical-index>
 					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12;partnumber=cevContainerNCSLineCardSlot</ns34:fdn>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:part-number>NCS4200-1T16G-PS</ns34:part-number>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerNCSLineCardSlot</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>16-port Gigabit Ethernet &amp; 1-port Ten Gigabit Ethernet CSFP Interface Module</ns32:description>
+					<ns32:name>IM subslot 0/12</ns32:name>
+					<ns34:connectors/>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 5;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 12;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 10;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 3;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 14;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 13;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 2;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 6;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 17;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 4;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 15;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 8;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 7;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 0;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 11;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 9;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 1;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 16;partnumber=cevContainerSFP</ns34:contained-equipment>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4500</ns34:ent-physical-index>
+					<ns34:equipment-type>MODULE</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:fdn>
+					<ns34:hardware-version>V01</ns34:hardware-version>
+					<ns34:is-field-replaceable-unit>TRUE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:manufacturer>Cisco Systems Inc</ns34:manufacturer>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:part-number>NCS4200-1T16G-PS</ns34:part-number>
+					<ns34:product-id>NCS4200-1T16G-PS</ns34:product-id>
+					<ns34:serial-number>FOC2138N0TZ</ns34:serial-number>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevModuleNCS42001T16GPS</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 5</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 5</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4673</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 5;partnumber=cevContainerSFP</ns34:fdn>
 					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
 					<ns34:is-physically-present>true</ns34:is-physically-present>
 					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
 					<ns34:operational-state-code>up</ns34:operational-state-code>
 					<ns34:product-id>N/A</ns34:product-id>
 					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerNCSLineCardSlot</ns34:vendor-equipment-type>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 12</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 12</ns32:name>
+					<ns34:connectors/>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 12;partnumber=FTRJ1319P1BTL-CE</ns34:contained-equipment>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4771</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 12;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>GE LX</ns32:description>
+					<ns32:name>subslot 0/12 transceiver 12</ns32:name>
+					<ns34:connectors>
+						<ns34:physical-connector>
+							<ns32:description>NCS4200-1T16G-PS</ns32:description>
+							<ns32:name>GigabitEthernet0/12/12</ns32:name>
+							<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 12;partnumber=FTRJ1319P1BTL-CE</ns34:containing-equipment>
+							<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 12;partnumber=FTRJ1319P1BTL-CE!PC=GigabitEthernet0/12/12</ns34:fdn>
+						</ns34:physical-connector>
+					</ns34:connectors>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 12;partnumber=cevContainerSFP</ns34:containing-equipment>
+					<ns34:ent-physical-index>4772</ns34:ent-physical-index>
+					<ns34:equipment-type>MODULE</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 12;partnumber=FTRJ1319P1BTL-CE</ns34:fdn>
+					<ns34:hardware-version>A   </ns34:hardware-version>
+					<ns34:is-field-replaceable-unit>TRUE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:manufacturer>CISCO-FINISAR   </ns34:manufacturer>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:part-number>FTRJ1319P1BTL-CE</ns34:part-number>
+					<ns34:product-id>FTRJ1319P1BTL-CE</ns34:product-id>
+					<ns34:serial-number>FNS172904AT     </ns34:serial-number>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevSFP1000BaseLx</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 10</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 10</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4743</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 10;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 3</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 3</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4645</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 3;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 14</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 14</ns32:name>
+					<ns34:connectors/>
+					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 14;partnumber=ONS-SI-GE-LX        </ns34:contained-equipment>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4799</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 14;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>GE LX</ns32:description>
+					<ns32:name>subslot 0/12 transceiver 14</ns32:name>
+					<ns34:connectors>
+						<ns34:physical-connector>
+							<ns32:description>NCS4200-1T16G-PS</ns32:description>
+							<ns32:name>GigabitEthernet0/12/14</ns32:name>
+							<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 14;partnumber=ONS-SI-GE-LX        </ns34:containing-equipment>
+							<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 14;partnumber=ONS-SI-GE-LX        !PC=GigabitEthernet0/12/14</ns34:fdn>
+						</ns34:physical-connector>
+					</ns34:connectors>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 14;partnumber=cevContainerSFP</ns34:containing-equipment>
+					<ns34:ent-physical-index>4800</ns34:ent-physical-index>
+					<ns34:equipment-type>MODULE</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver 14;partnumber=ONS-SI-GE-LX        </ns34:fdn>
+					<ns34:hardware-version>V02</ns34:hardware-version>
+					<ns34:is-field-replaceable-unit>TRUE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:manufacturer>CISCO-FINISAR   </ns34:manufacturer>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:part-number>ONS-SI-GE-LX        </ns34:part-number>
+					<ns34:product-id>ONS-SI-GE-LX        </ns34:product-id>
+					<ns34:serial-number>FNS19480QE0     </ns34:serial-number>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevSFP1000BaseLx</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 13</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 13</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4785</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 13;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 2</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 2</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4631</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 2;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 6</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 6</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4687</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 6;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 17</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 17</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4841</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 17;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 4</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 4</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4659</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 4;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 15</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 15</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4813</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 15;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 8</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 8</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4715</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 8;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 7</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 7</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4701</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 7;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 0</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 0</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4603</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 0;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 11</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 11</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4757</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 11;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 9</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 9</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4729</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 9;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 1</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 1</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4617</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 1;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
+				</ns34:equipment>
+				<ns34:equipment>
+					<ns32:description>subslot 0/12 transceiver container 16</ns32:description>
+					<ns32:name>subslot 0/12 transceiver container 16</ns32:name>
+					<ns34:connectors/>
+					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/12;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
+					<ns34:ent-physical-index>4827</ns34:ent-physical-index>
+					<ns34:equipment-type>OTHER</ns34:equipment-type>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/12 transceiver container 16;partnumber=cevContainerSFP</ns34:fdn>
+					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
+					<ns34:is-physically-present>true</ns34:is-physically-present>
+					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
+					<ns34:operational-state-code>up</ns34:operational-state-code>
+					<ns34:product-id>N/A</ns34:product-id>
+					<ns34:service-state>UNKNOWN</ns34:service-state>
+					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
 				</ns34:equipment>
 				<ns34:equipment>
 					<ns32:description>IM Bay</ns32:description>
@@ -32057,345 +32441,17 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 					<ns32:description>IM Bay</ns32:description>
 					<ns32:name>subslot 0/14</ns32:name>
 					<ns34:connectors/>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:contained-equipment>
 					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=Chassis;partnumber=NCS4216-F2B-SA</ns34:containing-equipment>
 					<ns34:ent-physical-index>18</ns34:ent-physical-index>
 					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:fdn>
+					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14;partnumber=cevContainerNCSLineCardSlot</ns34:fdn>
 					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
 					<ns34:is-physically-present>true</ns34:is-physically-present>
 					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
 					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:part-number>NCS4200-1T16G-PS</ns34:part-number>
 					<ns34:product-id>N/A</ns34:product-id>
 					<ns34:service-state>UNKNOWN</ns34:service-state>
 					<ns34:vendor-equipment-type>cevContainerNCSLineCardSlot</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>16-port Gigabit Ethernet &amp; 1-port Ten Gigabit Ethernet CSFP Interface Module</ns32:description>
-					<ns32:name>IM subslot 0/14</ns32:name>
-					<ns34:connectors/>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 5;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 12;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 10;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 14;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 3;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 13;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 2;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 6;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 17;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 4;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 15;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 8;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 7;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 0;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 11;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 9;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 1;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:contained-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 16;partnumber=cevContainerSFP</ns34:contained-equipment>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5200</ns34:ent-physical-index>
-					<ns34:equipment-type>MODULE</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:fdn>
-					<ns34:hardware-version>V01</ns34:hardware-version>
-					<ns34:is-field-replaceable-unit>TRUE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:manufacturer>Cisco Systems Inc</ns34:manufacturer>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:part-number>NCS4200-1T16G-PS</ns34:part-number>
-					<ns34:product-id>NCS4200-1T16G-PS</ns34:product-id>
-					<ns34:serial-number>FOC2138N0TZ</ns34:serial-number>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevModuleNCS42001T16GPS</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 5</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 5</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5373</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 5;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 12</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 12</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5471</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 12;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 10</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 10</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5443</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 10;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 14</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 14</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5499</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 14;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 3</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 3</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5345</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 3;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 13</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 13</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5485</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 13;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 2</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 2</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5331</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 2;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 6</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 6</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5387</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 6;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 17</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 17</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5541</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 17;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 4</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 4</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5359</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 4;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 15</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 15</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5513</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 15;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 8</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 8</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5415</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 8;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 7</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 7</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5401</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 7;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 0</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 0</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5303</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 0;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 11</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 11</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5457</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 11;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 9</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 9</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5429</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 9;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 1</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 1</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5317</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 1;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
-				</ns34:equipment>
-				<ns34:equipment>
-					<ns32:description>subslot 0/14 transceiver container 16</ns32:description>
-					<ns32:name>subslot 0/14 transceiver container 16</ns32:name>
-					<ns34:connectors/>
-					<ns34:containing-equipment>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=IM subslot 0/14;partnumber=NCS4200-1T16G-PS</ns34:containing-equipment>
-					<ns34:ent-physical-index>5527</ns34:ent-physical-index>
-					<ns34:equipment-type>OTHER</ns34:equipment-type>
-					<ns34:fdn>MD=CISCO_EPNM!ND=ncs4216-5!EQ=name=subslot 0/14 transceiver container 16;partnumber=cevContainerSFP</ns34:fdn>
-					<ns34:is-field-replaceable-unit>FALSE</ns34:is-field-replaceable-unit>
-					<ns34:is-physically-present>true</ns34:is-physically-present>
-					<ns34:is-reporting-alarms-allowed>UNKNOWN</ns34:is-reporting-alarms-allowed>
-					<ns34:operational-state-code>up</ns34:operational-state-code>
-					<ns34:product-id>N/A</ns34:product-id>
-					<ns34:service-state>UNKNOWN</ns34:service-state>
-					<ns34:vendor-equipment-type>cevContainerSFP</ns34:vendor-equipment-type>
 				</ns34:equipment>
 				<ns34:equipment>
 					<ns32:description>IM Bay</ns32:description>
@@ -33418,7 +33474,7 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:group>MD=CISCO_EPNM!GR=Optical Networking</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=VZ-Waltham</ns31:group>
 			<ns31:group>MD=CISCO_EPNM!GR=All Locations</ns31:group>
-			<ns31:last-boot-time>2017-12-01T08:33:10.570Z</ns31:last-boot-time>
+			<ns31:last-boot-time>2017-12-01T08:33:26.780Z</ns31:last-boot-time>
 			<ns31:lifecycle-state>MANAGED_AND_SYNCHRONIZED</ns31:lifecycle-state>
 			<ns31:management-address>10.135.7.55</ns31:management-address>
 			<ns31:name>ncs4216-5</ns31:name>
@@ -33429,15 +33485,15 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:software-type>IOS-XE</ns31:software-type>
 			<ns31:software-version>16.6.4vS</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.9.1.2434</ns31:sys-object-id>
-			<ns31:sys-up-time>49 days, 2:55:27.20</ns31:sys-up-time>
+			<ns31:sys-up-time>53 days, 23:32:34.99</ns31:sys-up-time>
 		</ns31:node>
 		<ns31:node>
 			<ns31:cluster-count>0</ns31:cluster-count>
 			<ns31:collection-status>&lt;status&gt;&lt;general code=&quot;SUCCESS&quot;/&gt;&lt;/status&gt;</ns31:collection-status>
-			<ns31:collection-time>2018-01-19T08:44:16.752Z</ns31:collection-time>
+			<ns31:collection-time>2018-01-24T06:26:09.223Z</ns31:collection-time>
 			<ns31:communication-state>Reachable</ns31:communication-state>
 			<ns31:creation-time>2018-01-10T14:39:18.243Z</ns31:creation-time>
-			<ns31:description>IPADDR=10.135.7.24,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site2\&quot;,SWVER=10.6.1,LOAD=10.61-016J-20.19-F-SPA,PROTSWVER=10.5.13,PROTLOAD=10.513-015-L1317-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD902CC000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3940,LONGITUDE=W11452,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902CC0,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=FALSE,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-2c-c0,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,,SOFTWARE=ONS</ns31:description>
+			<ns31:description>IPADDR=10.135.7.24,IPMASK=255.255.0.0,DEFRTR=10.135.7.254,IPV6ENABLE=N,IIOPPORT=57790,NAME=\&quot;NCS2K-Site2\&quot;,SWVER=10.8.0,LOAD=10.80-017K-29.15-F-SPA,PROTSWVER=10.6.1,PROTLOAD=10.61-016J-20.19-F-SPA,DEFDESC=\&quot;Factory Defaults\&quot;,PLATFORM=NCS2KFS-M15,SECUMODE=NORMAL,SUPPRESSIP=NO,MODE=MULTISHELFETH,MSPUBVLANID=1,MSINTLVLANID=2,AUTOPM=NO,SERIALPORTECHO=Y,OSIROUTINGMODE=IS1,OSIL1BUFSIZE=512,NET=39840F800000000000000000009C57AD902CC000,SYSTEMMODE=SONET,ALARMSUPPRESS=N,CVSTATUS=VERIFICATION_IDLE,DEGILTHR=1.5,FAILILTHR=4.0,LATITUDE=N3940,LONGITUDE=W11452,LCDSETTING=ALLOW-CONFIGURATION,NODEID=AD902CC0,NODECVSTATUS=TRUE,ENABLESOCKSPROXY=FALSE,PROXYPORT=1080,ALARMPROFILENAME=\&quot;Default\&quot;,COOLINGPROFILECTRL=AUTO,MACADDR=9c-57-ad-90-2c-c0,SUBNETMASKLEN=16,FORWARDDHCPENABLE=N,UPTIME=\&quot;0days/16hours/22mins/36secs\&quot;,DISCARDOTDRALARM=YES,SOFTWARE=ONS</ns31:description>
 			<ns31:equipment-list>
 				<ns34:equipment>
 					<ns32:description>RACK</ns32:description>
@@ -36884,7 +36940,7 @@ Compiled Mon 27-Nov-17 12:57 </ns31:description>
 			<ns31:product-type>Cisco NCS 2015</ns31:product-type>
 			<ns31:satellite-count>0</ns31:satellite-count>
 			<ns31:software-type>NCS SONET</ns31:software-type>
-			<ns31:software-version>10.6.1</ns31:software-version>
+			<ns31:software-version>10.8.0</ns31:software-version>
 			<ns31:sys-object-id>1.3.6.1.4.1.3607.1.20.10.90</ns31:sys-object-id>
 		</ns31:node>
 	</ns4:data>

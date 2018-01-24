@@ -176,7 +176,13 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     disjointOptimizerOptions = com.cisco.wae.design.tools.LSPDisjointPathOptimizerOptions()
     lspList = [lsp.getKey()]
     disjointOptimizerOptions.lsps = lspList
-    disjointOptimizerResults = disjointOptimizer.run(network, disjointOptimizerOptions)
+    disjointOptimizerOptions.srlgPriority = 'ignore'
+    try:
+        disjointOptimizerResults = disjointOptimizer.run(network, disjointOptimizerOptions)
+    except Exception as err:
+        print "!!!!!!!!!Could not run disjoint optimizer for LSP!!!!!!!!!"
+        print err
+        return False
 
     rprint("")
     rprint("---")
@@ -258,6 +264,8 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     rprint("")
     rprint("---")
     rprint("")
+
+    return True
 
 
 def rprint(input):
