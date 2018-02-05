@@ -25,7 +25,7 @@ def main():
 
 
     # Run the collector...
-    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')

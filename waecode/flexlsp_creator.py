@@ -177,6 +177,7 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     lspList = [lsp.getKey()]
     disjointOptimizerOptions.lsps = lspList
     disjointOptimizerOptions.srlgPriority = 'ignore'
+    # disjointOptimizerOptions.srlgPriority = '1'
     try:
         disjointOptimizerResults = disjointOptimizer.run(network, disjointOptimizerOptions)
     except Exception as err:

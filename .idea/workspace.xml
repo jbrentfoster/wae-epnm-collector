@@ -3,26 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c3af1011-fa1f-44dc-aaa6-e84809037973" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/isisdb" afterPath="$PROJECT_DIR$/jsonfiles/isisdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/l3Links.json" afterPath="$PROJECT_DIR$/jsonfiles/l3Links.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_l1hops.json" afterPath="$PROJECT_DIR$/jsonfiles/l3Links_add_l1hops.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_tl.json" afterPath="$PROJECT_DIR$/jsonfiles/l3Links_add_tl.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_add_vc.json" afterPath="$PROJECT_DIR$/jsonfiles/l3Links_add_vc.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/l3Links_final.json" afterPath="$PROJECT_DIR$/jsonfiles/l3Links_final.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsonfiles/lsps.json" afterPath="$PROJECT_DIR$/jsonfiles/lsps.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/planfiles/test.pln" afterPath="$PROJECT_DIR$/planfiles/test.pln" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wae_api.py" afterPath="$PROJECT_DIR$/wae_api.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/cs_common.py" afterPath="$PROJECT_DIR$/waecode/cs_common.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/flexlsp_creator.py" afterPath="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/node_coordinates.csv" afterPath="$PROJECT_DIR$/waecode/node_coordinates.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/waecode/planbuild.py" afterPath="$PROJECT_DIR$/waecode/planbuild.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlcode/collect.py" afterPath="$PROJECT_DIR$/xmlcode/collect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/l1-links-xml" afterPath="$PROJECT_DIR$/xmlgets/l1-links-xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/l1-nodes-xml" afterPath="$PROJECT_DIR$/xmlgets/l1-nodes-xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/multilayerroute" afterPath="$PROJECT_DIR$/xmlgets/multilayerroute" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/tl-mpls-link-layer-xml" afterPath="$PROJECT_DIR$/xmlgets/tl-mpls-link-layer-xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/vc-mpls-te-tunnel-xml" afterPath="$PROJECT_DIR$/xmlgets/vc-mpls-te-tunnel-xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xmlgets/vc-optical" afterPath="$PROJECT_DIR$/xmlgets/vc-optical" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,10 +16,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="wae_api.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="wae_api.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wae_api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-381">
+            <state relative-caret-position="825">
               <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
@@ -48,8 +31,8 @@
       <file leaf-file-name="collect.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/xmlcode/collect.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1270">
-              <caret line="12" column="35" lean-forward="true" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+            <state relative-caret-position="175">
+              <caret line="12" column="35" lean-forward="false" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -57,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="flexlsp_creator.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="flexlsp_creator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="184" column="20" lean-forward="true" selection-start-line="184" selection-start-column="20" selection-end-line="184" selection-end-column="20" />
+            <state relative-caret-position="4650">
+              <caret line="187" column="0" lean-forward="false" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -72,8 +55,8 @@
       <file leaf-file-name="planbuild.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="221" column="0" lean-forward="true" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+            <state relative-caret-position="4775">
+              <caret line="221" column="0" lean-forward="false" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -147,9 +130,9 @@
         <option value="$PROJECT_DIR$/jsonfiles/isisdb" />
         <option value="$PROJECT_DIR$/jsonfiles/l3Links_final.json" />
         <option value="$PROJECT_DIR$/waecode/planbuild.py" />
-        <option value="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
-        <option value="$PROJECT_DIR$/wae_api.py" />
         <option value="$PROJECT_DIR$/xmlcode/collect.py" />
+        <option value="$PROJECT_DIR$/wae_api.py" />
+        <option value="$PROJECT_DIR$/waecode/flexlsp_creator.py" />
       </list>
     </option>
   </component>
@@ -175,6 +158,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -221,7 +205,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -379,7 +362,14 @@
       <option name="project" value="LOCAL" />
       <updated>1516394371535</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Fixed issue with SRLG collection and ignoring SRLG conflicts for FlexLSP routing.">
+      <created>1516822975310</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1516822975310</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TodoView">
@@ -394,11 +384,10 @@
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22580644" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23225807" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66909975" sideWeight="0.50215054" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="1.0" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.6678832" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66909975" sideWeight="0.49784946" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -411,6 +400,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -476,7 +466,8 @@
     <MESSAGE value="Misc code cleanup." />
     <MESSAGE value="Added affinities and SRLG's." />
     <MESSAGE value="Reorganized code and cleanup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reorganized code and cleanup." />
+    <MESSAGE value="Fixed issue with SRLG collection and ignoring SRLG conflicts for FlexLSP routing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed issue with SRLG collection and ignoring SRLG conflicts for FlexLSP routing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -497,7 +488,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="103" />
+      <option name="time" value="104" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -506,9 +497,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1804">
           <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -523,10 +512,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1516813207275" expanded="true" signature="6:141" ph="{&quot;Destination IP&quot;: &quot;192.168.0.35&quot;...}" />
-            <marker date="1516813207275" expanded="true" signature="33918:33940" ph="{&quot;Destination IP&quot;: &quot;192.168.0.15&quot;...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -559,9 +544,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1804">
           <caret line="82" column="20" lean-forward="true" selection-start-line="82" selection-start-column="20" selection-end-line="82" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -701,7 +684,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -716,7 +698,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
           <caret line="1598" column="0" lean-forward="false" selection-start-line="1598" selection-start-column="0" selection-end-line="1598" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -745,7 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="524">
           <caret line="2088" column="57" lean-forward="true" selection-start-line="2088" selection-start-column="57" selection-end-line="2088" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -753,7 +733,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="29" lean-forward="false" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -761,7 +740,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="10" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -769,7 +747,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-10">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -777,7 +754,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -785,7 +761,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="6" column="29" lean-forward="false" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -793,7 +768,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
           <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="15" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -801,7 +775,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-200">
           <caret line="28" column="42" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -809,10 +782,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
           <caret line="68" column="21" lean-forward="false" selection-start-line="68" selection-start-column="16" selection-end-line="68" selection-end-column="21" />
-          <folding>
-            <marker date="1516813207275" expanded="true" signature="6:141" ph="{&quot;Destination IP&quot;: &quot;192.168.0.35&quot;...}" />
-            <marker date="1516813207275" expanded="true" signature="33918:33940" ph="{&quot;Destination IP&quot;: &quot;192.168.0.15&quot;...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -820,7 +789,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
           <caret line="14" column="28" lean-forward="false" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -828,7 +796,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-521">
           <caret line="7" column="29" lean-forward="false" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -836,7 +803,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="42" column="32" lean-forward="false" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -844,24 +810,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19048">
           <caret line="834" column="9" lean-forward="false" selection-start-line="834" selection-start-column="9" selection-end-line="834" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wae_api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-381">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/xmlcode/collect.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1270">
-          <caret line="12" column="35" lean-forward="true" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+        <state relative-caret-position="175">
+          <caret line="12" column="35" lean-forward="false" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
@@ -870,16 +825,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/waecode/planbuild.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="221" column="0" lean-forward="true" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+        <state relative-caret-position="4775">
+          <caret line="221" column="0" lean-forward="false" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/waecode/flexlsp_creator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="184" column="20" lean-forward="true" selection-start-line="184" selection-start-column="20" selection-end-line="184" selection-end-column="20" />
+        <state relative-caret-position="4650">
+          <caret line="187" column="0" lean-forward="false" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wae_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
