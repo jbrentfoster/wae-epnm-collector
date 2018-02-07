@@ -1,5 +1,6 @@
 import re
 import sys
+import logging
 
 sys.path.append("../")
 import cs_common
@@ -270,4 +271,4 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
 
 def rprint(input):
-    print input
+    logging.info(input)

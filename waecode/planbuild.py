@@ -1,4 +1,5 @@
 import com.cisco.wae.design
+import logging
 import flexlsp_creator
 from com.cisco.wae.design.model.net import HopType
 from com.cisco.wae.design.model.net import LSPType
@@ -117,7 +118,7 @@ def generateL3circuits(plan, l3linksdict):
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    # print "***************Linkname is: " + k3
+                    # logging.warn "***************Linkname is: " + k3
                     lastnode = v3['Neighbor']
                     discoveredname = v3['discoveredname']
                     affinity = v3['Affinity']
@@ -179,7 +180,7 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity):
 
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
-    # print bin(int(affinity, scale))[2:].zfill(num_of_bits)
+    # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
     affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
 
     affinities = []
@@ -206,7 +207,7 @@ def process_srlgs(plan, circ_srlgs):
     for circ, circ_dict in circ_srlgs.items():
         for srlg in circ_dict['SRLGs']:
             if not srlg in srlg_list:
-                print "Processing SRLG: " + srlg
+                logging.info("Processing SRLG: " + srlg)
                 circ_list = []
                 circ_keys_list = []
                 srlg_list.append(srlg)
@@ -313,7 +314,7 @@ def getintfbw(rsvpbw):
     elif rsvpbw > 40000000 and rsvpbw <= 100000000:
         intfbw = 100000
     else:
-        print "Error determining interface bandwidth!!!"
+        logging.warn("Error determining interface bandwidth!!!")
     return intfbw
 
 

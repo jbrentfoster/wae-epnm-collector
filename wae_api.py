@@ -3,10 +3,13 @@ import com.cisco.wae.design
 import waecode.planbuild
 import json
 import csv
-import shutil
 from datetime import datetime
 from distutils.dir_util import copy_tree
+from distutils.dir_util import remove_tree
+from distutils.dir_util import mkpath
 import xmlcode.collect
+import logging
+import shutil
 
 
 def main():
@@ -15,23 +18,62 @@ def main():
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"
     epnmpassword = "Epnm1234"
-
-    # Backup current output files
     current_time = str(datetime.now().strftime('%Y-%m-%d%H%M%S'))
     archive_root = "C:\Users\\brfoster\Temp\\" + current_time
-    copy_tree('jsonfiles',archive_root+'\jsonfiles')
-    copy_tree('planfiles', archive_root + '\planfiles')
-    copy_tree('xmlgets', archive_root + '\\xmlgets')
 
+    # Set up logging
+    print("Copying log file...")
+    try:
+        mkpath(archive_root)
+        shutil.copy('collection.log',archive_root+'\collection.log')
+    except Exception as err:
+        print("No log file to copy...")
+    try:
+        os.remove('collection.log...')
+    except Exception as err:
+        print("No log file to delete...")
+
+    logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
+    rootLogger = logging.getLogger()
+    rootLogger.level = logging.INFO
+
+    fileHandler = logging.FileHandler(filename='collection.log')
+    fileHandler.setFormatter(logFormatter)
+    rootLogger.addHandler(fileHandler)
+
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(logFormatter)
+    rootLogger.addHandler(consoleHandler)
+
+    # Backup current output files
+    logging.info("Backing up files from last collection...")
+    try:
+        copy_tree('jsonfiles',archive_root+'\jsonfiles')
+        copy_tree('planfiles', archive_root + '\planfiles')
+        copy_tree('xmlgets', archive_root + '\\xmlgets')
+    except Exception as err:
+        logging.info("No output files to backup...")
+
+    # Delete all output files
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles/.')
+    #     remove_tree('xmlgets/.')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+
+    # Recreate output directories
+    mkpath('jsonfiles')
+    mkpath('xmlgets')
 
     # Run the collector...
-    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
     # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
-    print "Building plan file..."
+    logging.info("Building plan file...")
 
     # Create a service to be used by this script
     conn = com.cisco.wae.design.ServiceConnectionManager.newService()
@@ -49,7 +91,7 @@ def main():
         f.close()
 
     # Add L1 nodes to plan
-    print "Adding L1 nodes..."
+    logging.info("Adding L1 nodes...")
     with open("jsonfiles/l1Nodes.json", 'rb') as f:
         l1nodesdict = json.load(f)
         f.close()
@@ -63,7 +105,7 @@ def main():
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan
-    print "Adding L1 links..."
+    logging.info("Adding L1 links...")
     with open("jsonfiles/l1Links.json", 'rb') as f:
         l1linksdict = json.load(f)
         f.close()
@@ -73,7 +115,7 @@ def main():
     waecode.planbuild.generateL1links(plan, l1linklist=l1links)
 
     # Add L3 nodes to plan
-    print "Adding L3 nodes..."
+    logging.info("Adding L3 nodes...")
     with open("jsonfiles/l3Links_final.json", 'rb') as f:
         l3linksdict = json.load(f)
         f.close()
@@ -86,7 +128,7 @@ def main():
     waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
     # Add L3 links to plan and stitch to L1 links where applicable
-    print "Adding L3 links..."
+    logging.info("Adding L3 links...")
     waecode.planbuild.generateL3circuits(plan, l3linksdict)
 
     # read FlexLSP add-on options
@@ -95,7 +137,7 @@ def main():
         f.close()
 
     # Add LSPs to plan
-    print "Adding LSP's..."
+    logging.info( "Adding LSP's...")
     l3nodeloopbacks = []
     for k1, v1 in l3linksdict.items():
         tmpnode = {k1: v1['Loopback Address']}
@@ -110,7 +152,7 @@ def main():
     plan.serializeToFileSystem('planfiles/test.pln')
 
     # Script completed
-    print "Plan file created.  See planfiles/test.pln"
+    logging.info("Plan file created.  See planfiles/test.pln")
 
 
 if __name__ == '__main__':

@@ -17,16 +17,16 @@
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!FTP=name=LINE-1-7-3-RX&amp;LINE-1-7-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
 						<ns17:power-tx>7.3</ns17:power-tx>
-						<ns17:power-rx>-3.7</ns17:power-rx>
+						<ns17:power-rx>-3.5</ns17:power-rx>
 						<ns17:span-loss-direction>A to Z</ns17:span-loss-direction>
-						<ns17:span-loss-value>11.1</ns17:span-loss-value>
+						<ns17:span-loss-value>10.9</ns17:span-loss-value>
 					</ns17:performance-metrics>
 				</ns17:endpoint>
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!FTP=name=LINE-1-10-3-RX&amp;LINE-1-10-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
 						<ns17:power-tx>7.4</ns17:power-tx>
-						<ns17:power-rx>-4.1</ns17:power-rx>
+						<ns17:power-rx>-4.2</ns17:power-rx>
 						<ns17:span-loss-direction>Z to A</ns17:span-loss-direction>
 						<ns17:span-loss-value>11.4</ns17:span-loss-value>
 					</ns17:performance-metrics>
@@ -47,7 +47,7 @@
 						<ns17:power-tx>6.1</ns17:power-tx>
 						<ns17:power-rx>-3.0</ns17:power-rx>
 						<ns17:span-loss-direction>Z to A</ns17:span-loss-direction>
-						<ns17:span-loss-value>9.0</ns17:span-loss-value>
+						<ns17:span-loss-value>8.9</ns17:span-loss-value>
 					</ns17:performance-metrics>
 				</ns17:endpoint>
 				<ns17:endpoint>
@@ -72,7 +72,7 @@
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!FTP=name=LINE-1-8-3-RX&amp;LINE-1-8-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
-						<ns17:power-tx>6.0</ns17:power-tx>
+						<ns17:power-tx>6.1</ns17:power-tx>
 						<ns17:power-rx>-4.3</ns17:power-rx>
 						<ns17:span-loss-direction>A to Z</ns17:span-loss-direction>
 						<ns17:span-loss-value>10.3</ns17:span-loss-value>
@@ -82,9 +82,9 @@
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site3!FTP=name=LINE-1-10-3-RX&amp;LINE-1-10-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
 						<ns17:power-tx>6.1</ns17:power-tx>
-						<ns17:power-rx>-4.3</ns17:power-rx>
+						<ns17:power-rx>-4.1</ns17:power-rx>
 						<ns17:span-loss-direction>Z to A</ns17:span-loss-direction>
-						<ns17:span-loss-value>10.3</ns17:span-loss-value>
+						<ns17:span-loss-value>10.1</ns17:span-loss-value>
 					</ns17:performance-metrics>
 				</ns17:endpoint>
 			</ns17:endpoint-list>
@@ -100,8 +100,8 @@
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site2!FTP=name=LINE-1-7-3-RX&amp;LINE-1-7-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
-						<ns17:power-tx>6.2</ns17:power-tx>
-						<ns17:power-rx>-4.6</ns17:power-rx>
+						<ns17:power-tx>6.1</ns17:power-tx>
+						<ns17:power-rx>-4.1</ns17:power-rx>
 						<ns17:span-loss-direction>Z to A</ns17:span-loss-direction>
 						<ns17:span-loss-value>10.5</ns17:span-loss-value>
 					</ns17:performance-metrics>
@@ -109,7 +109,7 @@
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!FTP=name=LINE-1-7-3-RX&amp;LINE-1-7-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
-						<ns17:power-tx>5.9</ns17:power-tx>
+						<ns17:power-tx>6.4</ns17:power-tx>
 						<ns17:power-rx>-4.4</ns17:power-rx>
 						<ns17:span-loss-direction>A to Z</ns17:span-loss-direction>
 						<ns17:span-loss-value>10.6</ns17:span-loss-value>
@@ -131,13 +131,13 @@
 						<ns17:power-tx>6.1</ns17:power-tx>
 						<ns17:power-rx>-2.5</ns17:power-rx>
 						<ns17:span-loss-direction>A to Z</ns17:span-loss-direction>
-						<ns17:span-loss-value>8.4</ns17:span-loss-value>
+						<ns17:span-loss-value>8.5</ns17:span-loss-value>
 					</ns17:performance-metrics>
 				</ns17:endpoint>
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!FTP=name=LINE-1-10-3-RX&amp;LINE-1-10-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
-						<ns17:power-tx>5.9</ns17:power-tx>
+						<ns17:power-tx>6.0</ns17:power-tx>
 						<ns17:power-rx>-5.6</ns17:power-rx>
 						<ns17:span-loss-direction>Z to A</ns17:span-loss-direction>
 						<ns17:span-loss-value>11.7</ns17:span-loss-value>
@@ -156,10 +156,10 @@
 				<ns17:endpoint>
 					<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site3!FTP=name=LINE-1-8-3-RX&amp;LINE-1-8-3-TX;lr=lr-optical-transmission-section</ns17:endpoint-ref>
 					<ns17:performance-metrics>
-						<ns17:power-tx>4.5</ns17:power-tx>
-						<ns17:power-rx>-6.6</ns17:power-rx>
+						<ns17:power-tx>4.4</ns17:power-tx>
+						<ns17:power-rx>-6.5</ns17:power-rx>
 						<ns17:span-loss-direction>A to Z</ns17:span-loss-direction>
-						<ns17:span-loss-value>11.1</ns17:span-loss-value>
+						<ns17:span-loss-value>11.0</ns17:span-loss-value>
 					</ns17:performance-metrics>
 				</ns17:endpoint>
 				<ns17:endpoint>

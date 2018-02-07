@@ -15,48 +15,48 @@
 				<ns17:tl-list>
 					<ns17:topological-link>
 						<ns17:tl-index>0</ns17:tl-index>
-						<ns17:fdn>MD=CISCO_EPNM!TL=FPSLINE-81-2-10-RX-ad902ea0_045d&amp;FPSLINE-81-2-10-TX-ad902ea0_045d,LINEWL-1-10-3-RX-ad902ea0_045d&amp;LINEWL-1-10-3-TX-ad902ea0_045d@NCS2K-Site1</ns17:fdn>
+						<ns17:fdn>MD=CISCO_EPNM!TL=FPSLINE-81-2-10-RX-ad902ea0_0463&amp;FPSLINE-81-2-10-TX-ad902ea0_0463,LINEWL-1-10-3-RX-ad902ea0_0463&amp;LINEWL-1-10-3-TX-ad902ea0_0463@NCS2K-Site1</ns17:fdn>
 						<ns17:is-cc>true</ns17:is-cc>
 						<ns17:direction>ns4:bi-direction</ns17:direction>
 						<ns17:endpoint-list>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!CTP=name=FPSLINE-81-2-10-TX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!CTP=name=FPSLINE-81-2-10-TX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!CTP=name=LINEWL-1-10-3-RX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site1!CTP=name=LINEWL-1-10-3-TX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 						</ns17:endpoint-list>
 					</ns17:topological-link>
 					<ns17:topological-link>
 						<ns17:tl-index>1</ns17:tl-index>
-						<ns17:fdn>MD=CISCO_EPNM!TL=LINEWL-1-8-3-RX-ad902ea0_045d&amp;LINEWL-1-8-3-TX-ad902ea0_045d,LINEWL-1-7-3-RX-ad902ea0_045d&amp;LINEWL-1-7-3-TX-ad902ea0_045d@NCS2K-Site2</ns17:fdn>
+						<ns17:fdn>MD=CISCO_EPNM!TL=LINEWL-1-8-3-RX-ad902ea0_0463&amp;LINEWL-1-8-3-TX-ad902ea0_0463,LINEWL-1-7-3-RX-ad902ea0_0463&amp;LINEWL-1-7-3-TX-ad902ea0_0463@NCS2K-Site2</ns17:fdn>
 						<ns17:is-cc>true</ns17:is-cc>
 						<ns17:direction>ns4:bi-direction</ns17:direction>
 						<ns17:endpoint-list>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site2!CTP=name=LINEWL-1-8-3-TX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site2!CTP=name=LINEWL-1-8-3-RX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site2!CTP=name=LINEWL-1-7-3-RX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site2!CTP=name=LINEWL-1-7-3-TX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 						</ns17:endpoint-list>
 					</ns17:topological-link>
 					<ns17:topological-link>
 						<ns17:tl-index>2</ns17:tl-index>
-						<ns17:fdn>MD=CISCO_EPNM!TL=FPSLINE-81-2-10-RX-ad902ea0_045d&amp;FPSLINE-81-2-10-TX-ad902ea0_045d,LINEWL-1-7-3-RX-ad902ea0_045d&amp;LINEWL-1-7-3-TX-ad902ea0_045d@NCS2K-Site4</ns17:fdn>
+						<ns17:fdn>MD=CISCO_EPNM!TL=FPSLINE-81-2-10-RX-ad902ea0_0463&amp;FPSLINE-81-2-10-TX-ad902ea0_0463,LINEWL-1-7-3-RX-ad902ea0_0463&amp;LINEWL-1-7-3-TX-ad902ea0_0463@NCS2K-Site4</ns17:fdn>
 						<ns17:is-cc>true</ns17:is-cc>
 						<ns17:direction>ns4:bi-direction</ns17:direction>
 						<ns17:endpoint-list>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!CTP=name=FPSLINE-81-2-10-RX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!CTP=name=FPSLINE-81-2-10-TX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 							<ns17:endpoint>
-								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!CTP=name=LINEWL-1-7-3-RX-ad902ea0_045d;lr=lr-optical-channel</ns17:endpoint-ref>
+								<ns17:endpoint-ref>MD=CISCO_EPNM!ND=NCS2K-Site4!CTP=name=LINEWL-1-7-3-RX-ad902ea0_0463;lr=lr-optical-channel</ns17:endpoint-ref>
 								<ns17:directionality>ns4:bi-direction</ns17:directionality>
 							</ns17:endpoint>
 						</ns17:endpoint-list>

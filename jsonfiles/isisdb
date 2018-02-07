@@ -8,16 +8,16 @@ do show isis database verbose level 2
 commit
 </cli><response><![CDATA[terminal width 0
 
-Wed Jan 24 11:50:50.236 EST
+Wed Feb  7 11:40:34.943 EST
 RP/0/RP0:NCS4K-Site1#config t
 
-Wed Jan 24 11:50:50.427 EST
+Wed Feb  7 11:40:35.139 EST
 RP/0/RP0:NCS4K-Site1(config)#do show isis database verbose level 2
 
-Wed Jan 24 11:50:51.225 EST
+Wed Feb  7 11:40:35.979 EST
 IS-IS 1 (Level-2) Link State Database
 LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
-NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
+NCS4K-Site1.00-00   * 0x000121cb   0xa584        63778           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -82,7 +82,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97999995 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98999993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -95,7 +95,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 18874386, [1]: 20054278, [2]: 20054534, [3]: 23331072
-      [4]: 23331328, [5]: 25165825
+      [4]: 23331328
   Metric: 10         IS-Extended NCS4K-Site2.00
     Affinity: 0x00000023
     Interface IP Address: 10.0.0.1
@@ -106,7 +106,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98999993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -154,7 +154,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97799996 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98799993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -167,7 +167,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 17825794, [1]: 18874386, [2]: 18874404, [3]: 20054290
-      [4]: 20055058, [5]: 23331077, [6]: 23331845, [7]: 25165825
+      [4]: 20055058, [5]: 23331077, [6]: 23331845
   Metric: 100        IS-Extended ncs4206-1.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.1.45
@@ -178,7 +178,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97699775 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 97694680 kbits/sec
     Admin. Weight: 1000
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -190,7 +190,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
     Neighbor IP Address: 10.0.1.46
     Flags: 0x1
     SRLGs: 
-      [0]: 23331072, [1]: 25172105
+      [0]: 23331072, [1]: 23339269
   Metric: 100        IS-Extended ncs4206-1.00
     Affinity: 0x00000023
     Interface IP Address: 10.0.1.49
@@ -201,7 +201,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
       [0]: 10000000 kbits/sec          [1]: 10000000 kbits/sec
       [2]: 10000000 kbits/sec          [3]: 10000000 kbits/sec
       [4]: 10000000 kbits/sec          [5]: 10000000 kbits/sec
-      [6]: 10000000 kbits/sec          [7]: 7700000  kbits/sec
+      [6]: 10000000 kbits/sec          [7]: 6700000  kbits/sec
     Admin. Weight: 1000
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -213,7 +213,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
     Neighbor IP Address: 10.0.1.50
     Flags: 0x1
     SRLGs: 
-      [0]: 23331079
+      [0]: 23331079, [1]: 23339264
   Metric: 0          IP-Extended 1.1.1.11/32
   Metric: 10         IP-Extended 10.0.0.0/30
   Metric: 10         IP-Extended 10.0.0.4/30
@@ -223,7 +223,7 @@ NCS4K-Site1.00-00   * 0x00012036   0x62d3        59381           0/0/0
   Metric: 10         IP-Extended 10.0.0.44/30
   Metric: 100        IP-Extended 10.0.1.44/30
   Metric: 100        IP-Extended 10.0.1.48/30
-NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
+NCS4K-Site2.00-00     0x00002a25   0xaa72        62403           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -253,7 +253,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 18874386, [1]: 20054278, [2]: 20054534, [3]: 23331072
-      [4]: 23331328, [5]: 25165825
+      [4]: 23331328
   Metric: 10         IS-Extended NCS4K-Site1.00
     Affinity: 0x00000023
     Interface IP Address: 10.0.0.2
@@ -264,7 +264,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98999993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -312,7 +312,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 99999982 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -325,7 +325,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 17825793, [1]: 18874386, [2]: 18874387, [3]: 20054546
-      [4]: 20054802, [5]: 23331333, [6]: 23331589, [7]: 25165825
+      [4]: 20054802, [5]: 23331333, [6]: 23331589
   Metric: 10         IS-Extended NCS4K-Site4.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.0.25
@@ -360,7 +360,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98999993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -384,7 +384,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
       [0]: 40000000 kbits/sec          [1]: 40000000 kbits/sec
       [2]: 40000000 kbits/sec          [3]: 40000000 kbits/sec
       [4]: 40000000 kbits/sec          [5]: 40000000 kbits/sec
-      [6]: 40000000 kbits/sec          [7]: 33950999 kbits/sec
+      [6]: 40000000 kbits/sec          [7]: 34950996 kbits/sec
     Admin. Weight: 1000
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -396,7 +396,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
     Neighbor IP Address: 10.0.1.21
     Flags: 0x1
     SRLGs: 
-      [0]: 23331328
+      [0]: 17825794, [1]: 23331328, [2]: 23339527
   Metric: 0          IP-Extended 1.1.1.21/32
   Metric: 10         IP-Extended 10.0.0.0/30
   Metric: 10         IP-Extended 10.0.0.8/30
@@ -405,7 +405,7 @@ NCS4K-Site2.00-00     0x00002973   0x1457        59266           0/0/0
   Metric: 10         IP-Extended 10.0.0.28/30
   Metric: 10         IP-Extended 10.0.0.32/30
   Metric: 100        IP-Extended 10.0.1.20/30
-NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
+NCS4K-Site3.00-00     0x00003f9f   0x5116        62267           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -422,7 +422,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99799999 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 99799991 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -446,7 +446,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99899991 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 99899999 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -507,7 +507,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 17825793, [1]: 18874386, [2]: 18874387, [3]: 20054546
-      [4]: 20054802, [5]: 23331333, [6]: 23331589, [7]: 25165825
+      [4]: 20054802, [5]: 23331333, [6]: 23331589
   Metric: 10         IS-Extended NCS4K-Site4.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.0.21
@@ -518,7 +518,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97955570 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 97999995 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -578,7 +578,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
     Neighbor IP Address: 10.0.1.13
     Flags: 0x1
     SRLGs: 
-      [0]: 23331592
+      [0]: 23331592, [1]: 23340295
   Metric: 100        IS-Extended ncs4206-3.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.1.38
@@ -601,7 +601,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
     Neighbor IP Address: 10.0.1.37
     Flags: 0x1
     SRLGs: 
-      [0]: 23331584
+      [0]: 23331584, [1]: 23339781
   Metric: 100        IS-Extended ncs4206-3.00
     Affinity: 0x00000023
     Interface IP Address: 10.0.1.42
@@ -612,7 +612,7 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
       [0]: 10000000 kbits/sec          [1]: 10000000 kbits/sec
       [2]: 10000000 kbits/sec          [3]: 10000000 kbits/sec
       [4]: 10000000 kbits/sec          [5]: 10000000 kbits/sec
-      [6]: 10000000 kbits/sec          [7]: 6851464  kbits/sec
+      [6]: 10000000 kbits/sec          [7]: 6899982  kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -624,11 +624,11 @@ NCS4K-Site3.00-00     0x00003e7b   0x61c7        64530           0/0/0
     Neighbor IP Address: 10.0.1.41
     Flags: 0x1
     SRLGs: 
-      [0]: 23331605
+      [0]: 23331605, [1]: 23339780
   Metric: 0          IP-Extended 1.1.1.31/32
   Metric: 10         IP-Extended 10.0.0.8/30
   Metric: 10         IP-Extended 10.0.0.12/30
-NCS4K-Site3.00-01     0x000003d4   0xe9ea        64530           0/0/0
+NCS4K-Site3.00-01     0x000004f8   0xf465        62267           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Metric: 10         IP-Extended 10.0.0.20/30
   Metric: 10         IP-Extended 10.0.0.32/30
@@ -637,7 +637,7 @@ NCS4K-Site3.00-01     0x000003d4   0xe9ea        64530           0/0/0
   Metric: 100        IP-Extended 10.0.1.12/30
   Metric: 100        IP-Extended 10.0.1.36/30
   Metric: 100        IP-Extended 10.0.1.40/30
-NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
+NCS4K-Site4.00-00     0x000047b0   0xa96b        63720           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -654,7 +654,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99899778 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 99894690 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -691,7 +691,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
     Flags: 0x1
     SRLGs: 
       [0]: 17825794, [1]: 18874386, [2]: 18874404, [3]: 20054290
-      [4]: 20055058, [5]: 23331077, [6]: 23331845, [7]: 25165825
+      [4]: 20055058, [5]: 23331077, [6]: 23331845
   Metric: 10         IS-Extended NCS4K-Site3.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.0.22
@@ -702,7 +702,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97951466 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 97999995 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000013   0x00000000
@@ -774,7 +774,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98999993 kbits/sec
     Admin. Weight: 10
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -798,7 +798,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 95899476 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 95899993 kbits/sec
     Admin. Weight: 1000
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -810,7 +810,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
     Neighbor IP Address: 10.0.1.17
     Flags: 0x1
     SRLGs: 
-      [0]: 23331847
+      [0]: 23331847, [1]: 23340296
   Metric: 100        IS-Extended ncs4216-4.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.1.30
@@ -833,7 +833,7 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
     Neighbor IP Address: 10.0.1.29
     Flags: 0x1
     SRLGs: 
-      [0]: 23331840
+      [0]: 23331840, [1]: 23340039
   Metric: 100        IS-Extended ncs4216-4.00
     Affinity: 0x00000023
     Interface IP Address: 10.0.1.34
@@ -856,8 +856,8 @@ NCS4K-Site4.00-00     0x000044c0   0xc035        64543           0/0/0
     Neighbor IP Address: 10.0.1.33
     Flags: 0x1
     SRLGs: 
-      [0]: 23331861
-NCS4K-Site4.00-01     0x00003992   0x6fc7        64543           0/0/0
+      [0]: 23331861, [1]: 23340040
+NCS4K-Site4.00-01     0x00003c81   0xb7c3        63720           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Metric: 100        IS-Extended ncs4216-2.00
     Affinity: 0x00000023
@@ -869,7 +869,7 @@ NCS4K-Site4.00-01     0x00003992   0x6fc7        64543           0/0/0
       [0]: 40000000 kbits/sec          [1]: 40000000 kbits/sec
       [2]: 40000000 kbits/sec          [3]: 40000000 kbits/sec
       [4]: 40000000 kbits/sec          [5]: 40000000 kbits/sec
-      [6]: 40000000 kbits/sec          [7]: 33955281 kbits/sec
+      [6]: 40000000 kbits/sec          [7]: 33999995 kbits/sec
     Admin. Weight: 1000
     Ext Admin Group: Length: 32
       0x00000023   0x00000000
@@ -881,7 +881,7 @@ NCS4K-Site4.00-01     0x00003992   0x6fc7        64543           0/0/0
     Neighbor IP Address: 10.0.1.25
     Flags: 0x1
     SRLGs: 
-      [0]: 23331861
+      [0]: 17825796, [1]: 23331861, [2]: 23339528
   Metric: 0          IP-Extended 1.1.1.41/32
   Metric: 10         IP-Extended 10.0.0.4/30
   Metric: 10         IP-Extended 10.0.0.12/30
@@ -893,7 +893,7 @@ NCS4K-Site4.00-01     0x00003992   0x6fc7        64543           0/0/0
   Metric: 100        IP-Extended 10.0.1.24/30
   Metric: 100        IP-Extended 10.0.1.28/30
   Metric: 100        IP-Extended 10.0.1.32/30
-ncs4206-1.00-00       0x00005ab0   0x83b8        57451           0/0/0
+ncs4206-1.00-00       0x00005b58   0xb7b4        63722           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -909,7 +909,7 @@ ncs4206-1.00-00       0x00005ab0   0x83b8        57451           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 97699988 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 98699985 kbits/sec
     Admin. Weight: 1000
   Metric: 100        IS-Extended NCS4K-Site1.00
     Affinity: 0x00000023
@@ -923,30 +923,38 @@ ncs4206-1.00-00       0x00005ab0   0x83b8        57451           0/0/0
       [4]: 10000000 kbits/sec          [5]: 10000000 kbits/sec
       [6]: 10000000 kbits/sec          [7]: 7700000  kbits/sec
     Admin. Weight: 1000
+  Metric: 16777215   IS-Extended 0000.0000.0a00.00
+    Interface IP Address: 1.0.0.0
+    Neighbor IP Address: 1.1.0.0
+    Global Pool BW Unreserved: 
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
   MPLS SRLG:      NCS4K-Site1.00
     Interface IP Address: 10.0.1.46
     Neighbor IP Address: 10.0.1.45
     Flags: 0x1
     SRLGs: 
-      [0]: 23331072, [1]: 25172105
+      [0]: 23331072, [1]: 23339269
   MPLS SRLG:      NCS4K-Site1.00
     Interface IP Address: 10.0.1.50
     Neighbor IP Address: 10.0.1.49
     Flags: 0x1
     SRLGs: 
-      [0]: 25172100
+      [0]: 23331079, [1]: 23339264
   IP Address:     192.168.0.15
+  Metric: 100        IP-Extended 10.0.1.44/30
+    SubTLV 4Length: 1
+  Metric: 100        IP-Extended 10.0.1.48/30
+    SubTLV 4Length: 1
   Metric: 0          IP-Extended 192.168.0.15/32
     SubTLV 4Length: 1
     SubTLV 11Length: 4
   Metric: 0          IP-Extended 192.168.10.15/32
     SubTLV 4Length: 1
     SubTLV 11Length: 4
-  Metric: 100        IP-Extended 10.0.1.44/30
-    SubTLV 4Length: 1
-  Metric: 100        IP-Extended 10.0.1.48/30
-    SubTLV 4Length: 1
-ncs4216-2.00-00       0x000083c5   0x81e3        57465           0/0/0
+ncs4216-2.00-00       0x00008408   0x3bab        62307           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -962,7 +970,7 @@ ncs4216-2.00-00       0x000083c5   0x81e3        57465           0/0/0
       [0]: 40000000 kbits/sec          [1]: 40000000 kbits/sec
       [2]: 40000000 kbits/sec          [3]: 40000000 kbits/sec
       [4]: 40000000 kbits/sec          [5]: 40000000 kbits/sec
-      [6]: 40000000 kbits/sec          [7]: 34940998 kbits/sec
+      [6]: 40000000 kbits/sec          [7]: 34940982 kbits/sec
     Admin. Weight: 1000
   Metric: 100        IS-Extended NCS4K-Site4.00
     Affinity: 0x00000023
@@ -974,20 +982,21 @@ ncs4216-2.00-00       0x000083c5   0x81e3        57465           0/0/0
       [0]: 40000000 kbits/sec          [1]: 40000000 kbits/sec
       [2]: 40000000 kbits/sec          [3]: 40000000 kbits/sec
       [4]: 40000000 kbits/sec          [5]: 40000000 kbits/sec
-      [6]: 40000000 kbits/sec          [7]: 34941731 kbits/sec
+      [6]: 40000000 kbits/sec          [7]: 33989999 kbits/sec
     Admin. Weight: 1000
-  MPLS SRLG:      NCS4K-Site2.00
-    Interface IP Address: 10.0.1.21
-    Neighbor IP Address: 10.0.1.22
-    Flags: 0x1
-    SRLGs: 
-      [0]: 25172207, [1]: 17825794
+  Metric: 16777215   IS-Extended 0000.0000.0000.00
   MPLS SRLG:      NCS4K-Site4.00
     Interface IP Address: 10.0.1.25
     Neighbor IP Address: 10.0.1.26
     Flags: 0x1
     SRLGs: 
-      [0]: 25172208, [1]: 17825796
+      [0]: 17825796, [1]: 23339528, [2]: 23331861
+  MPLS SRLG:      NCS4K-Site2.00
+    Interface IP Address: 10.0.1.21
+    Neighbor IP Address: 10.0.1.22
+    Flags: 0x1
+    SRLGs: 
+      [0]: 23339527, [1]: 23331328, [2]: 17825794
   IP Address:     192.168.0.25
   Metric: 0          IP-Extended 192.168.0.25/32
     SubTLV 4Length: 1
@@ -999,7 +1008,7 @@ ncs4216-2.00-00       0x000083c5   0x81e3        57465           0/0/0
     SubTLV 4Length: 1
   Metric: 100        IP-Extended 10.0.1.24/30
     SubTLV 4Length: 1
-ncs4206-3.00-00       0x00002ac5   0x25a8        39526           0/0/0
+ncs4206-3.00-00       0x00002aff   0xfcb7        61508           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -1027,20 +1036,28 @@ ncs4206-3.00-00       0x00002ac5   0x25a8        39526           0/0/0
       [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
       [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 96855565 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 96899990 kbits/sec
     Admin. Weight: 1000
+  Metric: 16777215   IS-Extended 0000.0000.0a00.00
+    Interface IP Address: 1.0.0.0
+    Neighbor IP Address: 1.1.0.0
+    Global Pool BW Unreserved: 
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
   MPLS SRLG:      NCS4K-Site3.00
     Interface IP Address: 10.0.1.41
     Neighbor IP Address: 10.0.1.42
     Flags: 0x1
     SRLGs: 
-      [0]: 25172304
+      [0]: 23339780, [1]: 23331605
   MPLS SRLG:      NCS4K-Site3.00
     Interface IP Address: 10.0.1.37
     Neighbor IP Address: 10.0.1.38
     Flags: 0x1
     SRLGs: 
-      [0]: 25172305
+      [0]: 23339781, [1]: 23331584
   IP Address:     192.168.0.35
   Metric: 0          IP-Extended 192.168.0.35/32
     SubTLV 4Length: 1
@@ -1049,24 +1066,12 @@ ncs4206-3.00-00       0x00002ac5   0x25a8        39526           0/0/0
     SubTLV 4Length: 1
   Metric: 100        IP-Extended 10.0.1.36/30
     SubTLV 4Length: 1
-ncs4216-4.00-00       0x000016d1   0xb493        64509           0/0/0
+ncs4216-4.00-00       0x00001959   0xe04e        63374           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
   Router ID:      192.168.0.45
   Hostname:       ncs4216-4
-  Metric: 10         IS-Extended NCS4K-Site4.00
-    Affinity: 0x00000023
-    Interface IP Address: 10.0.1.33
-    Neighbor IP Address: 10.0.1.34
-    Physical BW: 99999998 kbits/sec
-    Reservable Global pool BW: 99999998 kbits/sec
-    Global Pool BW Unreserved: 
-      [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
-      [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
-      [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
-      [6]: 99999998 kbits/sec          [7]: 96898712 kbits/sec
-    Admin. Weight: 10
   Metric: 50         IS-Extended NCS4K-Site4.00
     Affinity: 0x00000013
     Interface IP Address: 10.0.1.29
@@ -1079,18 +1084,38 @@ ncs4216-4.00-00       0x000016d1   0xb493        64509           0/0/0
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
       [6]: 99999998 kbits/sec          [7]: 96899998 kbits/sec
     Admin. Weight: 50
+  Metric: 10         IS-Extended NCS4K-Site4.00
+    Affinity: 0x00000023
+    Interface IP Address: 10.0.1.33
+    Neighbor IP Address: 10.0.1.34
+    Physical BW: 99999998 kbits/sec
+    Reservable Global pool BW: 99999998 kbits/sec
+    Global Pool BW Unreserved: 
+      [0]: 99999998 kbits/sec          [1]: 99999998 kbits/sec
+      [2]: 99999998 kbits/sec          [3]: 99999998 kbits/sec
+      [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
+      [6]: 99999998 kbits/sec          [7]: 96894690 kbits/sec
+    Admin. Weight: 10
+  Metric: 16777215   IS-Extended 0000.0000.0a00.00
+    Interface IP Address: 1.0.0.0
+    Neighbor IP Address: 1.1.0.0
+    Sub pool BW Unreserved: 
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
   MPLS SRLG:      NCS4K-Site4.00
     Interface IP Address: 10.0.1.33
     Neighbor IP Address: 10.0.1.34
     Flags: 0x1
     SRLGs: 
-      [0]: 25172408
+      [0]: 23340040, [1]: 23331861
   MPLS SRLG:      NCS4K-Site4.00
     Interface IP Address: 10.0.1.29
     Neighbor IP Address: 10.0.1.30
     Flags: 0x1
     SRLGs: 
-      [0]: 25172407
+      [0]: 23340039, [1]: 23331840
   IP Address:     192.168.0.45
   Metric: 0          IP-Extended 192.168.0.45/32
     SubTLV 4Length: 1
@@ -1099,7 +1124,7 @@ ncs4216-4.00-00       0x000016d1   0xb493        64509           0/0/0
     SubTLV 4Length: 1
   Metric: 50         IP-Extended 10.0.1.28/30
     SubTLV 4Length: 1
-ncs4216-5.00-00       0x00000433   0xb5e0        57325           0/0/0
+ncs4216-5.00-00       0x00000469   0xa792        31941           0/0/0
   Auth:           Algorithm HMAC-MD5, Length: 17
   Area Address:   49
   NLPID:          0xcc
@@ -1129,18 +1154,31 @@ ncs4216-5.00-00       0x00000433   0xb5e0        57325           0/0/0
       [4]: 99999998 kbits/sec          [5]: 99999998 kbits/sec
       [6]: 99999998 kbits/sec          [7]: 95899993 kbits/sec
     Admin. Weight: 1000
-  MPLS SRLG:      NCS4K-Site3.00
-    Interface IP Address: 10.0.1.13
-    Neighbor IP Address: 10.0.1.14
-    Flags: 0x1
-    SRLGs: 
-      [0]: 25172507
+  Metric: 16777215   IS-Extended 0000.0000.0a00.00
+    Interface IP Address: 1.0.0.0
+    Neighbor IP Address: 1.1.0.0
+    Global Pool BW Unreserved: 
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
+    Sub pool BW Unreserved: 
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
   MPLS SRLG:      NCS4K-Site4.00
     Interface IP Address: 10.0.1.17
     Neighbor IP Address: 10.0.1.18
     Flags: 0x1
     SRLGs: 
-      [0]: 25172508
+      [0]: 23340296, [1]: 23331847
+  MPLS SRLG:      NCS4K-Site3.00
+    Interface IP Address: 10.0.1.13
+    Neighbor IP Address: 10.0.1.14
+    Flags: 0x1
+    SRLGs: 
+      [0]: 23340295, [1]: 23331592
   IP Address:     192.168.0.55
   Metric: 0          IP-Extended 192.168.0.55/32
     SubTLV 4Length: 1
@@ -1152,6 +1190,6 @@ ncs4216-5.00-00       0x00000433   0xb5e0        57325           0/0/0
  Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
 RP/0/RP0:NCS4K-Site1(config)#commit
 
-Wed Jan 24 11:50:51.692 EST
+Wed Feb  7 11:40:36.523 EST
 No configuration changes to commit.
 RP/0/RP0:NCS4K-Site1(config)#]]></response></cliChunk></cliChunks>

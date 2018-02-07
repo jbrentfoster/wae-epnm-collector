@@ -4,26 +4,28 @@ import xml.parsers.expat
 import time
 import re
 import json
+import logging
 
 
 def runcollector(baseURL, epnmuser, epnmpassword):
-    print "Collecting L1 nodes..."
+    logging.info("Collecting L1 nodes...")
     collectL1Nodes(baseURL, epnmuser, epnmpassword)
-    print "Collecting L1 links..."
+    logging.info("Collecting L1 links...")
     collectL1links(baseURL, epnmuser, epnmpassword)
-    print "Collecting ISIS database..."
+    logging.info("Collecting ISIS database...")
     collectISIS(baseURL, epnmuser, epnmpassword)
-    print "Processing ISIS database..."
+    logging.info("Processing ISIS database...")
     processISIS()
-    print "Collecting MPLS topological links..."
+    logging.info("Collecting MPLS topological links...")
     collectMPLSinterfaces(baseURL, epnmuser, epnmpassword)
-    print "Collecting virtual connections..."
+    logging.info("Collecting virtual connections...")
     collectvirtualconnections(baseURL, epnmuser, epnmpassword)
-    print "Collecting L1 paths..."
+    logging.info("Collecting L1 paths...")
     addL1hopstol3links(baseURL, epnmuser, epnmpassword)
-    print "Re-ordering L1 hops..."
+    logging.info("Re-ordering L1 hops...")
     reorderl1hops()
-    print "Network collection completed!"
+    logging.info("Network collection completed!")
+    logging.info("Collecting LSPs...")
     collectlsps(baseURL, epnmuser, epnmpassword)
 
 
@@ -41,13 +43,14 @@ def collectL1Nodes(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message is not XML."
+        logging.info("XML parsing error.  The received message is not XML.")
         return
     l1nodes = {}
     i = 1
     with open("jsonfiles/l1Nodes.json", 'wb') as f:
         for item in thexml.getElementsByTagName("ns31:node"):
-            if item.getElementsByTagName("ns31:product-series")[0].firstChild.nodeValue == "Cisco Network Convergence System 2000 Series":
+            if item.getElementsByTagName("ns31:product-series")[
+                0].firstChild.nodeValue == "Cisco Network Convergence System 2000 Series":
                 nodeName = item.getElementsByTagName("ns31:name")[0].firstChild.nodeValue
                 latitude = item.getElementsByTagName("ns31:latitude")[0].getElementsByTagName("ns32:double-amount")[
                     0].firstChild.nodeValue
@@ -73,7 +76,7 @@ def collectL1links(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error."
+        logging.info("XML parsing error.")
         return
     l1links = {}
     i = 1
@@ -104,16 +107,16 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message from websocket is not XML."
+        logging.info("XML parsing error.  The received message from websocket is not XML.")
         return
 
     jobname = thexml.getElementsByTagName("ns13:job-name")[0].firstChild.nodeValue
 
-    print "Successfully submitted the API call to retrieve the ISIS database."
-    print "jobname is: " + jobname
+    logging.info("Successfully submitted the API call to retrieve the ISIS database.")
+    logging.info("jobname is: " + jobname)
 
     notDone = True
-    print "Checking job status..."
+    logging.info("Checking job status...")
     results = ""
     while notDone:
         time.sleep(5)
@@ -122,22 +125,22 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
         try:
             thexml = xml.dom.minidom.parseString(xmlresponse)
         except xml.parsers.expat.ExpatError as err:
-            print "XML parsing error."
+            logging.info("XML parsing error.")
             return
         try:
-            print "Job status: " + thexml.getElementsByTagName("ns13:status")[0].firstChild.nodeValue
+            logging.info("Job status: " + thexml.getElementsByTagName("ns13:status")[0].firstChild.nodeValue)
             if thexml.getElementsByTagName("ns13:status")[0].firstChild.nodeValue == "SUCCESS":
-                print "Completed running the script..."
+                logging.info("Completed running the script...")
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
         except IndexError:
-            print "Run status: " + thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue
+            logging.info("Run status: " + thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue)
             if thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue == "COMPLETED":
-                print "Completed running the script..."
+                logging.info("Completed running the script...")
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
 
-    print "Database received."
+    logging.info("Database received.")
     with open("jsonfiles/isisdb", 'wb') as f:
         f.write(results)
         f.close()
@@ -159,25 +162,28 @@ def processISIS():
                 nodes[node] = dict([('Loopback Address', routerid)])
                 nodes[node]['Links'] = dict()
             elif "Metric" in line and "IS-Extended" in line:
+                ignoreIntfIPs = False
                 try:
                     neighbor = re.search('.*%s (.*).00' % ('IS-Extended'), line).group(1)
                     i += 1
                     linkid = "Link" + str(i)
                     nodes[node]['Links'][linkid] = dict([('Neighbor', neighbor)])
                 except:
-                    print "There was a problem parsing the neighbor!"
+                    logging.info("There was a problem parsing the neighbor!")
                 try:
                     metric = re.search('Metric: (.*).*IS-Extended.*', line).group(1).strip()
                     nodes[node]['Links'][linkid]['Metric'] = metric
                 except:
-                    print "There was a problem parsing the metric!"
+                    logging.info("There was a problem parsing the metric!")
             elif "Affinity" in line:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
-            elif "Interface IP Address" in line:
+            elif "MPLS SRLG" in line:
+                ignoreIntfIPs = True
+            elif "Interface IP Address" in line and not ignoreIntfIPs:
                 localIP = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Local IP'] = localIP
-            elif "Neighbor IP Address" in line:
+            elif "Neighbor IP Address" in line and not ignoreIntfIPs:
                 neighIP = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Neighbor IP'] = neighIP
             elif "Reservable Global pool BW" in line:
@@ -198,9 +204,20 @@ def processISIS():
                     if ":" in srlg:
                         nodes[node]['Links'][linkid]['SRLGs'][srlg.split(':')[0].strip()] = srlg.split(":")[1].strip()
                     else:
-                        print "Errored SRLG list found while processing isis db line " + str(c)
+                        logging.info("Errored SRLG list found while processing isis db line " + str(c))
             c += 1
         f.close()
+
+    # go through links and remove any invalid links
+    for k1, v1 in nodes.items():
+        # logging.info "**************Nodename is: " + k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.info "***************Linkname is: " + k3
+                    if not 'Affinity' in v3:
+                        v2.pop(k3)
+                        logging.info("Removing invalid link with neighbor " + v3['Neighbor'])
 
     with open("jsonfiles/l3Links.json", "wb") as f:
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -220,7 +237,7 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message is not XML."
+        logging.info("XML parsing error.  The received message is not XML.")
         return
     with open("jsonfiles/l3Links.json", 'rb') as f:
         l3links = json.load(f)
@@ -228,11 +245,11 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
 
     names = []
     for k1, v1 in l3links.items():
-        # print "**************Nodename is: " + k1
+        # logging.info "**************Nodename is: " + k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    # print "***************Linkname is: " + k3
+                    # logging.info "***************Linkname is: " + k3
                     n1IP = v3.get('Local IP')
                     n2IP = v3.get('Neighbor IP')
                     name1 = n1IP + '-' + n2IP
@@ -263,16 +280,18 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                                     2].split('=')[2]
                             node2intfparsed = node2intf.split('-')[0]
 
-                            if node2 == v3.get('Neighbor'):
+                            if node2 == v3['Neighbor']:
                                 v3['Neighbor Intf'] = node2intfparsed
                                 v3['Local Intf'] = node1intfparsed
-                            elif node1 == v3.get('Neighbor'):
+                            elif node1 == v3['Neighbor']:
                                 v3['Neighbor Intf'] = node1intfparsed
                                 v3['Local Intf'] = node2intfparsed
                             else:
-                                print "Could not match node names for interface assignment!!!!!!"
+                                logging.info(
+                                    "Could not match node names for interface assignment for node " + k1 + " link " + k3)
                     if not matchedlink:
-                        print "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2
+                        logging.info(
+                            "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
     with open("jsonfiles/l3Links_add_tl.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -296,9 +315,10 @@ def collectvirtualconnections(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message is not XML."
+        logging.info("XML parsing error.  The received message is not XML.")
         return
     for item in thexml.getElementsByTagName("ns9:virtual-connection"):
+        matched_fdn = False
         fdn = item.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
         subtype = item.getElementsByTagName("ns9:subtype")[0].firstChild.nodeValue
         if subtype == "ns41:och-trail-uni":
@@ -309,16 +329,19 @@ def collectvirtualconnections(baseURL, epnmuser, epnmpassword):
                     tmpnode = tmpfdn.split('!')[1].split('=')[1]
                     vcdict[tmpnode] = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
             for k1, v1 in l3links.items():
-                # print "**************Nodename is: " + k1
+                # logging.info "**************Nodename is: " + k1
                 for k2, v2 in v1.items():
                     if isinstance(v2, dict):
                         for k3, v3 in v2.items():
-                            # print "***************Linkname is: " + k3
+                            # logging.info "***************Linkname is: " + k3
                             for node, intf in vcdict.items():
                                 if node == k1:
                                     if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
                                         v3['vc-fdn'] = fdn
-    print "completed collecting virtual connections..."
+                                        matched_fdn = True
+                                        # if not matched_fdn:
+                                        #     logging.info "Could not match vc-fdn " + fdn
+    logging.info("completed collecting virtual connections...")
     with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -330,24 +353,28 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
         f.close()
 
     for k1, v1 in l3links.items():
-        # print "**************Nodename is: " + k1
+        # logging.info "**************Nodename is: " + k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    # print "***************Linkname is: " + k3
-                    vcfdn = v3.get('vc-fdn')
-                    if vcfdn != None:
+                    # logging.info "***************Linkname is: " + k3
+                    if 'vc-fdn' in v3:
+                        vcfdn = v3['vc-fdn']
                         l1hops = collectmultilayerroute(baseURL, epnmuser, epnmpassword, vcfdn)
                         v3['L1 Hops'] = l1hops
                         if len(l1hops) > 0:
-                            print "Completed L3 link " + k1 + " " + k3
+                            logging.info("Completed L3 link " + k1 + " " + k3)
                         else:
-                            print "Could not get L1 hops for " + k1 + " " + k3
-                            print "vcFDN is " + vcfdn
+                            logging.info("Could not get L1 hops for " + k1 + " " + k3)
+                            logging.info("vcFDN is " + vcfdn)
                     else:
-                        print "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link."
+                        logging.info(
+                            "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
+                        logging.info("    Neighbor: " + v3['Neighbor'])
+                        logging.info("    Local Intf: " + v3['Local Intf'])
+                        logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
 
-    print "completed collecting L1 paths..."
+    logging.info("completed collecting L1 paths...")
     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -367,7 +394,7 @@ def collectmultilayerroute(baseURL, epnmuser, epnmpassword, vcfdn):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message is not XML."
+        logging.info("XML parsing error.  The received message is not XML.")
         return
     l1hops = {}
     l1hopsops = parsemultilayerroute(thexml, "ns17:ops-link-layer", "Optics")
@@ -419,13 +446,13 @@ def reorderl1hops():
         f.close()
 
     for k1, v1 in l3links.items():
-        # print "**************Nodename is: " + k1
+        # logging.info "**************Nodename is: " + k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    # print "***************Linkname is: " + k3
+                    # logging.info "***************Linkname is: " + k3
                     if 'L1 Hops' in v3:
-                        print "Node " + k1 + " " + k3 + " has L1 hops.  Processing..."
+                        logging.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
                         l1hops = []
                         for k4, v4 in v3.get('L1 Hops').items():
                             nodelist = []
@@ -434,7 +461,7 @@ def reorderl1hops():
                             l1hops.append(nodelist)
                         l1hopsordered = returnorderedlist(k1, l1hops)
                         if len(l1hopsordered) == 0:
-                            print "error generating ordered L1 hops"
+                            logging.info("error generating ordered L1 hops")
                         tmphops = []
                         completed = False
                         while not completed:
@@ -452,7 +479,7 @@ def reorderl1hops():
                                 break
                         v3['Ordered L1 Hops'] = tmphops
                         v3.pop('L1 Hops')
-                        # print "next L1 hop..."
+                        # logging.info "next L1 hop..."
     with open("jsonfiles/l3Links_final.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -493,7 +520,7 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
     try:
         thexml = xml.dom.minidom.parseString(xmlresponse)
     except xml.parsers.expat.ExpatError as err:
-        print "XML parsing error.  The received message is not XML."
+        logging.info("XML parsing error.  The received message is not XML.")
         return
     lsplist = []
     vcdict = {}
@@ -531,9 +558,11 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
             lsplist.append(vcdict)
             vcdict = {}
             i += 1
+            logging.info(
+                "Collected tunnel " + tunnelID + " Source: " + tunnelsource + " Destination " + tunneldestination)
         else:
-            print "Tunnel unavailable: " + fdn
-    print "done"
+            logging.warning("Tunnel unavailable: " + fdn)
+    logging.info("Completed collecting LSPs...")
     with open("jsonfiles/lsps.json", "wb") as f:
         f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -561,7 +590,7 @@ def parseintfnum(nodeintf):
     except:
         pass
     if nodeintfnum == "":
-        print "Could not parse interface number!!!!!!!!!"
+        logging.info("Could not parse interface number!!!!!!!!!")
     else:
         if len(nodeintfnum.split('/')) == 5:
             shortnodeintfnum = nodeintfnum.split('/')[:-1]
