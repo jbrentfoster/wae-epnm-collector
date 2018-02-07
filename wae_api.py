@@ -10,22 +10,29 @@ from distutils.dir_util import mkpath
 import xmlcode.collect
 import logging
 import shutil
+import argparse
 
 
 def main():
-    # EPNM server details for data collection...
+    # Get path for collection files from command line arguments
+    parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
+    parser.add_argument('archive_root', metavar='N', type=str,
+                        help='the local path for storing collections')
+    args = parser.parse_args()
+
     epnmipaddr = "10.135.7.222"
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"
     epnmpassword = "Epnm1234"
     current_time = str(datetime.now().strftime('%Y-%m-%d%H%M%S'))
-    archive_root = "C:\Users\\brfoster\Temp\\" + current_time
+    archive_root = args.archive_root + "/" + current_time
+    # archive_root = "C:\Users\\brfoster\Temp\\" + current_time
 
     # Set up logging
     print("Copying log file...")
     try:
         mkpath(archive_root)
-        shutil.copy('collection.log',archive_root+'\collection.log')
+        shutil.copy('collection.log', archive_root + '/collection.log')
     except Exception as err:
         print("No log file to copy...")
     try:
@@ -48,19 +55,19 @@ def main():
     # Backup current output files
     logging.info("Backing up files from last collection...")
     try:
-        copy_tree('jsonfiles',archive_root+'\jsonfiles')
-        copy_tree('planfiles', archive_root + '\planfiles')
-        copy_tree('xmlgets', archive_root + '\\xmlgets')
+        copy_tree('jsonfiles', archive_root + '/jsonfiles')
+        copy_tree('planfiles', archive_root + '/planfiles')
+        copy_tree('xmlgets', archive_root + '/xmlgets')
     except Exception as err:
         logging.info("No output files to backup...")
 
     # Delete all output files
-    # logging.info("Cleaning files from last collection...")
-    # try:
-    #     remove_tree('jsonfiles/.')
-    #     remove_tree('xmlgets/.')
-    # except Exception as err:
-    #     logging.info("No files to cleanup...")
+    logging.info("Cleaning files from last collection...")
+    try:
+        remove_tree('jsonfiles')
+        remove_tree('xmlgets')
+    except Exception as err:
+        logging.info("No files to cleanup...")
 
     # Recreate output directories
     mkpath('jsonfiles')
@@ -137,7 +144,7 @@ def main():
         f.close()
 
     # Add LSPs to plan
-    logging.info( "Adding LSP's...")
+    logging.info("Adding LSP's...")
     l3nodeloopbacks = []
     for k1, v1 in l3linksdict.items():
         tmpnode = {k1: v1['Loopback Address']}
