@@ -36,7 +36,7 @@ def main():
     except Exception as err:
         print("No log file to copy...")
     try:
-        os.remove('collection.log...')
+        os.remove('collection.log')
     except Exception as err:
         print("No log file to delete...")
 
