@@ -24,7 +24,7 @@ def main():
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"
     epnmpassword = "Epnm1234"
-    current_time = str(datetime.now().strftime('%Y-%m-%d%H%M%S'))
+    current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     archive_root = args.archive_root + "/" + current_time
     # archive_root = "C:\Users\\brfoster\Temp\\" + current_time
 
