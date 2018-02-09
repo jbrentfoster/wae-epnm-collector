@@ -287,10 +287,10 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                                 v3['Neighbor Intf'] = node1intfparsed
                                 v3['Local Intf'] = node2intfparsed
                             else:
-                                logging.info(
+                                logging.warn(
                                     "Could not match node names for interface assignment for node " + k1 + " link " + k3)
                     if not matchedlink:
-                        logging.info(
+                        logging.warn(
                             "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
     with open("jsonfiles/l3Links_add_tl.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -370,9 +370,12 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                     else:
                         logging.info(
                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
-                        logging.info("    Neighbor: " + v3['Neighbor'])
-                        logging.info("    Local Intf: " + v3['Local Intf'])
-                        logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+                        try:
+                            logging.info("    Neighbor: " + v3['Neighbor'])
+                            logging.info("    Local Intf: " + v3['Local Intf'])
+                            logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+                        except Exception as err:
+                            logging.warn("    !!!Serious error encountered.  EPNM is likely in partial state!!!")
 
     logging.info("completed collecting L1 paths...")
     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
