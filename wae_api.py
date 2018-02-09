@@ -11,7 +11,7 @@ import xmlcode.collect
 import logging
 import shutil
 import argparse
-
+import time
 
 def main():
     # Get path for collection files from command line arguments
@@ -25,16 +25,11 @@ def main():
     epnmuser = "root"
     epnmpassword = "Epnm1234"
     current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
-    archive_root = args.archive_root + "/" + current_time
+    archive_root = args.archive_root + "/captures/" + current_time
+    planfiles_root = args.archive_root + "/planfiles/"
     # archive_root = "C:\Users\\brfoster\Temp\\" + current_time
 
     # Set up logging
-    print("Copying log file...")
-    try:
-        mkpath(archive_root)
-        shutil.copy('collection.log', archive_root + '/collection.log')
-    except Exception as err:
-        print("No log file to copy...")
     try:
         os.remove('collection.log')
     except Exception as err:
@@ -52,33 +47,26 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
 
-    # Backup current output files
-    logging.info("Backing up files from last collection...")
-    try:
-        copy_tree('jsonfiles', archive_root + '/jsonfiles')
-        copy_tree('planfiles', archive_root + '/planfiles')
-        copy_tree('xmlgets', archive_root + '/xmlgets')
-    except Exception as err:
-        logging.info("No output files to backup...")
+    # # Delete all output files
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles')
+    #     remove_tree('xmlgets')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+    #
 
-    # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('xmlgets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
-
-    # Recreate output directories
+    # # Recreate output directories
     mkpath('jsonfiles')
     mkpath('xmlgets')
-
-    # Run the collector...
-    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
-
-    # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
-    # print "PATH=" + os.getenv('PATH')
-    # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
+    mkpath(planfiles_root)
+    #
+    # # Run the collector...
+    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    #
+    # # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
+    # # print "PATH=" + os.getenv('PATH')
+    # # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
     logging.info("Building plan file...")
 
@@ -156,10 +144,28 @@ def main():
     waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
     # Save the plan file
-    plan.serializeToFileSystem('planfiles/test.pln')
+    plan.serializeToFileSystem('planfiles/latest.pln')
+    plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
+
+    # Backup current output files
+    logging.info("Backing up files from collection...")
+    try:
+        copy_tree('jsonfiles', archive_root + '/jsonfiles')
+        copy_tree('planfiles', archive_root + '/planfiles')
+        copy_tree('xmlgets', archive_root + '/xmlgets')
+    except Exception as err:
+        logging.info("No output files to backup...")
+
+    logging.info("Copying log file...")
+    try:
+        mkpath(archive_root)
+        shutil.copy('collection.log', archive_root + '/collection.log')
+    except Exception as err:
+        logging.info("No log file to copy...")
 
     # Script completed
-    logging.info("Plan file created.  See planfiles/test.pln")
+    logging.info("Plan file created.")
+    time.sleep(2)
 
 
 if __name__ == '__main__':
