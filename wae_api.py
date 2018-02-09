@@ -48,21 +48,21 @@ def main():
     rootLogger.addHandler(consoleHandler)
 
     # # Delete all output files
-    # logging.info("Cleaning files from last collection...")
-    # try:
-    #     remove_tree('jsonfiles')
-    #     remove_tree('xmlgets')
-    # except Exception as err:
-    #     logging.info("No files to cleanup...")
-    #
+    logging.info("Cleaning files from last collection...")
+    try:
+        remove_tree('jsonfiles')
+        remove_tree('xmlgets')
+    except Exception as err:
+        logging.info("No files to cleanup...")
 
-    # # Recreate output directories
+
+    # Recreate output directories
     mkpath('jsonfiles')
     mkpath('xmlgets')
     mkpath(planfiles_root)
     #
     # # Run the collector...
-    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
     #
     # # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # # print "PATH=" + os.getenv('PATH')
