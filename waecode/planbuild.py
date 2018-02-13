@@ -169,6 +169,7 @@ def generateL3circuits(plan, l3linksdict):
 
                     duplicatelink = False
 
+    logging.info("Processing SRLG's...")
     process_srlgs(plan, circ_srlgs)
 
 
@@ -207,7 +208,7 @@ def process_srlgs(plan, circ_srlgs):
     for circ, circ_dict in circ_srlgs.items():
         for srlg in circ_dict['SRLGs']:
             if not srlg in srlg_list:
-                logging.info("Processing SRLG: " + srlg)
+                logging.debug("Processing SRLG: " + srlg)
                 circ_list = []
                 circ_keys_list = []
                 srlg_list.append(srlg)
@@ -226,6 +227,9 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
     for lsp in lsps:
         lspBW = int(int(lsp['signalled-bw']) / 1000)
         direction = lsp['direction']
+        frr = False
+        frrval = lsp['FRR']
+        if frrval == 'true': frr = True
         index += 1
         if lspBW > 0:
             tuID = lsp['Tunnel ID']
@@ -234,13 +238,14 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             if direction == "ns4:bi-direction":
+                logging.info("Processing FlexLSP: " + src + " to " + dest + " " + tuID)
                 nodes = [src, dest]
                 success = flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
                 if success:
                     new_demand_for_LSP(plan, src, dest, lspName + "_forward", demandName + "_forward", lspBW)
                     new_demand_for_LSP(plan, dest, src, lspName + "_reverse", demandName + "_reverse", lspBW)
             else:
-                frr = True
+                logging.info("Processing Data LSP: " + src + " to " + dest + " " + tuID)
                 new_private_lsp(plan, src, dest, lspName, lspBW, frr)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 

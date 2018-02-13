@@ -5,6 +5,7 @@ import time
 import re
 import json
 import logging
+import sys
 
 
 def runcollector(baseURL, epnmuser, epnmpassword):
@@ -17,7 +18,12 @@ def runcollector(baseURL, epnmuser, epnmpassword):
     logging.info("Processing ISIS database...")
     processISIS()
     logging.info("Collecting MPLS topological links...")
-    collectMPLSinterfaces(baseURL, epnmuser, epnmpassword)
+    try:
+        collectMPLSinterfaces(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.warn("MPLS topological links are not valid.  Halting program.")
+        sys.exit("Collection error.  Ending execution.")
+
     logging.info("Collecting virtual connections...")
     collectvirtualconnections(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 paths...")
@@ -493,10 +499,14 @@ def returnorderedlist(firstnode, l1hops):
     hopa = firstnode
     hopb = ""
     completed = False
+    loopcount = 0
     while not completed:
         if len(l1hops) == 0: completed = True
         for hop in l1hops:
-            if hop[0] == firstnode or hop[1] == firstnode:
+            if len(hop) != 2:
+                logging.warn("Invalid L1 hop!  Could not process L1 hops for " + firstnode + " !!!!")
+                return l1hopsordered
+            elif hop[0] == firstnode or hop[1] == firstnode:
                 l1hopsordered.insert(0, hop)
                 l1hops.remove(hop)
                 hopa = hop[0]
@@ -506,6 +516,10 @@ def returnorderedlist(firstnode, l1hops):
                 l1hops.remove(hop)
                 hopa = hop[0]
                 hopb = hop[1]
+            elif loopcount > 50:
+                logging.warn("Could not process L1 hops for " + firstnode + " !!!!")
+                return l1hopsordered
+            loopcount += 1
     return l1hopsordered
 
 
@@ -527,8 +541,19 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
         return
     lsplist = []
     vcdict = {}
-    i = 1
     for item in thexml.getElementsByTagName("ns9:virtual-connection"):
+        tmpfdn = None
+        affinitybits = None
+        destinationIP = None
+        tunnelID = None
+        tunnelsource = None
+        tunneldestination = None
+        corouted = None
+        signalledBW = None
+        fastreroute = None
+        adminstate = None
+        fdn = None
+        erroredlsp = False
         adminstate = item.getElementsByTagName("ns9:admin-state")[0].firstChild.nodeValue
         fdn = item.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
         if not adminstate == "ns4:admin-state-unavailable":
@@ -537,32 +562,48 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
             vcdict['direction'] = direction
             for subsubitem in item.getElementsByTagName("ns9:termination-point-list"):
                 tmpfdn = subsubitem.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
-                for subsubsubitem in subsubitem.getElementsByTagName("ns9:mpls-te-tunnel-tp"):
-                    affinitybits = subsubsubitem.getElementsByTagName("ns9:affinity-bits")[0].firstChild.nodeValue
-                    signalledBW = subsubsubitem.getElementsByTagName("ns9:signalled-bw")[0].firstChild.nodeValue
-                    destinationIP = subsubsubitem.getElementsByTagName("ns9:destination-address")[
-                        0].firstChild.nodeValue
-                    for subsubsubsubitem in subsubitem.getElementsByTagName("ns9:fast-reroute"):
-                        fastreroute = subsubsubsubitem.getElementsByTagName("ns9:is-enabled")[0].firstChild.nodeValue
-            for subitem in item.getElementsByTagName("ns9:te-tunnel"):
-                tunnelID = subitem.getElementsByTagName("ns9:tunnel-id")[0].firstChild.nodeValue
-                tunnelsource = subitem.getElementsByTagName("ns9:tunnel-source")[0].firstChild.nodeValue
-                tunneldestination = subitem.getElementsByTagName("ns9:tunnel-destination")[0].firstChild.nodeValue
-                corouted = subitem.getElementsByTagName("ns9:co-routed-enabled")[0].firstChild.nodeValue
-            vcdict['tufdn'] = tmpfdn
-            vcdict['affinitybits'] = affinitybits
-            vcdict['Destination IP'] = destinationIP
-            vcdict['Tunnel ID'] = tunnelID
-            vcdict['Tunnel Source'] = tunnelsource
-            vcdict['Tunnel Destination'] = tunneldestination
-            vcdict['co-routed'] = corouted
-            vcdict['signalled-bw'] = signalledBW
-            vcdict['FRR'] = fastreroute
-            lsplist.append(vcdict)
+                try:
+                    for subsubsubitem in subsubitem.getElementsByTagName("ns9:mpls-te-tunnel-tp"):
+                        try:
+                            affinitybits = subsubsubitem.getElementsByTagName("ns9:affinity-bits")[0].firstChild.nodeValue
+                        except Exception as err2:
+                            logging.warn("LSP has no affinity bits: " + fdn)
+                        signalledBW = subsubsubitem.getElementsByTagName("ns9:signalled-bw")[0].firstChild.nodeValue
+                        destinationIP = subsubsubitem.getElementsByTagName("ns9:destination-address")[
+                            0].firstChild.nodeValue
+                        for subsubsubsubitem in subsubitem.getElementsByTagName("ns9:fast-reroute"):
+                            fastreroute = subsubsubsubitem.getElementsByTagName("ns9:is-enabled")[
+                                0].firstChild.nodeValue
+                except Exception as err:
+                    logging.warn("Exception: could not get LSP mpls-te-tunnel-tp attributes for " + fdn)
+                    logging.warn(err)
+                    erroredlsp = True
+            try:
+                for subitem in item.getElementsByTagName("ns9:te-tunnel"):
+                    tunnelID = subitem.getElementsByTagName("ns9:tunnel-id")[0].firstChild.nodeValue
+                    tunnelsource = subitem.getElementsByTagName("ns9:tunnel-source")[0].firstChild.nodeValue
+                    tunneldestination = subitem.getElementsByTagName("ns9:tunnel-destination")[0].firstChild.nodeValue
+                    corouted = subitem.getElementsByTagName("ns9:co-routed-enabled")[0].firstChild.nodeValue
+            except Exception as err:
+                logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                logging.warn(err)
+                erroredlsp = True
+            if not erroredlsp:
+                vcdict['tufdn'] = tmpfdn
+                vcdict['affinitybits'] = affinitybits
+                vcdict['Destination IP'] = destinationIP
+                vcdict['Tunnel ID'] = tunnelID
+                vcdict['Tunnel Source'] = tunnelsource
+                vcdict['Tunnel Destination'] = tunneldestination
+                vcdict['co-routed'] = corouted
+                vcdict['signalled-bw'] = signalledBW
+                vcdict['FRR'] = fastreroute
+                lsplist.append(vcdict)
+                logging.info(
+                    "Collected tunnel " + tunnelID + " Source: " + tunnelsource + " Destination " + tunneldestination)
+            else:
+                logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
             vcdict = {}
-            i += 1
-            logging.info(
-                "Collected tunnel " + tunnelID + " Source: " + tunnelsource + " Destination " + tunneldestination)
         else:
             logging.warning("Tunnel unavailable: " + fdn)
     logging.info("Completed collecting LSPs...")

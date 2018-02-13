@@ -13,6 +13,7 @@ import shutil
 import argparse
 import time
 
+
 def main():
     # Get path for collection files from command line arguments
     parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
@@ -47,7 +48,7 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
 
-    # # Delete all output files
+    # Delete all output files
     logging.info("Cleaning files from last collection...")
     try:
         remove_tree('jsonfiles')
@@ -55,18 +56,17 @@ def main():
     except Exception as err:
         logging.info("No files to cleanup...")
 
-
     # Recreate output directories
     mkpath('jsonfiles')
     mkpath('xmlgets')
     mkpath(planfiles_root)
-    #
-    # # Run the collector...
+
+    # Run the collector...
     xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
-    #
-    # # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
-    # # print "PATH=" + os.getenv('PATH')
-    # # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
+
+    # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
+    # print "PATH=" + os.getenv('PATH')
+    # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
     logging.info("Building plan file...")
 

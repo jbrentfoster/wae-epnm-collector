@@ -271,4 +271,4 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
 
 def rprint(input):
-    logging.info(input)
+    logging.debug(input)
