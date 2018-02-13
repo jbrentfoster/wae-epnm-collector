@@ -182,9 +182,8 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     try:
         disjointOptimizerResults = disjointOptimizer.run(network, disjointOptimizerOptions)
     except Exception as err:
-        print "!!!!!!!!!Could not run disjoint optimizer for LSP!!!!!!!!!"
+        logging.warn("!!!!!!!!!Could not run disjoint optimizer for LSP!!!!!!!!!")
         print err
-        return False
 
     rprint("")
     rprint("---")
@@ -267,7 +266,7 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
     rprint("---")
     rprint("")
 
-    return True
+    return
 
 
 def rprint(input):

@@ -263,7 +263,6 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                     matchedlink = False
                     for item in thexml.getElementsByTagName("ns17:topological-link"):
                         fdn = item.getElementsByTagName("ns17:fdn")[0].firstChild.nodeValue
-                        # TODO fix this issue where discovered name is not getting set with Guy's testbed
                         discoveredname = item.getElementsByTagName("ns17:discovered-name")[0].firstChild.nodeValue
                         if (name1 == discoveredname or name2 == discoveredname):
                             matchedlink = True
@@ -381,7 +380,7 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                             logging.info("    Local Intf: " + v3['Local Intf'])
                             logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
                         except Exception as err:
-                            logging.warn("    !!!Serious error encountered.  EPNM is likely in partial state!!!")
+                            logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
 
     logging.info("completed collecting L1 paths...")
     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:

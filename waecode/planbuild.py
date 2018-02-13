@@ -238,14 +238,17 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             if direction == "ns4:bi-direction":
-                logging.info("Processing FlexLSP: " + src + " to " + dest + " " + tuID)
+                logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + tuID)
                 nodes = [src, dest]
-                success = flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
-                if success:
+                try:
+                    flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
                     new_demand_for_LSP(plan, src, dest, lspName + "_forward", demandName + "_forward", lspBW)
                     new_demand_for_LSP(plan, dest, src, lspName + "_reverse", demandName + "_reverse", lspBW)
+                except Exception as err:
+                    logging.warn(
+                        "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + tuID)
             else:
-                logging.info("Processing Data LSP: " + src + " to " + dest + " " + tuID)
+                logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + tuID)
                 new_private_lsp(plan, src, dest, lspName, lspBW, frr)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 
