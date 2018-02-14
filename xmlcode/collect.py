@@ -9,12 +9,12 @@ import sys
 
 
 def runcollector(baseURL, epnmuser, epnmpassword):
-    logging.info("Collecting L1 nodes...")
-    collectL1Nodes(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 links...")
-    collectL1links(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting ISIS database...")
-    collectISIS(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 nodes...")
+    # collectL1Nodes(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 links...")
+    # collectL1links(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting ISIS database...")
+    # collectISIS(baseURL, epnmuser, epnmpassword)
     logging.info("Processing ISIS database...")
     processISIS()
     logging.info("Collecting MPLS topological links...")
@@ -181,13 +181,19 @@ def processISIS():
                     i += 1
                     linkid = "Link" + str(i)
                     nodes[node]['Links'][linkid] = dict([('Neighbor', neighbor)])
-                except:
-                    logging.info("There was a problem parsing the neighbor!")
+                except Exception as err:
+                    logging.warn("There was a problem parsing the neighbor!")
+                    logging.exception(err)
+                    logging.critical("Critical error!")
+                    sys.exit("ISIS database is not complete for node " + node +"!!! Halting execution!")
                 try:
                     metric = re.search('Metric: (.*).*IS-Extended.*', line).group(1).strip()
                     nodes[node]['Links'][linkid]['Metric'] = metric
-                except:
-                    logging.info("There was a problem parsing the metric!")
+                except Exception as err:
+                    logging.warn("There was a problem parsing the metric!")
+                    logging.exception(err)
+                    logging.critical("Critical error!")
+                    sys.exit("ISIS database is not complete for node " + node +"!!! Halting execution!")
             elif "Affinity" in line:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
