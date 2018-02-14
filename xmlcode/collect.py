@@ -9,12 +9,12 @@ import sys
 
 
 def runcollector(baseURL, epnmuser, epnmpassword):
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 links...")
-    # collectL1links(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting ISIS database...")
-    # collectISIS(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 links...")
+    collectL1links(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting ISIS database...")
+    collectISIS(baseURL, epnmuser, epnmpassword)
     logging.info("Processing ISIS database...")
     processISIS()
     logging.info("Collecting MPLS topological links...")
