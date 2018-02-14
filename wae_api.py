@@ -28,7 +28,6 @@ def main():
     current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
-    # archive_root = "C:\Users\\brfoster\Temp\\" + current_time
 
     # Set up logging
     try:

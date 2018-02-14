@@ -145,6 +145,10 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
                 logging.info("Completed running the script...")
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
+            elif thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue == "FAILURE":
+                logging.warn("Could not get ISIS database!!!!!!")
+                sys.exit("Collection error.  Ending execution.")
+
 
     logging.info("Database received.")
     with open("jsonfiles/isisdb", 'wb') as f:
@@ -564,7 +568,8 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
                 try:
                     for subsubsubitem in subsubitem.getElementsByTagName("ns9:mpls-te-tunnel-tp"):
                         try:
-                            affinitybits = subsubsubitem.getElementsByTagName("ns9:affinity-bits")[0].firstChild.nodeValue
+                            affinitybits = subsubsubitem.getElementsByTagName("ns9:affinity-bits")[
+                                0].firstChild.nodeValue
                         except Exception as err2:
                             logging.warn("LSP has no affinity bits: " + fdn)
                         signalledBW = subsubsubitem.getElementsByTagName("ns9:signalled-bw")[0].firstChild.nodeValue
