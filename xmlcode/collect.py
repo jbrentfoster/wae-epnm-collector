@@ -139,6 +139,9 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
                 logging.info("Completed running the script...")
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
+            elif thexml.getElementsByTagName("ns13:status")[0].firstChild.nodeValue == "FAILURE":
+                logging.warn("Could not get ISIS database!!!!!!")
+                sys.exit("Collection error.  Ending execution.")
         except IndexError:
             logging.info("Run status: " + thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue)
             if thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue == "COMPLETED":
