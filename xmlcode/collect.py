@@ -21,7 +21,7 @@ def runcollector(baseURL, epnmuser, epnmpassword):
     try:
         collectMPLSinterfaces(baseURL, epnmuser, epnmpassword)
     except Exception as err:
-        logging.warn("MPLS topological links are not valid.  Halting program.")
+        logging.critical("MPLS topological links are not valid.  Halting program.")
         sys.exit("Collection error.  Ending execution.")
 
     logging.info("Collecting virtual connections...")
@@ -140,7 +140,7 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
             elif thexml.getElementsByTagName("ns13:status")[0].firstChild.nodeValue == "FAILURE":
-                logging.warn("Could not get ISIS database!!!!!!")
+                logging.critical("Could not get ISIS database!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
         except IndexError:
             logging.info("Run status: " + thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue)
@@ -149,7 +149,7 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
                 results = thexml.getElementsByTagName("ns13:transcript")[0].firstChild.nodeValue
                 notDone = False
             elif thexml.getElementsByTagName("ns13:run-status")[0].firstChild.nodeValue == "FAILURE":
-                logging.warn("Could not get ISIS database!!!!!!")
+                logging.critical("Could not get ISIS database!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
 
 

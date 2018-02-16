@@ -114,6 +114,7 @@ def generateL3circuits(plan, l3linksdict):
     duplicatelink = False
     circ_srlgs = {}
     for k1, v1 in l3linksdict.items():
+        # logging.info "**************Nodename is: " + k1
         firstnode = k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
@@ -139,8 +140,11 @@ def generateL3circuits(plan, l3linksdict):
                                                                                  lastnode)
 
                             name = "L1_circuit_" + str(c)
-                            l1circuit = generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
+                            try:
+                                l1circuit = generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
                                                           intfbw)
+                            except Exception as err:
+                                logging.critical("Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
                             name = "L3_circuit_" + str(i)
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity)
                             l3circuit.setL1Circuit(l1circuit)
@@ -225,7 +229,11 @@ def process_srlgs(plan, circ_srlgs):
 def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
     index = 0
     for lsp in lsps:
-        lspBW = int(int(lsp['signalled-bw']) / 1000)
+        if isinstance(lsp['signalled-bw'], basestring):
+            lspBW = int(int(lsp['signalled-bw']) / 1000)
+        else:
+            lspBW = '0'
+            logging.warn('LSP did not have valid BW, setting to zero.')
         direction = lsp['direction']
         frr = False
         frrval = lsp['FRR']
