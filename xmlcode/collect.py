@@ -21,8 +21,8 @@ def runcollector(baseURL, epnmuser, epnmpassword):
     try:
         collectMPLSinterfaces(baseURL, epnmuser, epnmpassword)
     except Exception as err:
-        logging.critical("MPLS topological links are not valid.  Halting program.")
-        sys.exit("Collection error.  Ending execution.")
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
 
     logging.info("Collecting virtual connections...")
     collectvirtualconnections(baseURL, epnmuser, epnmpassword)
@@ -281,22 +281,26 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                             matchedlink = True
                             names.append(discoveredname)
                             v3['discoveredname'] = discoveredname
-                            node1 = \
-                                item.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue.split('!')[
-                                    1].split('=')[1]
-                            node1intf = \
-                                item.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue.split('!')[
-                                    2].split('=')[2]
-                            node1intfparsed = node1intf.split('-')[0]
+                            try:
+                                node1 = \
+                                    item.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue.split('!')[
+                                        1].split('=')[1]
+                                node1intf = \
+                                    item.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue.split('!')[
+                                        2].split('=')[2]
+                                node1intfparsed = node1intf.split('-')[0]
 
-                            node2 = \
-                                item.getElementsByTagName("ns17:endpoint-ref")[1].firstChild.nodeValue.split('!')[
-                                    1].split('=')[1]
+                                node2 = \
+                                    item.getElementsByTagName("ns17:endpoint-ref")[1].firstChild.nodeValue.split('!')[
+                                        1].split('=')[1]
 
-                            node2intf = \
-                                item.getElementsByTagName("ns17:endpoint-ref")[1].firstChild.nodeValue.split('!')[
-                                    2].split('=')[2]
-                            node2intfparsed = node2intf.split('-')[0]
+                                node2intf = \
+                                    item.getElementsByTagName("ns17:endpoint-ref")[1].firstChild.nodeValue.split('!')[
+                                        2].split('=')[2]
+                                node2intfparsed = node2intf.split('-')[0]
+                            except Exception as err:
+                                logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+                                sys.exit("Collection error.  Halting execution.")
 
                             if node2 == v3['Neighbor']:
                                 v3['Neighbor Intf'] = node2intfparsed

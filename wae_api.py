@@ -47,7 +47,7 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
 
-    # # Delete all output files
+    # Delete all output files
     logging.info("Cleaning files from last collection...")
     try:
         remove_tree('jsonfiles')

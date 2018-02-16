@@ -123,6 +123,10 @@ def generateL3circuits(plan, l3linksdict):
                     lastnode = v3['Neighbor']
                     discoveredname = v3['discoveredname']
                     affinity = v3['Affinity']
+                    firstnode_ip = [v3['Local IP']]
+                    firstnode_intf = v3['Local Intf']
+                    lastnode_ip = [v3['Neighbor IP']]
+                    lastnode_intf = v3['Neighbor Intf']
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
                     srlgs = []
@@ -142,11 +146,13 @@ def generateL3circuits(plan, l3linksdict):
                             name = "L1_circuit_" + str(c)
                             try:
                                 l1circuit = generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
-                                                          intfbw)
+                                                              intfbw)
                             except Exception as err:
-                                logging.critical("Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
+                                logging.critical(
+                                    "Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
                             name = "L3_circuit_" + str(i)
-                            l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity)
+                            l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
+                                                          lastnode_ip, firstnode_intf, lastnode_intf)
                             l3circuit.setL1Circuit(l1circuit)
                             l3circuit.setCapacity(l1circuit.getBandwidth())
                             intfdict = l3circuit.getAllInterfaces()
@@ -161,7 +167,8 @@ def generateL3circuits(plan, l3linksdict):
                         i += 1
                         name = "L3_circuit_" + str(i)
                         linkslist.append(discoveredname)
-                        l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity)
+                        l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
+                                                      lastnode_ip, firstnode_intf, lastnode_intf)
                         l3circuit.setCapacity(intfbw)
                         intfdict = l3circuit.getAllInterfaces()
                         for k6, v6 in intfdict.items():
@@ -177,11 +184,11 @@ def generateL3circuits(plan, l3linksdict):
     process_srlgs(plan, circ_srlgs)
 
 
-def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity):
+def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
-    nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
-    nodeBintfname = "L3_intf_" + name + "_to_" + l3nodeA
+    # nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
+    # nodeBintfname = "L3_intf_" + name + "_to_" + l3nodeA
 
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
@@ -194,8 +201,10 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity):
         if afbit == '1':
             affinities.append(c)
         c += 1
-    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities)
-    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities)
+    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,
+                               ipAddresses=l3nodeA_ip)
+    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,
+                               ipAddresses=l3nodeB_ip)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
     circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
