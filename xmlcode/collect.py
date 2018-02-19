@@ -152,7 +152,6 @@ def collectISIS(baseURL, epnmuser, epnmpassword):
                 logging.critical("Could not get ISIS database!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
 
-
     logging.info("Database received.")
     with open("jsonfiles/isisdb", 'wb') as f:
         f.write(results)
@@ -185,7 +184,7 @@ def processISIS():
                     logging.warn("There was a problem parsing the neighbor!")
                     logging.exception(err)
                     logging.critical("Critical error!")
-                    sys.exit("ISIS database is not complete for node " + node +"!!! Halting execution!")
+                    sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
                 try:
                     metric = re.search('Metric: (.*).*IS-Extended.*', line).group(1).strip()
                     nodes[node]['Links'][linkid]['Metric'] = metric
@@ -193,7 +192,7 @@ def processISIS():
                     logging.warn("There was a problem parsing the metric!")
                     logging.exception(err)
                     logging.critical("Critical error!")
-                    sys.exit("ISIS database is not complete for node " + node +"!!! Halting execution!")
+                    sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
             elif "Affinity" in line:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
@@ -559,7 +558,9 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
     vcdict = {}
     for item in thexml.getElementsByTagName("ns9:virtual-connection"):
         tmpfdn = None
+        adminstate = None
         affinitybits = None
+        affinitymask = None
         destinationIP = None
         tunnelID = None
         tunnelsource = None
@@ -570,9 +571,10 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
         adminstate = None
         fdn = None
         erroredlsp = False
+        autoroute = None
         adminstate = item.getElementsByTagName("ns9:admin-state")[0].firstChild.nodeValue
         fdn = item.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
-        if not adminstate == "ns4:admin-state-unavailable":
+        if adminstate == "ns4:admin-state-up":
             direction = item.getElementsByTagName("ns9:direction")[0].firstChild.nodeValue
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
@@ -583,10 +585,14 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
                         try:
                             affinitybits = subsubsubitem.getElementsByTagName("ns9:affinity-bits")[
                                 0].firstChild.nodeValue
+                            affinitymask = subsubsubitem.getElementsByTagName("ns9:affinity-mask")[
+                                0].firstChild.nodeValue
                         except Exception as err2:
                             logging.warn("LSP has no affinity bits: " + fdn)
                         signalledBW = subsubsubitem.getElementsByTagName("ns9:signalled-bw")[0].firstChild.nodeValue
                         destinationIP = subsubsubitem.getElementsByTagName("ns9:destination-address")[
+                            0].firstChild.nodeValue
+                        autoroute = subsubsubitem.getElementsByTagName("ns9:auto-route-announce-enabled")[
                             0].firstChild.nodeValue
                         for subsubsubsubitem in subsubitem.getElementsByTagName("ns9:fast-reroute"):
                             fastreroute = subsubsubsubitem.getElementsByTagName("ns9:is-enabled")[
@@ -606,8 +612,10 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
                 logging.warn(err)
                 erroredlsp = True
             if not erroredlsp:
+                vcdict['admin-state'] = adminstate
                 vcdict['tufdn'] = tmpfdn
                 vcdict['affinitybits'] = affinitybits
+                vcdict['affinitymask'] = affinitymask
                 vcdict['Destination IP'] = destinationIP
                 vcdict['Tunnel ID'] = tunnelID
                 vcdict['Tunnel Source'] = tunnelsource
@@ -615,6 +623,7 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
                 vcdict['co-routed'] = corouted
                 vcdict['signalled-bw'] = signalledBW
                 vcdict['FRR'] = fastreroute
+                vcdict['auto-route-announce-enabled'] = autoroute
                 lsplist.append(vcdict)
                 logging.info(
                     "Collected tunnel " + tunnelID + " Source: " + tunnelsource + " Destination " + tunneldestination)

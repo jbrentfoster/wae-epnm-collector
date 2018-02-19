@@ -248,7 +248,8 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
         frrval = lsp['FRR']
         if frrval == 'true': frr = True
         index += 1
-        if lspBW > 0:
+        # if lspBW > 0:
+        if lsp['admin-state'] == 'ns4:admin-state-up':
             tuID = lsp['Tunnel ID']
             lspName = lsp['fdn'].split('!')[1].split('=')[1]
             demandName = "Demand for " + lspName
@@ -264,7 +265,7 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                 except Exception as err:
                     logging.warn(
                         "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + tuID)
-            else:
+            elif lsp['auto-route-announce-enabled']== 'true':
                 logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + tuID)
                 new_private_lsp(plan, src, dest, lspName, lspBW, frr)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
