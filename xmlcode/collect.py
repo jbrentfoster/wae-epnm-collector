@@ -89,14 +89,18 @@ def collectL1links(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/l1Links.json", 'wb') as f:
         for item in thexml.getElementsByTagName("ns17:topological-link"):
             fdn = item.getElementsByTagName("ns17:fdn")[0].firstChild.nodeValue
-            l1links['Link' + str(i)] = dict([('fdn', fdn)])
-            l1links['Link' + str(i)]['Nodes'] = []
+            nodes = []
             for subitem in item.getElementsByTagName("ns17:endpoint-list"):
                 if subitem.childNodes.length > 3:
                     for subsubitem in subitem.getElementsByTagName("ns17:endpoint"):
                         endpoint = subsubitem.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue
                         node = endpoint.split('!')[1].split('=')[1]
-                        l1links['Link' + str(i)].get('Nodes').append(node)
+                        nodes.append(node)
+                        # l1links['Link' + str(i)].get('Nodes').append(node)
+            if len(nodes) > 1:
+                l1links['Link' + str(i)] = dict([('fdn', fdn)])
+                l1links['Link' + str(i)]['Nodes'] = nodes
+            # l1links['Link' + str(i)]['Nodes'] = []
             i += 1
         f.write(json.dumps(l1links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -162,7 +166,6 @@ def processISIS():
     nodes = {}
     with open("jsonfiles/isisdb", 'rb') as f:
         lines = f.read().splitlines()
-        # ilines = iter(lines)
         ilines = lines
         c = 0
         for line in ilines:
@@ -299,8 +302,9 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                                 node2intfparsed = node2intf.split('-')[0]
                             except Exception as err:
                                 logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                                sys.exit("Collection error.  Halting execution.")
-
+                                # sys.exit("Collection error.  Halting execution.")
+                                logging.warn("Removing link from topology...")
+                                v2.pop(k3)
                             if node2 == v3['Neighbor']:
                                 v3['Neighbor Intf'] = node2intfparsed
                                 v3['Local Intf'] = node1intfparsed
@@ -310,9 +314,13 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                             else:
                                 logging.warn(
                                     "Could not match node names for interface assignment for node " + k1 + " link " + k3)
+                                logging.warn("Removing link from topology...")
+                                v2.pop(k3)
                     if not matchedlink:
                         logging.warn(
                             "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
+                        logging.warn("Removing link from topology...")
+                        v2.pop(k3)
     with open("jsonfiles/l3Links_add_tl.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -362,7 +370,7 @@ def collectvirtualconnections(baseURL, epnmuser, epnmpassword):
                                         matched_fdn = True
                                         # if not matched_fdn:
                                         #     logging.info "Could not match vc-fdn " + fdn
-    logging.info("completed collecting virtual connections...")
+    logging.info("Completed collecting virtual connections...")
     with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()

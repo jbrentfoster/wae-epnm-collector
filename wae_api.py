@@ -90,12 +90,18 @@ def main():
         l1nodesdict = json.load(f)
         f.close()
     l1nodes = []
+    found = False
     for k1, v1 in l1nodesdict.items():
         for node in nodecoordinates:
             if node['Node'] == v1['Name']:
                 tmpnode = {'Name': v1['Name'], 'X': node['X'], 'Y': node['Y']}
-                # TODO Add code to catch case where node name is not in the file with the coordinates (set to 0,0)
-        l1nodes.append(tmpnode)
+                l1nodes.append(tmpnode)
+                found = True
+                break
+        # If node not found in coordinates list just initialize with default 0,0 coordinates
+        if not found:
+            tmpnode = {'Name': v1['Name'], 'X': 0, 'Y': 0}
+            l1nodes.append(tmpnode)
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan
