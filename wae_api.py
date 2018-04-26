@@ -22,9 +22,11 @@ def main():
     args = parser.parse_args()
 
     epnmipaddr = "10.135.7.222"
+    # epnmipaddr = "10.201.1.248"
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"
     epnmpassword = "Epnm1234"
+    # epnmpassword = "Public123"
     current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
@@ -120,10 +122,16 @@ def main():
         l3linksdict = json.load(f)
         f.close()
     l3nodes = []
+    found = False
     for k1, v1 in l3linksdict.items():
         for node in nodecoordinates:
             if node['Node'] == k1:
                 tmpnode = {'Name': k1, 'X': node['X'], 'Y': node['Y']}
+                found = True
+                break
+        # If node not found in coordinates list just initialize with default 0,0 coordinates
+        if not found:
+            tmpnode = {'Name': k1, 'X': 0, 'Y': 0}
         l3nodes.append(tmpnode)
     waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 

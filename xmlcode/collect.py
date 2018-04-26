@@ -98,8 +98,10 @@ def collectL1links(baseURL, epnmuser, epnmpassword):
                         nodes.append(node)
                         # l1links['Link' + str(i)].get('Nodes').append(node)
             if len(nodes) > 1:
-                l1links['Link' + str(i)] = dict([('fdn', fdn)])
-                l1links['Link' + str(i)]['Nodes'] = nodes
+                duplicates = any(nodes.count(x) > 1 for x in nodes)
+                if not duplicates:
+                    l1links['Link' + str(i)] = dict([('fdn', fdn)])
+                    l1links['Link' + str(i)]['Nodes'] = nodes
             # l1links['Link' + str(i)]['Nodes'] = []
             i += 1
         f.write(json.dumps(l1links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -169,15 +171,18 @@ def processISIS():
         ilines = lines
         c = 0
         for line in ilines:
-            if "00-00 " in line:
+            if "00-00 " in line or "00-00*" in line:
                 node = line.split('.')[0]
                 i = 0
+                ignoreIntfIPs = False
+                foundfirstlink = False
             elif "Router ID" in line:
                 routerid = line.split(':')[1].strip()
                 nodes[node] = dict([('Loopback Address', routerid)])
                 nodes[node]['Links'] = dict()
             elif "Metric" in line and "IS-Extended" in line:
                 ignoreIntfIPs = False
+                foundfirstlink = True
                 try:
                     neighbor = re.search('.*%s (.*).00' % ('IS-Extended'), line).group(1)
                     i += 1
@@ -210,7 +215,7 @@ def processISIS():
             elif "Reservable Global pool BW" in line:
                 rsvpBW = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
-            elif "SRLGs" in line:
+            elif "SRLGs" in line and foundfirstlink:
                 nodes[node]['Links'][linkid]['SRLGs'] = dict()
                 d = 1
                 srlgs = []
@@ -587,7 +592,12 @@ def collectlsps(baseURL, epnmuser, epnmpassword):
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
             for subsubitem in item.getElementsByTagName("ns9:termination-point-list"):
-                tmpfdn = subsubitem.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
+                try:
+                    tmpfdn = subsubitem.getElementsByTagName("ns9:fdn")[0].firstChild.nodeValue
+                except Exception as err:
+                    logging.warn("Exception: could not get LSP fdn" )
+                    logging.warn(err)
+                    erroredlsp = True
                 try:
                     for subsubsubitem in subsubitem.getElementsByTagName("ns9:mpls-te-tunnel-tp"):
                         try:

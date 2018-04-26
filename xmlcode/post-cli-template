@@ -4,7 +4,7 @@
     <ns1:target-list>
       <ns1:target>
         <ns1:node-ref>MD=CISCO_EPNM!ND=NCS4K-Site1</ns1:node-ref>
-        <!--<ns1:node-ref>MD=CISCO_EPNM!ND=Naussau_M1_4K</ns1:node-ref>-->
+        <!--<ns1:node-ref>MD=CISCO_EPNM!ND=Weschester_M3_4K</ns1:node-ref>-->
       </ns1:target>
     </ns1:target-list>
   </ns1:run-cli-configuration>

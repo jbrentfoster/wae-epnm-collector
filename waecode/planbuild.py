@@ -43,12 +43,14 @@ def generateL1nodes(plan, l1nodelist):
 
 def generateL1links(plan, l1linklist):
     l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
+    i = 1
     for l1link in l1linklist:
         l1nodeAKey = L1NodeKey(l1link[0])
         l1nodeBKey = L1NodeKey(l1link[1])
-        l1linkname = l1link[0] + "_" + l1link[1]
+        l1linkname = l1link[0] + "_" + l1link[1] + "_" + str(i)
         l1linkRec = L1LinkRecord(name=l1linkname, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey)
         l1LinkManager.newL1Link(l1linkRec)
+        i += 1
 
 
 def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
@@ -255,6 +257,9 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             demandName = "Demand for " + lspName
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
+            if src == None or dest == None:
+                logging.warn("Could not get valid source or destination node from Tu IP address")
+                break
             if direction == "ns4:bi-direction":
                 logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + tuID)
                 nodes = [src, dest]
