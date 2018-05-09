@@ -21,7 +21,7 @@ def main():
                         help='the local path for storing collections')
     args = parser.parse_args()
 
-    epnmipaddr = "10.135.7.222"
+    epnmipaddr = "10.135.7.223"
     # epnmipaddr = "10.201.1.248"
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = "root"

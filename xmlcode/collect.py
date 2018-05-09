@@ -305,20 +305,21 @@ def collectMPLSinterfaces(baseURL, epnmuser, epnmpassword):
                                     item.getElementsByTagName("ns17:endpoint-ref")[1].firstChild.nodeValue.split('!')[
                                         2].split('=')[2]
                                 node2intfparsed = node2intf.split('-')[0]
+
+                                if node2 == v3['Neighbor']:
+                                    v3['Neighbor Intf'] = node2intfparsed
+                                    v3['Local Intf'] = node1intfparsed
+                                elif node1 == v3['Neighbor']:
+                                    v3['Neighbor Intf'] = node1intfparsed
+                                    v3['Local Intf'] = node2intfparsed
+                                else:
+                                    logging.warn(
+                                        "Could not match node names for interface assignment for node " + k1 + " link " + k3)
+                                    logging.warn("Removing link from topology...")
+                                    v2.pop(k3)
                             except Exception as err:
                                 logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
                                 # sys.exit("Collection error.  Halting execution.")
-                                logging.warn("Removing link from topology...")
-                                v2.pop(k3)
-                            if node2 == v3['Neighbor']:
-                                v3['Neighbor Intf'] = node2intfparsed
-                                v3['Local Intf'] = node1intfparsed
-                            elif node1 == v3['Neighbor']:
-                                v3['Neighbor Intf'] = node1intfparsed
-                                v3['Local Intf'] = node2intfparsed
-                            else:
-                                logging.warn(
-                                    "Could not match node names for interface assignment for node " + k1 + " link " + k3)
                                 logging.warn("Removing link from topology...")
                                 v2.pop(k3)
                     if not matchedlink:
