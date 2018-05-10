@@ -50,20 +50,20 @@ def main():
     rootLogger.addHandler(consoleHandler)
 
     # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('xmlgets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
-
-    # Recreate output directories
-    mkpath('jsonfiles')
-    mkpath('xmlgets')
-    mkpath(planfiles_root)
-
-    # Run the collector...
-    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles')
+    #     remove_tree('xmlgets')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+    #
+    # # Recreate output directories
+    # mkpath('jsonfiles')
+    # mkpath('xmlgets')
+    # mkpath(planfiles_root)
+    #
+    # # Run the collector...
+    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -133,6 +133,7 @@ def main():
         if not found:
             tmpnode = {'Name': k1, 'X': 0, 'Y': 0}
         l3nodes.append(tmpnode)
+        found = False
     waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
     # Add L3 links to plan and stitch to L1 links where applicable
