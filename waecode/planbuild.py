@@ -8,6 +8,7 @@ from com.cisco.wae.design.model.net import NodeKey
 from com.cisco.wae.design.model.net import InterfaceKey
 from com.cisco.wae.design.model.net.layer1 import L1NodeKey
 from com.cisco.wae.design.model.net.layer1 import L1PortKey
+from com.cisco.wae.design.model.net.layer1 import L1LinkKey
 from com.cisco.wae.design.model.net.layer1 import L1CircuitKey
 from com.cisco.wae.design.model.net.layer1 import L1CircuitPathKey
 from com.cisco.wae.design.model.net import DemandKey
@@ -41,21 +42,24 @@ def generateL1nodes(plan, l1nodelist):
         newl1node.setLongitude(int(l1node['X']))
 
 
-def generateL1links(plan, l1linklist):
+def generateL1links(plan, l1linksdict):
     l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
     i = 1
-    for l1link in l1linklist:
-        l1nodeAKey = L1NodeKey(l1link[0])
-        l1nodeBKey = L1NodeKey(l1link[1])
-        l1linkname = l1link[0] + "_" + l1link[1] + "_" + str(i)
-        l1linkRec = L1LinkRecord(name=l1linkname, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey)
+
+    for k, v in l1linksdict.items():
+        nodeAname = v['Nodes'][0]
+        nodeBname = v['Nodes'][1]
+        l1nodeAKey = L1NodeKey(nodeAname)
+        l1nodeBKey = L1NodeKey(nodeBname)
+        fdn = v['fdn']
+        l1linkname = nodeAname + "_" + nodeBname + "_" + str(i)
+        l1linkRec = L1LinkRecord(name=fdn, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=l1linkname)
         l1LinkManager.newL1Link(l1linkRec)
         i += 1
 
 
 def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
-    # l1portrecs = l1portManager.getAllL1PortRecords()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
     l1portAname = name + '_port_to_' + l1nodeB
@@ -79,25 +83,24 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
     l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
     l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
 
-    orderedl1hops = []
-    orderedl1hops.append(l1nodeA)
-    for l1hop in l1hops:
-        for node in l1hop:
-            if node == l1nodeA:
-                pass
-            elif not node in orderedl1hops:
-                orderedl1hops.append(node)
-    c = 0
-    for l1hop in orderedl1hops:
-        if l1hop == l1nodeA:
-            hoptype = HopType('PathStrict', 0)
-        else:
-            hoptype = HopType('PathLoose', 0)
-        l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1hop), step=c,
-                                          type=hoptype)
-        l1circuitpath.addHop(l1hoprec)
-        c += 1
+    l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
+    hoptype = HopType('PathStrict', 1)
+    l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1nodeA), step=0,
+                                      type=hoptype)
+    l1circuitpath.addHop(l1hoprec)
+    c = 1
+    for l1hop in l1hops:
+        l1_nodeA_key = L1NodeKey(l1hop[0][0])
+        l1_nodeB_key = L1NodeKey(l1hop[0][1])
+        l1_link_name = l1hop[1]
+        l1_link_key = L1LinkKey(l1_link_name, l1_nodeA_key, l1_nodeB_key)
+        l1_link = l1linkManager.getL1Link(l1_link_key)
+        l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=l1_nodeA_key,
+                                          hopLink=l1_link.getKey(), step=c, type=hoptype)
+        l1circuitpath.addHop(l1hoprec)
+        hops = l1circuitpath.getHops()
+        c += 1
     return l1circuit
 
 
@@ -270,7 +273,7 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                 except Exception as err:
                     logging.warn(
                         "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + tuID)
-            elif lsp['auto-route-announce-enabled']== 'true':
+            elif lsp['auto-route-announce-enabled'] == 'true':
                 logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + tuID)
                 new_private_lsp(plan, src, dest, lspName, lspBW, frr)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
@@ -355,12 +358,14 @@ def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
     lastl1node = ""
     for l1hop in orderedl1hops:
         nodelist = []
+        fdn = l1hop['fdn']
         firstlasthop = False
         for k5, v5 in l1hop['Nodes'].items():
             if k5 == firstnode or k5 == lastnode: firstlasthop = True
             nodelist.append(k5)
         if not firstlasthop:
-            l1hops.append(nodelist)
+            l1hops.append((nodelist, fdn))
+            # l1hops.append(nodelist)
         elif nodelist[0] == firstnode:
             firstl1node = nodelist[1]
         elif nodelist[1] == firstnode:

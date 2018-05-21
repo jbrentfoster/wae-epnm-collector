@@ -457,23 +457,25 @@ def parsemultilayerroute(thexml, topologylayer, intftype):
         subtype = item.getElementsByTagName("ns17:topology-layer")[0].firstChild.nodeValue
         if subtype == topologylayer:
             for subitem in item.getElementsByTagName("ns17:tl-list"):
-                tmpfdn = subitem.getElementsByTagName("ns17:fdn")[0].firstChild.nodeValue
-                for subsubitem in subitem.getElementsByTagName("ns17:endpoint-list"):
-                    for subsubsubitem in subsubitem.getElementsByTagName("ns17:endpoint"):
-                        tmpep = subsubsubitem.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue
-                        tmpnode = tmpep.split('!')[1].split('=')[1]
-                        tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
-                        tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
-                    for key, val in tmpl1hops.get('Nodes').items():
-                        porttype = val.get('Port')
-                        if intftype in porttype: firsthop = True
-                    if firsthop:
-                        l1hops['L1 Hop' + str(i)] = tmpl1hops
-                        l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
-                        i += 1
-                    tmpl1hops = {}
-                    tmpl1hops['Nodes'] = dict()
-                    firsthop = False
+                for subitem_tl in subitem.getElementsByTagName("ns17:topological-link"):
+                    tmpfdn = subitem_tl.getElementsByTagName("ns17:fdn")[0].firstChild.nodeValue
+                # tmpfdn = subitem.getElementsByTagName("ns17:fdn")[0].firstChild.nodeValue
+                    for subsubitem in subitem_tl.getElementsByTagName("ns17:endpoint-list"):
+                        for subsubsubitem in subsubitem.getElementsByTagName("ns17:endpoint"):
+                            tmpep = subsubsubitem.getElementsByTagName("ns17:endpoint-ref")[0].firstChild.nodeValue
+                            tmpnode = tmpep.split('!')[1].split('=')[1]
+                            tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
+                            tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
+                        for key, val in tmpl1hops.get('Nodes').items():
+                            porttype = val.get('Port')
+                            if intftype in porttype: firsthop = True
+                        if firsthop:
+                            l1hops['L1 Hop' + str(i)] = tmpl1hops
+                            l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
+                            i += 1
+                        tmpl1hops = {}
+                        tmpl1hops['Nodes'] = dict()
+                        firsthop = False
                 i = 1
     return l1hops
 

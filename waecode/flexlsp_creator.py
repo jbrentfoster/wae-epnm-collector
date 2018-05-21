@@ -1,11 +1,13 @@
-import re
-import sys
 import logging
+import re
+import os
+import sys
 
 sys.path.append("../")
 import cs_common
 
 import com.cisco.wae.design
+import json
 from com.cisco.wae.design.model.net import NodeKey
 
 _FLAG_RE = re.compile(r'\A--?([-\w]+)\Z')
@@ -13,6 +15,74 @@ _HELP_RE = re.compile(r'\A-h(?:elp)?\Z', re.IGNORECASE)
 _VERSION_RE = re.compile(r'\A-v(?:ersion)?\Z', re.IGNORECASE)
 
 reportLogText = ""
+
+
+def main():
+    '''
+    main()
+    '''
+
+    #  get addon options
+    options = get_cli_options()
+    print "foo"
+    #	print "[addon-print] options:", options
+    #	print "[addon-print] plan-file:", options['plan-file']
+    print json.dumps(options, sort_keys=True, indent=4, separators=(',', ': '))
+    rprint(json.dumps(options, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    #	rprint("")
+
+    #	rprint(options['nodes'])
+    with open(options['nodes']) as filehandle:
+        rawNodeData = filehandle.read()
+        filehandle.close()
+    # rprint("raw Node Data:")
+    #	rprint(rawNodeData)
+    #	rprint("")
+    is_addon = 'CARIDEN_GUI' in os.environ
+
+    # spin up WAE API instance
+    conn = com.cisco.wae.design.ServiceConnectionManager.newService()
+    plan = conn.getPlanManager().newPlanFromFileSystem(options['plan-file'])
+    network = plan.getNetwork()
+    nodeManager = network.getNodeManager()
+
+    # find selected Nodes
+    nodeMap = nodeManager.getNodesFromTable(rawNodeData)
+    rprint("NodeMap:")
+    rprint(nodeMap)
+    nodeList = []
+    nodeKeyList = []
+    for nodeKey in nodeMap:
+        nodeKeyList.append(nodeKey)
+        nodeList.append(nodeKey.name)
+    #
+    createflexlsp(options, conn, plan, nodeList, "foo", 123)
+
+
+    reportManager = network.getReportManager()
+    reportKeyName = "FlexLSP Creator"
+
+    textReportList = []
+    textSection = com.cisco.wae.design.model.net.ReportTextSection(title='Log', content=reportLogText, displayIndex=1)
+    textReportList.append(textSection)
+
+    reportKey = com.cisco.wae.design.model.net.ReportKey(reportKeyName)
+    if reportManager.hasReport(reportKey):
+        reportManager.removeReport(reportKey)
+
+    reportRecord = com.cisco.wae.design.model.net.ReportRecord(name=reportKeyName, textSections=textReportList)
+    newReport = reportManager.newReport(reportRecord)
+
+    if is_addon:
+        generate_return_config_file(options, reportKeyName)
+
+    # save the new plan-file with the created report
+    try:
+        plan.serializeToFileSystem(options['out-file'])
+    except Exception as exception:
+        sys.stderr.write("Fatal[0]: Unable to write: " + options['out-file'] + " (" + exception.reason + ")\n")
+        sys.exit(1)
 
 
 def createflexlsp(options, conn, plan, nodes, name, lspBW):
@@ -270,4 +340,86 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
 
 def rprint(input):
-    logging.debug(input)
+    is_addon = 'CARIDEN_GUI' in os.environ
+    if is_addon:
+        global reportLogText
+        reportLogText = reportLogText + str(input) + "\n"
+    else:
+        logging.debug(input)
+
+
+def get_cli_options():
+    '''
+        Captures and validates the CLI options
+    '''
+    options = process_argv()
+    # options = validate_options(options)
+    return options
+
+
+def process_argv():
+    '''
+        Returns the cli arguments in a dictionary
+    '''
+    argv = list(sys.argv)
+    options = {}
+    argv.pop(0)
+    while len(argv) > 0:
+        item = argv.pop(0)
+        next_item = argv.pop(0)
+        options[re.sub(r'^-', '', item)] = next_item
+    return options
+
+
+# def validate_options(options):
+#     '''
+#         Validates the CLI options
+#     '''
+#     # Ensure we fill out any defined defaults
+#     for option in valid_options.keys():
+#         if 'default' in valid_options[option]:
+#             default = valid_options[option]['default']
+#             option = re.sub(r'^-', '', option)
+#             if option not in options:
+#                 options[option] = default
+#
+#     # Ensure we check our allowed values
+#     for option in valid_options.keys():
+#         if 'allowed' in valid_options[option]:
+#             allowed_values = valid_options[option]['allowed']
+#             option = re.sub(r'^-', '', option)
+#             if option in options:
+#                 if options[option] not in allowed_values:
+#                     do_help()
+#
+#     # Ensure we have our required options
+#     for option in valid_options.keys():
+#         if 'REQUIRED' in valid_options[option]:
+#             if valid_options[option]['REQUIRED'] == 1:
+#                 option = re.sub(r'^-', '', option)
+#                 if option not in options:
+#                     do_help()
+#
+#     return options
+
+
+def generate_return_config_file(options, reportKey):
+    '''
+        Generate a return-config-file so the WAE GUI will display the report
+    '''
+    with open(options['return-config-file'], "w") as filehandle:
+        filehandle.write("<AddOnReturnConfig>\n")
+        filehandle.write("Property\tValue\n")
+        filehandle.write("ShowReport\t" + reportKey + "\n")
+        filehandle.close()
+    return
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except Exception as exception:
+        import traceback
+
+        print traceback.print_exc()
+        sys.stderr.write('Fatal [0]: ' + str(exception) + '\n')

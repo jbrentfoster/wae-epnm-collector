@@ -50,20 +50,20 @@ def main():
     rootLogger.addHandler(consoleHandler)
 
     # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('xmlgets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
-
-    # Recreate output directories
-    mkpath('jsonfiles')
-    mkpath('xmlgets')
-    mkpath(planfiles_root)
-
-    # Run the collector...
-    xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles')
+    #     remove_tree('xmlgets')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+    #
+    # # Recreate output directories
+    # mkpath('jsonfiles')
+    # mkpath('xmlgets')
+    # mkpath(planfiles_root)
+    #
+    # # Run the collector...
+    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -111,10 +111,10 @@ def main():
     with open("jsonfiles/l1Links.json", 'rb') as f:
         l1linksdict = json.load(f)
         f.close()
-    l1links = []
-    for k1, v1 in l1linksdict.items():
-        l1links.append(v1['Nodes'])
-    waecode.planbuild.generateL1links(plan, l1linklist=l1links)
+    # l1links = []
+    # for k1, v1 in l1linksdict.items():
+    #     l1links.append(v1['Nodes'])
+    waecode.planbuild.generateL1links(plan, l1linksdict)
 
     # Add L3 nodes to plan
     logging.info("Adding L3 nodes...")
