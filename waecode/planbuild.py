@@ -245,6 +245,8 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
     for lsp in lsps:
         if isinstance(lsp['signalled-bw'], basestring):
             lspBW = int(int(lsp['signalled-bw']) / 1000)
+        elif isinstance(lsp['signalled-bw'], int):
+            lspBW = lsp['signalled-bw'] / 1000
         else:
             lspBW = '0'
             logging.warn('LSP did not have valid BW, setting to zero.')
@@ -254,7 +256,7 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
         if frrval == 'true': frr = True
         index += 1
         # if lspBW > 0:
-        if lsp['admin-state'] == 'ns4:admin-state-up':
+        if lsp['admin-state'] == 'com:admin-state-up':
             tuID = lsp['Tunnel ID']
             lspName = lsp['fdn'].split('!')[1].split('=')[1]
             demandName = "Demand for " + lspName
@@ -263,8 +265,8 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             if src == None or dest == None:
                 logging.warn("Could not get valid source or destination node from Tu IP address")
                 break
-            if direction == "ns4:bi-direction":
-                logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + tuID)
+            if direction == "com:bi-direction":
+                logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + str(tuID))
                 nodes = [src, dest]
                 try:
                     flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
@@ -272,9 +274,9 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                     new_demand_for_LSP(plan, dest, src, lspName + "_reverse", demandName + "_reverse", lspBW)
                 except Exception as err:
                     logging.warn(
-                        "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + tuID)
-            elif lsp['auto-route-announce-enabled'] == 'true':
-                logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + tuID)
+                        "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + str(tuID))
+            elif lsp['auto-route-announce-enabled'] == True:
+                logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
                 new_private_lsp(plan, src, dest, lspName, lspBW, frr)
                 new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 

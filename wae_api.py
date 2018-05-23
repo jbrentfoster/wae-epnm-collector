@@ -7,7 +7,7 @@ from datetime import datetime
 from distutils.dir_util import copy_tree
 from distutils.dir_util import remove_tree
 from distutils.dir_util import mkpath
-import xmlcode.collect
+import collectioncode.collect
 import logging
 import shutil
 import argparse
@@ -50,20 +50,20 @@ def main():
     rootLogger.addHandler(consoleHandler)
 
     # Delete all output files
-    # logging.info("Cleaning files from last collection...")
-    # try:
-    #     remove_tree('jsonfiles')
-    #     remove_tree('xmlgets')
-    # except Exception as err:
-    #     logging.info("No files to cleanup...")
-    #
-    # # Recreate output directories
-    # mkpath('jsonfiles')
-    # mkpath('xmlgets')
-    # mkpath(planfiles_root)
-    #
-    # # Run the collector...
-    # xmlcode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    logging.info("Cleaning files from last collection...")
+    try:
+        remove_tree('jsonfiles')
+        remove_tree('jsongets')
+    except Exception as err:
+        logging.info("No files to cleanup...")
+
+    # Recreate output directories
+    mkpath('jsonfiles')
+    mkpath('jsongets')
+    mkpath(planfiles_root)
+
+    # Run the collector...
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -111,9 +111,6 @@ def main():
     with open("jsonfiles/l1Links.json", 'rb') as f:
         l1linksdict = json.load(f)
         f.close()
-    # l1links = []
-    # for k1, v1 in l1linksdict.items():
-    #     l1links.append(v1['Nodes'])
     waecode.planbuild.generateL1links(plan, l1linksdict)
 
     # Add L3 nodes to plan
@@ -166,7 +163,7 @@ def main():
     try:
         copy_tree('jsonfiles', archive_root + '/jsonfiles')
         copy_tree('planfiles', archive_root + '/planfiles')
-        copy_tree('xmlgets', archive_root + '/xmlgets')
+        copy_tree('xmlgets', archive_root + '/jsongets')
     except Exception as err:
         logging.info("No output files to backup...")
 

@@ -24,11 +24,10 @@ def main():
 
     #  get addon options
     options = get_cli_options()
-    print "foo"
     #	print "[addon-print] options:", options
     #	print "[addon-print] plan-file:", options['plan-file']
-    print json.dumps(options, sort_keys=True, indent=4, separators=(',', ': '))
-    rprint(json.dumps(options, sort_keys=True, indent=4, separators=(',', ': ')))
+    # print json.dumps(options, sort_keys=True, indent=4, separators=(',', ': '))
+    # rprint(json.dumps(options, sort_keys=True, indent=4, separators=(',', ': ')))
 
     #	rprint("")
 
@@ -57,7 +56,7 @@ def main():
         nodeKeyList.append(nodeKey)
         nodeList.append(nodeKey.name)
     #
-    createflexlsp(options, conn, plan, nodeList, "foo", 123)
+    createflexlsp(options, conn, plan, nodeList, options['lspName'], int(options['lspBW']))
 
 
     reportManager = network.getReportManager()

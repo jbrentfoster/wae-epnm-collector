@@ -1,0 +1,10 @@
+{
+	"ra.run-cli-configuration": {
+	"ra.template-name": "show isis database",
+		"ra.target-list": {
+			"ra.target": {
+				"ra.node-ref": "MD=CISCO_EPNM!ND=NCS4K-Site1"
+					}
+			}
+		}
+}
