@@ -19,14 +19,20 @@ def main():
     parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
     parser.add_argument('archive_root', metavar='N', type=str,
                         help='the local path for storing collections')
+    parser.add_argument('seednode_id', metavar='N', type=str,
+                        help="Host ID of the seed node (must be XR!) for network discovery")
+    parser.add_argument('epnm_ipaddr', metavar='N', type=str,
+                        help="Host ID of the seed node (must be XR!) for network discovery")
+    parser.add_argument('epnm_user', metavar='N', type=str,
+                        help="Host ID of the seed node (must be XR!) for network discovery")
+    parser.add_argument('epnm_pass', metavar='N', type=str,
+                        help="Host ID of the seed node (must be XR!) for network discovery")
     args = parser.parse_args()
 
-    epnmipaddr = "10.135.7.223"
-    # epnmipaddr = "10.201.1.248"
+    epnmipaddr = args.epnm_ipaddr
     baseURL = "https://" + epnmipaddr + "/restconf"
-    epnmuser = "root"
-    epnmpassword = "Epnm1234"
-    # epnmpassword = "Public123"
+    epnmuser = args.epnm_user
+    epnmpassword = args.epnm_pass
     current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
@@ -63,7 +69,7 @@ def main():
     mkpath(planfiles_root)
 
     # Run the collector...
-    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')

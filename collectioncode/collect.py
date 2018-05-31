@@ -6,13 +6,13 @@ import logging
 import sys
 
 
-def runcollector(baseURL, epnmuser, epnmpassword):
+def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     logging.info("Collecting L1 nodes...")
     collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 links...")
     collectL1links_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting ISIS database...")
-    collectISIS_json(baseURL, epnmuser, epnmpassword)
+    collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id)
     logging.info("Processing ISIS database...")
     processISIS()
     logging.info("Collecting MPLS topological links...")
@@ -80,13 +80,12 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             fdn = link['topo.fdn']
             nodes = []
             endpointlist = link['topo.endpoint-list']['topo.endpoint']
-            # if len(endpointlist) > 3:
+
             for ep in endpointlist:
                 endpoint = ep['topo.endpoint-ref']
                 node = endpoint.split('!')[1].split('=')[1]
                 nodes.append(node)
             if len(nodes) > 1:
-                # duplicates = any(nodes.count(x) > 1 for x in nodes)
                 duplicates = False
                 if not duplicates:
                     l1links['Link' + str(i)] = dict([('fdn', fdn)])
@@ -96,10 +95,19 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 
-def collectISIS_json(baseURL, epnmuser, epnmpassword):
+def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
     with open("collectioncode/post-cli-template.json", 'r') as f:
         jsonbody = f.read()
         f.close()
+    jsonbody_js = json.loads(jsonbody)
+
+    seednode = jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref']
+    nodeid = seednode.split('=')[2]
+    new_nodeid = seednode_id
+    seednode = seednode.replace(nodeid, new_nodeid)
+
+    jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seednode
+    jsonbody = json.dumps(jsonbody_js)
 
     uri = "/operations/v1/cisco-resource-activation:run-cli-configuration"
     jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
@@ -118,11 +126,7 @@ def collectISIS_json(baseURL, epnmuser, epnmpassword):
         time.sleep(5)
         uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-
         thejson = json.loads(jsonresponse)
-
-        # print json.dumps(thejson, f, sort_keys=True, indent=4, separators=(',', ': '))
-
         try:
             status = thejson['ra.config-response']['ra.job-status']['ra.status']
             logging.info("Job status: " + status)
@@ -428,7 +432,8 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
     tmpl1hops['Nodes'] = dict()
     firsthop = False
     i = 1
-    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list']['topo.virtual-connection-multi-layer-route']:
+    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'][
+        'topo.virtual-connection-multi-layer-route']:
         subtype = item['topo.topology-layer']
         if subtype == topologylayer:
             topo_links = item['topo.tl-list']['topo.topological-link']
@@ -470,6 +475,7 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
                 firsthop = False
                 i = 1
     return l1hops
+
 
 def reorderl1hops():
     with open("jsonfiles/l3Links_add_l1hops.json", 'rb') as f:
@@ -644,7 +650,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict['auto-route-announce-enabled'] = autoroute
                 lsplist.append(vcdict)
                 logging.info(
-                    "Collected tunnel " + str(tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+                    "Collected tunnel " + str(
+                        tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
             else:
                 logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
             vcdict = {}
