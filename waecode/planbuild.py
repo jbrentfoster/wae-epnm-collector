@@ -36,10 +36,8 @@ from com.cisco.wae.design.model.net import SRLGRecord
 def generateL1nodes(plan, l1nodelist):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
     for l1node in l1nodelist:
-        l1nodeRec = L1NodeRecord(name=l1node['Name'])
+        l1nodeRec = L1NodeRecord(name=l1node['Name'],site=l1node['sitekey'])
         newl1node = l1NodeManager.newL1Node(l1nodeRec)
-        newl1node.setLatitude(int(l1node['Y']))
-        newl1node.setLongitude(int(l1node['X']))
 
 
 def generateL1links(plan, l1linksdict):
@@ -108,14 +106,16 @@ def generateL3nodes(plan, l3nodelist):
     for l3node in l3nodelist:
         nodeRec = NodeRecord(name=l3node['Name'])
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
-        newl3node.setLatitude(int(l3node['Y']))
-        newl3node.setLongitude(int(l3node['X']))
+        # newl3node.setLatitude(int(l3node['Y']))
+        # newl3node.setLongitude(int(l3node['X']))
 
 
 def generateL3circuits(plan, l3linksdict):
     c = 0
     i = 0
     linkslist = []
+    l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
+    nodemanager = plan.getNetwork().getNodeManager()
     duplicatelink = False
     circ_srlgs = {}
     for k1, v1 in l3linksdict.items():
@@ -147,6 +147,11 @@ def generateL3circuits(plan, l3linksdict):
                             i += 1
                             l1hops, firstl1node, lastl1node = getfirstlastl1node(v3['Ordered L1 Hops'], firstnode,
                                                                                  lastnode)
+                            firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
+                            print "Node is " + k1 + "Site is " + str(firstsite.getKey())
+                            nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
+                            lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                            nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
 
                             name = "L1_circuit_" + str(c)
                             try:

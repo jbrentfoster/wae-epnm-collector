@@ -59,7 +59,6 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
-
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
     uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer"
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)

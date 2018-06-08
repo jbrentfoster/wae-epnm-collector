@@ -1,6 +1,7 @@
 import os
 import com.cisco.wae.design
 import waecode.planbuild
+from com.cisco.wae.design.model.net import SiteRecord
 import json
 import csv
 from datetime import datetime
@@ -98,18 +99,26 @@ def main():
         l1nodesdict = json.load(f)
         f.close()
     l1nodes = []
-    found = False
+    sites = []
+    site_manager = plan.getNetwork().getSiteManager()
+    # found = False
     for k1, v1 in l1nodesdict.items():
-        for node in nodecoordinates:
-            if node['Node'] == v1['Name']:
-                tmpnode = {'Name': v1['Name'], 'X': node['X'], 'Y': node['Y']}
-                l1nodes.append(tmpnode)
-                found = True
-                break
-        # If node not found in coordinates list just initialize with default 0,0 coordinates
-        if not found:
-            tmpnode = {'Name': v1['Name'], 'X': 0, 'Y': 0}
-            l1nodes.append(tmpnode)
+        tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+        site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+        tmpsite = site_manager.newSite(siteRec=site_rec)
+        tmpnode['sitekey'] = tmpsite.getKey()
+        sites.append(tmpsite)
+        l1nodes.append(tmpnode)
+    #     for node in nodecoordinates:
+    #         if node['Node'] == v1['Name']:
+    #             tmpnode = {'Name': v1['Name'], 'X': node['X'], 'Y': node['Y']}
+    #             l1nodes.append(tmpnode)
+    #             found = True
+    #             break
+    #     # If node not found in coordinates list just initialize with default 0,0 coordinates
+    #     if not found:
+    #         tmpnode = {'Name': v1['Name'], 'X': 0, 'Y': 0}
+    #         l1nodes.append(tmpnode)
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan
@@ -125,18 +134,19 @@ def main():
         l3linksdict = json.load(f)
         f.close()
     l3nodes = []
-    found = False
+    # found = False
     for k1, v1 in l3linksdict.items():
-        for node in nodecoordinates:
-            if node['Node'] == k1:
-                tmpnode = {'Name': k1, 'X': node['X'], 'Y': node['Y']}
-                found = True
-                break
-        # If node not found in coordinates list just initialize with default 0,0 coordinates
-        if not found:
-            tmpnode = {'Name': k1, 'X': 0, 'Y': 0}
+        tmpnode = {'Name': k1}
+        # for node in nodecoordinates:
+        #     if node['Node'] == k1:
+        #         tmpnode = {'Name': k1, 'X': node['X'], 'Y': node['Y']}
+        #         found = True
+        #         break
+        # # If node not found in coordinates list just initialize with default 0,0 coordinates
+        # if not found:
+        #     tmpnode = {'Name': k1, 'X': 0, 'Y': 0}
         l3nodes.append(tmpnode)
-        found = False
+        # found = False
     waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
     # Add L3 links to plan and stitch to L1 links where applicable
