@@ -34,8 +34,22 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-resource-physical:node"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-physical:node?.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    jsonresponse = json.dumps(jsonmerged)
 
     with open("jsongets/l1-nodes.json", 'wb') as f:
         f.write(jsonresponse)
@@ -60,8 +74,22 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    jsonresponse = json.dumps(jsonmerged)
 
     with open("jsongets/l1-links.json", 'wb') as f:
         f.write(jsonresponse)
@@ -240,8 +268,22 @@ def processISIS():
 
 
 def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    jsonresponse = json.dumps(jsonmerged)
 
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(jsonresponse)
@@ -315,8 +357,22 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
 
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-service-network:virtual-connection?type=optical"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    jsonresponse = json.dumps(jsonmerged)
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(jsonresponse)
@@ -551,8 +607,22 @@ def returnorderedlist(firstnode, l1hops):
 
 
 def collectlsps_json(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    jsonresponse = json.dumps(jsonmerged)
 
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(jsonresponse)
@@ -565,6 +635,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
 
     lsplist = []
     vcdict = {}
+
+
+
     for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
         tmpfdn = None
         adminstate = None
@@ -694,3 +767,15 @@ def parseintfnum(nodeintf):
             returnstring += num + "/"
 
     return returnstring[:-1]
+
+def merge(a, b):
+    "merges b into a"
+    for key in b:
+        if key in a:# if key is in both a and b
+            if isinstance(a[key], dict) and isinstance(b[key], dict): # if the key is dict Object
+                merge(a[key], b[key])
+            else:
+              a[key] =a[key]+ b[key]
+        else: # if the key is not in dict a , add it to dict a
+            a.update({key:b[key]})
+    return a
