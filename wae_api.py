@@ -179,7 +179,7 @@ def main():
     try:
         copy_tree('jsonfiles', archive_root + '/jsonfiles')
         copy_tree('planfiles', archive_root + '/planfiles')
-        copy_tree('xmlgets', archive_root + '/jsongets')
+        copy_tree('jsongets', archive_root + '/jsongets')
     except Exception as err:
         logging.info("No output files to backup...")
 

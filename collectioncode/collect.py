@@ -38,21 +38,19 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-physical:node?.startIndex=" + str(startindex)
+        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99:
+        if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
         else:
             incomplete = False
         merge(jsonmerged,jsonaddition)
 
-    jsonresponse = json.dumps(jsonmerged)
-
     with open("jsongets/l1-nodes.json", 'wb') as f:
-        f.write(jsonresponse)
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
     with open("jsongets/l1-nodes.json", 'rb') as f:
         jsonresponse = f.read()
@@ -66,8 +64,14 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         for node in thejson['com.response-message']['com.data']['nd.node']:
             if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
                 nodeName = node['nd.name']
-                latitude = node['nd.latitude']
-                longitude = node['nd.longitude']
+                logging.info("Processing node " + nodeName)
+                try:
+                    latitude = node['nd.latitude']
+                    longitude = node['nd.longitude']
+                except KeyError:
+                    logging.error("Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                    latitude = "0.0"
+                    longitude = "0.0"
                 l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
                 i += 1
         f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -83,16 +87,14 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99:
+        if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
         else:
             incomplete = False
         merge(jsonmerged,jsonaddition)
 
-    jsonresponse = json.dumps(jsonmerged)
-
     with open("jsongets/l1-links.json", 'wb') as f:
-        f.write(jsonresponse)
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
     with open("jsongets/l1-links.json", 'rb') as f:
         jsonresponse = f.read()
@@ -277,16 +279,14 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99:
+        if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
         else:
             incomplete = False
         merge(jsonmerged,jsonaddition)
 
-    jsonresponse = json.dumps(jsonmerged)
-
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
-        f.write(jsonresponse)
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
         jsonresponse = f.read()
@@ -366,16 +366,14 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99:
+        if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
         else:
             incomplete = False
         merge(jsonmerged,jsonaddition)
 
-    jsonresponse = json.dumps(jsonmerged)
-
     with open("jsongets/vc-optical.json", 'wb') as f:
-        f.write(jsonresponse)
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
     with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
@@ -394,24 +392,30 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         subtype = item['vc.subtype']
         if subtype == "oc:och-trail-uni":
             vcdict = {}
-            for subitem in item['vc.termination-point-list']['vc.termination-point']:
-                tmpfdn = subitem['vc.fdn']
-                tmpnode = tmpfdn.split('!')[1].split('=')[1]
-                tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
-                vcdict[tmpnode] = tmpoptics
-            for k1, v1 in l3links.items():
-                # logging.info "**************Nodename is: " + k1
-                for k2, v2 in v1.items():
-                    if isinstance(v2, dict):
-                        for k3, v3 in v2.items():
-                            # logging.info "***************Linkname is: " + k3
-                            for node, intf in vcdict.items():
-                                if node == k1:
-                                    if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
-                                        v3['vc-fdn'] = fdn
-                                        matched_fdn = True
-                                        # if not matched_fdn:
-                                        #     logging.info "Could not match vc-fdn " + fdn
+            logging.info("Processing virtual connection: " + fdn)
+            try:
+                for subitem in item['vc.termination-point-list']['vc.termination-point']:
+                    tmpfdn = subitem['vc.fdn']
+                    tmpnode = tmpfdn.split('!')[1].split('=')[1]
+                    tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
+                    vcdict[tmpnode] = tmpoptics
+                for k1, v1 in l3links.items():
+                    # logging.info "**************Nodename is: " + k1
+                    for k2, v2 in v1.items():
+                        if isinstance(v2, dict):
+                            for k3, v3 in v2.items():
+                                # logging.info "***************Linkname is: " + k3
+                                for node, intf in vcdict.items():
+                                    if node == k1:
+                                        if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
+                                            v3['vc-fdn'] = fdn
+                                            matched_fdn = True
+                                            # if not matched_fdn:
+                                            #     logging.info "Could not match vc-fdn " + fdn
+            except KeyError:
+                logging.error("Could not get virtual connection for " + fdn)
+            except TypeError:
+                logging.error("Type error encountered for " + fdn)
     logging.info("Completed collecting virtual connections...")
     with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -616,16 +620,14 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99:
+        if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
         else:
             incomplete = False
         merge(jsonmerged,jsonaddition)
 
-    jsonresponse = json.dumps(jsonmerged)
-
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
-        f.write(jsonresponse)
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
     with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
         jsonresponse = f.read()

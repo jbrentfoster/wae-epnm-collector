@@ -148,7 +148,7 @@ def generateL3circuits(plan, l3linksdict):
                             l1hops, firstl1node, lastl1node = getfirstlastl1node(v3['Ordered L1 Hops'], firstnode,
                                                                                  lastnode)
                             firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
-                            print "Node is " + k1 + "Site is " + str(firstsite.getKey())
+                            # print "Node is " + k1 + "Site is " + str(firstsite.getKey())
                             nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
                             lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
                             nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
