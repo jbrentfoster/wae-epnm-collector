@@ -36,7 +36,7 @@ from com.cisco.wae.design.model.net import SRLGRecord
 def generateL1nodes(plan, l1nodelist):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
     for l1node in l1nodelist:
-        l1nodeRec = L1NodeRecord(name=l1node['Name'],site=l1node['sitekey'])
+        l1nodeRec = L1NodeRecord(name=l1node['Name'], site=l1node['sitekey'])
         newl1node = l1NodeManager.newL1Node(l1nodeRec)
 
 
@@ -269,21 +269,23 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             if src == None or dest == None:
                 logging.warn("Could not get valid source or destination node from Tu IP address")
-                break
-            if direction == "com:bi-direction":
-                logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + str(tuID))
-                nodes = [src, dest]
-                try:
-                    flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
-                    new_demand_for_LSP(plan, src, dest, lspName + "_forward", demandName + "_forward", lspBW)
-                    new_demand_for_LSP(plan, dest, src, lspName + "_reverse", demandName + "_reverse", lspBW)
-                except Exception as err:
-                    logging.warn(
-                        "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + str(tuID))
-            elif lsp['auto-route-announce-enabled'] == True:
-                logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
-                new_private_lsp(plan, src, dest, lspName, lspBW, frr)
-                new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
+                logging.warn("Could not add LSP to plan file: " + lspName)
+            else:
+                if direction == "com:bi-direction":
+                    logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + str(tuID))
+                    nodes = [src, dest]
+                    try:
+                        flexlsp_creator.createflexlsp(options, conn, plan, nodes, lspName, lspBW)
+                        new_demand_for_LSP(plan, src, dest, lspName + "_forward", demandName + "_forward", lspBW)
+                        new_demand_for_LSP(plan, dest, src, lspName + "_reverse", demandName + "_reverse", lspBW)
+                    except Exception as err:
+                        logging.warn(
+                            "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + str(
+                                tuID))
+                elif lsp['auto-route-announce-enabled'] == True:
+                    logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
+                    new_private_lsp(plan, src, dest, lspName, lspBW, frr)
+                    new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 
 
 def new_demand_for_LSP(id, src, dest, lspName, demandName, val):
