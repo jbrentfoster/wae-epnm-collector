@@ -57,20 +57,20 @@ def main():
     rootLogger.addHandler(consoleHandler)
 
     # Delete all output files
-    # logging.info("Cleaning files from last collection...")
-    # try:
-    #     remove_tree('jsonfiles')
-    #     remove_tree('jsongets')
-    # except Exception as err:
-    #     logging.info("No files to cleanup...")
-    #
-    # # Recreate output directories
-    # mkpath('jsonfiles')
-    # mkpath('jsongets')
-    # mkpath(planfiles_root)
-    #
-    # # Run the collector...
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    logging.info("Cleaning files from last collection...")
+    try:
+        remove_tree('jsonfiles')
+        remove_tree('jsongets')
+    except Exception as err:
+        logging.info("No files to cleanup...")
+
+    # Recreate output directories
+    mkpath('jsonfiles')
+    mkpath('jsongets')
+    mkpath(planfiles_root)
+
+    # Run the collector...
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
