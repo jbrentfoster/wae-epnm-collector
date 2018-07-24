@@ -14,36 +14,36 @@ Data is parsed from JSON files created by the EPNM collector application.
 
 3) Activate the virtual environment
 
-Example Linux...
-[gibson@ibanez ~]$ source ./VirtualEnvs/wae_api_venv/bin/activate
-(wae_api_venv) [gibson@ibanez ~]$
-
-Example Windows...
-C:\Users\brfoster>virtualenvs\WAE_API_27_64\Scripts\activate
-(WAE_API_27_64) C:\Users\brfoster>
+    Example Linux...
+    [gibson@ibanez ~]$ source ./VirtualEnvs/wae_api_venv/bin/activate
+    (wae_api_venv) [gibson@ibanez ~]$
+    
+    Example Windows...
+    C:\Users\brfoster>virtualenvs\WAE_API_27_64\Scripts\activate
+    (WAE_API_27_64) C:\Users\brfoster>
 
 4) Install requests
 
-(wae_api_venv) [gibson@ibanez ~]$ pip install requests
+    (wae_api_venv) [gibson@ibanez ~]$ pip install requests
 
 5) Follow the directions for WAE Python environment setup from the WAE API documentation
 
-https://developer.cisco.com/docs/wan-automation-engine/#wae-design-rpc-api
-
-Example .bashrc entries...
-
-export CARIDEN_HOME=/usr/local/wae_install
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CARIDEN_HOME/lib
-
-export PYTHONPATH=$PYTHONPATH:$CARIDEN_HOME/lib/python
+    https://developer.cisco.com/docs/wan-automation-engine/#wae-design-rpc-api
+    
+    Example .bashrc entries...
+    
+    export CARIDEN_HOME=/usr/local/wae_install
+    
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CARIDEN_HOME/lib
+    
+    export PYTHONPATH=$PYTHONPATH:$CARIDEN_HOME/lib/python
 
 6) Run the collector
 
-Usage:
-
-python wae_api.py <path to archive directory> <seed node host name> <ip address of EPNM> <EPNM user> <EPNM password>
-
-Example,
-
-(wae_api_venv) [gibson@ibanez ~]$ python wae_api.py "C:\Users\brfoster\Temp" "NCS4K-Site2" "10.135.7.222" "root" "Epnm1234"
+    Usage:
+    
+    python wae_api.py <path to archive directory> <seed node host name> <ip address of EPNM> <EPNM user> <EPNM password>
+    
+    Example,
+    
+    (wae_api_venv) [gibson@ibanez ~]$ python wae_api.py "C:\Users\brfoster\Temp" "NCS4K-Site2" "10.135.7.222" "root" "Epnm1234"
