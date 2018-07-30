@@ -34,24 +34,24 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
-    # incomplete = True
-    # startindex = 0
-    # jsonmerged = {}
-    # while incomplete:
-    #     uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
-    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #     jsonaddition = json.loads(jsonresponse)
-    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-    #     if (lastindex - firstindex) == 99 and lastindex != -1:
-    #         startindex += 100
-    #     else:
-    #         incomplete = False
-    #     merge(jsonmerged,jsonaddition)
-    #
-    # with open("jsongets/l1-nodes.json", 'wb') as f:
-    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    #     f.close()
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    with open("jsongets/l1-nodes.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
     with open("jsongets/l1-nodes.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -78,24 +78,24 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
-    # incomplete = True
-    # startindex = 0
-    # jsonmerged = {}
-    # while incomplete:
-    #     uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
-    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #     jsonaddition = json.loads(jsonresponse)
-    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-    #     if (lastindex - firstindex) == 99 and lastindex != -1:
-    #         startindex += 100
-    #     else:
-    #         incomplete = False
-    #     merge(jsonmerged,jsonaddition)
-    #
-    # with open("jsongets/l1-links.json", 'wb') as f:
-    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    #     f.close()
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged,jsonaddition)
+
+    with open("jsongets/l1-links.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
     with open("jsongets/l1-links.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
