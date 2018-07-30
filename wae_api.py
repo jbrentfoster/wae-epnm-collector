@@ -108,6 +108,7 @@ def main():
         tmpsite = site_manager.newSite(siteRec=site_rec)
         tmpnode['sitekey'] = tmpsite.getKey()
         sites.append(tmpsite)
+        l1nodes.append(tmpnode)
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan
@@ -117,7 +118,7 @@ def main():
         f.close()
     waecode.planbuild.generateL1links(plan, l1linksdict)
 
-    # Add L3 nodes to plan
+    # # Add L3 nodes to plan
     # logging.info("Adding L3 nodes...")
     # with open("jsonfiles/l3Links_final.json", 'rb') as f:
     #     l3linksdict = json.load(f)

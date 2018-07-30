@@ -34,24 +34,24 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
-    incomplete = True
-    startindex = 0
-    jsonmerged = {}
-    while incomplete:
-        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-        else:
-            incomplete = False
-        merge(jsonmerged,jsonaddition)
-
-    with open("jsongets/l1-nodes.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # incomplete = True
+    # startindex = 0
+    # jsonmerged = {}
+    # while incomplete:
+    #     uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
+    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #     jsonaddition = json.loads(jsonresponse)
+    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+    #     if (lastindex - firstindex) == 99 and lastindex != -1:
+    #         startindex += 100
+    #     else:
+    #         incomplete = False
+    #     merge(jsonmerged,jsonaddition)
+    #
+    # with open("jsongets/l1-nodes.json", 'wb') as f:
+    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
     with open("jsongets/l1-nodes.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -70,32 +70,32 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
                     longitude = node['nd.longitude']
                 except KeyError:
                     logging.error("Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-                    latitude = "0.0"
-                    longitude = "0.0"
+                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                 l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
                 i += 1
         f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
-    incomplete = True
-    startindex = 0
-    jsonmerged = {}
-    while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-        else:
-            incomplete = False
-        merge(jsonmerged,jsonaddition)
-
-    with open("jsongets/l1-links.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # incomplete = True
+    # startindex = 0
+    # jsonmerged = {}
+    # while incomplete:
+    #     uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
+    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #     jsonaddition = json.loads(jsonresponse)
+    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+    #     if (lastindex - firstindex) == 99 and lastindex != -1:
+    #         startindex += 100
+    #     else:
+    #         incomplete = False
+    #     merge(jsonmerged,jsonaddition)
+    #
+    # with open("jsongets/l1-links.json", 'wb') as f:
+    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
     with open("jsongets/l1-links.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -110,16 +110,17 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             nodes = []
             endpointlist = link['topo.endpoint-list']['topo.endpoint']
 
-            for ep in endpointlist:
-                endpoint = ep['topo.endpoint-ref']
-                node = endpoint.split('!')[1].split('=')[1]
-                nodes.append(node)
-            if len(nodes) > 1:
-                duplicates = False
-                if not duplicates:
-                    l1links['Link' + str(i)] = dict([('fdn', fdn)])
-                    l1links['Link' + str(i)]['Nodes'] = nodes
-                i += 1
+            if len(endpointlist) > 1:
+                for ep in endpointlist:
+                    endpoint = ep['topo.endpoint-ref']
+                    node = endpoint.split('!')[1].split('=')[1]
+                    nodes.append(node)
+                if len(nodes) > 1:
+                    duplicates = False
+                    if not duplicates:
+                        l1links['Link' + str(i)] = dict([('fdn', fdn)])
+                        l1links['Link' + str(i)]['Nodes'] = nodes
+                    i += 1
         f.write(json.dumps(l1links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
