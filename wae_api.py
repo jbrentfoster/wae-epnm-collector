@@ -118,39 +118,39 @@ def main():
         f.close()
     waecode.planbuild.generateL1links(plan, l1linksdict)
 
-    # # Add L3 nodes to plan
-    # logging.info("Adding L3 nodes...")
-    # with open("jsonfiles/l3Links_final.json", 'rb') as f:
-    #     l3linksdict = json.load(f)
-    #     f.close()
-    # l3nodes = []
-    # # found = False
-    # for k1, v1 in l3linksdict.items():
-    #     tmpnode = {'Name': k1}
-    #     l3nodes.append(tmpnode)
-    #     # found = False
-    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
-    #
-    # # Add L3 links to plan and stitch to L1 links where applicable
-    # logging.info("Adding L3 links...")
-    # waecode.planbuild.generateL3circuits(plan, l3linksdict)
-    #
-    # # read FlexLSP add-on options
-    # with open("waecode/options.json", 'rb') as f:
-    #     options = json.load(f)
-    #     f.close()
-    #
-    # # Add LSPs to plan
-    # logging.info("Adding LSP's...")
-    # l3nodeloopbacks = []
-    # for k1, v1 in l3linksdict.items():
-    #     tmpnode = {k1: v1['Loopback Address']}
-    #     l3nodeloopbacks.append(tmpnode)
-    #
-    # with open("jsonfiles/lsps.json", 'rb') as f:
-    #     lsps = json.load(f)
-    #     f.close()
-    # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+    # Add L3 nodes to plan
+    logging.info("Adding L3 nodes...")
+    with open("jsonfiles/l3Links_final.json", 'rb') as f:
+        l3linksdict = json.load(f)
+        f.close()
+    l3nodes = []
+    # found = False
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {'Name': k1}
+        l3nodes.append(tmpnode)
+        # found = False
+    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
+    # Add L3 links to plan and stitch to L1 links where applicable
+    logging.info("Adding L3 links...")
+    waecode.planbuild.generateL3circuits(plan, l3linksdict)
+
+    # read FlexLSP add-on options
+    with open("waecode/options.json", 'rb') as f:
+        options = json.load(f)
+        f.close()
+
+    # Add LSPs to plan
+    logging.info("Adding LSP's...")
+    l3nodeloopbacks = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {k1: v1['Loopback Address']}
+        l3nodeloopbacks.append(tmpnode)
+
+    with open("jsonfiles/lsps.json", 'rb') as f:
+        lsps = json.load(f)
+        f.close()
+    waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
     # Save the plan file
     plan.serializeToFileSystem('planfiles/latest.pln')

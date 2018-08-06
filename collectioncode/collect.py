@@ -11,26 +11,26 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 links...")
     collectL1links_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting ISIS database...")
-    # collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # logging.info("Processing ISIS database...")
-    # processISIS()
-    # logging.info("Collecting MPLS topological links...")
-    # try:
-    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    # except Exception as err:
-    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-    #     sys.exit("Collection error.  Halting execution.")
-    #
-    # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 paths...")
-    # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
-    # logging.info("Re-ordering L1 hops...")
-    # reorderl1hops()
-    # logging.info("Network collection completed!")
-    # logging.info("Collecting LSPs...")
-    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting ISIS database...")
+    collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    logging.info("Processing ISIS database...")
+    processISIS()
+    logging.info("Collecting MPLS topological links...")
+    try:
+        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
+
+    logging.info("Collecting virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 paths...")
+    addL1hopstol3links(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops...")
+    reorderl1hops()
+    logging.info("Network collection completed!")
+    logging.info("Collecting LSPs...")
+    collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -139,18 +139,22 @@ def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
     jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seednode
     jsonbody = json.dumps(jsonbody_js)
 
-    uri = "/operations/v1/cisco-resource-activation:run-cli-configuration"
+    uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
     jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
 
-    thejson = json.loads(jsonresponse)
+    try:
+        thejson = json.loads(jsonresponse)
+    except Exception as err:
+        logging.critical('EPNM server is not configured with "show isis database" CLI template.  Halting execution.')
+        sys.exit()
 
     jobname = thejson['ra.config-response']['ra.job-status']['ra.job-name']
 
-    logging.info("Successfully submitted the API call to retrieve the ISIS database.")
-    logging.info("jobname is: " + jobname)
+    logging.info('Successfully submitted the API call to retrieve the ISIS database.')
+    logging.info('jobname is: ' + jobname)
 
     notDone = True
-    logging.info("Checking job status...")
+    logging.info('Checking job status...')
     results = ""
     while notDone:
         time.sleep(5)
