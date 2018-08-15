@@ -11,10 +11,13 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 links...")
     collectL1links_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting ISIS database...")
-    collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    logging.info("Processing ISIS database...")
-    processISIS()
+    logging.info("Collecting MPLS topology...")
+    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    logging.info("Collecting ISIS hostnames...")
+    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    process_hostnames()
+    logging.info("Processing MPLS topology...")
+    processMPLS()
     logging.info("Collecting MPLS topological links...")
     try:
         collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
@@ -125,8 +128,8 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 
-def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
-    with open("collectioncode/post-cli-template.json", 'r') as f:
+def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id):
+    with open("collectioncode/post-cli-template-mpls.json", 'r') as f:
         jsonbody = f.read()
         f.close()
     jsonbody_js = json.loads(jsonbody)
@@ -145,12 +148,12 @@ def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
     try:
         thejson = json.loads(jsonresponse)
     except Exception as err:
-        logging.critical('EPNM server is not configured with "show isis database" CLI template.  Halting execution.')
+        logging.critical('EPNM server is not configured with "show mpls topology" CLI template.  Halting execution.')
         sys.exit()
 
     jobname = thejson['ra.config-response']['ra.job-status']['ra.job-name']
 
-    logging.info('Successfully submitted the API call to retrieve the ISIS database.')
+    logging.info('Successfully submitted the API call to retrieve the MPLS topology.')
     logging.info('jobname is: ' + jobname)
 
     notDone = True
@@ -169,7 +172,7 @@ def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
                 results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
-                logging.critical("Could not get ISIS database!!!!!!")
+                logging.critical("Could not get MPLS topology!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
         except KeyError:
             status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
@@ -179,36 +182,127 @@ def collectISIS_json(baseURL, epnmuser, epnmpassword, seednode_id):
                 results = thejson['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
-                logging.critical("Could not get ISIS database!!!!!!")
+                logging.critical("Could not get MPLS topology!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
 
     logging.info("Database received.")
-    with open("jsonfiles/isisdb", 'wb') as f:
+    with open("jsongets/mplstopo.txt", 'wb') as f:
         f.write(results)
         f.close()
 
+def collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id):
+    with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
+        jsonbody = f.read()
+        f.close()
+    jsonbody_js = json.loads(jsonbody)
 
-def processISIS():
+    seednode = jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref']
+    nodeid = seednode.split('=')[2]
+    new_nodeid = seednode_id
+    seednode = seednode.replace(nodeid, new_nodeid)
+
+    jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seednode
+    jsonbody = json.dumps(jsonbody_js)
+
+    uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+    jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
+
+    try:
+        thejson = json.loads(jsonresponse)
+    except Exception as err:
+        logging.critical('EPNM server is not configured with "show isis hostname" CLI template.  Halting execution.')
+        sys.exit()
+
+    jobname = thejson['ra.config-response']['ra.job-status']['ra.job-name']
+
+    logging.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
+    logging.info('jobname is: ' + jobname)
+
+    notDone = True
+    logging.info('Checking job status...')
+    results = ""
+    while notDone:
+        time.sleep(5)
+        uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        thejson = json.loads(jsonresponse)
+        try:
+            status = thejson['ra.config-response']['ra.job-status']['ra.status']
+            logging.info("Job status: " + status)
+            if status == "SUCCESS":
+                logging.info("Completed running the script...")
+                results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
+                notDone = False
+            elif status == "FAILURE":
+                logging.critical("Could not get MPLS topology!!!!!!")
+                sys.exit("Collection error.  Ending execution.")
+        except KeyError:
+            status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
+            logging.info("Run status: " + status)
+            if status == "COMPLETED":
+                logging.info("Completed running the script...")
+                results = thejson['ra.deploy-result']['ra.transcript']
+                notDone = False
+            elif status == "FAILURE":
+                logging.critical("Could not get MPLS topology!!!!!!")
+                sys.exit("Collection error.  Ending execution.")
+
+    logging.info("Database received.")
+    with open("jsongets/hostnames.txt", 'wb') as f:
+        f.write(results)
+        f.close()
+
+def process_hostnames():
+    nodes = []
+    with open("jsongets/hostnames.txt", 'rb') as f:
+        lines = f.read().splitlines()
+        ilines = lines
+        c = 0
+        start = False
+        for line in ilines:
+            if "Level  System ID      Dynamic Hostname" in line:
+                start = True
+                continue
+            elif start == True:
+                line_list = line.split(" ")
+                if len(line_list) > 3:
+                    isis_id = line_list[-2]
+                    hostname = line_list[-1]
+                    nodes.append({'isis_id': isis_id,'hostname': hostname})
+                else:
+                    break
+            c += 1
+        f.close()
+
+    with open("jsonfiles/hostnames.json", "wb") as f:
+        f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+def processMPLS():
     nodes = {}
-    with open("jsonfiles/isisdb", 'rb') as f:
+    with open("jsongets/mplstopo.txt", 'rb') as f:
         lines = f.read().splitlines()
         ilines = lines
         c = 0
         for line in ilines:
-            if "00-00 " in line or "00-00*" in line:
-                node = line.split('.')[0]
-                i = 0
-                ignoreIntfIPs = False
-                foundfirstlink = False
-            elif "Router ID" in line:
-                routerid = line.split(':')[1].strip()
-                nodes[node] = dict([('Loopback Address', routerid)])
+            if "IGP Id: " in line:
+                isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.',1)[0]
+                node = hostname_lookup(isis_id)
+                loopback = line.split(',')[1].split(':')[1].split(' ')[1]
+                nodes[node] = {'Loopback Address':loopback}
                 nodes[node]['Links'] = dict()
-            elif "Metric" in line and "IS-Extended" in line:
-                ignoreIntfIPs = False
+                i = 0
+                foundfirstlink = False
+            elif "Link[" in line and "Nbr IGP Id" in line:
                 foundfirstlink = True
                 try:
-                    neighbor = re.search('.*%s (.*).00' % ('IS-Extended'), line).group(1)
+                    neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.',1)[0]
+                    neighbor = hostname_lookup(neighbor_isis_id)
+                    if neighbor == None:
+                        logging.warn("There was a problem parsing the neighbor!")
+                        logging.exception(err)
+                        logging.critical("Critical error!")
+                        sys.exit("MPLS topology is not complete for node " + node + "!!! Halting execution!")
                     i += 1
                     linkid = "Link" + str(i)
                     nodes[node]['Links'][linkid] = dict([('Neighbor', neighbor)])
@@ -217,61 +311,64 @@ def processISIS():
                     logging.exception(err)
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
+            elif "TE Metric:" in line:
                 try:
-                    metric = re.search('Metric: (.*).*IS-Extended.*', line).group(1).strip()
+                    metric = line.split(',')[0].split(':')[1]
                     nodes[node]['Links'][linkid]['Metric'] = metric
                 except Exception as err:
                     logging.warn("There was a problem parsing the metric!")
                     logging.exception(err)
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
-            elif "Affinity" in line:
+            elif "Attribute Flags:" in line:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
-            elif "MPLS SRLG" in line:
-                ignoreIntfIPs = True
-            elif "Interface IP Address" in line and not ignoreIntfIPs:
-                localIP = line.split(':')[1].strip()
+            elif "Intf Address:" in line and not 'Nbr' in line:
+                localIP = line.split(',')[1].split(':')[1]
                 nodes[node]['Links'][linkid]['Local IP'] = localIP
-            elif "Neighbor IP Address" in line and not ignoreIntfIPs:
-                neighIP = line.split(':')[1].strip()
+            elif "Nbr Intf Address:" in line:
+                neighIP = line.split(',')[0].split(':')[1]
                 nodes[node]['Links'][linkid]['Neighbor IP'] = neighIP
-            elif "Reservable Global pool BW" in line:
-                rsvpBW = line.split(':')[1].strip()
+            elif "Max Reservable BW Global:" in line:
+                rsvpBW = line.split(',')[1].split(':')[1].split(' ')[0]
                 nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
-            elif "SRLGs" in line and foundfirstlink:
+            #TODO Fix SRLGs on 4k to 4200 links (example 17825796 4216-2 to 4k-Site4 showing up on wrong link)
+            elif "SRLGs:" in line and foundfirstlink:
                 nodes[node]['Links'][linkid]['SRLGs'] = dict()
-                d = 1
+                d = 0
                 srlgs = []
                 while True:
                     tline = ilines[c + d]
-                    if "[" in tline:
-                        srlgs = srlgs + tline.strip().split(',')
+                    if not ("Switching Capability:" in tline):
+                        if ':' in tline:
+                            srlgs = srlgs + tline.strip().split(':')[1].split(',')
+                        else:
+                            srlgs = srlgs + tline.strip().split(',')
                         d += 1
                     else:
                         break
+                cleaned_srlgs = []
                 for srlg in srlgs:
-                    if ":" in srlg:
-                        nodes[node]['Links'][linkid]['SRLGs'][srlg.split(':')[0].strip()] = srlg.split(":")[1].strip()
-                    else:
-                        logging.info("Errored SRLG list found while processing isis db line " + str(c))
+                    cleaned_srlgs.append(''.join(srlg.split()))
+                nodes[node]['Links'][linkid]['SRLGs'] = cleaned_srlgs
             c += 1
         f.close()
 
-    # go through links and remove any invalid links
-    for k1, v1 in nodes.items():
-        # logging.info "**************Nodename is: " + k1
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
-                    if not 'Affinity' in v3:
-                        v2.pop(k3)
-                        logging.info("Removing invalid link with neighbor " + v3['Neighbor'])
+        with open("jsonfiles/l3Links.json", "wb") as f:
+            f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+            f.close()
 
-    with open("jsonfiles/l3Links.json", "wb") as f:
-        f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+def hostname_lookup(isis_id):
+    with open("jsonfiles/hostnames.json", 'rb') as f:
+        jsonresponse = f.read()
         f.close()
+    hostnames = json.loads(jsonresponse)
+
+    for host in hostnames:
+        if host['isis_id'] == isis_id:
+            return host['hostname']
+
+    return None
 
 
 def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):

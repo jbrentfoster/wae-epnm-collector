@@ -139,10 +139,12 @@ def generateL3circuits(plan, l3linksdict):
                     lastnode_intf = v3['Neighbor Intf']
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
+
                     srlgs = []
                     if 'SRLGs' in v3:
-                        for k4, v4 in v3['SRLGs'].items():
-                            srlgs.append(v4)
+                        srlgs = v3['SRLGs']
+                    #     for k4, v4 in v3['SRLGs'].items():
+                    #         srlgs.append(v4)
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if 'Ordered L1 Hops' in v3 and not duplicatelink:
