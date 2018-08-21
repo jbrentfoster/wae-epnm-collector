@@ -105,10 +105,15 @@ def main():
     for k1, v1 in l1nodesdict.items():
         tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
         site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
-        tmpsite = site_manager.newSite(siteRec=site_rec)
-        tmpnode['sitekey'] = tmpsite.getKey()
-        sites.append(tmpsite)
-        l1nodes.append(tmpnode)
+        try:
+            tmpsite = site_manager.newSite(siteRec=site_rec)
+            tmpnode['sitekey'] = tmpsite.getKey()
+            sites.append(tmpsite)
+            l1nodes.append(tmpnode)
+            logging.info("successfully added node " + tmpnode['Name'])
+        except Exception as err:
+            logging.warn('Could not process node ' + tmpnode['Name'])
+            logging.warn(err)
     waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
     # Add L1 links to plan

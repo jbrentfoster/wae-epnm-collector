@@ -51,12 +51,13 @@ def generateL1links(plan, l1linksdict):
         l1nodeBKey = L1NodeKey(nodeBname)
         fdn = v['fdn']
         l1linkname = nodeAname + "_" + nodeBname + "_" + str(i)
-        logging.info("Processing L1 link: "+ l1linkname)
+        logging.info("Processing L1 link: "+ fdn)
         l1linkRec = L1LinkRecord(name=fdn, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=l1linkname)
         try:
             l1LinkManager.newL1Link(l1linkRec)
         except Exception as err:
             logging.warn("Could not add L1 link to the plan!")
+            logging.warn(err)
 
         i += 1
 

@@ -110,10 +110,11 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/l1Links.json", 'wb') as f:
         for link in thejson['com.response-message']['com.data']['topo.topological-link']:
             fdn = link['topo.fdn']
+            discovered_name = link['topo.discovered-name']
             nodes = []
             endpointlist = link['topo.endpoint-list']['topo.endpoint']
-
-            if len(endpointlist) > 1:
+            logging.info("Processing link " + fdn)
+            if len(endpointlist) > 1 and isinstance(endpointlist,list) and 'WDMSIDE' in discovered_name:
                 for ep in endpointlist:
                     endpoint = ep['topo.endpoint-ref']
                     node = endpoint.split('!')[1].split('=')[1]
