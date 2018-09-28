@@ -5,9 +5,9 @@ Data is parsed from JSON files created by the EPNM collector application.
 
 1) Add a CLI template to EPNM for retrieving the ISIS database from IOS-XR node (must be XR for this to work).
 
-    Template name "show isis database".
+    Template name "show mpls traffic-eng topology".
     Device type should be XR device (e.g. NCS4000, NCS5500, ASR9000)
-    Template command "do show isis database verbose"
+    Template command "do show mpls traffic-eng topology isis brief"
     
     
 2) Create a virtual environment for Python 2.7

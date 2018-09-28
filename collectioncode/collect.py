@@ -11,29 +11,29 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 links...")
     collectL1links_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting MPLS topology...")
-    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # logging.info("Collecting ISIS hostnames...")
-    # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # process_hostnames()
-    # logging.info("Processing MPLS topology...")
-    # processMPLS()
-    # logging.info("Collecting MPLS topological links...")
-    # try:
-    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    # except Exception as err:
-    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-    #     sys.exit("Collection error.  Halting execution.")
-    #
-    # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 paths...")
-    # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
-    # logging.info("Re-ordering L1 hops...")
-    # reorderl1hops()
-    # logging.info("Network collection completed!")
-    # logging.info("Collecting LSPs...")
-    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting MPLS topology...")
+    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    logging.info("Collecting ISIS hostnames...")
+    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    process_hostnames()
+    logging.info("Processing MPLS topology...")
+    processMPLS()
+    logging.info("Collecting MPLS topological links...")
+    try:
+        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
+
+    logging.info("Collecting virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 paths...")
+    addL1hopstol3links(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops...")
+    reorderl1hops()
+    logging.info("Network collection completed!")
+    logging.info("Collecting LSPs...")
+    collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -298,7 +298,10 @@ def processMPLS():
                 foundfirstlink = True
                 try:
                     neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.',1)[0]
+                    neighbor_node_id = line.split(',')[2].split(':')[1]
                     neighbor = hostname_lookup(neighbor_isis_id)
+                    if neighbor_node_id == "-1":
+                        continue
                     if neighbor == None:
                         logging.warn("There was a problem parsing the neighbor!")
                         logging.exception(err)
