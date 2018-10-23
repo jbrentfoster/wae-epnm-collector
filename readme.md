@@ -3,12 +3,17 @@ Data is parsed from JSON files created by the EPNM collector application.
 
 **Setup**
 
-1) Add a CLI template to EPNM for retrieving the ISIS database from IOS-XR node (must be XR for this to work).
+1) Add a CLI template to EPNM for retrieving the MPLS database from IOS-XR node (must be XR for this to work).
 
     Template name "show mpls traffic-eng topology".
     Device type should be XR device (e.g. NCS4000, NCS5500, ASR9000)
     Template command "do show mpls traffic-eng topology isis brief"
     
+Also add CLI template to get ISIS hostnames...
+    
+    Template name "show isis hostname"
+    Device type should be XR device (e.g. NCS4000, NCS5500, ASR9000)
+    Template command "do show isis hostname"
     
 2) Create a virtual environment for Python 2.7
 
