@@ -51,14 +51,13 @@ def generateL1links(plan, l1linksdict):
         l1nodeBKey = L1NodeKey(nodeBname)
         fdn = v['fdn']
         l1linkname = nodeAname + "_" + nodeBname + "_" + str(i)
-        logging.info("Processing L1 link: "+ fdn)
+        logging.info("Processing L1 link: " + fdn)
         l1linkRec = L1LinkRecord(name=fdn, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=l1linkname)
         try:
             l1LinkManager.newL1Link(l1linkRec)
         except Exception as err:
             logging.warn("Could not add L1 link to the plan!")
             logging.warn(err)
-
         i += 1
 
 
@@ -253,6 +252,64 @@ def process_srlgs(plan, circ_srlgs):
                 srlg_mgr.newSRLG(srlg_rec)
 
 
+def assignSites(plan):
+    node_manager = plan.getNetwork().getNodeManager()
+    site_manager = plan.getNetwork().getSiteManager()
+    nodes = node_manager.getAllNodes()
+    for node in nodes:
+        node_name = node_manager.getNode(node).getName()
+        node_site = node_manager.getNode(node).getSite()
+        if node_site != None:
+            node_site_name = node_site.getName()
+            logging.info("Node: " + node_name + " Site: " + node_site_name)
+        else:
+            logging.info("Node " + node_name + " does not have a site.")
+            intf_dict = node_manager.getNode(node).getAllInterfaces ()
+            if len(intf_dict) > 0:
+                for k,v in intf_dict.items():
+                    circuit = v.getCircuit()
+                    for k1, v1 in circuit.getAllInterfaces().items():
+                        if k !=k1:
+                            logging.info("Connected node name is " + v1.getSource().getName())
+                            node_rec = v1.getSource().getRecord()
+                            if v1.getSource().getSite() is not None:
+                                logging.info("Setting site to connected node site: " + v1.getSource().getSite().getName())
+                                connected_site = v1.getSource().getSite()
+                                node_manager.getNode(node).setSite(connected_site)
+                            else:
+                                logging.info("Could not get site for connected node...")
+                                site_name = set_site_using_name(site_manager,node_manager,node)
+                                if site_name is not None:
+                                    logging.info("Setting site based on node name to " + site_name)
+                                else:
+                                    logging.info("Could not match a site name!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        elif k1 == k1:
+                            logging.info("Local node name is " + v1.getSource().getName())
+            else:
+                logging.info("Node does not have interfaces...")
+                site_name = set_site_using_name(site_manager, node_manager, node)
+                if site_name is not None:
+                    logging.info("Setting site based on node name to " + site_name)
+                else:
+                    logging.info("Could not match a site name!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+def set_site_using_name(site_manager, node_manager, node):
+    sites = site_manager.getAllSites()
+    node_name = node_manager.getNode(node).getName()
+    for x in range(14, 10, -1):
+        for site in sites:
+            site_name = site_manager.getSite(site).getName()
+            try:
+                site_name_prefix = site_name[0:x]
+                node_name_prefix = node_name[0:x]
+            except Exception as err:
+                logging.info("Site or node name is less than " + x + " characters.")
+            if site_name_prefix == node_name_prefix:
+                logging.info("Setting site to " + site_name)
+                node_manager.getNode(node).setSite(site_manager.getSite(site))
+                return site_name
+
+
 def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
     index = 0
     for lsp in lsps:
@@ -271,7 +328,10 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
         # if lspBW > 0:
         if lsp['admin-state'] == 'com:admin-state-up':
             tuID = lsp['Tunnel ID']
-            lspName = lsp['fdn'].split('!')[1].split('=')[1]
+            # lspName = lsp['fdn'].split('!')[1].split('=')[1]
+            lspName = lsp['tufdn'].split('!')[1].split('=')[1] + "-" + \
+                      lsp['tufdn'].split('!')[2].split('=')[2].split(';')[0]
+            logging.info(lspName)
             demandName = "Demand for " + lspName
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)

@@ -289,13 +289,15 @@ def processMPLS():
             if "IGP Id: " in line:
                 isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.',1)[0]
                 node = hostname_lookup(isis_id)
+                # print "processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c)
+                # if isis_id == "0630.3809.6020":
+                #     print "found it!"
                 loopback = line.split(',')[1].split(':')[1].split(' ')[1]
                 nodes[node] = {'Loopback Address':loopback}
                 nodes[node]['Links'] = dict()
                 i = 0
                 foundfirstlink = False
             elif "Link[" in line and "Nbr IGP Id" in line:
-                foundfirstlink = True
                 try:
                     neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.',1)[0]
                     neighbor_node_id = line.split(',')[2].split(':')[1]
@@ -315,7 +317,8 @@ def processMPLS():
                     logging.exception(err)
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
-            elif "TE Metric:" in line:
+                foundfirstlink = True
+            elif "TE Metric:" in line and foundfirstlink:
                 try:
                     metric = line.split(',')[0].split(':')[1]
                     nodes[node]['Links'][linkid]['Metric'] = metric
@@ -324,19 +327,18 @@ def processMPLS():
                     logging.exception(err)
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
-            elif "Attribute Flags:" in line:
+            elif "Attribute Flags:" in line and foundfirstlink:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
-            elif "Intf Address:" in line and not 'Nbr' in line:
+            elif "Intf Address:" in line and not 'Nbr' in line and foundfirstlink:
                 localIP = line.split(',')[1].split(':')[1]
                 nodes[node]['Links'][linkid]['Local IP'] = localIP
-            elif "Nbr Intf Address:" in line:
+            elif "Nbr Intf Address:" in line and foundfirstlink == True:
                 neighIP = line.split(',')[0].split(':')[1]
                 nodes[node]['Links'][linkid]['Neighbor IP'] = neighIP
-            elif "Max Reservable BW Global:" in line:
+            elif "Max Reservable BW Global:" in line and foundfirstlink:
                 rsvpBW = line.split(',')[1].split(':')[1].split(' ')[0]
                 nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
-            #TODO Fix SRLGs on 4k to 4200 links (example 17825796 4216-2 to 4k-Site4 showing up on wrong link)
             elif "SRLGs:" in line and foundfirstlink:
                 nodes[node]['Links'][linkid]['SRLGs'] = dict()
                 d = 0

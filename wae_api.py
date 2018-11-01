@@ -55,6 +55,7 @@ def main():
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
+    logging.info("Collection start time is " + current_time)
 
     # Delete all output files
     logging.info("Cleaning files from last collection...")
@@ -86,12 +87,12 @@ def main():
     plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
 
     # Read node coordinates file into a dict
-    nodecoordinates = []
-    with open('waecode/node_coordinates.csv', 'rb') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            nodecoordinates.append(row)
-        f.close()
+    # nodecoordinates = []
+    # with open('waecode/node_coordinates.csv', 'rb') as f:
+    #     reader = csv.DictReader(f)
+    #     for row in reader:
+    #         nodecoordinates.append(row)
+    #     f.close()
 
     # Add L1 nodes to plan
     logging.info("Adding L1 nodes...")
@@ -140,6 +141,8 @@ def main():
     logging.info("Adding L3 links...")
     waecode.planbuild.generateL3circuits(plan, l3linksdict)
 
+    waecode.planbuild.assignSites(plan)
+
     # read FlexLSP add-on options
     with open("waecode/options.json", 'rb') as f:
         options = json.load(f)
@@ -179,6 +182,8 @@ def main():
 
     # Script completed
     logging.info("Plan file created.")
+    finish_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
+    logging.info("Collection finish time is " + finish_time)
     time.sleep(2)
 
 
