@@ -408,25 +408,34 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
     names = []
     for k1, v1 in l3links.items():
-        # logging.info "**************Nodename is: " + k1
+        logging.info ("**************Nodename is: " + k1)
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
+                    logging.info ("***************Linkname is: " + k3)
                     n1IP = v3.get('Local IP')
                     n2IP = v3.get('Neighbor IP')
                     name1 = n1IP + '-' + n2IP
                     name2 = n2IP + '-' + n1IP
                     matchedlink = False
                     for item in thejson['com.response-message']['com.data']['topo.topological-link']:
-
                         # for item in thexml.getElementsByTagName("ns17:topological-link"):
                         fdn = item['topo.fdn']
                         discoveredname = item['topo.discovered-name']
                         if (name1 == discoveredname or name2 == discoveredname):
+                            logging.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
                             matchedlink = True
-                            names.append(discoveredname)
+                            # names.append(discoveredname)
                             v3['discoveredname'] = discoveredname
+                            # try:
+                            #     if isinstance(item['topo.endpoint-list']['topo.endpoint'], list):
+                            #         logging.info("End point list is valid...")
+                            #     else:
+                            #         logging.info(("!!!End point list is not valid!!!"))
+                            # except Exception as err:
+                            #     logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+                            #     logging.warn("Removing link from topology...")
+                            #     v2.pop(k3)
                             try:
                                 parse1 = item['topo.endpoint-list']['topo.endpoint'][0]['topo.endpoint-ref']
                                 node1 = parse1.split('!')[1].split('=')[1]
@@ -449,9 +458,9 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
                                         "Could not match node names for interface assignment for node " + k1 + " link " + k3)
                                     logging.warn("Removing link from topology...")
                                     v2.pop(k3)
+                                break
                             except Exception as err:
                                 logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                                # sys.exit("Collection error.  Halting execution.")
                                 logging.warn("Removing link from topology...")
                                 v2.pop(k3)
                     if not matchedlink:
@@ -543,13 +552,16 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                     # logging.info "***************Linkname is: " + k3
                     if 'vc-fdn' in v3:
                         vcfdn = v3['vc-fdn']
-                        l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
-                        v3['L1 Hops'] = l1hops
-                        if len(l1hops) > 0:
-                            logging.info("Completed L3 link " + k1 + " " + k3)
-                        else:
-                            logging.info("Could not get L1 hops for " + k1 + " " + k3)
-                            logging.info("vcFDN is " + vcfdn)
+                        try:
+                            l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
+                            v3['L1 Hops'] = l1hops
+                            if len(l1hops) > 0:
+                                logging.info("Completed L3 link " + k1 + " " + k3)
+                            else:
+                                logging.info("Could not get L1 hops for " + k1 + " " + k3)
+                                logging.info("vcFDN is " + vcfdn)
+                        except Exception as err:
+                            logging.warn("Could not get parse multilayer_route for node " + k1 + " link " + k3)
                     else:
                         logging.info(
                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
@@ -599,8 +611,7 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
     tmpl1hops['Nodes'] = dict()
     firsthop = False
     i = 1
-    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'][
-        'topo.virtual-connection-multi-layer-route']:
+    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list']['topo.virtual-connection-multi-layer-route']:
         subtype = item['topo.topology-layer']
         if subtype == topologylayer:
             topo_links = item['topo.tl-list']['topo.topological-link']
