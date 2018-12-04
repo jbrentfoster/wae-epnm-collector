@@ -41,7 +41,8 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.startIndex=" + str(startindex)
+        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.depth=1&.startIndex=" + str(
+            startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
@@ -50,7 +51,7 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
             startindex += 100
         else:
             incomplete = False
-        merge(jsonmerged,jsonaddition)
+        merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -72,7 +73,8 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
                     latitude = node['nd.latitude']
                     longitude = node['nd.longitude']
                 except KeyError:
-                    logging.error("Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                    logging.error(
+                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
                     latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                     longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                 l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
@@ -80,12 +82,14 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(startindex)
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(
+            startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
@@ -94,7 +98,7 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             startindex += 100
         else:
             incomplete = False
-        merge(jsonmerged,jsonaddition)
+        merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-links.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -114,7 +118,7 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             nodes = []
             endpointlist = link['topo.endpoint-list']['topo.endpoint']
             logging.info("Processing link " + fdn)
-            if len(endpointlist) > 1 and isinstance(endpointlist,list) and 'WDMSIDE' in discovered_name:
+            if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
                 for ep in endpointlist:
                     endpoint = ep['topo.endpoint-ref']
                     node = endpoint.split('!')[1].split('=')[1]
@@ -191,6 +195,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id):
         f.write(results)
         f.close()
 
+
 def collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id):
     with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
         jsonbody = f.read()
@@ -253,6 +258,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id):
         f.write(results)
         f.close()
 
+
 def process_hostnames():
     nodes = []
     with open("jsongets/hostnames.txt", 'rb') as f:
@@ -269,7 +275,7 @@ def process_hostnames():
                 if len(line_list) > 3:
                     isis_id = line_list[-2]
                     hostname = line_list[-1]
-                    nodes.append({'isis_id': isis_id,'hostname': hostname})
+                    nodes.append({'isis_id': isis_id, 'hostname': hostname})
                 else:
                     break
             c += 1
@@ -279,6 +285,7 @@ def process_hostnames():
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+
 def processMPLS():
     nodes = {}
     with open("jsongets/mplstopo.txt", 'rb') as f:
@@ -287,19 +294,19 @@ def processMPLS():
         c = 0
         for line in ilines:
             if "IGP Id: " in line:
-                isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.',1)[0]
+                isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.', 1)[0]
                 node = hostname_lookup(isis_id)
                 # print "processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c)
                 # if isis_id == "0630.3809.6020":
                 #     print "found it!"
                 loopback = line.split(',')[1].split(':')[1].split(' ')[1]
-                nodes[node] = {'Loopback Address':loopback}
+                nodes[node] = {'Loopback Address': loopback}
                 nodes[node]['Links'] = dict()
                 i = 0
                 foundfirstlink = False
             elif "Link[" in line and "Nbr IGP Id" in line:
                 try:
-                    neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.',1)[0]
+                    neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.', 1)[0]
                     neighbor_node_id = line.split(',')[2].split(':')[1]
                     neighbor = hostname_lookup(neighbor_isis_id)
                     if neighbor_node_id == "-1":
@@ -364,6 +371,7 @@ def processMPLS():
             f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
 
+
 def hostname_lookup(isis_id):
     with open("jsonfiles/hostnames.json", 'rb') as f:
         jsonresponse = f.read()
@@ -382,7 +390,8 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(startindex)
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
+            startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
@@ -391,7 +400,7 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
             startindex += 100
         else:
             incomplete = False
-        merge(jsonmerged,jsonaddition)
+        merge(jsonmerged, jsonaddition)
 
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -408,11 +417,11 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
     names = []
     for k1, v1 in l3links.items():
-        logging.info ("**************Nodename is: " + k1)
+        logging.info("**************Nodename is: " + k1)
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    logging.info ("***************Linkname is: " + k3)
+                    logging.info("***************Linkname is: " + k3)
                     n1IP = v3.get('Local IP')
                     n2IP = v3.get('Neighbor IP')
                     name1 = n1IP + '-' + n2IP
@@ -487,7 +496,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
             startindex += 100
         else:
             incomplete = False
-        merge(jsonmerged,jsonaddition)
+        merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -581,14 +590,14 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    logging.info("Result of multi-layer route for vcFdn: " + vcfdn)
-    logging.info(jsonresponse)
+    # logging.info("Result of multi-layer route for vcFdn: " + vcfdn)
+    # logging.info(jsonresponse)
 
-    with open("jsongets/multilayer_route.json", 'wb') as f:
+    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
         f.write(jsonresponse)
         f.close()
 
-    with open("jsongets/multilayer_route.json", 'rb') as f:
+    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
 
@@ -613,7 +622,8 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
     tmpl1hops['Nodes'] = dict()
     firsthop = False
     i = 1
-    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list']['topo.virtual-connection-multi-layer-route']:
+    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'][
+        'topo.virtual-connection-multi-layer-route']:
         subtype = item['topo.topology-layer']
         if subtype == topologylayer:
             topo_links = item['topo.tl-list']['topo.topological-link']
@@ -679,8 +689,9 @@ def reorderl1hops():
                             l1hops.append(nodelist)
                         l1hopsordered = returnorderedlist(k1, l1hops)
                         if l1hopsordered == None:
-                            logging.warn("Error generating ordered L1 hops for vcFdn="+vcfdn)
-                            logging.warn("Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
+                            logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
+                            logging.warn(
+                                "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
                             v3.pop('L1 Hops')
                             break
                         tmphops = []
@@ -749,7 +760,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             startindex += 100
         else:
             incomplete = False
-        merge(jsonmerged,jsonaddition)
+        merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -762,8 +773,6 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
 
     lsplist = []
     vcdict = {}
-
-
 
     for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
         tmpfdn = None
@@ -895,14 +904,15 @@ def parseintfnum(nodeintf):
 
     return returnstring[:-1]
 
+
 def merge(a, b):
     "merges b into a"
     for key in b:
-        if key in a:# if key is in both a and b
-            if isinstance(a[key], dict) and isinstance(b[key], dict): # if the key is dict Object
+        if key in a:  # if key is in both a and b
+            if isinstance(a[key], dict) and isinstance(b[key], dict):  # if the key is dict Object
                 merge(a[key], b[key])
             else:
-              a[key] =a[key]+ b[key]
-        else: # if the key is not in dict a , add it to dict a
-            a.update({key:b[key]})
+                a[key] = a[key] + b[key]
+        else:  # if the key is not in dict a , add it to dict a
+            a.update({key: b[key]})
     return a
