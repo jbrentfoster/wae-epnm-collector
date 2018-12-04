@@ -581,6 +581,8 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    logging.info("Result of multi-layer route for vcFdn: " + vcfdn)
+    logging.info(jsonresponse)
 
     with open("jsongets/multilayer_route.json", 'wb') as f:
         f.write(jsonresponse)
