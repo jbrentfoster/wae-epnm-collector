@@ -126,11 +126,15 @@ def generateL3circuits(plan, l3linksdict):
     for k1, v1 in l3linksdict.items():
         # logging.info "**************Nodename is: " + k1
         firstnode = k1
+        if firstnode == "LYBRNYLB-01153A08A":
+            pass
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
                     # logging.warn "***************Linkname is: " + k3
                     lastnode = v3['Neighbor']
+                    if lastnode == "NYCKNYAL-0223502A":
+                        pass
                     discoveredname = v3['discoveredname']
                     affinity = v3['Affinity']
                     firstnode_ip = [v3['Local IP']]
@@ -157,7 +161,10 @@ def generateL3circuits(plan, l3linksdict):
                             firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
                             # print "Node is " + k1 + "Site is " + str(firstsite.getKey())
                             nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
-                            lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                            try:
+                                lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                            except Exception as err:
+                                logging.warn("")
                             nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
 
                             name = "L1_circuit_" + str(c)

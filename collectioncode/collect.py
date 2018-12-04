@@ -669,14 +669,18 @@ def reorderl1hops():
                     if 'L1 Hops' in v3:
                         logging.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
                         l1hops = []
+                        vcfdn = v3['vc-fdn']
                         for k4, v4 in v3.get('L1 Hops').items():
                             nodelist = []
                             for k5, v5 in v4.get('Nodes').items():
                                 nodelist.append(k5)
                             l1hops.append(nodelist)
                         l1hopsordered = returnorderedlist(k1, l1hops)
-                        if len(l1hopsordered) == 0:
-                            logging.info("error generating ordered L1 hops")
+                        if l1hopsordered == None:
+                            logging.warn("Error generating ordered L1 hops for vcFdn="+vcfdn)
+                            logging.warn("Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
+                            v3.pop('L1 Hops')
+                            break
                         tmphops = []
                         completed = False
                         while not completed:
@@ -710,8 +714,8 @@ def returnorderedlist(firstnode, l1hops):
         if len(l1hops) == 0: completed = True
         for hop in l1hops:
             if len(hop) != 2:
-                logging.warn("Invalid L1 hop!  Could not process L1 hops for " + firstnode + " !!!!")
-                return l1hopsordered
+                logging.warn("Invalid L1 hop!  Could not process L1 hops!")
+                return None
             elif hop[0] == firstnode or hop[1] == firstnode:
                 l1hopsordered.insert(0, hop)
                 l1hops.remove(hop)
@@ -723,8 +727,8 @@ def returnorderedlist(firstnode, l1hops):
                 hopa = hop[0]
                 hopb = hop[1]
             elif loopcount > 50:
-                logging.warn("Could not process L1 hops for " + firstnode + " !!!!")
-                return l1hopsordered
+                logging.warn("Could not process L1 hops!")
+                return None
             loopcount += 1
     return l1hopsordered
 
