@@ -561,16 +561,23 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                     # logging.info "***************Linkname is: " + k3
                     if 'vc-fdn' in v3:
                         vcfdn = v3['vc-fdn']
+                        logging.info("Collecting multilayer route for node " + k1 + " " + k3 + " vcFdn is " + vcfdn)
+                        if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
+                            pass
                         try:
                             l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
-                            v3['L1 Hops'] = l1hops
                             if len(l1hops) > 0:
-                                logging.info("Completed L3 link " + k1 + " " + k3)
+                                logging.info("Multi-layer route collection successful.")
+                                v3['L1 Hops'] = l1hops
                             else:
-                                logging.info("Could not get L1 hops for " + k1 + " " + k3)
-                                logging.info("vcFDN is " + vcfdn)
+                                logging.warn("Could not get multilayer route for " + k1 + " " + k3)
+                                logging.warn("vcFDN is " + vcfdn)
+                                logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
                         except Exception as err:
                             logging.warn("Could not get parse multilayer_route for node " + k1 + " link " + k3)
+                            logging.warn("vcFDN is " + vcfdn)
+                            logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+
                     else:
                         logging.info(
                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
@@ -590,8 +597,6 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    # logging.info("Result of multi-layer route for vcFdn: " + vcfdn)
-    # logging.info(jsonresponse)
 
     with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
         f.write(jsonresponse)
@@ -606,6 +611,8 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     l1hops = {}
     l1hopsops = parsemultilayerroute_json(thejson, "topo:ops-link-layer", "Optics")
     l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
+    if len(l1hopsops) == 0 or len(l1hopsots) == 0: #check if either multilayer route parsing fails and exit the function if so
+        return l1hops
     i = 1
     for k, v in l1hopsops.items():
         l1hops['L1 Hop' + str(i)] = v
@@ -630,6 +637,12 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
             if isinstance(topo_links, list):
                 for subitem in topo_links:
                     tmpfdn = subitem['topo.fdn']
+                    try:
+                        endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
+                    except Exception as err:
+                        logging.error("No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
+                        l1hops = {}
+                        return l1hops
                     for subsubitem in subitem['topo.endpoint-list']['topo.endpoint']:
                         tmpep = subsubitem['topo.endpoint-ref']
                         tmpnode = tmpep.split('!')[1].split('=')[1]
@@ -648,6 +661,13 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
                 i = 1
             else:
                 tmpfdn = topo_links['topo.fdn']
+                try:
+                    endpointlist = topo_links['topo.endpoint-list']['topo.endpoint']
+                except Exception as err:
+                    logging.error(
+                        "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
+                    l1hops = {}
+                    return l1hops
                 for subitem in topo_links['topo.endpoint-list']['topo.endpoint']:
                     tmpep = subitem['topo.endpoint-ref']
                     tmpnode = tmpep.split('!')[1].split('=')[1]
@@ -687,6 +707,8 @@ def reorderl1hops():
                             for k5, v5 in v4.get('Nodes').items():
                                 nodelist.append(k5)
                             l1hops.append(nodelist)
+                        if k1 == "LYBRNYLB-01153A08A" and k3 == "Link9":
+                            pass
                         l1hopsordered = returnorderedlist(k1, l1hops)
                         if l1hopsordered == None:
                             logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
@@ -739,7 +761,7 @@ def returnorderedlist(firstnode, l1hops):
                 l1hops.remove(hop)
                 hopa = hop[0]
                 hopb = hop[1]
-            elif loopcount > 50:
+            elif loopcount > 200:
                 logging.warn("Could not process L1 hops!")
                 return None
             loopcount += 1
