@@ -5,6 +5,37 @@ import json
 import logging
 import sys
 
+def collection_router(collection_call):
+    if collection_call['type'] == "l1nodes":
+        logging.info("Collecting L1 nodes...")
+        collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == "l1links":
+        logging.info("Collecting L1 links...")
+        collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == "mpls":
+        logging.info("Collecting MPLS topology...")
+        collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['seednodeid'])
+        logging.info("Collecting ISIS hostnames...")
+        collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['seednodeid'])
+        process_hostnames()
+        logging.info("Processing MPLS topology...")
+        processMPLS()
+        logging.info("Collecting MPLS topological links...")
+        try:
+            collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        except Exception as err:
+            logging.critical("MPLS topological links are not valid.  Halting execution.")
+            sys.exit("Collection error.  Halting execution.")
+
+        logging.info("Collecting virtual connections...")
+        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        logging.info("Collecting L1 paths...")
+        addL1hopstol3links(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        logging.info("Re-ordering L1 hops...")
+        reorderl1hops()
+    if collection_call['type'] == "lsps":
+        logging.info("Collecting LSPs...")
+        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     logging.info("Collecting L1 nodes...")
@@ -24,7 +55,6 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     except Exception as err:
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
-
     logging.info("Collecting virtual connections...")
     collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 paths...")
@@ -595,12 +625,12 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
 
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
-    uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-
-    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
-        f.write(jsonresponse)
-        f.close()
+    # uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
+    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #
+    # with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
+    #     f.write(jsonresponse)
+    #     f.close()
 
     with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
         jsonresponse = f.read()

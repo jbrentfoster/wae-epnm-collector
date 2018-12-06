@@ -13,6 +13,7 @@ import logging
 import shutil
 import argparse
 import time
+from multiprocessing.dummy import Pool as ThreadPool
 
 
 def main():
@@ -71,7 +72,17 @@ def main():
     mkpath(planfiles_root)
 
     # Run the collector...
-    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
+                        ]
+    pool = ThreadPool(4)
+    pool.map(collectioncode.collect.collection_router, collection_calls)
+    pool.close()
+    pool.join()
+
+    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
