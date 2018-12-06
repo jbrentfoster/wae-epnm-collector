@@ -513,24 +513,24 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
 
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
-    incomplete = True
-    startindex = 0
-    jsonmerged = {}
-    while incomplete:
-        uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-        else:
-            incomplete = False
-        merge(jsonmerged, jsonaddition)
-
-    with open("jsongets/vc-optical.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # incomplete = True
+    # startindex = 0
+    # jsonmerged = {}
+    # while incomplete:
+    #     uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
+    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #     jsonaddition = json.loads(jsonresponse)
+    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+    #     if (lastindex - firstindex) == 99 and lastindex != -1:
+    #         startindex += 100
+    #     else:
+    #         incomplete = False
+    #     merge(jsonmerged, jsonaddition)
+    #
+    # with open("jsongets/vc-optical.json", 'wb') as f:
+    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
 
     with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
         l3links = json.load(f)
@@ -548,7 +548,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         subtype = item['vc.subtype']
         if subtype == "oc:och-trail-uni":
             vcdict = {}
-            logging.info("Processing virtual connection: " + fdn)
+            # logging.info("Processing virtual connection: " + fdn)
             try:
                 for subitem in item['vc.termination-point-list']['vc.termination-point']:
                     tmpfdn = subitem['vc.fdn']
@@ -566,12 +566,14 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
                                         if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
                                             v3['vc-fdn'] = fdn
                                             matched_fdn = True
-                                            # if not matched_fdn:
-                                            #     logging.info "Could not match vc-fdn " + fdn
+                                            logging.info("Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
+                if not matched_fdn:
+                    # logging.info("Could not match vc-fdn " + fdn)
+                    pass
             except KeyError:
                 logging.error("Could not get virtual connection for " + fdn)
             except TypeError:
-                logging.error("Type error encountered for " + fdn)
+                logging.error("Missing or invalid end-point list for  " + fdn)
     logging.info("Completed collecting virtual connections...")
     with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -625,12 +627,12 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
 
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
-    # uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
-    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #
-    # with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
-    #     f.write(jsonresponse)
-    #     f.close()
+    uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
+    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+
+    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
+        f.write(jsonresponse)
+        f.close()
 
     with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
         jsonresponse = f.read()
