@@ -513,24 +513,24 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
 
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
-    # incomplete = True
-    # startindex = 0
-    # jsonmerged = {}
-    # while incomplete:
-    #     uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
-    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #     jsonaddition = json.loads(jsonresponse)
-    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-    #     if (lastindex - firstindex) == 99 and lastindex != -1:
-    #         startindex += 100
-    #     else:
-    #         incomplete = False
-    #     merge(jsonmerged, jsonaddition)
-    #
-    # with open("jsongets/vc-optical.json", 'wb') as f:
-    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    #     f.close()
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+        else:
+            incomplete = False
+        merge(jsonmerged, jsonaddition)
+
+    with open("jsongets/vc-optical.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
 
     with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
         l3links = json.load(f)
