@@ -4,6 +4,7 @@ import re
 import json
 import logging
 import sys
+from multiprocessing.dummy import Pool as ThreadPool
 
 def collection_router(collection_call):
     if collection_call['type'] == "l1nodes":
@@ -30,7 +31,7 @@ def collection_router(collection_call):
         logging.info("Collecting virtual connections...")
         collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         logging.info("Collecting L1 paths...")
-        addL1hopstol3links(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         logging.info("Re-ordering L1 hops...")
         reorderl1hops()
     if collection_call['type'] == "lsps":
@@ -38,27 +39,27 @@ def collection_router(collection_call):
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    logging.info("Collecting L1 nodes...")
-    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 links...")
-    collectL1links_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting MPLS topology...")
-    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    logging.info("Collecting ISIS hostnames...")
-    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    process_hostnames()
-    logging.info("Processing MPLS topology...")
-    processMPLS()
-    logging.info("Collecting MPLS topological links...")
-    try:
-        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    except Exception as err:
-        logging.critical("MPLS topological links are not valid.  Halting execution.")
-        sys.exit("Collection error.  Halting execution.")
-    logging.info("Collecting virtual connections...")
-    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 nodes...")
+    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting MPLS topology...")
+    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    # logging.info("Collecting ISIS hostnames...")
+    # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    # process_hostnames()
+    # logging.info("Processing MPLS topology...")
+    # processMPLS()
+    # logging.info("Collecting MPLS topological links...")
+    # try:
+    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    # except Exception as err:
+    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
+    #     sys.exit("Collection error.  Halting execution.")
+    # logging.info("Collecting virtual connections...")
+    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting L1 paths...")
-    addL1hopstol3links(baseURL, epnmuser, epnmpassword)
+    addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword)
     logging.info("Re-ordering L1 hops...")
     reorderl1hops()
     logging.info("Network collection completed!")
@@ -594,8 +595,8 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                     if 'vc-fdn' in v3:
                         vcfdn = v3['vc-fdn']
                         logging.info("Collecting multilayer route for node " + k1 + " " + k3 + " vcFdn is " + vcfdn)
-                        if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
-                            pass
+                        # if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
+                        #     pass
                         try:
                             l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
                             if len(l1hops) > 0:
@@ -625,6 +626,62 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
+    with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
+        l3links = json.load(f)
+        f.close()
+    vcfdns = []
+    for k1, v1 in l3links.items():
+        # logging.info "**************Nodename is: " + k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.info "***************Linkname is: " + k3
+                    if 'vc-fdn' in v3:
+                        vcfdn = v3['vc-fdn']
+                        logging.info("Node " + k1 + " " + k3 + " has L1 hops and vcFdn is " + vcfdn)
+                        vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'vcfdn': vcfdn}
+                        if not vcfdn_dict in vcfdns:
+                            vcfdns.append(vcfdn_dict)
+                    else:
+                        logging.info(
+                            "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
+                        try:
+                            logging.info("    Neighbor: " + v3['Neighbor'])
+                            logging.info("    Local Intf: " + v3['Local Intf'])
+                            logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+                        except Exception as err:
+                            logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
+
+    pool = ThreadPool(4)
+    l1hops = pool.map(process_vcfdn, vcfdns)
+    pool.close()
+    pool.join()
+
+    for k1, v1 in l3links.items():
+        # logging.info "**************Nodename is: " + k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.info "***************Linkname is: " + k3
+                    if 'vc-fdn' in v3:
+                        tmp_vcfdn = v3['vc-fdn']
+                        if len(l1hops) > 0:
+                            for l1hopset in l1hops:
+                                if len(l1hopset) > 1:
+                                    if l1hopset['vcfdn'] == tmp_vcfdn:
+                                        logging.info("Multi-layer route collection successful.")
+                                        v3['L1 Hops'] = l1hopset.copy()
+                                        v3['L1 Hops'].pop('vcfdn')
+
+    logging.info("completed collecting L1 paths...")
+    with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
+        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+def process_vcfdn(vcfdn_dict):
+    l1hops = collectmultilayerroute_json(vcfdn_dict['baseURL'], vcfdn_dict['epnmuser'], vcfdn_dict['epnmpassword'], vcfdn_dict['vcfdn'])
+    return l1hops
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
@@ -644,6 +701,8 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     l1hopsops = parsemultilayerroute_json(thejson, "topo:ops-link-layer", "Optics")
     l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
     if len(l1hopsops) == 0 or len(l1hopsots) == 0: #check if either multilayer route parsing fails and exit the function if so
+        logging.warn("Could not get multilayer route for vcFDN " + vcfdn)
+        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
         return l1hops
     i = 1
     for k, v in l1hopsops.items():
@@ -652,6 +711,7 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     for k, v in l1hopsots.items():
         l1hops['L1 Hop' + str(i)] = v
         i += 1
+    l1hops['vcfdn'] = vcfdn
     return l1hops
 
 
