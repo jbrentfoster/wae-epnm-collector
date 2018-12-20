@@ -141,6 +141,8 @@ def generateL3circuits(plan, l3linksdict):
                     firstnode_intf = v3['Local Intf']
                     lastnode_ip = [v3['Neighbor IP']]
                     lastnode_intf = v3['Neighbor Intf']
+                    te_metric = int(v3['TE Metric'])
+                    igp_metric = int(v3['IGP Metric'])
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
 
@@ -176,7 +178,7 @@ def generateL3circuits(plan, l3linksdict):
                                     "Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
                             name = "L3_circuit_" + str(i)
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
-                                                          lastnode_ip, firstnode_intf, lastnode_intf)
+                                                          lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
                             l3circuit.setL1Circuit(l1circuit)
                             l3circuit.setCapacity(l1circuit.getBandwidth())
                             intfdict = l3circuit.getAllInterfaces()
@@ -192,7 +194,7 @@ def generateL3circuits(plan, l3linksdict):
                         name = "L3_circuit_" + str(i)
                         linkslist.append(discoveredname)
                         l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
-                                                      lastnode_ip, firstnode_intf, lastnode_intf)
+                                                      lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
                         l3circuit.setCapacity(intfbw)
                         intfdict = l3circuit.getAllInterfaces()
                         for k6, v6 in intfdict.items():
@@ -208,7 +210,8 @@ def generateL3circuits(plan, l3linksdict):
     process_srlgs(plan, circ_srlgs)
 
 
-def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname):
+def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,
+                      igp_metric, te_metric):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
     # nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
@@ -226,9 +229,9 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
             affinities.append(c)
         c += 1
     intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,
-                               ipAddresses=l3nodeA_ip)
+                               ipAddresses=l3nodeA_ip, igpMetric=igp_metric, teMetric=te_metric)
     intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,
-                               ipAddresses=l3nodeB_ip)
+                               ipAddresses=l3nodeB_ip, igpMetric=igp_metric, teMetric=te_metric)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
     circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
@@ -271,21 +274,22 @@ def assignSites(plan):
             logging.info("Node: " + node_name + " Site: " + node_site_name)
         else:
             logging.info("Node " + node_name + " does not have a site.")
-            intf_dict = node_manager.getNode(node).getAllInterfaces ()
+            intf_dict = node_manager.getNode(node).getAllInterfaces()
             if len(intf_dict) > 0:
-                for k,v in intf_dict.items():
+                for k, v in intf_dict.items():
                     circuit = v.getCircuit()
                     for k1, v1 in circuit.getAllInterfaces().items():
-                        if k !=k1:
+                        if k != k1:
                             logging.info("Connected node name is " + v1.getSource().getName())
                             node_rec = v1.getSource().getRecord()
                             if v1.getSource().getSite() is not None:
-                                logging.info("Setting site to connected node site: " + v1.getSource().getSite().getName())
+                                logging.info(
+                                    "Setting site to connected node site: " + v1.getSource().getSite().getName())
                                 connected_site = v1.getSource().getSite()
                                 node_manager.getNode(node).setSite(connected_site)
                             else:
                                 logging.info("Could not get site for connected node...")
-                                site_name = set_site_using_name(site_manager,node_manager,node)
+                                site_name = set_site_using_name(site_manager, node_manager, node)
                                 if site_name is not None:
                                     logging.info("Setting site based on node name to " + site_name)
                                 else:
@@ -299,6 +303,7 @@ def assignSites(plan):
                     logging.info("Setting site based on node name to " + site_name)
                 else:
                     logging.info("Could not match a site name!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
 
 def set_site_using_name(site_manager, node_manager, node):
     sites = site_manager.getAllSites()
