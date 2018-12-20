@@ -358,8 +358,10 @@ def processMPLS():
                 foundfirstlink = True
             elif "TE Metric:" in line and foundfirstlink:
                 try:
-                    metric = line.split(',')[0].split(':')[1]
-                    nodes[node]['Links'][linkid]['Metric'] = metric
+                    te_metric = line.split(',')[0].split(':')[1]
+                    nodes[node]['Links'][linkid]['TE Metric'] = te_metric
+                    igp_metric = line.split(',')[1].split(':')[1]
+                    nodes[node]['Links'][linkid]['IGP Metric'] = igp_metric
                 except Exception as err:
                     logging.warn("There was a problem parsing the metric!")
                     logging.exception(err)
