@@ -148,7 +148,7 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             discovered_name = link['topo.discovered-name']
             nodes = []
             endpointlist = link['topo.endpoint-list']['topo.endpoint']
-            logging.info("Processing link " + fdn)
+            logging.info("Processing L1 link " + fdn)
             if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
                 for ep in endpointlist:
                     endpoint = ep['topo.endpoint-ref']
@@ -204,7 +204,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id):
             status = thejson['ra.config-response']['ra.job-status']['ra.status']
             logging.info("Job status: " + status)
             if status == "SUCCESS":
-                logging.info("Completed running the script...")
+                logging.info("Successfully collected MPLS topology...")
                 results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
@@ -214,7 +214,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id):
             status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
             logging.info("Run status: " + status)
             if status == "COMPLETED":
-                logging.info("Completed running the script...")
+                logging.info("Successfully collected MPLS topology...")
                 results = thejson['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
@@ -267,7 +267,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id):
             status = thejson['ra.config-response']['ra.job-status']['ra.status']
             logging.info("Job status: " + status)
             if status == "SUCCESS":
-                logging.info("Completed running the script...")
+                logging.info("Successfully collected ISIS hostnames...")
                 results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
@@ -277,11 +277,11 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id):
             status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
             logging.info("Run status: " + status)
             if status == "COMPLETED":
-                logging.info("Completed running the script...")
+                logging.info("Successfully collected ISIS hostnames...")
                 results = thejson['ra.deploy-result']['ra.transcript']
                 notDone = False
             elif status == "FAILURE":
-                logging.critical("Could not get MPLS topology!!!!!!")
+                logging.critical("Could not get ISIS hostnames!!!!!!")
                 sys.exit("Collection error.  Ending execution.")
 
     logging.info("Database received.")
@@ -653,11 +653,14 @@ def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
                         except Exception as err:
                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
 
+    logging.info("Spawning threads to collect multi-layer routes...")
     pool = ThreadPool(4)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
 
+    logging.info("Completed collecting multi-layer routes...")
+    logging.info("Processing multi-layer routes...")
     for k1, v1 in l3links.items():
         # logging.info "**************Nodename is: " + k1
         for k2, v2 in v1.items():
@@ -670,11 +673,11 @@ def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
                             for l1hopset in l1hops:
                                 if len(l1hopset) > 1:
                                     if l1hopset['vcfdn'] == tmp_vcfdn:
-                                        logging.info("Multi-layer route collection successful.")
+                                        logging.info("Multi-layer route collection successful for node " + k1 + " vcFdn " + tmp_vcfdn)
                                         v3['L1 Hops'] = l1hopset.copy()
                                         v3['L1 Hops'].pop('vcfdn')
 
-    logging.info("completed collecting L1 paths...")
+    logging.info("Completed collecting L1 paths...")
     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -684,6 +687,7 @@ def process_vcfdn(vcfdn_dict):
     return l1hops
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
+    logging.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
 
@@ -695,6 +699,7 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
         jsonresponse = f.read()
         f.close()
 
+    logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
     thejson = json.loads(jsonresponse)
 
     l1hops = {}
