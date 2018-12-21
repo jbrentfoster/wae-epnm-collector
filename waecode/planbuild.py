@@ -145,6 +145,7 @@ def generateL3circuits(plan, l3linksdict):
                     igp_metric = int(v3['IGP Metric'])
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
+                    tp_description = v3['tp-description']
 
                     srlgs = []
                     if 'SRLGs' in v3:
@@ -176,7 +177,10 @@ def generateL3circuits(plan, l3linksdict):
                             except Exception as err:
                                 logging.critical(
                                     "Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
-                            name = "L3_circuit_" + str(i)
+                            if tp_description == "":
+                                name = "L3_circuit_" + str(i)
+                            else:
+                                name = tp_description
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                           lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
                             l3circuit.setL1Circuit(l1circuit)
