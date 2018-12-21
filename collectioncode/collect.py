@@ -34,6 +34,7 @@ def collection_router(collection_call):
         addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         logging.info("Re-ordering L1 hops...")
         reorderl1hops()
+        collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
@@ -58,10 +59,11 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     #     sys.exit("Collection error.  Halting execution.")
     # logging.info("Collecting virtual connections...")
     # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 paths...")
-    addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword)
-    logging.info("Re-ordering L1 hops...")
-    reorderl1hops()
+    # logging.info("Collecting L1 paths...")
+    #     # addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword)
+    #     # logging.info("Re-ordering L1 hops...")
+    #     # reorderl1hops()
+    # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     logging.info("Network collection completed!")
     logging.info("Collecting LSPs...")
     collectlsps_json(baseURL, epnmuser, epnmpassword)
@@ -492,9 +494,11 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
                                 if node2 == v3['Neighbor']:
                                     v3['Neighbor Intf'] = node2intfparsed
                                     v3['Local Intf'] = node1intfparsed
+                                    v3['Link Speed'], v3['lr type'] = parseintftype(node1intfparsed)
                                 elif node1 == v3['Neighbor']:
                                     v3['Neighbor Intf'] = node1intfparsed
                                     v3['Local Intf'] = node2intfparsed
+                                    v3['Link Speed'], v3['lr type'] = parseintftype(node2intfparsed)
                                 else:
                                     logging.warn(
                                         "Could not match node names for interface assignment for node " + k1 + " link " + k3)
@@ -866,6 +870,83 @@ def returnorderedlist(firstnode, l1hops):
             loopcount += 1
     return l1hopsordered
 
+def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword):
+    with open("jsonfiles/l3Links_final.json", 'rb') as f:
+        l3links = json.load(f)
+        f.close()
+    tpfdns = []
+    for k1, v1 in l3links.items():
+        # logging.info "**************Nodename is: " + k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.info "***************Linkname is: " + k3
+                    tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr="+ v3['lr type']
+                    logging.info("Node " + k1 + " " + k3 + " tpFdn is " + tpfdn)
+                    tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'tpfdn': tpfdn}
+                    v3['tpfdn'] = tpfdn
+                    if not tpfdn_dict in tpfdns:
+                        tpfdns.append(tpfdn_dict)
+
+
+    logging.info("Spawning threads to collect termination points...")
+    pool = ThreadPool(4)
+    termination_points = pool.map(process_tpfdn, tpfdns)
+    pool.close()
+    pool.join()
+
+    for k1, v1 in l3links.items():
+        # logging.info "**************Nodename is: " + k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.info "***************Linkname is: " + k3
+                    tpfdn = v3['tpfdn']
+                    for tp in termination_points:
+                        if tp['tpfdn'] == tpfdn:
+                            v3['tp-description'] = tp['tp-description']
+                            v3['tp-mac'] = tp['tp-mac']
+                            v3['tp-mtu'] = tp['tp-mtu']
+                            break
+
+    with open("jsonfiles/l3Links_final.json", "wb") as f:
+        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+def process_tpfdn(tpfdn_dict):
+    l1hops = collect_termination_point(tpfdn_dict['baseURL'], tpfdn_dict['epnmuser'], tpfdn_dict['epnmpassword'], tpfdn_dict['tpfdn'])
+    return l1hops
+
+def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
+    try:
+        logging.info("Making API call to collect termination point for tpFdn " + tpfdn)
+        uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+
+        # with open("jsongets/termination_point_" + tpfdn + ".json", 'wb') as f:
+        #     f.write(jsonresponse)
+        #     f.close()
+        #
+        # with open("jsongets/termination_point_" + tpfdn + ".json", 'rb') as f:
+        #     jsonresponse = f.read()
+        #     f.close()
+
+        logging.info("Parsing termination_point results for vcFdn " + tpfdn)
+        thejson = json.loads(jsonresponse)
+        tp_description = ""
+        try:
+            tp_description = thejson['com.response-message']['com.data']['tp.termination-point']['tp.description']
+        except Exception as err:
+            logging.warn("termination point " + tpfdn + " not configured with description!")
+        tp_mac_addr = thejson['com.response-message']['com.data']['tp.termination-point']['tp.mac-address']
+        tp_mtu = str(thejson['com.response-message']['com.data']['tp.termination-point']['tp.mtu'])
+
+        return {'tpfdn': tpfdn, 'tp-description': tp_description, 'tp-mac': tp_mac_addr, 'tp-mtu': tp_mtu}
+    except Exception as err:
+        logging.warn("Could not get termination point for tpfdn " + tpfdn)
+        logging.warn(err)
+        return {'tpfdn': tpfdn, 'tp-description': "", 'tp-mac': "", 'tp-mtu': ""}
+
 
 def collectlsps_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
@@ -1025,6 +1106,39 @@ def parseintfnum(nodeintf):
 
     return returnstring[:-1]
 
+def parseintftype(nodeintf):
+    nodeintfnum = ""
+    nodeintftype = ""
+    intflist = ['HundredGigE', 'TenGigE', 'FortyGigE']
+    intf_lr_list = ['lr-hundred-gigabit-ethernet', 'lr-ten-gigabit-ethernet', 'lr-forty-gigabit-ethernet']
+    for i in intflist:
+        try:  # this block is for Ethernet interfaces
+            nodeintfnum = re.search('.*%s(.*)\..*' % (i), nodeintf).group(1)
+            nodeintftype = i
+            nodeintf_lr_type = intf_lr_list[intflist.index(i)]
+            break
+        except:
+            pass
+        try:  # this block is for "Optics" interfaces
+            nodeintfnum = re.search('.*%s(.*).*' % (i), nodeintf).group(1)
+            nodeintftype = i
+            nodeintf_lr_type = intf_lr_list[intflist.index(i)]
+            break
+        except:
+            pass
+    try:
+        re.search('%s(.*).*' % ('BDI'), nodeintf).group(1)
+        nodeintfnum = nodeintf
+        nodeintftype = 'BDI'
+        nodeintf_lr_type = 'lr-bridge'
+        return nodeintftype, nodeintf_lr_type
+    except:
+        pass
+    if nodeintfnum == "":
+        logging.info("Could not parse interface type!!!!!!!!!")
+        return None
+    else:
+        return nodeintftype, nodeintf_lr_type
 
 def merge(a, b):
     "merges b into a"
