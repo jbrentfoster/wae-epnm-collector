@@ -881,7 +881,10 @@ def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword):
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
                     # logging.info "***************Linkname is: " + k3
-                    tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr="+ v3['lr type']
+                    if 'vc-fdn' in v3 and not('Ordered L1 Hops' in v3):
+                        tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr=lr-ethernet"
+                    else:
+                        tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr=" + v3['lr type']
                     logging.info("Node " + k1 + " " + k3 + " tpFdn is " + tpfdn)
                     tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'tpfdn': tpfdn}
                     v3['tpfdn'] = tpfdn
@@ -938,9 +941,16 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
             tp_description = thejson['com.response-message']['com.data']['tp.termination-point']['tp.description']
         except Exception as err:
             logging.warn("termination point " + tpfdn + " not configured with description!")
-        tp_mac_addr = thejson['com.response-message']['com.data']['tp.termination-point']['tp.mac-address']
-        tp_mtu = str(thejson['com.response-message']['com.data']['tp.termination-point']['tp.mtu'])
-
+        try:
+            tp_mac_addr = thejson['com.response-message']['com.data']['tp.termination-point']['tp.mac-address']
+        except Exception as err:
+            logging.warn("Could not get mac-address for tpFdn " + tpfdn)
+            tp_mac_addr = ""
+        try:
+            tp_mtu = str(thejson['com.response-message']['com.data']['tp.termination-point']['tp.mtu'])
+        except Exception as err:
+            logging.warn("Could not get MTU for tpFdn " + tpfdn)
+            tp_mtu = ""
         return {'tpfdn': tpfdn, 'tp-description': tp_description, 'tp-mac': tp_mac_addr, 'tp-mtu': tp_mtu}
     except Exception as err:
         logging.warn("Could not get termination point for tpfdn " + tpfdn)
