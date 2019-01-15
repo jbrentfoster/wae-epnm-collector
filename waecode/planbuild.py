@@ -166,9 +166,10 @@ def generateL3circuits(plan, l3linksdict):
                             nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
                             try:
                                 lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                                nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
                             except Exception as err:
-                                logging.warn("")
-                            nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
+                                logging.warn("Could not get site for " + lastl1node)
+                            # nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
 
                             name = "L1_circuit_" + str(c)
                             try:
@@ -177,6 +178,7 @@ def generateL3circuits(plan, l3linksdict):
                             except Exception as err:
                                 logging.critical(
                                     "Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
+                                break
                             if tp_description == "":
                                 name = "L3_circuit_" + str(i)
                             else:
@@ -195,7 +197,10 @@ def generateL3circuits(plan, l3linksdict):
 
                     elif not duplicatelink:
                         i += 1
-                        name = "L3_circuit_" + str(i)
+                        if tp_description == "":
+                            name = "L3_circuit_" + str(i)
+                        else:
+                            name = tp_description
                         linkslist.append(discoveredname)
                         l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                       lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
