@@ -40,30 +40,30 @@ def collection_router(collection_call):
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting MPLS topology...")
-    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # logging.info("Collecting ISIS hostnames...")
-    # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # process_hostnames()
-    # logging.info("Processing MPLS topology...")
-    # processMPLS()
-    # logging.info("Collecting MPLS topological links...")
-    # try:
-    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    # except Exception as err:
-    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-    #     sys.exit("Collection error.  Halting execution.")
-    # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 paths...")
-    #     # addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword)
-    #     # logging.info("Re-ordering L1 hops...")
-    #     # reorderl1hops()
-    # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting MPLS topology...")
+    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    logging.info("Collecting ISIS hostnames...")
+    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    process_hostnames()
+    logging.info("Processing MPLS topology...")
+    processMPLS()
+    logging.info("Collecting MPLS topological links...")
+    try:
+        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
+    logging.info("Collecting virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 paths...")
+    addL1hopstol3links(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops...")
+    reorderl1hops()
+    collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     logging.info("Network collection completed!")
     logging.info("Collecting LSPs...")
     collectlsps_json(baseURL, epnmuser, epnmpassword)
@@ -83,9 +83,11 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
         else:
             incomplete = False
-        # merge(jsonmerged, jsonaddition)
+            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -131,9 +133,11 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
         else:
             incomplete = False
-        # merge(jsonmerged, jsonaddition)
+            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-links.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -436,9 +440,11 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
         else:
             incomplete = False
-        # merge(jsonmerged, jsonaddition)
+            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -535,9 +541,11 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
         else:
             incomplete = False
-        # merge(jsonmerged, jsonaddition)
+            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -975,9 +983,11 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
         else:
             incomplete = False
-        # merge(jsonmerged, jsonaddition)
+            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
