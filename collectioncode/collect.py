@@ -82,9 +82,10 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
+            merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-        merge(jsonmerged, jsonaddition)
+        # merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -129,9 +130,10 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
+            merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-        merge(jsonmerged, jsonaddition)
+        # merge(jsonmerged, jsonaddition)
 
     with open("jsongets/l1-links.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -433,9 +435,10 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
+            merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-        merge(jsonmerged, jsonaddition)
+        # merge(jsonmerged, jsonaddition)
 
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -531,9 +534,10 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
+            merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-        merge(jsonmerged, jsonaddition)
+        # merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -970,9 +974,10 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
+            merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-        merge(jsonmerged, jsonaddition)
+        # merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
