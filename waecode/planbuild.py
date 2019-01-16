@@ -182,7 +182,10 @@ def generateL3circuits(plan, l3linksdict):
                             if tp_description == "":
                                 name = "L3_circuit_" + str(i)
                             else:
-                                name = tp_description
+                                if 'CktId: ' in tp_description:
+                                    name = tp_description.split('CktId: ')[1]
+                                else:
+                                    name = "L3_circuit_" + str(i)
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                           lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
                             l3circuit.setL1Circuit(l1circuit)
@@ -200,7 +203,10 @@ def generateL3circuits(plan, l3linksdict):
                         if tp_description == "":
                             name = "L3_circuit_" + str(i)
                         else:
-                            name = tp_description
+                            if 'CktId: ' in tp_description:
+                                name = tp_description.split('CktId: ')[1]
+                            else:
+                                name = tp_description
                         linkslist.append(discoveredname)
                         l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                       lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
