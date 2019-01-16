@@ -1,4 +1,5 @@
 import com.cisco.wae.design
+import json
 import logging
 import flexlsp_creator
 from com.cisco.wae.design.model.net import HopType
@@ -108,11 +109,31 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
 
 
 def generateL3nodes(plan, l3nodelist):
+    with open("jsonfiles/all-nodes.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+    all_nodes = json.loads(jsonresponse)
     for l3node in l3nodelist:
-        nodeRec = NodeRecord(name=l3node['Name'])
+        name = l3node['Name']
+        vendor = 'Cisco'
+        model = ""
+        os = ""
+        description = ""
+        ipManage = ""
+        for node in all_nodes:
+            if node['name'] == name:
+                model = node['product-type']
+                os = node['software-version']
+                description = node['description']
+                ipManage = node['management-address']
+                break
+        nodeRec = NodeRecord(name=name,
+                             model=model,
+                             vendor=vendor,
+                             os=os,
+                             description=description,
+                             ipManage=ipManage)
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
-        # newl3node.setLatitude(int(l3node['Y']))
-        # newl3node.setLongitude(int(l3node['X']))
 
 
 def generateL3circuits(plan, l3linksdict):
@@ -185,7 +206,7 @@ def generateL3circuits(plan, l3linksdict):
                                 if 'CktId: ' in tp_description:
                                     name = tp_description.split('CktId: ')[1]
                                 else:
-                                    name = "L3_circuit_" + str(i)
+                                    name = tp_description
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                           lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
                             l3circuit.setL1Circuit(l1circuit)
