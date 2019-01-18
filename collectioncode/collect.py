@@ -51,12 +51,12 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    logging.info("Collection all nodes equipment information...")
-    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collection all nodes equipment information...")
+    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 nodes...")
     # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
@@ -218,23 +218,18 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/all-nodes.json", 'wb') as f:
         for node in thejson['com.response-message']['com.data']['nd.node']:
             # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
-            nodeName = node['nd.name']
-            logging.info("Processing for equipment information " + nodeName)
-            product_type = node['nd.product-type']
-            software_version = node['nd.software-version']
-            management_address = node['nd.management-address']
-            description = node['nd.description']
-            # try:
-            #     latitude = node['nd.latitude']
-            #     longitude = node['nd.longitude']
-            # except KeyError:
-            #     logging.error(
-            #         "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-            #     latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-            #     longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-            # l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
-            nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
+            try:
+                node_fdn = node['nd.fdn']
+                nodeName = node['nd.name']
+                logging.info("Processing for equipment information " + nodeName)
+                product_type = node['nd.product-type']
+                software_version = node['nd.software-version']
+                management_address = node['nd.management-address']
+                description = node['nd.description']
+                nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
                             'management-address': management_address, 'description': description})
+            except Exception as err:
+                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
             # i += 1
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -823,7 +818,11 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
         'topo.virtual-connection-multi-layer-route']:
         subtype = item['topo.topology-layer']
         if subtype == topologylayer:
-            topo_links = item['topo.tl-list']['topo.topological-link']
+            try:
+                topo_links = item['topo.tl-list']['topo.topological-link']
+            except Exception as err:
+                logging.warning("Could not process multi-layer route response, skipping this fdn...")
+                break
             if isinstance(topo_links, list):
                 for subitem in topo_links:
                     tmpfdn = subitem['topo.fdn']
@@ -1253,7 +1252,7 @@ def merge(a, b):
         if key in a:  # if key is in both a and b
             if isinstance(a[key], dict) and isinstance(b[key], dict):  # if the key is dict Object
                 merge(a[key], b[key])
-            else:
+            elif isinstance(a[key], list) and isinstance(b[key], list):
                 a[key] = a[key] + b[key]
         else:  # if the key is not in dict a , add it to dict a
             a.update({key: b[key]})
