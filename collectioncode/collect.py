@@ -1096,6 +1096,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         fdn = None
         erroredlsp = False
         autoroute = None
+        # Fix - GLH - 2-18-19 #
+        priority = None
+        # Fix - GLH - 2-18-19 #
         adminstate = item['vc.admin-state']
         fdn = item['vc.fdn']
         if adminstate == "com:admin-state-up":
@@ -1115,6 +1118,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                # Fix - GLH - 2-18-19 #
+                priority = subsubsubitem["vc.hold-priority"]
+                # Fix - GLH - 2-18-19 #
                 try:
                     subitem = item['vc.te-tunnel']
                     tunnelID = subitem['vc.tunnel-id']
@@ -1138,6 +1144,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                # Fix - GLH - 2-18-19 #
+                priority = subsubsubitem["vc.hold-priority"]
+                # Fix - GLH - 2-18-19 #
                 try:
                     subitem = item['vc.te-tunnel']
                     tunnelID = subitem['vc.tunnel-id']
@@ -1162,6 +1171,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict['signalled-bw'] = signalledBW
                 vcdict['FRR'] = fastreroute
                 vcdict['auto-route-announce-enabled'] = autoroute
+                # Fix - GLH - 2-18-19 #
+                vcdict["vc.hold-priority"] = priority
+                # Fix - GLH - 2-18-19 #
                 lsplist.append(vcdict)
                 logging.info(
                     "Collected tunnel " + str(
