@@ -205,6 +205,10 @@ def generateL3circuits(plan, l3linksdict):
                             else:
                                 if 'CktId: ' in tp_description:
                                     name = tp_description.split('CktId: ')[1]
+                                # Fix - GLH - 2-18-19 #
+                                elif 'CID:' in tp_description:
+                                    name = tp_description.split('CID:')[1]
+                                # Fix End - GLH - 2-18-19 #
                                 else:
                                     name = tp_description
                             l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
@@ -226,7 +230,10 @@ def generateL3circuits(plan, l3linksdict):
                         else:
                             if 'CktId: ' in tp_description:
                                 name = tp_description.split('CktId: ')[1]
-                            # Fix - GLH - 2-18-18 #
+                            # Fix - GLH - 2-18-19 #
+                            elif 'CID:' in tp_description:
+                                name = tp_description.split('CID:')[1]
+                            # Fix End - GLH - 2-18-19 #
                             else:
                                 name = tp_description
                         linkslist.append(discoveredname)
