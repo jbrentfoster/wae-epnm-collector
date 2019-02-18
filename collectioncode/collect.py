@@ -1097,7 +1097,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         erroredlsp = False
         autoroute = None
         # Fix - GLH - 2-18-19 #
-        priority = None
+        setupPriority = None
+        holdPriority = None
         # Fix - GLH - 2-18-19 #
         adminstate = item['vc.admin-state']
         fdn = item['vc.fdn']
@@ -1119,7 +1120,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
-                priority = subsubsubitem["vc.hold-priority"]
+                setupPriority = subsubsubitem["vc.setup-priority"]
+                holdPriority = subsubsubitem["vc.hold-priority"]
                 # Fix - GLH - 2-18-19 #
                 try:
                     subitem = item['vc.te-tunnel']
@@ -1145,7 +1147,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
-                priority = subsubsubitem["vc.hold-priority"]
+                holdPriority = subsubsubitem["vc.hold-priority"]
+                setupPriority = subsubsubitem["vc.setup-priority"]
                 # Fix - GLH - 2-18-19 #
                 try:
                     subitem = item['vc.te-tunnel']
@@ -1172,7 +1175,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict['FRR'] = fastreroute
                 vcdict['auto-route-announce-enabled'] = autoroute
                 # Fix - GLH - 2-18-19 #
-                vcdict["vc.hold-priority"] = priority
+                vcdict["vc.hold-priority"] = holdPriority
+                vcdict["vc.setup-priority"] = setupPriority
                 # Fix - GLH - 2-18-19 #
                 lsplist.append(vcdict)
                 logging.info(

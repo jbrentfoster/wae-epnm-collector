@@ -387,6 +387,10 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             # lspName = lsp['fdn'].split('!')[1].split('=')[1]
             lspName = lsp['tufdn'].split('!')[1].split('=')[1] + "-" + \
                       lsp['tufdn'].split('!')[2].split('=')[2].split(';')[0]
+            # Fix - GLH - 2-18-19#
+            lspSetupPriority = lsp["vc.setup-priority"]
+            lspHoldPriority = lsp["vc.hold-priority"]
+            # Fix - GLH - 2-18-19 #
             logging.info(lspName)
             demandName = "Demand for " + lspName
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
@@ -408,7 +412,7 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                                 tuID))
                 elif lsp['auto-route-announce-enabled'] == True:
                     logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
-                    new_private_lsp(plan, src, dest, lspName, lspBW, frr)
+                    new_private_lsp(plan, src, dest, lspName, lspBW, frr, lspSetupPriority, lspHoldPriority)  #Fix - GLH - 2-18-19
                     new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
 
 
@@ -448,11 +452,13 @@ def new_demand_for_LSP(id, src, dest, lspName, demandName, val):
     dmdTrafficMgr.setTraffic(dmdTraffKey, val)
 
 
-def new_private_lsp(id, src, dest, name, lspBW, frr):
+def new_private_lsp(id, src, dest, name, lspBW, frr, lspSetupPriority, lspHoldPriority):
     lspRec = LSPRecord(
         sourceKey=NodeKey(name=src),
         name=name,
         destinationKey=NodeKey(name=dest),
+        setupPriority=int(lspSetupPriority),
+        holdPriority=int(lspHoldPriority),
         isActive=True,
         isPrivate=True,
         setupBW=lspBW,
