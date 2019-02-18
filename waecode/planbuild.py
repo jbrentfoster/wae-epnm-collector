@@ -226,6 +226,7 @@ def generateL3circuits(plan, l3linksdict):
                         else:
                             if 'CktId: ' in tp_description:
                                 name = tp_description.split('CktId: ')[1]
+                            # Fix - GLH - 2-18-18 #
                             else:
                                 name = tp_description
                         linkslist.append(discoveredname)
