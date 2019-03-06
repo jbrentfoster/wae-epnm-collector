@@ -17,6 +17,9 @@ def collection_router(collection_call):
     if collection_call['type'] == 'allnodes':
         logging.info("Collection all node equipment details...")
         collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == '4knodes':
+        logging.info("Collecting 4k nodes...")
+        collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topology...")
         collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
@@ -38,6 +41,24 @@ def collection_router(collection_call):
         logging.info("Collecting virtual connections...")
         collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
+
+        logging.info("Parsing OCH-trails...")
+        parse_vc_optical_och_trails()
+
+        logging.info("Getting OCH-trails wavelengths...")
+        add_wavelength_vc_optical_och_trails()
+
+        logging.info("Collection OTU links...")
+        collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+
+        logging.info("Collecting OTU termination points...")
+        collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+
+        logging.info("Adding OCH trails to OTU links...")
+        add_och_trails_to_otu_links()
+
         logging.info("Collecting L1 paths...")
         addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                     collection_call['epnmpassword'])
@@ -50,13 +71,15 @@ def collection_router(collection_call):
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 
-def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
+# def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collection all nodes equipment information...")
     # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 nodes...")
     # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 links...")
-    collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting 4k nodes...")
+    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
@@ -72,6 +95,16 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     #     sys.exit("Collection error.  Halting execution.")
     # logging.info("Collecting virtual connections...")
     # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Parsing OCH-trails...")
+    # parse_vc_optical_och_trails()
+    # logging.info("Getting OCH-trails wavelengths...")
+    # add_wavelength_vc_optical_och_trails()
+    # logging.info("Collection OTU links...")
+    # collect_otu_links_json(baseURL,epnmuser,epnmpassword)
+    # logging.info("Collecting OTU termination points...")
+    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Adding OCH trails to OTU links...")
+    # add_och_trails_to_otu_links()
     # logging.info("Collecting L1 paths...")
     # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
     # logging.info("Re-ordering L1 hops...")
@@ -232,6 +265,58 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
                 logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
             # i += 1
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series&.startIndex=" + str(
+            startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+            merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
+        else:
+            incomplete = False
+            merge(jsonmerged, jsonaddition)
+
+    with open("jsongets/4k-nodes.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+    with open("jsongets/4k-nodes.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+
+    thejson = json.loads(jsonresponse)
+
+    l1nodes = {}
+    i = 1
+    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
+        for node in thejson['com.response-message']['com.data']['nd.node']:
+            if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
+                nodeName = node['nd.name']
+                fdn = node['nd.fdn']
+                logging.info("Processing node " + nodeName)
+                try:
+                    latitude = node['nd.latitude']
+                    longitude = node['nd.longitude']
+                except KeyError:
+                    logging.error(
+                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                l1nodes['Node' + str(i)] = dict(
+                    [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
+                i += 1
+        # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        json.dump(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': '))
         f.close()
 
 
@@ -591,6 +676,132 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 
+def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=otu-link-layer&.startIndex=" + str(
+            startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+            merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
+        else:
+            incomplete = False
+            merge(jsonmerged, jsonaddition)
+
+    with open("jsongets/tl-otu-link-layer.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+    with open("jsongets/tl-otu-link-layer.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+
+    thejson = json.loads(jsonresponse)
+
+    otu_links = []
+    for item in thejson['com.response-message']['com.data']['topo.topological-link']:
+        try:
+            otu_link = {}
+            termination_points = []
+            fdn = item['topo.fdn']
+            discoveredname = item['topo.discovered-name']
+            capacity = item['topo.total-capacity']
+            ep_list = item['topo.endpoint-list']['topo.endpoint']
+            endpoints = []
+            for ep in ep_list:
+                tmptp = {}
+                tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+                tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
+                tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp['port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
+                tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
+                termination_points.append(tmptp)
+            otu_link['fdn'] = fdn
+            otu_link['discoveredname'] = discoveredname
+            otu_link['capacity'] = capacity
+            # otu_link['endpoints'] = endpoints
+            otu_link['termination-points'] = termination_points
+            if len(ep_list) == 2:
+                otu_links.append(otu_link)
+            else:
+                logging.warn("Endpoint list for " + fdn + " is incomplete!")
+        except Exception as error:
+            logging.warn("Invalid OTU topo link!")
+    with open("jsonfiles/otu_links.json", "wb") as f:
+        f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
+def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
+    with open("jsonfiles/otu_links.json", 'rb') as f:
+        otu_links = json.load(f)
+        f.close()
+    tpfdns = []
+    for otu_link in otu_links:
+        for tp in otu_link['termination-points']:
+            tpfdn = tp['tp-fdn']
+            tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'tpfdn': tpfdn}
+            tpfdns.append(tpfdn_dict)
+
+    logging.info("Spawning threads to collect termination points...")
+    pool = ThreadPool(4)
+    termination_points = pool.map(process_otu_tpfdn, tpfdns)
+    pool.close()
+    pool.join()
+
+    for otu_link in otu_links:
+        for tp in otu_link['termination-points']:
+            channels = []
+            for tmptp in termination_points:
+                for channel in tmptp:
+                    if channel['tp-fdn'] ==  tp['tp-fdn']:
+                        tmpchannel = channel.copy()
+                        tmpchannel.pop('tp-fdn', None)
+                        channels.append(tmpchannel)
+            tp['channels'] = channels
+
+    with open("jsonfiles/otu_links.json", "wb") as f:
+        f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
+def process_otu_tpfdn(tpfdn_dict):
+    tp_info = collect_otu_termination_point(tpfdn_dict['baseURL'], tpfdn_dict['epnmuser'], tpfdn_dict['epnmpassword'],
+                                       tpfdn_dict['tpfdn'])
+    return tp_info
+
+def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
+    try:
+        logging.info("Making API call to collect OTU termination point for tpFdn " + tpfdn)
+        uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+
+        logging.info("Parsing termination_point results for vcFdn " + tpfdn)
+        thejson = json.loads(jsonresponse)
+        tp_description = ""
+        tp_list = thejson['com.response-message']['com.data']['tp.termination-point']
+        tp_data = []
+        for tp in tp_list:
+            tp_dict = {}
+            tp_dict['ch-fdn'] = tp['tp.fdn']
+            tp_dict['tp-fdn'] = tpfdn
+            tp_dict['layer-rate'] = tp['tp.layer-rate']
+            try:
+                tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
+                tp_data.append(tp_dict)
+            except Exception as error:
+                pass
+        return tp_data
+    except Exception as err:
+        logging.warn("OTU termination point collection failed!")
+
+
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
@@ -662,6 +873,105 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         f.close()
 
 
+def parse_vc_optical_och_trails():
+    with open("jsongets/vc-optical.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+    thejson = json.loads(jsonresponse)
+    och_trails = []
+    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+        vcdict = {}
+        fdn = item['vc.fdn']
+        subtype = item['vc.subtype']
+        termination_points = []
+        if subtype == "oc:och-trail-uni":
+            vcdict['fdn'] = fdn
+            vcdict['subtype'] = subtype
+            vcdict['termination-points'] = termination_points
+            # logging.info("Processing virtual connection: " + fdn)
+            try:
+                vcdict['trail-fdn'] = item['vc.carried-by-vc-ref-list']['vc.carried-by-vc-ref']
+            except Exception as error:
+                logging.warn("Could not determine trail-fdn for OCH-trail " + fdn)
+            try:
+                item_tps = item['vc.termination-point-list']['vc.termination-point']
+                if len(item_tps) == 2:
+                    for subitem in item_tps:
+                        tmptp = {}
+                        tmpfdn = subitem['vc.fdn']
+                        tmptp['node'] = tmpfdn.split('!')[1].split('=')[1]
+                        tmptp['port'] = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
+                        tmptp['port-num'] = tmptp['port'].split('Optics')[1]
+                        termination_points.append(tmptp)
+                    och_trails.append(vcdict)
+                else:
+                    logging.warn("OCH-trail " + fdn + " has incomplete termination points!")
+            except KeyError:
+                logging.error("Could not get virtual connection for " + fdn)
+            except TypeError:
+                logging.error("Missing or invalid end-point list for  " + fdn)
+
+    logging.info("Completed parsing OCH Trails...")
+    with open("jsonfiles/och_trails.json", "wb") as f:
+        f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+def add_wavelength_vc_optical_och_trails():
+    with open("jsongets/vc-optical.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+    thejson = json.loads(jsonresponse)
+
+    with open("jsonfiles/och_trails.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+    och_trails = json.loads(jsonresponse)
+    virtual_connections = thejson['com.response-message']['com.data']['vc.virtual-connection']
+
+    for och_trail in och_trails:
+        for vc in virtual_connections:
+            fdn = vc['vc.fdn']
+            subtype = vc['vc.subtype']
+            if subtype == "oc:och-nc":
+                if fdn == och_trail['trail-fdn']:
+                    och_trail['wavelength'] = vc['vc.och-nc']['vc.wavelength']
+
+    logging.info("Completed getting OCH Trails wavelengths...")
+    with open("jsonfiles/och_trails.json", "wb") as f:
+        f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
+def add_och_trails_to_otu_links():
+    with open("jsonfiles/otu_links.json", 'rb') as f:
+        otu_links = json.load(f)
+        f.close()
+    with open("jsonfiles/och_trails.json", 'rb') as f:
+        och_trails = json.load(f)
+        f.close()
+
+    for otu_link in otu_links:
+        otu_ports = []
+        matched = False
+        for otu_tp in otu_link['termination-points']:
+            tp_dict = {'node': otu_tp['node'], 'port-num': otu_tp['port-num']}
+            otu_ports.append(tp_dict)
+            for och_trail in och_trails:
+                och_ports = []
+                for och_trail_tp in och_trail['termination-points']:
+                    tmp_tp = {'node': och_trail_tp['node'], 'port-num': och_trail_tp['port-num']}
+                    och_ports.append(tmp_tp)
+                for tp in och_ports:
+                    if tp not in otu_ports: matched = False
+                    elif tp in otu_ports: matched = True
+                if matched: otu_link['och-trail-fdn'] = och_trail['fdn']
+
+    logging.info("Completed adding OCH trails to OTU links...")
+    with open("jsonfiles/otu_links.json", "wb") as f:
+        f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
 def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
         l3links = json.load(f)
@@ -683,6 +993,7 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
                             if len(l1hops) > 0:
                                 logging.info("Multi-layer route collection successful.")
                                 v3['L1 Hops'] = l1hops
+                                v3['L1 Hops'].pop('vcfdn')
                             else:
                                 logging.warn("Could not get multilayer route for " + k1 + " " + k3)
                                 logging.warn("vcFDN is " + vcfdn)
@@ -1085,7 +1396,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         adminstate = None
         affinitybits = None
         affinitymask = None
-        destinationIP = None
+        # destinationIP = None
         tunnelID = None
         tunnelsource = None
         tunneldestination = None
@@ -1106,6 +1417,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             direction = item['vc.direction']
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
+            logging.info("Collecting LSP: " + fdn)
             term_point = item['vc.termination-point-list']['vc.termination-point']
             if isinstance(term_point, dict):
                 tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
@@ -1116,7 +1428,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 except Exception as err2:
                     logging.warn("LSP has no affinity bits: " + fdn)
                 signalledBW = subsubsubitem['vc.signalled-bw']
-                destinationIP = subsubsubitem['vc.destination-address']
+                # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
@@ -1143,7 +1455,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 except Exception as err2:
                     logging.warn("LSP has no affinity bits: " + fdn)
                 signalledBW = subsubsubitem['vc.signalled-bw']
-                destinationIP = subsubsubitem['vc.destination-address']
+                # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
@@ -1166,7 +1478,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict['tufdn'] = tmpfdn
                 vcdict['affinitybits'] = affinitybits
                 vcdict['affinitymask'] = affinitymask
-                vcdict['Destination IP'] = destinationIP
+                # vcdict['Destination IP'] = destinationIP
                 vcdict['Tunnel ID'] = tunnelID
                 vcdict['Tunnel Source'] = tunnelsource
                 vcdict['Tunnel Destination'] = tunneldestination
