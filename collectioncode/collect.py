@@ -1361,27 +1361,27 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
 
 
 def collectlsps_json(baseURL, epnmuser, epnmpassword):
-    # incomplete = True
-    # startindex = 0
-    # jsonmerged = {}
-    # while incomplete:
-    #     uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
-    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #     jsonaddition = json.loads(jsonresponse)
-    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-    #     if (lastindex - firstindex) == 99 and lastindex != -1:
-    #         startindex += 100
-    #         merge(jsonmerged, jsonaddition)
-    #     elif lastindex == -1:
-    #         incomplete = False
-    #     else:
-    #         incomplete = False
-    #         merge(jsonmerged, jsonaddition)
-    #
-    # with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
-    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    #     f.close()
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+            merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
+        else:
+            incomplete = False
+            merge(jsonmerged, jsonaddition)
+
+    with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
     with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
