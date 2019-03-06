@@ -1418,7 +1418,11 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
             logging.info("Collecting LSP: " + fdn)
-            term_point = item['vc.termination-point-list']['vc.termination-point']
+            try:
+                term_point = item['vc.termination-point-list']['vc.termination-point']
+            except Exception as err:
+                logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
+                continue
             if isinstance(term_point, dict):
                 tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
