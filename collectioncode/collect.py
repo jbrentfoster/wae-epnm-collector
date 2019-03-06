@@ -71,7 +71,7 @@ def collection_router(collection_call):
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 
-# def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
+def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collection all nodes equipment information...")
     # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 nodes...")
@@ -111,8 +111,8 @@ def collection_router(collection_call):
     # reorderl1hops()
     # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     # logging.info("Network collection completed!")
-    # logging.info("Collecting LSPs...")
-    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting LSPs...")
+    collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -1361,27 +1361,27 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
 
 
 def collectlsps_json(baseURL, epnmuser, epnmpassword):
-    incomplete = True
-    startindex = 0
-    jsonmerged = {}
-    while incomplete:
-        uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-            merge(jsonmerged, jsonaddition)
-        elif lastindex == -1:
-            incomplete = False
-        else:
-            incomplete = False
-            merge(jsonmerged, jsonaddition)
-
-    with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # incomplete = True
+    # startindex = 0
+    # jsonmerged = {}
+    # while incomplete:
+    #     uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
+    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #     jsonaddition = json.loads(jsonresponse)
+    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+    #     if (lastindex - firstindex) == 99 and lastindex != -1:
+    #         startindex += 100
+    #         merge(jsonmerged, jsonaddition)
+    #     elif lastindex == -1:
+    #         incomplete = False
+    #     else:
+    #         incomplete = False
+    #         merge(jsonmerged, jsonaddition)
+    #
+    # with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
+    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
     with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -1424,7 +1424,11 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
                 continue
             if isinstance(term_point, dict):
-                tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']
@@ -1451,7 +1455,11 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                     erroredlsp = True
             else:
                 logging.info("List format term_point " + fdn)
-                tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']

@@ -59,32 +59,32 @@ def main():
     logging.info("Collection start time is " + current_time)
 
     # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('jsongets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
-
-    # Recreate output directories
-    mkpath('jsonfiles')
-    mkpath('jsongets')
-    mkpath(planfiles_root)
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles')
+    #     remove_tree('jsongets')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+    #
+    # # Recreate output directories
+    # mkpath('jsonfiles')
+    # mkpath('jsongets')
+    # mkpath(planfiles_root)
 
     # Run the collector...
-    collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
-                        ]
-    pool = ThreadPool(4)
-    pool.map(collectioncode.collect.collection_router, collection_calls)
-    pool.close()
-    pool.join()
+    # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
+    #                     ]
+    # pool = ThreadPool(4)
+    # pool.map(collectioncode.collect.collection_router, collection_calls)
+    # pool.close()
+    # pool.join()
 
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
