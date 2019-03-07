@@ -8,45 +8,45 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 
 def collection_router(collection_call):
-    if collection_call['type'] == "l1nodes":
-        logging.info("Collecting L1 nodes...")
-        collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    if collection_call['type'] == "l1links":
-        logging.info("Collecting L1 links...")
-        collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    if collection_call['type'] == 'allnodes':
-        logging.info("Collection all node equipment details...")
-        collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    if collection_call['type'] == '4knodes':
-        logging.info("Collecting 4k nodes...")
-        collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    # if collection_call['type'] == "l1nodes":
+    #     logging.info("Collecting L1 nodes...")
+    #     collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    # if collection_call['type'] == "l1links":
+    #     logging.info("Collecting L1 links...")
+    #     collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    # if collection_call['type'] == 'allnodes':
+    #     logging.info("Collection all node equipment details...")
+    #     collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    # if collection_call['type'] == '4knodes':
+    #     logging.info("Collecting 4k nodes...")
+    #     collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
-        logging.info("Collecting MPLS topology...")
-        collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-                               collection_call['seednodeid'])
-        logging.info("Collecting ISIS hostnames...")
-        collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-                               collection_call['seednodeid'])
-        process_hostnames()
-        logging.info("Processing MPLS topology...")
-        processMPLS()
-        logging.info("Collecting MPLS topological links...")
-        try:
-            collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
-        except Exception as err:
-            logging.critical("MPLS topological links are not valid.  Halting execution.")
-            sys.exit("Collection error.  Halting execution.")
-
-        logging.info("Collecting virtual connections...")
-        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
-
-        logging.info("Parsing OCH-trails...")
-        parse_vc_optical_och_trails()
-
-        logging.info("Getting OCH-trails wavelengths...")
-        add_wavelength_vc_optical_och_trails()
+        # logging.info("Collecting MPLS topology...")
+        # collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
+        #                        collection_call['seednodeid'])
+        # logging.info("Collecting ISIS hostnames...")
+        # collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
+        #                        collection_call['seednodeid'])
+        # process_hostnames()
+        # logging.info("Processing MPLS topology...")
+        # processMPLS()
+        # logging.info("Collecting MPLS topological links...")
+        # try:
+        #     collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                                collection_call['epnmpassword'])
+        # except Exception as err:
+        #     logging.critical("MPLS topological links are not valid.  Halting execution.")
+        #     sys.exit("Collection error.  Halting execution.")
+        #
+        # logging.info("Collecting virtual connections...")
+        # collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                                collection_call['epnmpassword'])
+        #
+        # logging.info("Parsing OCH-trails...")
+        # parse_vc_optical_och_trails()
+        #
+        # logging.info("Getting OCH-trails wavelengths...")
+        # add_wavelength_vc_optical_och_trails()
 
         logging.info("Collection OTU links...")
         collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -56,19 +56,19 @@ def collection_router(collection_call):
         collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
 
-        logging.info("Adding OCH trails to OTU links...")
-        add_och_trails_to_otu_links()
-
-        logging.info("Collecting L1 paths...")
-        addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                    collection_call['epnmpassword'])
-        logging.info("Re-ordering L1 hops...")
-        reorderl1hops()
-        collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                            collection_call['epnmpassword'])
-    if collection_call['type'] == "lsps":
-        logging.info("Collecting LSPs...")
-        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    #     logging.info("Adding OCH trails to OTU links...")
+    #     add_och_trails_to_otu_links()
+    #
+    #     logging.info("Collecting L1 paths...")
+    #     addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+    #                                 collection_call['epnmpassword'])
+    #     logging.info("Re-ordering L1 hops...")
+    #     reorderl1hops()
+    #     collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+    #                                         collection_call['epnmpassword'])
+    # if collection_call['type'] == "lsps":
+    #     logging.info("Collecting LSPs...")
+    #     collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
@@ -99,10 +99,10 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # parse_vc_optical_och_trails()
     # logging.info("Getting OCH-trails wavelengths...")
     # add_wavelength_vc_optical_och_trails()
-    # logging.info("Collection OTU links...")
-    # collect_otu_links_json(baseURL,epnmuser,epnmpassword)
-    # logging.info("Collecting OTU termination points...")
-    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Collection OTU links...")
+    collect_otu_links_json(baseURL,epnmuser,epnmpassword)
+    logging.info("Collecting OTU termination points...")
+    collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     # logging.info("Adding OCH trails to OTU links...")
     # add_och_trails_to_otu_links()
     # logging.info("Collecting L1 paths...")
@@ -111,8 +111,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # reorderl1hops()
     # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     # logging.info("Network collection completed!")
-    logging.info("Collecting LSPs...")
-    collectlsps_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting LSPs...")
+    # collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -711,6 +711,7 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
             otu_link = {}
             termination_points = []
             fdn = item['topo.fdn']
+            logging.info("Collecting OTU link " + fdn)
             discoveredname = item['topo.discovered-name']
             capacity = item['topo.total-capacity']
             ep_list = item['topo.endpoint-list']['topo.endpoint']
@@ -720,7 +721,10 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                 tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
                 tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
                 tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp['port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
-                tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
+                try:
+                    tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
+                except Exception as err:
+                    tmptp['port-num'] = tmptp['port'].split('OTU4')[1]
                 termination_points.append(tmptp)
             otu_link['fdn'] = fdn
             otu_link['discoveredname'] = discoveredname
@@ -759,11 +763,14 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
         for tp in otu_link['termination-points']:
             channels = []
             for tmptp in termination_points:
-                for channel in tmptp:
-                    if channel['tp-fdn'] ==  tp['tp-fdn']:
-                        tmpchannel = channel.copy()
-                        tmpchannel.pop('tp-fdn', None)
-                        channels.append(tmpchannel)
+                try:
+                    for channel in tmptp:
+                        if channel['tp-fdn'] ==  tp['tp-fdn']:
+                            tmpchannel = channel.copy()
+                            tmpchannel.pop('tp-fdn', None)
+                            channels.append(tmpchannel)
+                except Exception as err:
+                    logging.warn("TP for OTU link is invalid.")
             tp['channels'] = channels
 
     with open("jsonfiles/otu_links.json", "wb") as f:
@@ -782,10 +789,17 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
 
+        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/','-') + ".json"
+        logging.info("Filename is " + filename)
+        with open(filename, 'wb') as f:
+            f.write(json.dumps(json.loads(jsonresponse), f, sort_keys=True, indent=4, separators=(',', ': ')))
+            f.close()
+        with open(filename, 'rb') as f:
+            jsonresponse = json.load(f)
+            f.close()
+
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
-        thejson = json.loads(jsonresponse)
-        tp_description = ""
-        tp_list = thejson['com.response-message']['com.data']['tp.termination-point']
+        tp_list = jsonresponse['com.response-message']['com.data']['tp.termination-point']
         tp_data = []
         for tp in tp_list:
             tp_dict = {}
@@ -799,7 +813,7 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
                 pass
         return tp_data
     except Exception as err:
-        logging.warn("OTU termination point collection failed!")
+        logging.warn("OTU termination point collection failed for tpfdn " + tpfdn)
 
 
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):

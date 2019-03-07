@@ -90,92 +90,92 @@ def main():
     # print "PATH=" + os.getenv('PATH')
     # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
-    logging.info("Building plan file...")
-
-    # Create a service to be used by this script
-    conn = com.cisco.wae.design.ServiceConnectionManager.newService()
-
-    cwd = os.getcwd()
-    fileName = os.path.join(cwd, 'planfiles/blank.pln')
-    plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
-
-    # Read node coordinates file into a dict
-    # nodecoordinates = []
-    # with open('waecode/node_coordinates.csv', 'rb') as f:
-    #     reader = csv.DictReader(f)
-    #     for row in reader:
-    #         nodecoordinates.append(row)
+    # logging.info("Building plan file...")
+    #
+    # # Create a service to be used by this script
+    # conn = com.cisco.wae.design.ServiceConnectionManager.newService()
+    #
+    # cwd = os.getcwd()
+    # fileName = os.path.join(cwd, 'planfiles/blank.pln')
+    # plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
+    #
+    # # Read node coordinates file into a dict
+    # # nodecoordinates = []
+    # # with open('waecode/node_coordinates.csv', 'rb') as f:
+    # #     reader = csv.DictReader(f)
+    # #     for row in reader:
+    # #         nodecoordinates.append(row)
+    # #     f.close()
+    #
+    # # Add L1 nodes to plan
+    # logging.info("Adding L1 nodes...")
+    # with open("jsonfiles/l1Nodes.json", 'rb') as f:
+    #     l1nodesdict = json.load(f)
     #     f.close()
-
-    # Add L1 nodes to plan
-    logging.info("Adding L1 nodes...")
-    with open("jsonfiles/l1Nodes.json", 'rb') as f:
-        l1nodesdict = json.load(f)
-        f.close()
-    l1nodes = []
-    sites = []
-    site_manager = plan.getNetwork().getSiteManager()
-    # found = False
-    for k1, v1 in l1nodesdict.items():
-        tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
-        site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
-        try:
-            tmpsite = site_manager.newSite(siteRec=site_rec)
-            tmpnode['sitekey'] = tmpsite.getKey()
-            sites.append(tmpsite)
-            l1nodes.append(tmpnode)
-            logging.info("successfully added node " + tmpnode['Name'])
-        except Exception as err:
-            logging.warn('Could not process node ' + tmpnode['Name'])
-            logging.warn(err)
-    waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
-
-    # Add L1 links to plan
-    logging.info("Adding L1 links...")
-    with open("jsonfiles/l1Links.json", 'rb') as f:
-        l1linksdict = json.load(f)
-        f.close()
-    waecode.planbuild.generateL1links(plan, l1linksdict)
-
-    # Add L3 nodes to plan
-    logging.info("Adding L3 nodes...")
-    with open("jsonfiles/l3Links_final.json", 'rb') as f:
-        l3linksdict = json.load(f)
-        f.close()
-    l3nodes = []
-    # found = False
-    for k1, v1 in l3linksdict.items():
-        tmpnode = {'Name': k1}
-        l3nodes.append(tmpnode)
-        # found = False
-    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
-
-    # Add L3 links to plan and stitch to L1 links where applicable
-    logging.info("Adding L3 links...")
-    waecode.planbuild.generateL3circuits(plan, l3linksdict)
-
-    waecode.planbuild.assignSites(plan)
-
-    # read FlexLSP add-on options
-    with open("waecode/options.json", 'rb') as f:
-        options = json.load(f)
-        f.close()
-
-    # Add LSPs to plan
-    logging.info("Adding LSP's...")
-    l3nodeloopbacks = []
-    for k1, v1 in l3linksdict.items():
-        tmpnode = {k1: v1['Loopback Address']}
-        l3nodeloopbacks.append(tmpnode)
-
-    with open("jsonfiles/lsps.json", 'rb') as f:
-        lsps = json.load(f)
-        f.close()
-    waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
-
-    # Save the plan file
-    plan.serializeToFileSystem('planfiles/latest.pln')
-    plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
+    # l1nodes = []
+    # sites = []
+    # site_manager = plan.getNetwork().getSiteManager()
+    # # found = False
+    # for k1, v1 in l1nodesdict.items():
+    #     tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+    #     site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+    #     try:
+    #         tmpsite = site_manager.newSite(siteRec=site_rec)
+    #         tmpnode['sitekey'] = tmpsite.getKey()
+    #         sites.append(tmpsite)
+    #         l1nodes.append(tmpnode)
+    #         logging.info("successfully added node " + tmpnode['Name'])
+    #     except Exception as err:
+    #         logging.warn('Could not process node ' + tmpnode['Name'])
+    #         logging.warn(err)
+    # waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
+    #
+    # # Add L1 links to plan
+    # logging.info("Adding L1 links...")
+    # with open("jsonfiles/l1Links.json", 'rb') as f:
+    #     l1linksdict = json.load(f)
+    #     f.close()
+    # waecode.planbuild.generateL1links(plan, l1linksdict)
+    #
+    # # Add L3 nodes to plan
+    # logging.info("Adding L3 nodes...")
+    # with open("jsonfiles/l3Links_final.json", 'rb') as f:
+    #     l3linksdict = json.load(f)
+    #     f.close()
+    # l3nodes = []
+    # # found = False
+    # for k1, v1 in l3linksdict.items():
+    #     tmpnode = {'Name': k1}
+    #     l3nodes.append(tmpnode)
+    #     # found = False
+    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+    #
+    # # Add L3 links to plan and stitch to L1 links where applicable
+    # logging.info("Adding L3 links...")
+    # waecode.planbuild.generateL3circuits(plan, l3linksdict)
+    #
+    # waecode.planbuild.assignSites(plan)
+    #
+    # # read FlexLSP add-on options
+    # with open("waecode/options.json", 'rb') as f:
+    #     options = json.load(f)
+    #     f.close()
+    #
+    # # Add LSPs to plan
+    # logging.info("Adding LSP's...")
+    # l3nodeloopbacks = []
+    # for k1, v1 in l3linksdict.items():
+    #     tmpnode = {k1: v1['Loopback Address']}
+    #     l3nodeloopbacks.append(tmpnode)
+    #
+    # with open("jsonfiles/lsps.json", 'rb') as f:
+    #     lsps = json.load(f)
+    #     f.close()
+    # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+    #
+    # # Save the plan file
+    # plan.serializeToFileSystem('planfiles/latest.pln')
+    # plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
 
     # Backup current output files
     logging.info("Backing up files from collection...")
