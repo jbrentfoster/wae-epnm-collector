@@ -792,7 +792,7 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/','-') + ".json"
         logging.info("Filename is " + filename)
         with open(filename, 'wb') as f:
-            f.write(json.dumps(json.loads(jsonresponse), f, sort_keys=True, indent=4, separators=(',', ': ')))
+            f.write(jsonresponse)
             f.close()
         with open(filename, 'rb') as f:
             jsonresponse = json.load(f)
