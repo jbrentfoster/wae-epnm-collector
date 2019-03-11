@@ -55,8 +55,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 nodes...")
     # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 links...")
-    collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
@@ -78,8 +78,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # reorderl1hops()
     # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     # logging.info("Network collection completed!")
-    # logging.info("Collecting LSPs...")
-    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting LSPs...")
+    collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -1085,7 +1085,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         adminstate = None
         affinitybits = None
         affinitymask = None
-        destinationIP = None
+        # destinationIP = None
         tunnelID = None
         tunnelsource = None
         tunneldestination = None
@@ -1106,9 +1106,18 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             direction = item['vc.direction']
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
-            term_point = item['vc.termination-point-list']['vc.termination-point']
+            logging.info("Collecting LSP: " + fdn)
+            try:
+                term_point = item['vc.termination-point-list']['vc.termination-point']
+            except Exception as err:
+                logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
+                continue
             if isinstance(term_point, dict):
-                tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']
@@ -1116,7 +1125,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 except Exception as err2:
                     logging.warn("LSP has no affinity bits: " + fdn)
                 signalledBW = subsubsubitem['vc.signalled-bw']
-                destinationIP = subsubsubitem['vc.destination-address']
+                # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
@@ -1135,7 +1144,11 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                     erroredlsp = True
             else:
                 logging.info("List format term_point " + fdn)
-                tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']
@@ -1143,7 +1156,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 except Exception as err2:
                     logging.warn("LSP has no affinity bits: " + fdn)
                 signalledBW = subsubsubitem['vc.signalled-bw']
-                destinationIP = subsubsubitem['vc.destination-address']
+                # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
                 # Fix - GLH - 2-18-19 #
@@ -1166,7 +1179,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict['tufdn'] = tmpfdn
                 vcdict['affinitybits'] = affinitybits
                 vcdict['affinitymask'] = affinitymask
-                vcdict['Destination IP'] = destinationIP
+                # vcdict['Destination IP'] = destinationIP
                 vcdict['Tunnel ID'] = tunnelID
                 vcdict['Tunnel Source'] = tunnelsource
                 vcdict['Tunnel Destination'] = tunneldestination
