@@ -59,32 +59,32 @@ def main():
     logging.info("Collection start time is " + current_time)
 
     # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('jsongets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
+    # logging.info("Cleaning files from last collection...")
+    # try:
+    #     remove_tree('jsonfiles')
+    #     remove_tree('jsongets')
+    # except Exception as err:
+    #     logging.info("No files to cleanup...")
+    #
+    # # Recreate output directories
+    # mkpath('jsonfiles')
+    # mkpath('jsongets')
+    # mkpath(planfiles_root)
+    #
+    # # Run the collector...
+    # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
+    #                     ]
+    # pool = ThreadPool(4)
+    # pool.map(collectioncode.collect.collection_router, collection_calls)
+    # pool.close()
+    # pool.join()
 
-    # Recreate output directories
-    mkpath('jsonfiles')
-    mkpath('jsongets')
-    mkpath(planfiles_root)
-
-    # Run the collector...
-    collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
-                        ]
-    pool = ThreadPool(4)
-    pool.map(collectioncode.collect.collection_router, collection_calls)
-    pool.close()
-    pool.join()
-
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -137,6 +137,24 @@ def main():
     #     f.close()
     # waecode.planbuild.generateL1links(plan, l1linksdict)
     #
+    #
+    #
+    # # Add nodes to plan
+    # logging.info("Adding nodes to plan...")
+    # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
+    #     mpls_nodes = json.load(f)
+    #     f.close()
+    # l3nodes = []
+    # for mpls_node in mpls_nodes:
+    #     tmpnode = {'Name': mpls_node}
+    #     l3nodes.append(tmpnode)
+    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+    #
+
+    # Add OCH-Trails (wavelengths) to plan
+
+
+
     # # Add L3 nodes to plan
     # logging.info("Adding L3 nodes...")
     # with open("jsonfiles/l3Links_final.json", 'rb') as f:
@@ -172,8 +190,8 @@ def main():
     #     lsps = json.load(f)
     #     f.close()
     # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
-    #
-    # # Save the plan file
+
+    # Save the plan file
     # plan.serializeToFileSystem('planfiles/latest.pln')
     # plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
 

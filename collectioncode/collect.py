@@ -8,67 +8,67 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 
 def collection_router(collection_call):
-    # if collection_call['type'] == "l1nodes":
-    #     logging.info("Collecting L1 nodes...")
-    #     collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    # if collection_call['type'] == "l1links":
-    #     logging.info("Collecting L1 links...")
-    #     collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    # if collection_call['type'] == 'allnodes':
-    #     logging.info("Collection all node equipment details...")
-    #     collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-    # if collection_call['type'] == '4knodes':
-    #     logging.info("Collecting 4k nodes...")
-    #     collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == "l1nodes":
+        logging.info("Collecting L1 nodes...")
+        collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == "l1links":
+        logging.info("Collecting L1 links...")
+        collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == 'allnodes':
+        logging.info("Collection all node equipment details...")
+        collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == '4knodes':
+        logging.info("Collecting 4k nodes...")
+        collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
-        # logging.info("Collecting MPLS topology...")
-        # collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-        #                        collection_call['seednodeid'])
-        # logging.info("Collecting ISIS hostnames...")
-        # collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-        #                        collection_call['seednodeid'])
-        # process_hostnames()
-        # logging.info("Processing MPLS topology...")
-        # processMPLS()
-        # logging.info("Collecting MPLS topological links...")
-        # try:
-        #     collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                                collection_call['epnmpassword'])
-        # except Exception as err:
-        #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-        #     sys.exit("Collection error.  Halting execution.")
-        #
-        # logging.info("Collecting virtual connections...")
-        # collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                                collection_call['epnmpassword'])
-        #
-        # logging.info("Parsing OCH-trails...")
-        # parse_vc_optical_och_trails()
-        #
-        # logging.info("Getting OCH-trails wavelengths...")
-        # add_wavelength_vc_optical_och_trails()
+        logging.info("Collecting MPLS topology...")
+        collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
+                               collection_call['seednodeid'])
+        logging.info("Collecting ISIS hostnames...")
+        collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
+                               collection_call['seednodeid'])
+        process_hostnames()
+        logging.info("Processing MPLS topology...")
+        processMPLS()
+        logging.info("Collecting MPLS topological links...")
+        try:
+            collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+        except Exception as err:
+            logging.critical("MPLS topological links are not valid.  Halting execution.")
+            sys.exit("Collection error.  Halting execution.")
+
+        logging.info("Collecting virtual connections...")
+        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+
+        logging.info("Parsing OCH-trails...")
+        parse_vc_optical_och_trails()
+
+        logging.info("Getting OCH-trails wavelengths...")
+        add_wavelength_vc_optical_och_trails()
 
         logging.info("Collection OTU links...")
         collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
+                               collection_call['epnmpassword'])
 
         logging.info("Collecting OTU termination points...")
         collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
+                                                collection_call['epnmpassword'])
 
-    #     logging.info("Adding OCH trails to OTU links...")
-    #     add_och_trails_to_otu_links()
-    #
-    #     logging.info("Collecting L1 paths...")
-    #     addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-    #                                 collection_call['epnmpassword'])
-    #     logging.info("Re-ordering L1 hops...")
-    #     reorderl1hops()
-    #     collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-    #                                         collection_call['epnmpassword'])
-    # if collection_call['type'] == "lsps":
-    #     logging.info("Collecting LSPs...")
-    #     collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        logging.info("Adding OCH trails to OTU links...")
+        add_och_trails_to_otu_links()
+
+        logging.info("Collecting L1 paths...")
+        addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                    collection_call['epnmpassword'])
+        logging.info("Re-ordering L1 hops...")
+        reorderl1hops()
+        collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                            collection_call['epnmpassword'])
+    if collection_call['type'] == "lsps":
+        logging.info("Collecting LSPs...")
+        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
@@ -81,6 +81,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collecting 4k nodes...")
     # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
+    # logging.info("Collection MPLS nodes...")
+    # collectMPLSnodes()
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
     # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
@@ -105,6 +107,10 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     # logging.info("Adding OCH trails to OTU links...")
     # add_och_trails_to_otu_links()
+    # logging.info("Collecting L1 paths for OCH-trails...")
+    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Re-ordering L1 hops for OCH-trails...")
+    # reorderl1hops_och_trails()
     # logging.info("Collecting L1 paths...")
     # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
     # logging.info("Re-ordering L1 hops...")
@@ -260,12 +266,13 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
                 management_address = node['nd.management-address']
                 description = node['nd.description']
                 nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
-                            'management-address': management_address, 'description': description})
+                              'management-address': management_address, 'description': description})
             except Exception as err:
                 logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
             # i += 1
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
+
 
 def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
@@ -574,6 +581,24 @@ def hostname_lookup(isis_id):
     return None
 
 
+def collectMPLSnodes():
+    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
+        thejson = json.load(f)
+        f.close()
+    mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
+    mpls_nodes = []
+    for mpls_link in mpls_links:
+        tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
+        if len(tmp_ep_list) == 2:
+            for ep in tmp_ep_list:
+                tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+                if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
+
+    with open("jsonfiles/mpls_nodes.json", "wb") as f:
+        f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
 def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
@@ -720,7 +745,8 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                 tmptp = {}
                 tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
                 tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
-                tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp['port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
+                tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
+                    'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
                 try:
                     tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
                 except Exception as err:
@@ -765,7 +791,7 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
             for tmptp in termination_points:
                 try:
                     for channel in tmptp:
-                        if channel['tp-fdn'] ==  tp['tp-fdn']:
+                        if channel['tp-fdn'] == tp['tp-fdn']:
                             tmpchannel = channel.copy()
                             tmpchannel.pop('tp-fdn', None)
                             channels.append(tmpchannel)
@@ -780,8 +806,9 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
 
 def process_otu_tpfdn(tpfdn_dict):
     tp_info = collect_otu_termination_point(tpfdn_dict['baseURL'], tpfdn_dict['epnmuser'], tpfdn_dict['epnmpassword'],
-                                       tpfdn_dict['tpfdn'])
+                                            tpfdn_dict['tpfdn'])
     return tp_info
+
 
 def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     try:
@@ -789,7 +816,8 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
 
-        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/','-') + ".json"
+        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/',
+                                                                                                         '-') + ".json"
         logging.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
@@ -930,6 +958,7 @@ def parse_vc_optical_och_trails():
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+
 def add_wavelength_vc_optical_och_trails():
     with open("jsongets/vc-optical.json", 'rb') as f:
         jsonresponse = f.read()
@@ -976,8 +1005,10 @@ def add_och_trails_to_otu_links():
                     tmp_tp = {'node': och_trail_tp['node'], 'port-num': och_trail_tp['port-num']}
                     och_ports.append(tmp_tp)
                 for tp in och_ports:
-                    if tp not in otu_ports: matched = False
-                    elif tp in otu_ports: matched = True
+                    if tp not in otu_ports:
+                        matched = False
+                    elif tp in otu_ports:
+                        matched = True
                 if matched: otu_link['och-trail-fdn'] = och_trail['fdn']
 
     logging.info("Completed adding OCH trails to OTU links...")
@@ -1030,6 +1061,54 @@ def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
     logging.info("completed collecting L1 paths...")
     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
+def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
+    with open("jsonfiles/och_trails.json", 'rb') as f:
+        och_trails = json.load(f)
+        f.close()
+    vcfdns = []
+    for och_trail in och_trails:
+        if 'fdn' in och_trail:
+            vcfdn = och_trail['fdn']
+            vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
+                          'vcfdn': vcfdn}
+            if not vcfdn_dict in vcfdns:
+                vcfdns.append(vcfdn_dict)
+        # else:
+        #     logging.info(
+        #         "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
+        #     try:
+        #         logging.info("    Neighbor: " + v3['Neighbor'])
+        #         logging.info("    Local Intf: " + v3['Local Intf'])
+        #         logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+        #     except Exception as err:
+        #         logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
+
+    logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
+    pool = ThreadPool(4)
+    l1hops = pool.map(process_vcfdn, vcfdns)
+    pool.close()
+    pool.join()
+
+    logging.info("Completed collecting multi-layer routes...")
+    logging.info("Processing multi-layer routes...")
+    for och_trail in och_trails:
+        if 'fdn' in och_trail:
+            tmp_vcfdn = och_trail['fdn']
+            if len(l1hops) > 0:
+                for l1hopset in l1hops:
+                    if len(l1hopset) > 1:
+                        if l1hopset['vcfdn'] == tmp_vcfdn:
+                            logging.info(
+                                "Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
+                            och_trail['L1 Hops'] = l1hopset.copy()
+                            och_trail['L1 Hops'].pop('vcfdn')
+
+    logging.info("Completed collecting L1 paths for OCH-trails...")
+    with open("jsonfiles/och_trails.json", "wb") as f:
+        f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
 
@@ -1202,6 +1281,54 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
     return l1hops
 
 
+def reorderl1hops_och_trails():
+    with open("jsonfiles/och_trails.json", 'rb') as f:
+        och_trails = json.load(f)
+        f.close()
+
+    for och_trail in och_trails:
+        if 'L1 Hops' in och_trail:
+            logging.info("OCH-trail " + och_trail['fdn'] + " has L1 hops.  Processing...")
+            l1hops = []
+            vcfdn = och_trail['fdn']
+            for k4, v4 in och_trail['L1 Hops'].items():
+                nodelist = []
+                for k5, v5 in v4.get('Nodes').items():
+                    nodelist.append(k5)
+                l1hops.append(nodelist)
+            # if k1 == "LYBRNYLB-01153A08A" and k3 == "Link9":
+            #     pass
+            ref_node = och_trail['termination-points'][0]['node']
+            l1hopsordered = returnorderedlist(ref_node, l1hops)
+            if l1hopsordered == None:
+                logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
+                logging.warn(
+                    "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
+                och_trail.pop('L1 Hops')
+                break
+            tmphops = []
+            completed = False
+            while not completed:
+                if len(l1hopsordered) == 0: completed = True
+                for hop in l1hopsordered:
+                    for k4, v4 in och_trail.get('L1 Hops').items():
+                        tmpnodes = []
+                        for k5, v5 in v4.get('Nodes').items():
+                            tmpnodes.append(k5)
+                        if (hop[0] == tmpnodes[0] and hop[1] == tmpnodes[1]) or \
+                                (hop[0] == tmpnodes[1] and hop[1] == tmpnodes[0]):
+                            tmphops.append(v4)
+                            l1hopsordered.remove(hop)
+                            break
+                    break
+            och_trail['Ordered L1 Hops'] = tmphops
+            och_trail.pop('L1 Hops')
+            # logging.info "next L1 hop..."
+    with open("jsonfiles/och_trails.json", "wb") as f:
+        f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+
 def reorderl1hops():
     with open("jsonfiles/l3Links_add_l1hops.json", 'rb') as f:
         l3links = json.load(f)
@@ -1350,8 +1477,18 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         #     jsonresponse = f.read()
         #     f.close()
 
+        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/',
+                                                                                                         '-') + ".json"
+        logging.info("Filename is " + filename)
+        with open(filename, 'wb') as f:
+            f.write(jsonresponse)
+            f.close()
+        with open(filename, 'rb') as f:
+            thejson = json.load(f)
+            f.close()
+
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
-        thejson = json.loads(jsonresponse)
+        # thejson = json.loads(jsonresponse)
         tp_description = ""
         try:
             tp_description = thejson['com.response-message']['com.data']['tp.termination-point']['tp.description']
