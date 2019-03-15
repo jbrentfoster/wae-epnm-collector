@@ -745,8 +745,9 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                 tmptp = {}
                 tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
                 tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
-                tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
-                    'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
+                # tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
+                #     'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
+                tmptp['tp-fdn'] = ep['topo.endpoint-ref'] + "&containedCTP=true"
                 try:
                     tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
                 except Exception as err:
