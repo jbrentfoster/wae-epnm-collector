@@ -488,19 +488,25 @@ def processMPLS():
         lines = f.read().splitlines()
         ilines = lines
         c = 0
+        otn_flag = False
         for line in ilines:
             if "IGP Id: " in line:
+                if "OSPF OTN" in line:
+                    otn_flag = True
+                    continue
+                else:
+                    otn_flag = False
                 isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.', 1)[0]
                 node = hostname_lookup(isis_id)
-                # print "processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c)
-                # if isis_id == "0630.3809.6020":
+                logging.info("processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c))
+                # if isis_id == "0010.0040.1069":
                 #     print "found it!"
                 loopback = line.split(',')[1].split(':')[1].split(' ')[1]
                 nodes[node] = {'Loopback Address': loopback}
                 nodes[node]['Links'] = dict()
                 i = 0
                 foundfirstlink = False
-            elif "Link[" in line and "Nbr IGP Id" in line:
+            elif "Link[" in line and "Nbr IGP Id" in line and not otn_flag:
                 try:
                     neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.', 1)[0]
                     neighbor_node_id = line.split(',')[2].split(':')[1]
@@ -509,7 +515,6 @@ def processMPLS():
                         continue
                     if neighbor == None:
                         logging.warn("There was a problem parsing the neighbor!")
-                        logging.exception(err)
                         logging.critical("Critical error!")
                         sys.exit("MPLS topology is not complete for node " + node + "!!! Halting execution!")
                     i += 1
@@ -521,7 +526,7 @@ def processMPLS():
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
                 foundfirstlink = True
-            elif "TE Metric:" in line and foundfirstlink:
+            elif "TE Metric:" in line and foundfirstlink and not otn_flag:
                 try:
                     te_metric = line.split(',')[0].split(':')[1]
                     nodes[node]['Links'][linkid]['TE Metric'] = te_metric
@@ -532,19 +537,19 @@ def processMPLS():
                     logging.exception(err)
                     logging.critical("Critical error!")
                     sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
-            elif "Attribute Flags:" in line and foundfirstlink:
+            elif "Attribute Flags:" in line and foundfirstlink and not otn_flag:
                 affinity = line.split(':')[1].strip()
                 nodes[node]['Links'][linkid]['Affinity'] = affinity
-            elif "Intf Address:" in line and not 'Nbr' in line and foundfirstlink:
+            elif "Intf Address:" in line and not 'Nbr' in line and foundfirstlink and not otn_flag:
                 localIP = line.split(',')[1].split(':')[1]
                 nodes[node]['Links'][linkid]['Local IP'] = localIP
-            elif "Nbr Intf Address:" in line and foundfirstlink == True:
+            elif "Nbr Intf Address:" in line and foundfirstlink == True and not otn_flag:
                 neighIP = line.split(',')[0].split(':')[1]
                 nodes[node]['Links'][linkid]['Neighbor IP'] = neighIP
-            elif "Max Reservable BW Global:" in line and foundfirstlink:
+            elif "Max Reservable BW Global:" in line and foundfirstlink and not otn_flag:
                 rsvpBW = line.split(',')[1].split(':')[1].split(' ')[0]
                 nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
-            elif "SRLGs:" in line and foundfirstlink:
+            elif "SRLGs:" in line and foundfirstlink and not otn_flag:
                 nodes[node]['Links'][linkid]['SRLGs'] = dict()
                 d = 0
                 srlgs = []
