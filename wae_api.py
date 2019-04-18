@@ -70,7 +70,7 @@ def main():
     mkpath('jsonfiles')
     mkpath('jsongets')
     mkpath(planfiles_root)
-    #
+
     # # Run the collector...
     # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
     #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
@@ -90,70 +90,73 @@ def main():
     # print "PATH=" + os.getenv('PATH')
     # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
-    # logging.info("Building plan file...")
-    #
-    # # Create a service to be used by this script
-    # conn = com.cisco.wae.design.ServiceConnectionManager.newService()
-    #
-    # cwd = os.getcwd()
-    # fileName = os.path.join(cwd, 'planfiles/blank.pln')
-    # plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
-    #
-    # # Read node coordinates file into a dict
-    # # nodecoordinates = []
-    # # with open('waecode/node_coordinates.csv', 'rb') as f:
-    # #     reader = csv.DictReader(f)
-    # #     for row in reader:
-    # #         nodecoordinates.append(row)
-    # #     f.close()
-    #
-    # # Add L1 nodes to plan
-    # logging.info("Adding L1 nodes...")
-    # with open("jsonfiles/l1Nodes.json", 'rb') as f:
-    #     l1nodesdict = json.load(f)
+    logging.info("Building plan file...")
+
+    # Create a service to be used by this script
+    conn = com.cisco.wae.design.ServiceConnectionManager.newService()
+
+    cwd = os.getcwd()
+    fileName = os.path.join(cwd, 'planfiles/blank.pln')
+    plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
+
+    # Read node coordinates file into a dict
+    # nodecoordinates = []
+    # with open('waecode/node_coordinates.csv', 'rb') as f:
+    #     reader = csv.DictReader(f)
+    #     for row in reader:
+    #         nodecoordinates.append(row)
     #     f.close()
-    # l1nodes = []
-    # sites = []
-    # site_manager = plan.getNetwork().getSiteManager()
-    # # found = False
-    # for k1, v1 in l1nodesdict.items():
-    #     tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
-    #     site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
-    #     try:
-    #         tmpsite = site_manager.newSite(siteRec=site_rec)
-    #         tmpnode['sitekey'] = tmpsite.getKey()
-    #         sites.append(tmpsite)
-    #         l1nodes.append(tmpnode)
-    #         logging.info("successfully added node " + tmpnode['Name'])
-    #     except Exception as err:
-    #         logging.warn('Could not process node ' + tmpnode['Name'])
-    #         logging.warn(err)
-    # waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
-    #
-    # # Add L1 links to plan
-    # logging.info("Adding L1 links...")
-    # with open("jsonfiles/l1Links.json", 'rb') as f:
-    #     l1linksdict = json.load(f)
-    #     f.close()
-    # waecode.planbuild.generateL1links(plan, l1linksdict)
-    #
-    #
-    #
-    # # Add nodes to plan
-    # logging.info("Adding nodes to plan...")
-    # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
-    #     mpls_nodes = json.load(f)
-    #     f.close()
-    # l3nodes = []
-    # for mpls_node in mpls_nodes:
-    #     tmpnode = {'Name': mpls_node}
-    #     l3nodes.append(tmpnode)
-    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
-    #
+
+    # Add L1 nodes to plan
+    logging.info("Adding L1 nodes...")
+    with open("jsonfiles/l1Nodes.json", 'rb') as f:
+        l1nodesdict = json.load(f)
+        f.close()
+    l1nodes = []
+    sites = []
+    site_manager = plan.getNetwork().getSiteManager()
+    # found = False
+    for k1, v1 in l1nodesdict.items():
+        tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+        site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+        try:
+            tmpsite = site_manager.newSite(siteRec=site_rec)
+            tmpnode['sitekey'] = tmpsite.getKey()
+            sites.append(tmpsite)
+            l1nodes.append(tmpnode)
+            logging.info("successfully added node " + tmpnode['Name'])
+        except Exception as err:
+            logging.warn('Could not process node ' + tmpnode['Name'])
+            logging.warn(err)
+    waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
+
+    # Add L1 links to plan
+    logging.info("Adding L1 links...")
+    with open("jsonfiles/l1Links.json", 'rb') as f:
+        l1linksdict = json.load(f)
+        f.close()
+    waecode.planbuild.generateL1links(plan, l1linksdict)
+
+
+
+    # Add nodes to plan
+    logging.info("Adding nodes to plan...")
+    with open("jsonfiles/mpls_nodes.json", 'rb') as f:
+        mpls_nodes = json.load(f)
+        f.close()
+    l3nodes = []
+    for mpls_node in mpls_nodes:
+        tmpnode = {'Name': mpls_node}
+        l3nodes.append(tmpnode)
+    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
 
     # Add OCH-Trails (wavelengths) to plan
-
-
+    logging.info("Adding OCH Trails as L1 circuits to the plan...")
+    with open("jsonfiles/och_trails.json", 'rb') as f:
+        och_trails = json.load(f)
+        f.close()
+    waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
     # # Add L3 nodes to plan
     # logging.info("Adding L3 nodes...")
@@ -192,8 +195,8 @@ def main():
     # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
     # Save the plan file
-    # plan.serializeToFileSystem('planfiles/latest.pln')
-    # plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
+    plan.serializeToFileSystem('planfiles/latest.pln')
+    plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
 
     # Backup current output files
     logging.info("Backing up files from collection...")

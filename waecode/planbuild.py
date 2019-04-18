@@ -136,6 +136,43 @@ def generateL3nodes(plan, l3nodelist):
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
 
 
+def generateL1circuits(plan, och_trails):
+    l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
+    nodemanager = plan.getNetwork().getNodeManager()
+    for och_trail in och_trails:
+        fdn = och_trail['fdn']
+        logging.info("Generating L1 circuit for OCH Trail " + fdn)
+        if 'Ordered L1 Hops' in och_trail:
+            if len(och_trail['Ordered L1 Hops']) > 0:
+                term_points = och_trail['termination-points']
+                firstnode = term_points[0]['node']
+                lastnode = term_points[1]['node']
+                l1hops, firstl1node, lastl1node = getfirstlastl1node(och_trail['Ordered L1 Hops'], firstnode,
+                                                                     lastnode)
+                firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
+                try:
+                    nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
+                except Exception as err:
+                    pass
+                try:
+                    lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                    nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
+                except Exception as err:
+                    logging.warn("Could not get site for " + lastl1node)
+                try:
+                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000)
+                except Exception as err:
+                    logging.critical(
+                        "Could not generate L1 circuit for OCH Trail " + fdn)
+                    break
+        else:
+            logging.warn("OCH Trail " + fdn + " has no L1 hops!")
+
+
+def generate_circuits(plan, circuits):
+    pass
+
+
 def generateL3circuits(plan, l3linksdict):
     c = 0
     i = 0
