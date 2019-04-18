@@ -64,6 +64,8 @@ def collection_router(collection_call):
                                     collection_call['epnmpassword'])
         logging.info("Re-ordering L1 hops...")
         reorderl1hops()
+
+        logging.info("Collecting MPLS termination points...")
         collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                             collection_call['epnmpassword'])
     if collection_call['type'] == "lsps":
@@ -72,45 +74,45 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    # logging.info("Collection all nodes equipment information...")
-    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting 4k nodes...")
-    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collection all nodes equipment information...")
+    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting 4k nodes...")
+    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
-    # logging.info("Collection MPLS nodes...")
-    # collectMPLSnodes()
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
     # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # process_hostnames()
     # logging.info("Processing MPLS topology...")
     # processMPLS()
-    # logging.info("Collecting MPLS topological links...")
-    # try:
-    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    # except Exception as err:
-    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-    #     sys.exit("Collection error.  Halting execution.")
-    # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Parsing OCH-trails...")
-    # parse_vc_optical_och_trails()
-    # logging.info("Getting OCH-trails wavelengths...")
-    # add_wavelength_vc_optical_och_trails()
+    logging.info("Collecting MPLS topological links...")
+    try:
+        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
+    logging.info("Collection MPLS nodes...")
+    collectMPLSnodes()
+    logging.info("Collecting virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Parsing OCH-trails...")
+    parse_vc_optical_och_trails()
+    logging.info("Getting OCH-trails wavelengths...")
+    add_wavelength_vc_optical_och_trails()
     logging.info("Collection OTU links...")
     collect_otu_links_json(baseURL,epnmuser,epnmpassword)
     logging.info("Collecting OTU termination points...")
     collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Adding OCH trails to OTU links...")
-    # add_och_trails_to_otu_links()
-    # logging.info("Collecting L1 paths for OCH-trails...")
-    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Re-ordering L1 hops for OCH-trails...")
-    # reorderl1hops_och_trails()
+    logging.info("Adding OCH trails to OTU links...")
+    add_och_trails_to_otu_links()
+    logging.info("Collecting L1 paths for OCH-trails...")
+    addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops for OCH-trails...")
+    reorderl1hops_och_trails()
     # logging.info("Collecting L1 paths...")
     # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
     # logging.info("Re-ordering L1 hops...")
@@ -622,83 +624,83 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
-    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
-        jsonresponse = f.read()
-        f.close()
-
-    thejson = json.loads(jsonresponse)
-
-    with open("jsonfiles/l3Links.json", 'rb') as f:
-        l3links = json.load(f)
-        f.close()
-
-    names = []
-    for k1, v1 in l3links.items():
-        logging.info("**************Nodename is: " + k1)
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    logging.info("***************Linkname is: " + k3)
-                    n1IP = v3.get('Local IP')
-                    n2IP = v3.get('Neighbor IP')
-                    name1 = n1IP + '-' + n2IP
-                    name2 = n2IP + '-' + n1IP
-                    matchedlink = False
-                    for item in thejson['com.response-message']['com.data']['topo.topological-link']:
-                        # for item in thexml.getElementsByTagName("ns17:topological-link"):
-                        fdn = item['topo.fdn']
-                        discoveredname = item['topo.discovered-name']
-                        if (name1 == discoveredname or name2 == discoveredname):
-                            logging.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
-                            matchedlink = True
-                            # names.append(discoveredname)
-                            v3['discoveredname'] = discoveredname
-                            # try:
-                            #     if isinstance(item['topo.endpoint-list']['topo.endpoint'], list):
-                            #         logging.info("End point list is valid...")
-                            #     else:
-                            #         logging.info(("!!!End point list is not valid!!!"))
-                            # except Exception as err:
-                            #     logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                            #     logging.warn("Removing link from topology...")
-                            #     v2.pop(k3)
-                            try:
-                                parse1 = item['topo.endpoint-list']['topo.endpoint'][0]['topo.endpoint-ref']
-                                node1 = parse1.split('!')[1].split('=')[1]
-                                node1intf = parse1.split('!')[2].split('=')[2]
-                                node1intfparsed = node1intf.split('-')[0]
-
-                                parse2 = item['topo.endpoint-list']['topo.endpoint'][1]['topo.endpoint-ref']
-                                node2 = parse2.split('!')[1].split('=')[1]
-                                node2intf = parse2.split('!')[2].split('=')[2]
-                                node2intfparsed = node2intf.split('-')[0]
-
-                                if node2 == v3['Neighbor']:
-                                    v3['Neighbor Intf'] = node2intfparsed
-                                    v3['Local Intf'] = node1intfparsed
-                                    v3['Link Speed'], v3['lr type'] = parseintftype(node1intfparsed)
-                                elif node1 == v3['Neighbor']:
-                                    v3['Neighbor Intf'] = node1intfparsed
-                                    v3['Local Intf'] = node2intfparsed
-                                    v3['Link Speed'], v3['lr type'] = parseintftype(node2intfparsed)
-                                else:
-                                    logging.warn(
-                                        "Could not match node names for interface assignment for node " + k1 + " link " + k3)
-                                    logging.warn("Removing link from topology...")
-                                    v2.pop(k3)
-                                break
-                            except Exception as err:
-                                logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                                logging.warn("Removing link from topology...")
-                                v2.pop(k3)
-                    if not matchedlink:
-                        logging.warn(
-                            "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
-                        logging.warn("Removing link from topology...")
-                        v2.pop(k3)
-    with open("jsonfiles/l3Links_add_tl.json", "wb") as f:
-        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
+    #     jsonresponse = f.read()
+    #     f.close()
+    #
+    # thejson = json.loads(jsonresponse)
+    #
+    # with open("jsonfiles/l3Links.json", 'rb') as f:
+    #     l3links = json.load(f)
+    #     f.close()
+    #
+    # names = []
+    # for k1, v1 in l3links.items():
+    #     logging.info("**************Nodename is: " + k1)
+    #     for k2, v2 in v1.items():
+    #         if isinstance(v2, dict):
+    #             for k3, v3 in v2.items():
+    #                 logging.info("***************Linkname is: " + k3)
+    #                 n1IP = v3.get('Local IP')
+    #                 n2IP = v3.get('Neighbor IP')
+    #                 name1 = n1IP + '-' + n2IP
+    #                 name2 = n2IP + '-' + n1IP
+    #                 matchedlink = False
+    #                 for item in thejson['com.response-message']['com.data']['topo.topological-link']:
+    #                     # for item in thexml.getElementsByTagName("ns17:topological-link"):
+    #                     fdn = item['topo.fdn']
+    #                     discoveredname = item['topo.discovered-name']
+    #                     if (name1 == discoveredname or name2 == discoveredname):
+    #                         logging.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
+    #                         matchedlink = True
+    #                         # names.append(discoveredname)
+    #                         v3['discoveredname'] = discoveredname
+    #                         # try:
+    #                         #     if isinstance(item['topo.endpoint-list']['topo.endpoint'], list):
+    #                         #         logging.info("End point list is valid...")
+    #                         #     else:
+    #                         #         logging.info(("!!!End point list is not valid!!!"))
+    #                         # except Exception as err:
+    #                         #     logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+    #                         #     logging.warn("Removing link from topology...")
+    #                         #     v2.pop(k3)
+    #                         try:
+    #                             parse1 = item['topo.endpoint-list']['topo.endpoint'][0]['topo.endpoint-ref']
+    #                             node1 = parse1.split('!')[1].split('=')[1]
+    #                             node1intf = parse1.split('!')[2].split('=')[2]
+    #                             node1intfparsed = node1intf.split('-')[0]
+    #
+    #                             parse2 = item['topo.endpoint-list']['topo.endpoint'][1]['topo.endpoint-ref']
+    #                             node2 = parse2.split('!')[1].split('=')[1]
+    #                             node2intf = parse2.split('!')[2].split('=')[2]
+    #                             node2intfparsed = node2intf.split('-')[0]
+    #
+    #                             if node2 == v3['Neighbor']:
+    #                                 v3['Neighbor Intf'] = node2intfparsed
+    #                                 v3['Local Intf'] = node1intfparsed
+    #                                 v3['Link Speed'], v3['lr type'] = parseintftype(node1intfparsed)
+    #                             elif node1 == v3['Neighbor']:
+    #                                 v3['Neighbor Intf'] = node1intfparsed
+    #                                 v3['Local Intf'] = node2intfparsed
+    #                                 v3['Link Speed'], v3['lr type'] = parseintftype(node2intfparsed)
+    #                             else:
+    #                                 logging.warn(
+    #                                     "Could not match node names for interface assignment for node " + k1 + " link " + k3)
+    #                                 logging.warn("Removing link from topology...")
+    #                                 v2.pop(k3)
+    #                             break
+    #                         except Exception as err:
+    #                             logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+    #                             logging.warn("Removing link from topology...")
+    #                             v2.pop(k3)
+    #                 if not matchedlink:
+    #                     logging.warn(
+    #                         "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
+    #                     logging.warn("Removing link from topology...")
+    #                     v2.pop(k3)
+    # with open("jsonfiles/l3Links_add_tl.json", "wb") as f:
+    #     f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
 
 
 def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
@@ -828,18 +830,38 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
             f.close()
 
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
-        tp_list = jsonresponse['com.response-message']['com.data']['tp.termination-point']
+        termination_points = jsonresponse['com.response-message']['com.data']['tp.termination-point']
         tp_data = []
-        for tp in tp_list:
+        if isinstance(termination_points, list):
+            is_first_tp = True
+            for tp in termination_points:
+                if is_first_tp:
+                    is_first_tp = False
+                    continue
+                tp_dict = {}
+                tp_dict['ch-fdn'] = tp['tp.fdn']
+                tp_dict['tp-fdn'] = tpfdn
+                tp_dict['layer-rate'] = tp['tp.layer-rate']
+                try:
+                    logging.info("OTU TP termination-mode is Ethernet " + tp['tp.fdn'])
+                    tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
+                    tp_data.append(tp_dict)
+                except Exception as error:
+                    logging.info("OTU TP termination-mode is OTN " + tp['tp.fdn'])
+                    tp_dict['termination-mode'] = "OTN"
+                    tp_data.append(tp_dict)
+        else:
             tp_dict = {}
-            tp_dict['ch-fdn'] = tp['tp.fdn']
+            tp_dict['ch-fdn'] = termination_points['tp.fdn']
             tp_dict['tp-fdn'] = tpfdn
-            tp_dict['layer-rate'] = tp['tp.layer-rate']
+            tp_dict['layer-rate'] = termination_points['tp.layer-rate']
             try:
-                tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
+                tp_dict['termination-mode'] = termination_points['tp.optical-attributes']['tp.termination-mode']
                 tp_data.append(tp_dict)
             except Exception as error:
-                pass
+                logging.info("OTU TP termination-mode is OTN " + termination_points['tp.fdn'])
+                tp_dict['termination-mode'] = "OTN"
+                tp_data.append(tp_dict)
         return tp_data
     except Exception as err:
         logging.warn("OTU termination point collection failed for tpfdn " + tpfdn)
@@ -868,52 +890,52 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
-    with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
-        l3links = json.load(f)
-        f.close()
-
-    with open("jsongets/vc-optical.json", 'rb') as f:
-        jsonresponse = f.read()
-        f.close()
-
-    thejson = json.loads(jsonresponse)
-
-    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
-        matched_fdn = False
-        fdn = item['vc.fdn']
-        subtype = item['vc.subtype']
-        if subtype == "oc:och-trail-uni":
-            vcdict = {}
-            # logging.info("Processing virtual connection: " + fdn)
-            try:
-                for subitem in item['vc.termination-point-list']['vc.termination-point']:
-                    tmpfdn = subitem['vc.fdn']
-                    tmpnode = tmpfdn.split('!')[1].split('=')[1]
-                    tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
-                    vcdict[tmpnode] = tmpoptics
-                for k1, v1 in l3links.items():
-                    # logging.info "**************Nodename is: " + k1
-                    for k2, v2 in v1.items():
-                        if isinstance(v2, dict):
-                            for k3, v3 in v2.items():
-                                # logging.info "***************Linkname is: " + k3
-                                for node, intf in vcdict.items():
-                                    if node == k1:
-                                        if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
-                                            v3['vc-fdn'] = fdn
-                                            matched_fdn = True
-                                            logging.info("Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
-                if not matched_fdn:
-                    # logging.info("Could not match vc-fdn " + fdn)
-                    pass
-            except KeyError:
-                logging.error("Could not get virtual connection for " + fdn)
-            except TypeError:
-                logging.error("Missing or invalid end-point list for  " + fdn)
-    logging.info("Completed collecting virtual connections...")
-    with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
-        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+    # with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
+    #     l3links = json.load(f)
+    #     f.close()
+    #
+    # with open("jsongets/vc-optical.json", 'rb') as f:
+    #     jsonresponse = f.read()
+    #     f.close()
+    #
+    # thejson = json.loads(jsonresponse)
+    #
+    # for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+    #     matched_fdn = False
+    #     fdn = item['vc.fdn']
+    #     subtype = item['vc.subtype']
+    #     if subtype == "oc:och-trail-uni":
+    #         vcdict = {}
+    #         # logging.info("Processing virtual connection: " + fdn)
+    #         try:
+    #             for subitem in item['vc.termination-point-list']['vc.termination-point']:
+    #                 tmpfdn = subitem['vc.fdn']
+    #                 tmpnode = tmpfdn.split('!')[1].split('=')[1]
+    #                 tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
+    #                 vcdict[tmpnode] = tmpoptics
+    #             for k1, v1 in l3links.items():
+    #                 # logging.info "**************Nodename is: " + k1
+    #                 for k2, v2 in v1.items():
+    #                     if isinstance(v2, dict):
+    #                         for k3, v3 in v2.items():
+    #                             # logging.info "***************Linkname is: " + k3
+    #                             for node, intf in vcdict.items():
+    #                                 if node == k1:
+    #                                     if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
+    #                                         v3['vc-fdn'] = fdn
+    #                                         matched_fdn = True
+    #                                         logging.info("Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
+    #             if not matched_fdn:
+    #                 # logging.info("Could not match vc-fdn " + fdn)
+    #                 pass
+    #         except KeyError:
+    #             logging.error("Could not get virtual connection for " + fdn)
+    #         except TypeError:
+    #             logging.error("Missing or invalid end-point list for  " + fdn)
+    # logging.info("Completed collecting virtual connections...")
+    # with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
+    #     f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
 
 
 def parse_vc_optical_och_trails():
