@@ -337,6 +337,44 @@ def createflexlsp(options, conn, plan, nodes, name, lspBW):
 
     return
 
+def create_otn_lsp(conn, plan, nodeA, nodeB, name, lspBW, otn_link_hops):
+    # get all necessary Managers
+    network = plan.getNetwork()
+    circuitManager = network.getCircuitManager()
+    lspManager = network.getLSPManager()
+    lspPathManager = network.getLSPPathManager()
+    namedPathManager = network.getNamedPathManager()
+    lspBandwidth = lspBW
+
+    nodeAkey = NodeKey(nodeA)
+    nodeBkey = NodeKey(nodeB)
+
+    # add the LSPs
+    rprint("Creating forward LSP")
+    lsp = cs_common.createLsp(lspManager, name + "_forward", nodeAkey, nodeBkey, lspBandwidth, "Forward")
+    text = "LSP called " + lsp.getName() + " with Bandwidth of " + str(
+        lsp.getSetupBW()) + "Mbps created from Node " + lsp.getSource().getName() + " to Node " + lsp.getDestination().getName()
+    rprint(text)
+
+    rprint("Creating Reverse LSP")
+    rlsp = cs_common.createLsp(lspManager, name + "_reverse", nodeBkey, nodeAkey, lspBandwidth, "Reverse")
+    text = "LSP called " + rlsp.getName() + " with Bandwidth of " + str(
+        rlsp.getSetupBW()) + "Mbps created from Node " + rlsp.getSource().getName() + " to Node " + rlsp.getDestination().getName()
+    rprint(text)
+
+    workingLspPath = cs_common.addPathToLsp(lsp, lspPathManager, namedPathManager, nodeAkey, 1, False, True, "0x80", "0x80")
+    rWorkingLspPath = cs_common.addPathToLsp(rlsp, lspPathManager, namedPathManager, nodeBkey, 1, False, True, "0x80", "0x80")
+
+    forward_lsp_path = lsp.getOrderedLSPPaths()[0]
+    namedPathHopRecordList = cs_common.buildNamedPathHopRecordList(forward_lsp_path, circuitManager, otn_link_hops)
+    forward_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+
+    reverse_lsp_path = rlsp.getOrderedLSPPaths()[0]
+    namedPathHopRecordList = cs_common.buildNamedPathHopRecordList(reverse_lsp_path, circuitManager, otn_link_hops)
+    reverse_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+
+    return
+
 
 def rprint(input):
     is_addon = 'CARIDEN_GUI' in os.environ
