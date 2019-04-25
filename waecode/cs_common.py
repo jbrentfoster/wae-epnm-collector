@@ -1,4 +1,5 @@
 import com.cisco.wae.design
+import logging
 
 
 def createLsp(lspManager, lspIndex, sourceNodeKey, destinationNodeKey, lspBandwidth, directionText):
@@ -16,7 +17,7 @@ def createLsp(lspManager, lspIndex, sourceNodeKey, destinationNodeKey, lspBandwi
     return lsp
 
 
-def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOption, standby, active):
+def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOption, standby, active, primary_affinity, standby_affinity):
     # standby and active are booleans: True or False
     # pathOption is integer: i.e. 1 or 2
     lspRecord = lsp.getRecord()
@@ -24,10 +25,10 @@ def addPathToLsp(lsp, lspPathManager, namedPathManager, sourceNodeKey, pathOptio
 
     if standby:
         standbyEnum = com.cisco.wae.design.model.net.LSPStandbyType.Standby
-        affinity = "0x21"
+        affinity = standby_affinity
     else:
         standbyEnum = com.cisco.wae.design.model.net.LSPStandbyType.NotStandby
-        affinity = "0x11"
+        affinity = primary_affinity
 
     namedPathRecord = com.cisco.wae.design.model.net.NamedPathRecord()
     namedPathRecord.sourceKey = sourceNodeKey
@@ -116,6 +117,62 @@ def calculateReverseNamedPathHopRecordList(lspPath, circuitManager):
 
     return reverseNamedPathHopRecordList
 
+def buildNamedPathHopRecordList(lspPath, circuitManager, circuit_list):
+    # namedPathHopRecordList = lspPath.getNamedPath().getHops()
+
+    firstNode = lspPath.getLSP().getSource().getName()
+    lastNode = lspPath.getLSP().getDestination().getName()
+
+    circuitRecords = circuitManager.getAllCircuitRecords()
+
+    hops = []
+    for circuitRecord in circuitRecords:
+        for circuit in circuit_list:
+            circ_hops = []
+            if circuitRecord.name == circuit:
+                circ_hops.append(circuitRecord.interfaceAKey)
+                circ_hops.append(circuitRecord.interfaceBKey)
+                hops.append(circ_hops)
+
+    ordered_hops = returnorderedlist(firstNode, lastNode,hops)
+    namedPathHopRecordList = []
+    for intf_hop in ordered_hops:
+        hopRecord = com.cisco.wae.design.model.net.NamedPathHopRecord()
+        hopRecord.ifaceHop = intf_hop
+        hopRecord.type = com.cisco.wae.design.model.net.HopType.PathStrict
+        namedPathHopRecordList.append(hopRecord)
+
+    return namedPathHopRecordList
+
+def returnorderedlist(firstnode, lastnode, hops):
+    hopsordered = []
+    hopa = firstnode
+    hopb = ""
+    completed = False
+    loopcount = 0
+    while not completed:
+        if len(hops) == 0: completed = True
+        for hop in hops:
+            if len(hop) != 2:
+                logging.warn("Invalid hop!  Could not process hops!")
+                return None
+            elif hop[0].sourceKey.name == firstnode:
+                hopsordered.insert(0, hop[0])
+                if hop[1].sourceKey.name != lastnode:
+                    hopsordered.append(hop[1])
+                    firstnode = hop[1].sourceKey.name
+                hops.remove(hop)
+            elif hop[1].sourceKey.name == firstnode:
+                hopsordered.insert(0, hop[1])
+                if hop[0].sourceKey.name != lastnode:
+                    hopsordered.append(hop[0])
+                    firstnode = hop[0].sourceKey.name
+                hops.remove(hop)
+            elif loopcount > 200:
+                logging.warn("Could not process hops!")
+                return None
+            loopcount += 1
+    return hopsordered
 
 def setStrictNamedPath(lspPath, NamedPathHopRecordList):
     # get named  path
