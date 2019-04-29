@@ -74,14 +74,14 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    # logging.info("Collection all nodes equipment information...")
-    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting 4k nodes...")
-    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collection all nodes equipment information...")
+    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting 4k nodes...")
+    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
@@ -95,35 +95,40 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # except Exception as err:
     #     logging.critical("MPLS topological links are not valid.  Halting execution.")
     #     sys.exit("Collection error.  Halting execution.")
-    # logging.info("Collection MPLS nodes...")
-    # collectMPLSnodes()
-    # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Parsing OCH-trails...")
-    # parse_vc_optical_och_trails()
-    # logging.info("Getting OCH-trails wavelengths...")
-    # add_wavelength_vc_optical_och_trails()
-    # logging.info("Collecting MPLS links...")
-    # collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
-    # logging.info("Collection OTU links...")
-    # collect_otu_links_json(baseURL,epnmuser,epnmpassword)
-    # logging.info("Collecting OTU termination points...")
-    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Adding OCH trails to OTU links...")
-    # add_och_trails_to_otu_links()
-    # logging.info("Collecting L1 paths for OCH-trails...")
-    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Re-ordering L1 hops for OCH-trails...")
-    # reorderl1hops_och_trails()
+    logging.info("Collecting MPLS links...")
+    collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
+    logging.info("Collection MPLS nodes...")
+    collectMPLSnodes()
+    logging.info("Collecting virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Adding vc-fdn to L3links...")
+    # add_vcfdn_l3links()
+    logging.info("Parsing OCH-trails...")
+    parse_vc_optical_och_trails()
+    logging.info("Getting OCH-trails wavelengths...")
+    add_wavelength_vc_optical_och_trails()
+    logging.info("Collection OTU links...")
+    collect_otu_links_json(baseURL,epnmuser,epnmpassword)
+    logging.info("Collecting OTU termination points...")
+    collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Adding OCH trails to OTU links...")
+    add_och_trails_to_otu_links()
+    logging.info("Collecting L1 paths for OCH-trails...")
+    addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops for OCH-trails...")
+    reorderl1hops_och_trails()
+    logging.info("Parsing OTN links from OTU link data...")
     parse_otn_links()
-    # parse_odu_services()
-    # collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword)
-    # # logging.info("Collecting L1 paths...")
-    # # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
-    # # logging.info("Re-ordering L1 hops...")
-    # # reorderl1hops()
+    logging.info("Parsing ODU services from vc-optical data...")
+    parse_odu_services()
+    logging.info("Getting multi-layer routes for OTN services...")
+    collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 paths...")
+    # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
+    # logging.info("Re-ordering L1 hops...")
+    # reorderl1hops()
     # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Network collection completed!")
+    logging.info("Network collection completed!")
     # logging.info("Collecting LSPs...")
     # collectlsps_json(baseURL, epnmuser, epnmpassword)
 
@@ -934,8 +939,8 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
             tp_dict['ch-fdn'] = termination_points['tp.fdn']
             tp_dict['tp-fdn'] = tpfdn
             tp_dict['layer-rate'] = termination_points['tp.layer-rate']
-            tp_dict['bandwidth'] = tp['tp.if-speed']
-            tp_dict['channel'] = tp['tp.fdn'].split('!')[2].split(';')[0].split('=')[2]
+            tp_dict['bandwidth'] = termination_points['tp.if-speed']
+            tp_dict['channel'] = termination_points['tp.fdn'].split('!')[2].split(';')[0].split('=')[2]
             try:
                 tp_dict['termination-mode'] = termination_points['tp.optical-attributes']['tp.termination-mode']
                 tp_data.append(tp_dict)
@@ -970,6 +975,9 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
+
+
+def add_vcfdn_l3links():
 
     with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
         l3links = json.load(f)
@@ -1140,21 +1148,25 @@ def parse_odu_services():
     odu_services = []
     for vc in virtual_connections:
         if vc['vc.subtype'] == "oc:och-odu-uni":
-            odu_service = {}
-            odu_service['fdn'] = vc['vc.fdn']
-            odu_service['discovered-name'] = vc['vc.discovered-name']
-            odu_service['carrying-odu-tunnel'] = vc['vc.carrying-vc-ref-list']['vc.carrying-vc-ref']
-            termination_points = vc['vc.termination-point-list']['vc.termination-point']
-            if len(termination_points) == 2:
-                odu_service['node-A'] = termination_points[0]['vc.fdn'].split('!')[1].split('=')[1]
-                odu_service['node-A-intf'] = termination_points[0]['vc.alias-name']
-                odu_service['node-B'] = termination_points[1]['vc.fdn'].split('!')[1].split('=')[1]
-                odu_service['node-B-intf'] = termination_points[1]['vc.alias-name']
-            for tmp_vc in virtual_connections:
-                if tmp_vc['vc.fdn'] == odu_service['carrying-odu-tunnel']:
-                    odu_service['bandwidth'] = tmp_vc['vc.odu-tunnel']['vc.bandwidth']
-                    break
-            odu_services.append(odu_service)
+            try:
+                odu_service = {}
+                odu_service['fdn'] = vc['vc.fdn']
+                odu_service['discovered-name'] = vc['vc.discovered-name']
+                odu_service['carrying-odu-tunnel'] = vc['vc.carrying-vc-ref-list']['vc.carrying-vc-ref']
+                termination_points = vc['vc.termination-point-list']['vc.termination-point']
+                if len(termination_points) == 2:
+                    odu_service['node-A'] = termination_points[0]['vc.fdn'].split('!')[1].split('=')[1]
+                    odu_service['node-A-intf'] = termination_points[0]['vc.alias-name']
+                    odu_service['node-B'] = termination_points[1]['vc.fdn'].split('!')[1].split('=')[1]
+                    odu_service['node-B-intf'] = termination_points[1]['vc.alias-name']
+                for tmp_vc in virtual_connections:
+                    if tmp_vc['vc.fdn'] == odu_service['carrying-odu-tunnel']:
+                        odu_service['bandwidth'] = tmp_vc['vc.odu-tunnel']['vc.bandwidth']
+                        break
+                odu_services.append(odu_service)
+            except Exception as err:
+                logging.warn("Problem processing ODU service, skipping...")
+                continue
 
     with open("jsonfiles/odu_services.json", "wb") as f:
         f.write(json.dumps(odu_services, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -1645,8 +1657,11 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
                 logging.warning("Could not process multi-layer route response, skipping this fdn...")
                 break
             if isinstance(topo_links, list):
-                # TODO add code to handle case of multiple OTU link hops
-                pass
+                odu_service_route_data['vcfdn'] = vcfdn
+                for tl in topo_links:
+                    odu_service_otu_link_list.append(tl['topo.fdn'])
+                odu_service_route_data['otu-links'] = odu_service_otu_link_list
+                return odu_service_route_data
             else:
                 tl = layer['topo.tl-list']['topo.topological-link']
                 odu_service_route_data['vcfdn'] = vcfdn

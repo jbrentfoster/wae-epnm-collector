@@ -157,21 +157,23 @@ def returnorderedlist(firstnode, lastnode, hops):
                 logging.warn("Invalid hop!  Could not process hops!")
                 return None
             elif hop[0].sourceKey.name == firstnode:
-                hopsordered.insert(0, hop[0])
+                hopsordered.append(hop[0])
                 if hop[1].sourceKey.name != lastnode:
                     hopsordered.append(hop[1])
                     firstnode = hop[1].sourceKey.name
                 hops.remove(hop)
+                break
             elif hop[1].sourceKey.name == firstnode:
-                hopsordered.insert(0, hop[1])
+                hopsordered.append(hop[1])
                 if hop[0].sourceKey.name != lastnode:
                     hopsordered.append(hop[0])
                     firstnode = hop[0].sourceKey.name
                 hops.remove(hop)
+                break
             elif loopcount > 200:
                 logging.warn("Could not process hops!")
                 return None
-            loopcount += 1
+        loopcount += 1
     return hopsordered
 
 def setStrictNamedPath(lspPath, NamedPathHopRecordList):
