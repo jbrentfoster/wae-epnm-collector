@@ -59,17 +59,17 @@ def main():
     logging.info("Collection start time is " + current_time)
 
     # Delete all output files
-    # logging.info("Cleaning files from last collection...")
-    # try:
-    #     remove_tree('jsonfiles')
-    #     remove_tree('jsongets')
-    # except Exception as err:
-    #     logging.info("No files to cleanup...")
-    #
-    # # Recreate output directories
-    # mkpath('jsonfiles')
-    # mkpath('jsongets')
-    # mkpath(planfiles_root)
+    logging.info("Cleaning files from last collection...")
+    try:
+        remove_tree('jsonfiles')
+        remove_tree('jsongets')
+    except Exception as err:
+        logging.info("No files to cleanup...")
+
+    # Recreate output directories
+    mkpath('jsonfiles')
+    mkpath('jsongets')
+    mkpath(planfiles_root)
 
     # # Run the collector...
     # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
@@ -84,7 +84,7 @@ def main():
     # pool.close()
     # pool.join()
 
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -150,6 +150,17 @@ def main():
     #     l3nodes.append(tmpnode)
     # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
+    # Add nodes to plan
+    logging.info("Adding 4k nodes to plan...")
+    with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+        four_k_nodes = json.load(f)
+        f.close()
+    l3nodes = []
+    for k, v in four_k_nodes.items():
+        tmpnode = {'Name': v['Name']}
+        l3nodes.append(tmpnode)
+    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
 
     # Add OCH-Trails (wavelengths) to plan
     logging.info("Adding OCH Trails as L1 circuits to the plan...")
@@ -158,18 +169,18 @@ def main():
         f.close()
     waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-    # Add L3 nodes to plan
-    logging.info("Adding L3 nodes...")
-    with open("jsonfiles/l3Links_final.json", 'rb') as f:
-        l3linksdict = json.load(f)
-        f.close()
-    l3nodes = []
-    # found = False
-    for k1, v1 in l3linksdict.items():
-        tmpnode = {'Name': k1}
-        l3nodes.append(tmpnode)
-        # found = False
-    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+    # # Add L3 nodes to plan
+    # logging.info("Adding L3 nodes...")
+    # with open("jsonfiles/l3Links_final.json", 'rb') as f:
+    #     l3linksdict = json.load(f)
+    #     f.close()
+    # l3nodes = []
+    # # found = False
+    # for k1, v1 in l3linksdict.items():
+    #     tmpnode = {'Name': k1}
+    #     l3nodes.append(tmpnode)
+    #     # found = False
+    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
     # # Add L3 links to plan and stitch to L1 links where applicable
     # logging.info("Adding L3 links...")
@@ -181,8 +192,9 @@ def main():
         otn_links = json.load(f)
         f.close()
     waecode.planbuild.generate_OTN_circuits(plan, otn_links)
-
-    waecode.planbuild.assignSites(plan)
+    #
+    # TODO see if assignSites is breaking something (seems to be)
+    # waecode.planbuild.assignSites(plan)
 
     # # read FlexLSP add-on options
     # with open("waecode/options.json", 'rb') as f:
@@ -207,8 +219,6 @@ def main():
         odu_services = json.load(f)
         f.close()
     waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
-    # TODO Verify multi-OTN hop service
-    # TODO Test against SVS server
 
     # Save the plan file
     plan.serializeToFileSystem('planfiles/latest.pln')
