@@ -344,6 +344,8 @@ def create_otn_lsp(conn, plan, nodeA, nodeB, name, lspBW, otn_link_hops):
     lspManager = network.getLSPManager()
     lspPathManager = network.getLSPPathManager()
     namedPathManager = network.getNamedPathManager()
+    simulationManager = conn.getSimulationManager()
+
     lspBandwidth = lspBW
 
     nodeAkey = NodeKey(nodeA)
@@ -367,11 +369,42 @@ def create_otn_lsp(conn, plan, nodeA, nodeB, name, lspBW, otn_link_hops):
 
     forward_lsp_path = lsp.getOrderedLSPPaths()[0]
     namedPathHopRecordList = cs_common.buildNamedPathHopRecordList(forward_lsp_path, circuitManager, otn_link_hops)
-    forward_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+    if namedPathHopRecordList != None:
+        forward_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+    else:
+        logging.warn("Failed to route forward OTN LSP " + name + " according to circuit list!  Will route dynamically.")
 
     reverse_lsp_path = rlsp.getOrderedLSPPaths()[0]
     namedPathHopRecordList = cs_common.buildNamedPathHopRecordList(reverse_lsp_path, circuitManager, otn_link_hops)
-    reverse_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+    if namedPathHopRecordList != None:
+        reverse_lsp_path.getNamedPath().addHops(namedPathHopRecordList)
+    else:
+        logging.warn("Failed to route reverse OTN LSP " + name + " according to circuit list!  Will route dynamically.")
+
+
+
+    # run simulation
+    rprint("4. Running Simulation")
+    failureScenarioRecord = com.cisco.wae.design.sim.FailureScenarioRecord()
+    routeSimulation = simulationManager.newRouteSimulation(plan, failureScenarioRecord)
+    routeOptions = com.cisco.wae.design.sim.RouteOptions()
+    lspRouteRecords = routeSimulation.getAllLSPRouteRecords(routeOptions)
+    lspPathRouteRecords = routeSimulation.getAllLSPPathRouteRecords(routeOptions)
+
+    # retrieve and print dynamic forward Paths
+    rprint("working forward LSP Path:")
+    indent = " "
+    workingRouteInterfaceList = cs_common.getRouteInterfaceList(workingLspPath, routeSimulation, routeOptions)
+    text = cs_common.printInterfaceList(workingRouteInterfaceList, True)
+    text = indent + text
+    rprint(text)
+    rprint("protect forward LSP Path:")
+    indent = " "
+    protectRouteInterfaceList = cs_common.getRouteInterfaceList(rWorkingLspPath, routeSimulation, routeOptions)
+    text = cs_common.printInterfaceList(protectRouteInterfaceList, True)
+    text = indent + text
+    rprint(text)
+
 
     return
 
@@ -382,7 +415,7 @@ def rprint(input):
         global reportLogText
         reportLogText = reportLogText + str(input) + "\n"
     else:
-        logging.debug(input)
+        logging.info(input)
 
 
 def get_cli_options():

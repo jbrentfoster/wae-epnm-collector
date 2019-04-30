@@ -82,27 +82,27 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collectL1links_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting 4k nodes...")
     collect4kNodes_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Collecting MPLS topology...")
-    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # logging.info("Collecting ISIS hostnames...")
-    # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    # process_hostnames()
-    # logging.info("Processing MPLS topology...")
-    # processMPLS()
-    # logging.info("Collecting MPLS topological links...")
-    # try:
-    #     collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
-    # except Exception as err:
-    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
-    #     sys.exit("Collection error.  Halting execution.")
+    logging.info("Collecting MPLS topology...")
+    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    logging.info("Collecting ISIS hostnames...")
+    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    process_hostnames()
+    logging.info("Processing MPLS topology...")
+    processMPLS()
+    logging.info("Collecting MPLS topological links...")
+    try:
+        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.critical("MPLS topological links are not valid.  Halting execution.")
+        sys.exit("Collection error.  Halting execution.")
     logging.info("Collecting MPLS links...")
     collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
     logging.info("Collection MPLS nodes...")
     collectMPLSnodes()
     logging.info("Collecting virtual connections...")
     collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Adding vc-fdn to L3links...")
-    # add_vcfdn_l3links()
+    logging.info("Adding vc-fdn to L3links...")
+    add_vcfdn_l3links()
     logging.info("Parsing OCH-trails...")
     parse_vc_optical_och_trails()
     logging.info("Getting OCH-trails wavelengths...")
@@ -127,10 +127,11 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # addL1hopstol3links(baseURL, epnmuser, epnmpassword)
     # logging.info("Re-ordering L1 hops...")
     # reorderl1hops()
-    # collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting L3 link termination points...")
+    collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     logging.info("Network collection completed!")
-    # logging.info("Collecting LSPs...")
-    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting LSPs...")
+    collectlsps_json(baseURL, epnmuser, epnmpassword)
 
 
 
@@ -1051,11 +1052,13 @@ def parse_otn_links():
             if len(otn_channel) == 0: continue
             for otn_channel_compare in otn_channels:
                 if len(otn_channel_compare) == 0: continue
-                if otn_channel['node'] != otn_channel_compare['node'] and otn_channel['channel'] == otn_channel_compare[
-                    'channel']:
+                ch = otn_channel['channel'].split('/')[4]
+                ch_compare = otn_channel_compare['channel'].split('/')[4]
+                if otn_channel['node'] != otn_channel_compare['node'] and ch == ch_compare:
                     otn_link = {}
                     otn_link_ep = {}
                     otn_link['name'] = "OTN link " + otn_channel['node'] + " to " + otn_channel_compare['node'] + " " + otn_channel['channel']
+                    otn_link['name'] = otu_link['fdn'].split("=")[2] + " ODU4 channel " + ch
                     otn_link['och-trail-fdn'] = otu_link['och-trail-fdn']
                     otn_link['otu-link-fdn'] = otu_link['fdn']
                     otn_link_endpoints = []

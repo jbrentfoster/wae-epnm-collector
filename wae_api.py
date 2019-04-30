@@ -137,9 +137,7 @@ def main():
         f.close()
     waecode.planbuild.generateL1links(plan, l1linksdict)
 
-
-
-    # # Add nodes to plan
+    # # Add MPLS nodes to plan
     # logging.info("Adding nodes to plan...")
     # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
     #     mpls_nodes = json.load(f)
@@ -150,16 +148,32 @@ def main():
     #     l3nodes.append(tmpnode)
     # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
-    # Add nodes to plan
+    # Add L3 nodes to plan
+    logging.info("Adding L3 nodes...")
+    with open("jsonfiles/l3Links_final.json", 'rb') as f:
+        l3linksdict = json.load(f)
+        f.close()
+    l3nodes = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {'Name': k1}
+        l3nodes.append(tmpnode)
+    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
+    # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
     logging.info("Adding 4k nodes to plan...")
     with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
         four_k_nodes = json.load(f)
         f.close()
-    l3nodes = []
+    added_nodes = []
     for k, v in four_k_nodes.items():
-        tmpnode = {'Name': v['Name']}
-        l3nodes.append(tmpnode)
-    waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+        matched = False
+        for l3_node in l3nodes:
+            if v['Name'] == l3_node['Name']:
+                matched = True
+        if not matched:
+            tmpnode = {'Name': v['Name']}
+            added_nodes.append(tmpnode)
+    waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
 
 
     # Add OCH-Trails (wavelengths) to plan
@@ -169,22 +183,11 @@ def main():
         f.close()
     waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-    # # Add L3 nodes to plan
-    # logging.info("Adding L3 nodes...")
-    # with open("jsonfiles/l3Links_final.json", 'rb') as f:
-    #     l3linksdict = json.load(f)
-    #     f.close()
-    # l3nodes = []
-    # # found = False
-    # for k1, v1 in l3linksdict.items():
-    #     tmpnode = {'Name': k1}
-    #     l3nodes.append(tmpnode)
-    #     # found = False
-    # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
-    # # Add L3 links to plan and stitch to L1 links where applicable
-    # logging.info("Adding L3 links...")
-    # waecode.planbuild.generateL3circuits(plan, l3linksdict)
+
+    # Add L3 links to plan and stitch to L1 links where applicable
+    logging.info("Adding L3 links...")
+    waecode.planbuild.generateL3circuits(plan, l3linksdict)
 
     # Add OTN links to plan
     logging.info("Adding OTN links...")
@@ -196,22 +199,22 @@ def main():
     # TODO see if assignSites is breaking something (seems to be)
     # waecode.planbuild.assignSites(plan)
 
-    # # read FlexLSP add-on options
-    # with open("waecode/options.json", 'rb') as f:
-    #     options = json.load(f)
-    #     f.close()
-    #
-    # # Add LSPs to plan
-    # logging.info("Adding LSP's...")
-    # l3nodeloopbacks = []
-    # for k1, v1 in l3linksdict.items():
-    #     tmpnode = {k1: v1['Loopback Address']}
-    #     l3nodeloopbacks.append(tmpnode)
-    #
-    # with open("jsonfiles/lsps.json", 'rb') as f:
-    #     lsps = json.load(f)
-    #     f.close()
-    # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+    # read FlexLSP add-on options
+    with open("waecode/options.json", 'rb') as f:
+        options = json.load(f)
+        f.close()
+
+    # Add LSPs to plan
+    logging.info("Adding LSP's...")
+    l3nodeloopbacks = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {k1: v1['Loopback Address']}
+        l3nodeloopbacks.append(tmpnode)
+
+    with open("jsonfiles/lsps.json", 'rb') as f:
+        lsps = json.load(f)
+        f.close()
+    waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
     # Add OTN services to the plan
     logging.info("Adding ODU services to the plan...")

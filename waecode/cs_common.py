@@ -135,14 +135,17 @@ def buildNamedPathHopRecordList(lspPath, circuitManager, circuit_list):
                 hops.append(circ_hops)
 
     ordered_hops = returnorderedlist(firstNode, lastNode,hops)
-    namedPathHopRecordList = []
-    for intf_hop in ordered_hops:
-        hopRecord = com.cisco.wae.design.model.net.NamedPathHopRecord()
-        hopRecord.ifaceHop = intf_hop
-        hopRecord.type = com.cisco.wae.design.model.net.HopType.PathStrict
-        namedPathHopRecordList.append(hopRecord)
+    if ordered_hops != None:
+        namedPathHopRecordList = []
+        for intf_hop in ordered_hops:
+            hopRecord = com.cisco.wae.design.model.net.NamedPathHopRecord()
+            hopRecord.ifaceHop = intf_hop
+            hopRecord.type = com.cisco.wae.design.model.net.HopType.PathStrict
+            namedPathHopRecordList.append(hopRecord)
 
-    return namedPathHopRecordList
+        return namedPathHopRecordList
+    else:
+        return
 
 def returnorderedlist(firstnode, lastnode, hops):
     hopsordered = []
