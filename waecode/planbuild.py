@@ -62,7 +62,7 @@ def generateL1links(plan, l1linksdict):
         i += 1
 
 
-def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
+def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw,wl):
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
@@ -83,7 +83,7 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
     l1circuit = l1circuitManager.newL1Circuit(l1circuitrec)
 
     l1circKey = L1CircuitKey(l1PortAKey=l1portAkey, l1PortBKey=l1portBkey)
-    l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1)
+    l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1, lambdaVal=int(wl))
     l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
     l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
 
@@ -142,6 +142,8 @@ def generateL1circuits(plan, och_trails):
     for och_trail in och_trails:
         fdn = och_trail['fdn']
         logging.info("Generating L1 circuit for OCH Trail " + fdn)
+        # TODO add actual capacity of wavelength to plan (hard coded to 200G now)
+        wavelength = och_trail['wavelength'] * 100
         if 'Ordered L1 Hops' in och_trail:
             if len(och_trail['Ordered L1 Hops']) > 0:
                 term_points = och_trail['termination-points']
@@ -160,7 +162,7 @@ def generateL1circuits(plan, och_trails):
                 except Exception as err:
                     logging.warn("Could not get site for " + lastl1node)
                 try:
-                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000)
+                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000,wavelength)
                 except Exception as err:
                     logging.critical(
                         "Could not generate L1 circuit for OCH Trail " + fdn)
@@ -599,6 +601,7 @@ def generate_otn_lsps(plan, odu_services, conn):
             for otn_link in otn_links:
                 if otn_link['otu-link-fdn'] == otu_link:
                     otn_link_hops.append(otn_link['name'])
+                    break
         flexlsp_creator.create_otn_lsp(conn, plan, odu_service['node-A'], odu_service['node-B'],
                                        odu_service['discovered-name'], 10000, otn_link_hops)
         new_demand_for_LSP(plan, odu_service['node-A'], odu_service['node-B'], odu_service['discovered-name'] + "_forward", odu_service['discovered-name'] + "_forward", 10000)
