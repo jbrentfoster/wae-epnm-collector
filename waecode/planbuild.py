@@ -83,7 +83,8 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw,wl):
     l1circuit = l1circuitManager.newL1Circuit(l1circuitrec)
 
     l1circKey = L1CircuitKey(l1PortAKey=l1portAkey, l1PortBKey=l1portBkey)
-    l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1, lambdaVal=int(wl))
+    # l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1, lambdaVal=int(wl))
+    l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1)
     l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
     l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
 

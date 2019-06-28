@@ -5,6 +5,7 @@ import json
 import logging
 import sys
 from multiprocessing.dummy import Pool as ThreadPool
+import wae_api
 
 
 def collection_router(collection_call):
@@ -38,9 +39,18 @@ def collection_router(collection_call):
             logging.critical("MPLS topological links are not valid.  Halting execution.")
             sys.exit("Collection error.  Halting execution.")
 
+        logging.info("Collecting MPLS links...")
+        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+        logging.info("Collection MPLS nodes...")
+        collectMPLSnodes()
+
         logging.info("Collecting virtual connections...")
         collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
+
+        logging.info("Adding vc-fdn to L3links...")
+        add_vcfdn_l3links()
 
         logging.info("Parsing OCH-trails...")
         parse_vc_optical_och_trails()
@@ -59,15 +69,24 @@ def collection_router(collection_call):
         logging.info("Adding OCH trails to OTU links...")
         add_och_trails_to_otu_links()
 
-        logging.info("Collecting L1 paths...")
-        addL1hopstol3links_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                    collection_call['epnmpassword'])
-        logging.info("Re-ordering L1 hops...")
-        reorderl1hops()
-
-        logging.info("Collecting MPLS termination points...")
+        logging.info("Collecting L1 paths for OCH-trails...")
+        addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                                collection_call['epnmpassword'])
+        logging.info("Re-ordering L1 hops for OCH-trails...")
+        reorderl1hops_och_trails()
+        logging.info("Parsing OTN links from OTU link data...")
+        parse_otn_links()
+        logging.info("Parsing ODU services from vc-optical data...")
+        parse_odu_services()
+        logging.info("Getting multi-layer routes for OTN services...")
+        collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                                collection_call['epnmpassword'])
+        logging.info("Collecting L3 link termination points...")
         collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                            collection_call['epnmpassword'])
+                                                collection_call['epnmpassword'])
+
+
+
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
@@ -609,11 +628,14 @@ def collectMPLSnodes():
     mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
     mpls_nodes = []
     for mpls_link in mpls_links:
-        tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
-        if len(tmp_ep_list) == 2:
-            for ep in tmp_ep_list:
-                tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-                if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
+        try:
+            tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
+            if len(tmp_ep_list) == 2:
+                for ep in tmp_ep_list:
+                    tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+                    if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
+        except Exception as err:
+            logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
 
     with open("jsonfiles/mpls_nodes.json", "wb") as f:
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -866,7 +888,7 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
             tpfdns.append(tpfdn_dict)
 
     logging.info("Spawning threads to collect termination points...")
-    pool = ThreadPool(1)
+    pool = ThreadPool(wae_api.thread_count)
     termination_points = pool.map(process_otu_tpfdn, tpfdns)
     pool.close()
     pool.join()
@@ -1059,14 +1081,18 @@ def parse_otn_links():
                     otn_link_ep = {}
                     otn_link['name'] = "OTN link " + otn_channel['node'] + " to " + otn_channel_compare['node'] + " " + otn_channel['channel']
                     otn_link['name'] = otu_link['fdn'].split("=")[2] + " ODU4 channel " + ch
-                    otn_link['och-trail-fdn'] = otu_link['och-trail-fdn']
-                    otn_link['otu-link-fdn'] = otu_link['fdn']
-                    otn_link_endpoints = []
-                    otn_link_endpoints.append({'node': otn_channel['node'], 'channel': otn_channel['channel']})
-                    otn_link_endpoints.append({'node': otn_channel_compare['node'], 'channel': otn_channel_compare['channel']})
-                    otn_link['endpoints'] = otn_link_endpoints
-                    otn_links.append(otn_link)
-                    otn_channels.pop(0)
+                    try:
+                        otn_link['och-trail-fdn'] = otu_link['och-trail-fdn']
+                        otn_link['otu-link-fdn'] = otu_link['fdn']
+                        otn_link_endpoints = []
+                        otn_link_endpoints.append({'node': otn_channel['node'], 'channel': otn_channel['channel']})
+                        otn_link_endpoints.append({'node': otn_channel_compare['node'], 'channel': otn_channel_compare['channel']})
+                        otn_link['endpoints'] = otn_link_endpoints
+                        otn_links.append(otn_link)
+                        otn_channels.pop(0)
+                        logging.info("Successfully parsed OTN link from OTU link " + otu_link['fdn'])
+                    except Exception as err:
+                        logging.warn("Could not parse OTN link from OTU link for " + otu_link['fdn'])
 
     with open("jsonfiles/otn_links.json", "wb") as f:
         f.write(json.dumps(otn_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -1187,7 +1213,7 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
         # if not vcfdn_dict in vcfdns:
         vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
-    pool = ThreadPool(1)
+    pool = ThreadPool(wae_api.thread_count)
     otu_links = pool.map(process_vcfdn_odu_service, vcfdns)
     pool.close()
     pool.join()
@@ -1235,7 +1261,11 @@ def add_och_trails_to_otu_links():
                         matched = False
                     elif tp in otu_ports:
                         matched = True
-                if matched: otu_link['och-trail-fdn'] = och_trail['fdn']
+                if matched:
+                    otu_link['och-trail-fdn'] = och_trail['fdn']
+                    break
+        if not matched:
+            logging.warn("Could not find och-trail-fdn for otu_link " + otu_link['fdn'])
 
     logging.info("Completed adding OCH trails to OTU links...")
     with open("jsonfiles/otu_links.json", "wb") as f:
@@ -1303,7 +1333,7 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
             if not vcfdn_dict in vcfdns:
                 vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
-    pool = ThreadPool(1)
+    pool = ThreadPool(wae_api.thread_count)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
@@ -1357,7 +1387,7 @@ def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
 
     logging.info("Spawning threads to collect multi-layer routes...")
-    pool = ThreadPool(4)
+    pool = ThreadPool(wae_api.thread_count)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
@@ -1712,7 +1742,7 @@ def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword):
                         tpfdns.append(tpfdn_dict)
 
     logging.info("Spawning threads to collect termination points...")
-    pool = ThreadPool(1)
+    pool = ThreadPool(wae_api.thread_count)
     termination_points = pool.map(process_tpfdn, tpfdns)
     pool.close()
     pool.join()
