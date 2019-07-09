@@ -332,13 +332,14 @@ def generate_OTN_circuits(plan, otn_links):
         name = otn_link['name']
         if len(otn_link['endpoints']) == 2:
             nodeAKey = NodeKey(otn_link['endpoints'][0]['node'])
-            nodeAintfname = otn_link['endpoints'][0]['channel']
+            nodeAintfname = otn_link['endpoints'][0]['channel'] + name
             nodeBKey = NodeKey(otn_link['endpoints'][1]['node'])
-            nodeBintfname = otn_link['endpoints'][1]['channel']
+            nodeBintfname = otn_link['endpoints'][1]['channel'] + name
         te_metric = 10
         igp_metric = 10
         affinity = "0x80"
-        intfbw = 100000
+        intfbw = otn_link['intfbw']
+        # intfbw = 100000
         scale = 16  ## equals to hexadecimal
         num_of_bits = 32
         # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
@@ -596,15 +597,24 @@ def generate_otn_lsps(plan, odu_services, conn):
         otn_links = json.load(f)
         f.close()
     for odu_service in odu_services:
+        if odu_service['bandwidth'] == 'ODU2':
+            serv_bw = 10000
         otu_links = odu_service['otu-links']
         otn_link_hops = []
         for otu_link in otu_links:
             for otn_link in otn_links:
                 if otn_link['otu-link-fdn'] == otu_link:
-                    otn_link_hops.append(otn_link['name'])
+                    otn_link['intfbw'] = serv_bw
+                    otn_link['name'] = otn_link['name'] + odu_service['discovered-name']
+                    otn_link_hops.append(otn_link)
+                    # otn_link_hops.append(otn_link['name'])
                     break
+        generate_OTN_circuits(plan,otn_link_hops)
+        otn_link_hop_names = []
+        for hop in otn_link_hops:
+            otn_link_hop_names.append(hop['name'])
         flexlsp_creator.create_otn_lsp(conn, plan, odu_service['node-A'], odu_service['node-B'],
-                                       odu_service['discovered-name'], 10000, otn_link_hops)
+                                       odu_service['discovered-name'], serv_bw, otn_link_hop_names)
         new_demand_for_LSP(plan, odu_service['node-A'], odu_service['node-B'], odu_service['discovered-name'] + "_forward", odu_service['discovered-name'] + "_forward", 10000)
         new_demand_for_LSP(plan, odu_service['node-B'], odu_service['node-A'], odu_service['discovered-name'] + "_reverse", odu_service['discovered-name'] + "_reverse", 10000)
 

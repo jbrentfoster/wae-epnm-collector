@@ -31,19 +31,24 @@ def collection_router(collection_call):
         process_hostnames()
         logging.info("Processing MPLS topology...")
         processMPLS()
+
         logging.info("Collecting MPLS topological links...")
+        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+
+        logging.info("Adding MPLS TL data to L3 links...")
         try:
-            collectMPLSinterfaces_json(collection_call['baseURL'], collection_call['epnmuser'],
+            add_mpls_tl_data(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
         except Exception as err:
             logging.critical("MPLS topological links are not valid.  Halting execution.")
             sys.exit("Collection error.  Halting execution.")
 
-        logging.info("Collecting MPLS links...")
-        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
-        logging.info("Collection MPLS nodes...")
-        collectMPLSnodes()
+        # logging.info("Collecting MPLS links...")
+        # collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                                collection_call['epnmpassword'])
+        # logging.info("Collection MPLS nodes...")
+        # collectMPLSnodes()
 
         logging.info("Collecting virtual connections...")
         collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -84,9 +89,6 @@ def collection_router(collection_call):
         logging.info("Collecting L3 link termination points...")
         collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                 collection_call['epnmpassword'])
-
-
-
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
         collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
@@ -110,7 +112,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     processMPLS()
     logging.info("Collecting MPLS topological links...")
     try:
-        collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword)
+        add_mpls_tl_data(baseURL, epnmuser, epnmpassword)
     except Exception as err:
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
@@ -613,58 +615,56 @@ def hostname_lookup(isis_id):
         jsonresponse = f.read()
         f.close()
     hostnames = json.loads(jsonresponse)
-
     for host in hostnames:
         if host['isis_id'] == isis_id:
             return host['hostname']
-
     return None
 
 
-def collectMPLSnodes():
-    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
-        thejson = json.load(f)
-        f.close()
-    mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
-    mpls_nodes = []
-    for mpls_link in mpls_links:
-        try:
-            tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
-            if len(tmp_ep_list) == 2:
-                for ep in tmp_ep_list:
-                    tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-                    if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
-        except Exception as err:
-            logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
+# def collectMPLSnodes():
+#     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
+#         thejson = json.load(f)
+#         f.close()
+#     mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
+#     mpls_nodes = []
+#     for mpls_link in mpls_links:
+#         try:
+#             tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
+#             if len(tmp_ep_list) == 2:
+#                 for ep in tmp_ep_list:
+#                     tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+#                     if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
+#         except Exception as err:
+#             logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
+#
+#     with open("jsonfiles/mpls_nodes.json", "wb") as f:
+#         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+#         f.close()
 
-    with open("jsonfiles/mpls_nodes.json", "wb") as f:
-        f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
-
-def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
-    incomplete = True
-    startindex = 0
-    jsonmerged = {}
-    while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
-            startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-            merge(jsonmerged, jsonaddition)
-        elif lastindex == -1:
-            incomplete = False
-        else:
-            incomplete = False
-            merge(jsonmerged, jsonaddition)
-
-    with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+def add_mpls_tl_data(baseURL, epnmuser, epnmpassword):
+    # incomplete = True
+    # startindex = 0
+    # jsonmerged = {}
+    # while incomplete:
+    #     uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
+    #         startindex)
+    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    #     jsonaddition = json.loads(jsonresponse)
+    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+    #     if (lastindex - firstindex) == 99 and lastindex != -1:
+    #         startindex += 100
+    #         merge(jsonmerged, jsonaddition)
+    #     elif lastindex == -1:
+    #         incomplete = False
+    #     else:
+    #         incomplete = False
+    #         merge(jsonmerged, jsonaddition)
+    #
+    # with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
+    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    #     f.close()
     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -677,11 +677,11 @@ def collectMPLSinterfaces_json(baseURL, epnmuser, epnmpassword):
 
     names = []
     for k1, v1 in l3links.items():
-        logging.info("**************Nodename is: " + k1)
+        logging.info("Nodename is: " + k1)
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
-                    logging.info("***************Linkname is: " + k3)
+                    logging.info("Linkname is: " + k3)
                     n1IP = v3.get('Local IP')
                     n2IP = v3.get('Neighbor IP')
                     name1 = n1IP + '-' + n2IP
@@ -770,42 +770,42 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
-
-    thejson = json.loads(jsonresponse)
-    mpls_links = []
-    for item in thejson['com.response-message']['com.data']['topo.topological-link']:
-        try:
-            mpls_link = {}
-            termination_points = []
-            fdn = item['topo.fdn']
-            logging.info("Collecting MPLS link " + fdn)
-            discoveredname = item['topo.discovered-name']
-            ep_list = item['topo.endpoint-list']['topo.endpoint']
-            endpoints = []
-            for ep in ep_list:
-                tmptp = {}
-                tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-                tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
-                # tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
-                #     'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
-                tmptp['tp-fdn'] = ep['topo.endpoint-ref'] + "&containedCTP=true"
-                # try:
-                #     tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
-                # except Exception as err:
-                #     tmptp['port-num'] = tmptp['port'].split('OTU4')[1]
-                termination_points.append(tmptp)
-            mpls_link['fdn'] = fdn
-            mpls_link['discoveredname'] = discoveredname
-            mpls_link['termination-points'] = termination_points
-            if len(ep_list) == 2:
-                mpls_links.append(mpls_link)
-            else:
-                logging.warn("Endpoint list for " + fdn + " is incomplete!")
-        except Exception as error:
-            logging.warn("Invalid MPLS topo link!")
-    with open("jsonfiles/mpls_links.json", "wb") as f:
-        f.write(json.dumps(mpls_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+#
+#     thejson = json.loads(jsonresponse)
+#     mpls_links = []
+#     for item in thejson['com.response-message']['com.data']['topo.topological-link']:
+#         try:
+#             mpls_link = {}
+#             termination_points = []
+#             fdn = item['topo.fdn']
+#             logging.info("Collecting MPLS link " + fdn)
+#             discoveredname = item['topo.discovered-name']
+#             ep_list = item['topo.endpoint-list']['topo.endpoint']
+#             endpoints = []
+#             for ep in ep_list:
+#                 tmptp = {}
+#                 tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+#                 tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
+#                 # tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
+#                 #     'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
+#                 tmptp['tp-fdn'] = ep['topo.endpoint-ref'] + "&containedCTP=true"
+#                 # try:
+#                 #     tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
+#                 # except Exception as err:
+#                 #     tmptp['port-num'] = tmptp['port'].split('OTU4')[1]
+#                 termination_points.append(tmptp)
+#             mpls_link['fdn'] = fdn
+#             mpls_link['discoveredname'] = discoveredname
+#             mpls_link['termination-points'] = termination_points
+#             if len(ep_list) == 2:
+#                 mpls_links.append(mpls_link)
+#             else:
+#                 logging.warn("Endpoint list for " + fdn + " is incomplete!")
+#         except Exception as error:
+#             logging.warn("Invalid MPLS topo link!")
+#     with open("jsonfiles/mpls_links.json", "wb") as f:
+#         f.write(json.dumps(mpls_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+#         f.close()
 
 
 def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
@@ -1214,6 +1214,7 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
         vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
+    # pool = ThreadPool(1)
     otu_links = pool.map(process_vcfdn_odu_service, vcfdns)
     pool.close()
     pool.join()
@@ -1273,51 +1274,51 @@ def add_och_trails_to_otu_links():
         f.close()
 
 
-def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
-    with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
-        l3links = json.load(f)
-        f.close()
-
-    for k1, v1 in l3links.items():
-        # logging.info "**************Nodename is: " + k1
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
-                    if 'vc-fdn' in v3:
-                        vcfdn = v3['vc-fdn']
-                        logging.info("Collecting multilayer route for node " + k1 + " " + k3 + " vcFdn is " + vcfdn)
-                        # if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
-                        #     pass
-                        try:
-                            l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
-                            if len(l1hops) > 0:
-                                logging.info("Multi-layer route collection successful.")
-                                v3['L1 Hops'] = l1hops
-                                v3['L1 Hops'].pop('vcfdn')
-                            else:
-                                logging.warn("Could not get multilayer route for " + k1 + " " + k3)
-                                logging.warn("vcFDN is " + vcfdn)
-                                logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
-                        except Exception as err:
-                            logging.warn("Could not get parse multilayer_route for node " + k1 + " link " + k3)
-                            logging.warn("vcFDN is " + vcfdn)
-                            logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
-
-                    else:
-                        logging.info(
-                            "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
-                        try:
-                            logging.info("    Neighbor: " + v3['Neighbor'])
-                            logging.info("    Local Intf: " + v3['Local Intf'])
-                            logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
-                        except Exception as err:
-                            logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
-
-    logging.info("completed collecting L1 paths...")
-    with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
-        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+# def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
+#     with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
+#         l3links = json.load(f)
+#         f.close()
+#
+#     for k1, v1 in l3links.items():
+#         # logging.info "**************Nodename is: " + k1
+#         for k2, v2 in v1.items():
+#             if isinstance(v2, dict):
+#                 for k3, v3 in v2.items():
+#                     # logging.info "***************Linkname is: " + k3
+#                     if 'vc-fdn' in v3:
+#                         vcfdn = v3['vc-fdn']
+#                         logging.info("Collecting multilayer route for node " + k1 + " " + k3 + " vcFdn is " + vcfdn)
+#                         # if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
+#                         #     pass
+#                         try:
+#                             l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
+#                             if len(l1hops) > 0:
+#                                 logging.info("Multi-layer route collection successful.")
+#                                 v3['L1 Hops'] = l1hops
+#                                 v3['L1 Hops'].pop('vcfdn')
+#                             else:
+#                                 logging.warn("Could not get multilayer route for " + k1 + " " + k3)
+#                                 logging.warn("vcFDN is " + vcfdn)
+#                                 logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+#                         except Exception as err:
+#                             logging.warn("Could not get parse multilayer_route for node " + k1 + " link " + k3)
+#                             logging.warn("vcFDN is " + vcfdn)
+#                             logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+#
+#                     else:
+#                         logging.info(
+#                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
+#                         try:
+#                             logging.info("    Neighbor: " + v3['Neighbor'])
+#                             logging.info("    Local Intf: " + v3['Local Intf'])
+#                             logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+#                         except Exception as err:
+#                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
+#
+#     logging.info("completed collecting L1 paths...")
+#     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
+#         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+#         f.close()
 
 
 def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
@@ -1334,6 +1335,7 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
                 vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
+    # pool = ThreadPool(1)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
@@ -1358,63 +1360,63 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
         f.close()
 
 
-def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
-    with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
-        l3links = json.load(f)
-        f.close()
-    vcfdns = []
-    for k1, v1 in l3links.items():
-        # logging.info "**************Nodename is: " + k1
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
-                    if 'vc-fdn' in v3:
-                        vcfdn = v3['vc-fdn']
-                        logging.info("Node " + k1 + " " + k3 + " has L1 hops and vcFdn is " + vcfdn)
-                        vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
-                                      'vcfdn': vcfdn}
-                        if not vcfdn_dict in vcfdns:
-                            vcfdns.append(vcfdn_dict)
-                    else:
-                        logging.info(
-                            "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
-                        try:
-                            logging.info("    Neighbor: " + v3['Neighbor'])
-                            logging.info("    Local Intf: " + v3['Local Intf'])
-                            logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
-                        except Exception as err:
-                            logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
-
-    logging.info("Spawning threads to collect multi-layer routes...")
-    pool = ThreadPool(wae_api.thread_count)
-    l1hops = pool.map(process_vcfdn, vcfdns)
-    pool.close()
-    pool.join()
-
-    logging.info("Completed collecting multi-layer routes...")
-    logging.info("Processing multi-layer routes...")
-    for k1, v1 in l3links.items():
-        # logging.info "**************Nodename is: " + k1
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
-                    if 'vc-fdn' in v3:
-                        tmp_vcfdn = v3['vc-fdn']
-                        if len(l1hops) > 0:
-                            for l1hopset in l1hops:
-                                if len(l1hopset) > 1:
-                                    if l1hopset['vcfdn'] == tmp_vcfdn:
-                                        logging.info(
-                                            "Multi-layer route collection successful for node " + k1 + " vcFdn " + tmp_vcfdn)
-                                        v3['L1 Hops'] = l1hopset.copy()
-                                        v3['L1 Hops'].pop('vcfdn')
-
-    logging.info("Completed collecting L1 paths...")
-    with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
-        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+# def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
+#     with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
+#         l3links = json.load(f)
+#         f.close()
+#     vcfdns = []
+#     for k1, v1 in l3links.items():
+#         # logging.info "**************Nodename is: " + k1
+#         for k2, v2 in v1.items():
+#             if isinstance(v2, dict):
+#                 for k3, v3 in v2.items():
+#                     # logging.info "***************Linkname is: " + k3
+#                     if 'vc-fdn' in v3:
+#                         vcfdn = v3['vc-fdn']
+#                         logging.info("Node " + k1 + " " + k3 + " has L1 hops and vcFdn is " + vcfdn)
+#                         vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
+#                                       'vcfdn': vcfdn}
+#                         if not vcfdn_dict in vcfdns:
+#                             vcfdns.append(vcfdn_dict)
+#                     else:
+#                         logging.info(
+#                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
+#                         try:
+#                             logging.info("    Neighbor: " + v3['Neighbor'])
+#                             logging.info("    Local Intf: " + v3['Local Intf'])
+#                             logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
+#                         except Exception as err:
+#                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
+#
+#     logging.info("Spawning threads to collect multi-layer routes...")
+#     pool = ThreadPool(wae_api.thread_count)
+#     l1hops = pool.map(process_vcfdn, vcfdns)
+#     pool.close()
+#     pool.join()
+#
+#     logging.info("Completed collecting multi-layer routes...")
+#     logging.info("Processing multi-layer routes...")
+#     for k1, v1 in l3links.items():
+#         # logging.info "**************Nodename is: " + k1
+#         for k2, v2 in v1.items():
+#             if isinstance(v2, dict):
+#                 for k3, v3 in v2.items():
+#                     # logging.info "***************Linkname is: " + k3
+#                     if 'vc-fdn' in v3:
+#                         tmp_vcfdn = v3['vc-fdn']
+#                         if len(l1hops) > 0:
+#                             for l1hopset in l1hops:
+#                                 if len(l1hopset) > 1:
+#                                     if l1hopset['vcfdn'] == tmp_vcfdn:
+#                                         logging.info(
+#                                             "Multi-layer route collection successful for node " + k1 + " vcFdn " + tmp_vcfdn)
+#                                         v3['L1 Hops'] = l1hopset.copy()
+#                                         v3['L1 Hops'].pop('vcfdn')
+#
+#     logging.info("Completed collecting L1 paths...")
+#     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
+#         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+#         f.close()
 
 
 def process_vcfdn(vcfdn_dict):
