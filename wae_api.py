@@ -190,12 +190,12 @@ def main():
     logging.info("Adding L3 links...")
     waecode.planbuild.generateL3circuits(plan, l3linksdict)
 
-    # Add OTN links to plan
-    logging.info("Adding OTN links...")
-    with open("jsonfiles/otn_links.json", 'rb') as f:
-        otn_links = json.load(f)
-        f.close()
-    waecode.planbuild.generate_OTN_circuits(plan, otn_links)
+    # # Add OTN links to plan
+    # logging.info("Adding OTN links...")
+    # with open("jsonfiles/otn_links.json", 'rb') as f:
+    #     otn_links = json.load(f)
+    #     f.close()
+    # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
     #
     # TODO see if assignSites is breaking something (seems to be)
     # waecode.planbuild.assignSites(plan)
