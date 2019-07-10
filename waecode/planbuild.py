@@ -176,8 +176,6 @@ def generateL3circuits(plan, l3linksdict):
     c = 0
     i = 0
     linkslist = []
-    # l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
-    # nodemanager = plan.getNetwork().getNodeManager()
     duplicatelink = False
     circ_srlgs = {}
     for k1, v1 in l3linksdict.items():
@@ -207,11 +205,8 @@ def generateL3circuits(plan, l3linksdict):
                     srlgs = []
                     if 'SRLGs' in v3:
                         srlgs = v3['SRLGs']
-                    #     for k4, v4 in v3['SRLGs'].items():
-                    #         srlgs.append(v4)
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
-                    # if 'Ordered L1 Hops' in v3 and not duplicatelink:
                     if not duplicatelink:
                         linkslist.append(discoveredname)
                         c += 1
@@ -248,78 +243,6 @@ def generateL3circuits(plan, l3linksdict):
                         circ_key = l3circuit.getKey()
                         circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
                         circ_srlgs[circ_name] = circ_dict
-                        # if len(v3['Ordered L1 Hops']) > 0:
-                        #     linkslist.append(discoveredname)
-                        #     c += 1
-                        #     i += 1
-                        #     l1hops, firstl1node, lastl1node = getfirstlastl1node(v3['Ordered L1 Hops'], firstnode,
-                        #                                                          lastnode)
-                        #     firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
-                        #     # print "Node is " + k1 + "Site is " + str(firstsite.getKey())
-                        #     nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
-                        #     try:
-                        #         lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
-                        #         nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
-                        #     except Exception as err:
-                        #         logging.warn("Could not get site for " + lastl1node)
-                        #     # nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
-                        #
-                        #     name = "L1_circuit_" + str(c)
-                        #     try:
-                        #         l1circuit = generateL1circuit(plan, name, firstl1node, lastl1node, l1hops,
-                        #                                       intfbw)
-                        #     except Exception as err:
-                        #         logging.critical(
-                        #             "Could not generate L1 circuit for L3 circuit " + firstnode + " to " + lastnode + " " + k3)
-                        #         break
-                        #     if tp_description == "":
-                        #         name = "L3_circuit_" + str(i)
-                        #     else:
-                        #         if 'CktId: ' in tp_description:
-                        #             name = tp_description.split('CktId: ')[1]
-                        #         # Fix - GLH - 2-18-19 #
-                        #         elif 'CID:' in tp_description:
-                        #             name = tp_description.split('CID:')[1]
-                        #         # Fix End - GLH - 2-18-19 #
-                        #         else:
-                        #             name = tp_description
-                        #     l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
-                        #                                   lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
-                        #     l3circuit.setL1Circuit(l1circuit)
-                        #     l3circuit.setCapacity(l1circuit.getBandwidth())
-                        #     intfdict = l3circuit.getAllInterfaces()
-                        #     for k6, v6 in intfdict.items():
-                        #         v6.setResvBW(int(rsvpbw / 1000))
-                        #     circ_name = l3circuit.getName()
-                        #     circ_key = l3circuit.getKey()
-                        #     circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
-                        #     circ_srlgs[circ_name] = circ_dict
-                    #
-                    # elif not duplicatelink:
-                    #     i += 1
-                    #     if tp_description == "":
-                    #         name = "L3_circuit_" + str(i)
-                    #     else:
-                    #         if 'CktId: ' in tp_description:
-                    #             name = tp_description.split('CktId: ')[1]
-                    #         # Fix - GLH - 2-18-19 #
-                    #         elif 'CID:' in tp_description:
-                    #             name = tp_description.split('CID:')[1]
-                    #         # Fix End - GLH - 2-18-19 #
-                    #         else:
-                    #             name = tp_description
-                    #     linkslist.append(discoveredname)
-                    #     l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
-                    #                                   lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
-                    #     l3circuit.setCapacity(intfbw)
-                    #     intfdict = l3circuit.getAllInterfaces()
-                    #     for k6, v6 in intfdict.items():
-                    #         v6.setResvBW(int(rsvpbw / 1000))
-                    #     circ_name = l3circuit.getName()
-                    #     circ_key = l3circuit.getKey()
-                    #     circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
-                    #     circ_srlgs[circ_name] = circ_dict
-
                     duplicatelink = False
 
     logging.info("Processing SRLG's...")
@@ -342,7 +265,6 @@ def generate_OTN_circuits(plan, otn_links):
         # intfbw = 100000
         scale = 16  ## equals to hexadecimal
         num_of_bits = 32
-        # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
         affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
 
         affinities = []
@@ -370,9 +292,6 @@ def generate_OTN_circuits(plan, otn_links):
                     circuit.setL1Circuit(l1circuit)
                     # TODO recode setting the L3 node site based on connected L1 node site
         circuit.setCapacity(intfbw)
-        intfdict = circuit.getAllInterfaces()
-        # for k6, v6 in intfdict.items():
-        #     v6.setResvBW(int(rsvpbw / 1000))
         i += 1
 
 
