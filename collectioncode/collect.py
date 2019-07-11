@@ -1889,7 +1889,10 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                     affinitymask = subsubsubitem['vc.affinity-mask']
                 except Exception as err2:
                     logging.warn("LSP has no affinity bits: " + fdn)
-                signalledBW = subsubsubitem['vc.signalled-bw']
+                try:
+                    signalledBW = subsubsubitem['vc.signalled-bw']
+                except Exception as err:
+                    logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
                 # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
