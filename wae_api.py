@@ -249,6 +249,7 @@ def main():
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
         plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
+        logging.info("Plan file created.")
 
     # Backup current output files
     logging.info("Backing up files from collection...")
@@ -267,7 +268,6 @@ def main():
         logging.info("No log file to copy...")
 
     # Script completed
-    logging.info("Plan file created.")
     finish_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     logging.info("Collection finish time is " + finish_time)
     time.sleep(2)
