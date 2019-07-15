@@ -242,7 +242,11 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             fdn = link['topo.fdn']
             discovered_name = link['topo.discovered-name']
             nodes = []
-            endpointlist = link['topo.endpoint-list']['topo.endpoint']
+            try:
+                endpointlist = link['topo.endpoint-list']['topo.endpoint']
+            except Exception as err:
+                logging.warn("L1 Link missing valid endpoint-list " + fdn + " ...removing this link from L1 topology.")
+                continue
             logging.info("Processing L1 link " + fdn)
             if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
                 for ep in endpointlist:
