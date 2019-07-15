@@ -32,7 +32,7 @@ def main():
                         help="Host ID of the seed node (must be XR!) for network discovery")
     parser.add_argument('phases', metavar='N', type=str,
                         help="List of the collection phases to run(1-6), example '1356'")
-    parser.add_argument('build_plan', metavar='N', type=str,
+    parser.add_argument('build_plan', metavar='N', type=int,
                         help="Set to 1 to build plan, otherwise set to 0.")
     args = parser.parse_args()
 
