@@ -66,17 +66,19 @@ def main():
     logging.info("Collection start time is " + current_time)
 
     # Delete all output files
-    logging.info("Cleaning files from last collection...")
-    try:
-        remove_tree('jsonfiles')
-        remove_tree('jsongets')
-    except Exception as err:
-        logging.info("No files to cleanup...")
-
-    # Recreate output directories
-    mkpath('jsonfiles')
-    mkpath('jsongets')
-    mkpath(planfiles_root)
+    if phases != "0":
+        logging.info("Cleaning files from last collection...")
+        try:
+            remove_tree('jsonfiles')
+            remove_tree('jsongets')
+        except Exception as err:
+            logging.info("No files to cleanup...")
+        # Recreate output directories
+        mkpath('jsonfiles')
+        mkpath('jsongets')
+        mkpath(planfiles_root)
+    else:
+        logging.info("Keeping collection files from previous collection, building plan file only...")
 
     phase_list = []
     for phase in phases:
