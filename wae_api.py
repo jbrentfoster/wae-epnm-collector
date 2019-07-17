@@ -32,8 +32,10 @@ def main():
                         help="Host ID of the seed node (must be XR!) for network discovery")
     parser.add_argument('phases', metavar='N', type=str,
                         help="List of the collection phases to run(1-6), example '1356'")
-    parser.add_argument('build_plan', metavar='N', type=int,
+    parser.add_argument('--build_plan', action='store_true',
                         help="Set to 1 to build plan, otherwise set to 0.")
+    parser.add_argument('--delete_previous', action='store_true',
+                        help="Set to True to delete previous collection files.")
     args = parser.parse_args()
 
     epnmipaddr = args.epnm_ipaddr
@@ -45,6 +47,7 @@ def main():
     planfiles_root = args.archive_root + "/planfiles/"
     phases = args.phases
     build_plan = args.build_plan
+    delete_previous = args.delete_previous
 
     # Set up logging
     try:
@@ -66,7 +69,7 @@ def main():
     logging.info("Collection start time is " + current_time)
 
     # Delete all output files
-    if phases != "0":
+    if delete_previous:
         logging.info("Cleaning files from last collection...")
         try:
             remove_tree('jsonfiles')
@@ -112,7 +115,7 @@ def main():
     # print "PATH=" + os.getenv('PATH')
     # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
 
-    if build_plan == 1:
+    if build_plan:
         logging.info("Building plan file...")
 
         # Create a service to be used by this script
