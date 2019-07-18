@@ -62,7 +62,7 @@ def generateL1links(plan, l1linksdict):
         i += 1
 
 
-def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw,wl):
+def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
@@ -144,7 +144,7 @@ def generateL1circuits(plan, och_trails):
         fdn = och_trail['fdn']
         logging.info("Generating L1 circuit for OCH Trail " + fdn)
         # TODO add actual capacity of wavelength to plan (hard coded to 200G now)
-        wavelength = och_trail['wavelength'] * 100
+        # wavelength = och_trail['wavelength'] * 100
         if 'Ordered L1 Hops' in och_trail:
             if len(och_trail['Ordered L1 Hops']) > 0:
                 term_points = och_trail['termination-points']
@@ -163,7 +163,7 @@ def generateL1circuits(plan, och_trails):
                 except Exception as err:
                     logging.warn("Could not get site for " + lastl1node)
                 try:
-                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000,wavelength)
+                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000)
                 except Exception as err:
                     logging.critical(
                         "Could not generate L1 circuit for OCH Trail " + fdn)
@@ -200,7 +200,10 @@ def generateL3circuits(plan, l3linksdict):
                     igp_metric = int(v3['IGP Metric'])
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
                     intfbw = getintfbw(rsvpbw)
-                    tp_description = v3['tp-description']
+                    try:
+                        tp_description = v3['tp-description']
+                    except Exception as err:
+                        tp_description = ""
 
                     srlgs = []
                     if 'SRLGs' in v3:
@@ -427,7 +430,8 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             tuID = lsp['Tunnel ID']
             # lspName = lsp['fdn'].split('!')[1].split('=')[1]
             lspName = lsp['tufdn'].split('!')[1].split('=')[1] + "-" + \
-                      lsp['tufdn'].split('!')[2].split('=')[2].split(';')[0]
+                      lsp['tufdn'].split('!')[2].split('=')[2].split(';')[0] + \
+                      "-" + str(index)
             # Fix - GLH - 2-18-19#
             lspSetupPriority = lsp["vc.setup-priority"]
             lspHoldPriority = lsp["vc.hold-priority"]
@@ -453,9 +457,13 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                                 tuID))
                 elif lsp['auto-route-announce-enabled'] == True:
                     logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
-                    new_private_lsp(plan, src, dest, lspName, lspBW, frr, lspSetupPriority,
-                                    lspHoldPriority)  # Fix - GLH - 2-18-19
-                    new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
+                    try:
+                        new_private_lsp(plan, src, dest, lspName, lspBW, frr, lspSetupPriority,
+                                        lspHoldPriority)  # Fix - GLH - 2-18-19
+                        new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
+                    except Exception as err:
+                        logging.warn("Could not process Data LSP: " + lspName)
+                        logging.warn(err)
 
 
 def new_demand_for_LSP(id, src, dest, lspName, demandName, val):

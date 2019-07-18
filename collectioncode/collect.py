@@ -44,18 +44,21 @@ def collection_router(collection_call):
             logging.critical("MPLS topological links are not valid.  Halting execution.")
             sys.exit("Collection error.  Halting execution.")
 
-        # logging.info("Collecting MPLS links...")
-        # collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                                collection_call['epnmpassword'])
-        # logging.info("Collection MPLS nodes...")
-        # collectMPLSnodes()
+        logging.info("Collecting L3 link termination points...")
+        collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                                collection_call['epnmpassword'])
 
-        logging.info("Collecting virtual connections...")
+        logging.info("Collecting optical virtual connections...")
         collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
 
         logging.info("Adding vc-fdn to L3links...")
         add_vcfdn_l3links()
+
+    if collection_call['type'] == "optical":
+        logging.info("Collecting optical virtual connections...")
+        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
 
         logging.info("Parsing OCH-trails...")
         parse_vc_optical_och_trails()
@@ -85,9 +88,6 @@ def collection_router(collection_call):
         parse_odu_services()
         logging.info("Getting multi-layer routes for OTN services...")
         collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                collection_call['epnmpassword'])
-        logging.info("Collecting L3 link termination points...")
-        collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                 collection_call['epnmpassword'])
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
@@ -1006,7 +1006,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
 
 def add_vcfdn_l3links():
 
-    with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
+    with open("jsonfiles/l3Links_final.json", 'rb') as f:
         l3links = json.load(f)
         f.close()
 
@@ -1725,7 +1725,7 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
 
 
 def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword):
-    with open("jsonfiles/l3Links_final.json", 'rb') as f:
+    with open("jsonfiles/l3Links_add_tl.json", 'rb') as f:
         l3links = json.load(f)
         f.close()
     tpfdns = []
