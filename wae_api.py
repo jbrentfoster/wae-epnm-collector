@@ -49,17 +49,18 @@ def main():
     build_plan = args.build_plan
     delete_previous = args.delete_previous
 
-    # Set up logging
-    try:
-        os.remove('collection.log')
-    except Exception as err:
-        print("No log file to delete...")
+    # # Set up logging
+    # try:
+    #     os.remove('collection.log')
+    # except Exception as err:
+    #     print("No log file to delete...")
 
     logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
     rootLogger = logging.getLogger()
     rootLogger.level = logging.INFO
 
-    fileHandler = logging.FileHandler(filename='collection.log')
+    log_file_name = 'collection-'+current_time+'.log'
+    fileHandler = logging.FileHandler(filename=log_file_name)
     fileHandler.setFormatter(logFormatter)
     rootLogger.addHandler(fileHandler)
 
@@ -93,7 +94,8 @@ def main():
                         {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id}
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id},
+                        {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         ]
     phases_to_run = []
     c = 1
@@ -104,7 +106,7 @@ def main():
                 break
         c +=1
 
-    pool = ThreadPool(6)
+    pool = ThreadPool(7)
     pool.map(collectioncode.collect.collection_router, phases_to_run)
     pool.close()
     pool.join()
@@ -223,7 +225,7 @@ def main():
         # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
         #
         # TODO see if assignSites is breaking something (seems to be)
-        # waecode.planbuild.assignSites(plan)
+        waecode.planbuild.assignSites(plan)
 
         # read FlexLSP add-on options
         with open("waecode/options.json", 'rb') as f:
@@ -266,7 +268,7 @@ def main():
     logging.info("Copying log file...")
     try:
         mkpath(archive_root)
-        shutil.copy('collection.log', archive_root + '/collection.log')
+        shutil.copy(log_file_name, archive_root + '/collection.log')
     except Exception as err:
         logging.info("No log file to copy...")
 
