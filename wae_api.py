@@ -33,9 +33,9 @@ def main():
     parser.add_argument('phases', metavar='N', type=str,
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('--build_plan', action='store_true',
-                        help="Set to 1 to build plan, otherwise set to 0.")
+                        help="Add this flag to build the plan file.")
     parser.add_argument('--delete_previous', action='store_true',
-                        help="Set to True to delete previous collection files.")
+                        help="Add this flag to delete previous collection files.")
     args = parser.parse_args()
 
     epnmipaddr = args.epnm_ipaddr
