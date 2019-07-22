@@ -1430,9 +1430,15 @@ def process_vcfdn(vcfdn_dict):
 
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
+    l1hops = {}
     logging.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    try:
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    except Exception as err:
+        logging.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
+        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        return l1hops
 
     with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
         f.write(jsonresponse)
@@ -1445,7 +1451,6 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
     thejson = json.loads(jsonresponse)
 
-    l1hops = {}
     l1hopsops = parsemultilayerroute_json(thejson, "topo:ops-link-layer", "Optics")
     l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
     if len(l1hopsops) == 0 or len(
