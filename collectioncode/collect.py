@@ -1440,13 +1440,18 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
         return l1hops
 
-    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
-        f.write(jsonresponse)
-        f.close()
+    try:
+        with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
+            f.write(jsonresponse)
+            f.close()
 
-    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
-        jsonresponse = f.read()
-        f.close()
+        with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
+            jsonresponse = f.read()
+            f.close()
+    except Exception as err:
+        logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
+        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        return l1hops
 
     logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
     thejson = json.loads(jsonresponse)
