@@ -1454,24 +1454,29 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
         return l1hops
 
     logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
-    thejson = json.loads(jsonresponse)
+    try:
+        thejson = json.loads(jsonresponse)
 
-    l1hopsops = parsemultilayerroute_json(thejson, "topo:ops-link-layer", "Optics")
-    l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
-    if len(l1hopsops) == 0 or len(
-            l1hopsots) == 0:  # check if either multilayer route parsing fails and exit the function if so
-        logging.warn("Could not get multilayer route for vcFDN " + vcfdn)
+        l1hopsops = parsemultilayerroute_json(thejson, "topo:ops-link-layer", "Optics")
+        l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
+        if len(l1hopsops) == 0 or len(
+                l1hopsots) == 0:  # check if either multilayer route parsing fails and exit the function if so
+            logging.warn("Could not get multilayer route for vcFDN " + vcfdn)
+            logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+            return l1hops
+        i = 1
+        for k, v in l1hopsops.items():
+            l1hops['L1 Hop' + str(i)] = v
+            i += 1
+        for k, v in l1hopsots.items():
+            l1hops['L1 Hop' + str(i)] = v
+            i += 1
+        l1hops['vcfdn'] = vcfdn
+        return l1hops
+    except Exception as err:
+        logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
         return l1hops
-    i = 1
-    for k, v in l1hopsops.items():
-        l1hops['L1 Hop' + str(i)] = v
-        i += 1
-    for k, v in l1hopsots.items():
-        l1hops['L1 Hop' + str(i)] = v
-        i += 1
-    l1hops['vcfdn'] = vcfdn
-    return l1hops
 
 
 def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
