@@ -22,6 +22,11 @@ def collection_router(collection_call):
         logging.info("Collecting 4k nodes...")
         collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
+        logging.info("Collecting MPLS topological links...")
+        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                       collection_call['epnmpassword'])
+        logging.info("Collecting MPLS nodes...")
+        collectMPLSnodes()
         logging.info("Collecting MPLS topology...")
         collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
                                collection_call['seednodeid'])
@@ -31,10 +36,6 @@ def collection_router(collection_call):
         process_hostnames()
         logging.info("Processing MPLS topology...")
         processMPLS()
-
-        logging.info("Collecting MPLS topological links...")
-        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
 
         logging.info("Adding MPLS TL data to L3 links...")
         try:
@@ -95,19 +96,19 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
-    logging.info("Collection all nodes equipment information...")
-    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 nodes...")
-    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting L1 links...")
-    collectL1links_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting 4k nodes...")
-    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting MPLS topology...")
-    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    logging.info("Collecting ISIS hostnames...")
-    collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
-    process_hostnames()
+    # logging.info("Collection all nodes equipment information...")
+    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 nodes...")
+    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting 4k nodes...")
+    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting MPLS topology...")
+    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    # logging.info("Collecting ISIS hostnames...")
+    # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
+    # process_hostnames()
     logging.info("Processing MPLS topology...")
     processMPLS()
     logging.info("Collecting MPLS topological links...")
@@ -625,25 +626,25 @@ def hostname_lookup(isis_id):
     return None
 
 
-# def collectMPLSnodes():
-#     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
-#         thejson = json.load(f)
-#         f.close()
-#     mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
-#     mpls_nodes = []
-#     for mpls_link in mpls_links:
-#         try:
-#             tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
-#             if len(tmp_ep_list) == 2:
-#                 for ep in tmp_ep_list:
-#                     tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-#                     if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
-#         except Exception as err:
-#             logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
-#
-#     with open("jsonfiles/mpls_nodes.json", "wb") as f:
-#         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-#         f.close()
+def collectMPLSnodes():
+    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
+        thejson = json.load(f)
+        f.close()
+    mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
+    mpls_nodes = []
+    for mpls_link in mpls_links:
+        try:
+            tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
+            if len(tmp_ep_list) == 2:
+                for ep in tmp_ep_list:
+                    tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
+                    if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
+        except Exception as err:
+            logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
+
+    with open("jsonfiles/mpls_nodes.json", "wb") as f:
+        f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
 
 
 def add_mpls_tl_data(baseURL, epnmuser, epnmpassword):
