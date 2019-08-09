@@ -109,37 +109,37 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collecting ISIS hostnames...")
     # collect_hostnames_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # process_hostnames()
-    logging.info("Processing MPLS topology...")
-    processMPLS()
-    logging.info("Collecting MPLS topological links...")
-    try:
-        add_mpls_tl_data(baseURL, epnmuser, epnmpassword)
-    except Exception as err:
-        logging.critical("MPLS topological links are not valid.  Halting execution.")
-        sys.exit("Collection error.  Halting execution.")
-    logging.info("Collecting MPLS links...")
-    collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
-    logging.info("Collection MPLS nodes...")
-    collectMPLSnodes()
-    logging.info("Collecting virtual connections...")
-    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Adding vc-fdn to L3links...")
-    add_vcfdn_l3links()
-    logging.info("Parsing OCH-trails...")
-    parse_vc_optical_och_trails()
-    logging.info("Getting OCH-trails wavelengths...")
-    add_wavelength_vc_optical_och_trails()
-    logging.info("Collection OTU links...")
-    collect_otu_links_json(baseURL,epnmuser,epnmpassword)
-    logging.info("Collecting OTU termination points...")
-    collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
-    logging.info("Adding OCH trails to OTU links...")
-    add_och_trails_to_otu_links()
-    logging.info("Collecting L1 paths for OCH-trails...")
-    addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
-    logging.info("Re-ordering L1 hops for OCH-trails...")
-    reorderl1hops_och_trails()
-    logging.info("Parsing OTN links from OTU link data...")
+    # logging.info("Processing MPLS topology...")
+    # processMPLS()
+    # logging.info("Collecting MPLS topological links...")
+    # try:
+    #     add_mpls_tl_data(baseURL, epnmuser, epnmpassword)
+    # except Exception as err:
+    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
+    #     sys.exit("Collection error.  Halting execution.")
+    # logging.info("Collecting MPLS links...")
+    # collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
+    # logging.info("Collection MPLS nodes...")
+    # collectMPLSnodes()
+    # logging.info("Collecting virtual connections...")
+    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Adding vc-fdn to L3links...")
+    # add_vcfdn_l3links()
+    # logging.info("Parsing OCH-trails...")
+    # parse_vc_optical_och_trails()
+    # logging.info("Getting OCH-trails wavelengths...")
+    # add_wavelength_vc_optical_och_trails()
+    # logging.info("Collection OTU links...")
+    # collect_otu_links_json(baseURL,epnmuser,epnmpassword)
+    # logging.info("Collecting OTU termination points...")
+    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Adding OCH trails to OTU links...")
+    # add_och_trails_to_otu_links()
+    # logging.info("Collecting L1 paths for OCH-trails...")
+    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Re-ordering L1 hops for OCH-trails...")
+    # reorderl1hops_och_trails()
+    # logging.info("Parsing OTN links from OTU link data...")
     parse_otn_links()
     logging.info("Parsing ODU services from vc-optical data...")
     parse_odu_services()
@@ -1079,8 +1079,13 @@ def parse_otn_links():
             if len(otn_channel) == 0: continue
             for otn_channel_compare in otn_channels:
                 if len(otn_channel_compare) == 0: continue
-                ch = otn_channel['channel'].split('/')[4]
-                ch_compare = otn_channel_compare['channel'].split('/')[4]
+                try:
+                    ch = otn_channel['channel'].split('/')[4]
+                    ch_compare = otn_channel_compare['channel'].split('/')[4]
+                except:
+                    logging.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
+                    ch = 1
+                    ch_compare = 1
                 if otn_channel['node'] != otn_channel_compare['node'] and ch == ch_compare:
                     otn_link = {}
                     otn_link_ep = {}
