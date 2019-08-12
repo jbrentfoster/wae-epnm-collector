@@ -47,7 +47,7 @@ Also add CLI template to get ISIS hostnames...
 
     Usage:
     
-    python wae_api.py <path to archive directory> <seed node host name and domain> <ip address of EPNM> <EPNM user> <EPNM password> <phases> <build_plan>
+    `python wae_api.py <path to archive directory> <seed node host name and domain> <ip address of EPNM> <EPNM user> <EPNM password> <phases> <build_plan>`
     
     Example,
     
