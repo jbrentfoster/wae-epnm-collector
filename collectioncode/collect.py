@@ -1235,12 +1235,13 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
         tmp_vcfdn = odu_service['fdn']
         if len(otu_links) > 0:
             for result in otu_links:
-                if 'otu-links' in result:
-                    if result['vcfdn'] == tmp_vcfdn:
-                        logging.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
-                        odu_service['otu-links'] = result['otu-links']
-                        # odu_service['L1 Hops'] = l1hopset.copy()
-                        # odu_service['L1 Hops'].pop('vcfdn')
+                if result:
+                    if 'otu-links' in result:
+                        if result['vcfdn'] == tmp_vcfdn:
+                            logging.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
+                            odu_service['otu-links'] = result['otu-links']
+                            # odu_service['L1 Hops'] = l1hopset.copy()
+                            # odu_service['L1 Hops'].pop('vcfdn')
 
     logging.info("Completed collecting OTU links for ODU services...")
     with open("jsonfiles/odu_services.json", "wb") as f:
