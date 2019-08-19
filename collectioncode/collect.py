@@ -1492,66 +1492,68 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
     tmpl1hops['Nodes'] = dict()
     firsthop = False
     i = 1
-    for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'][
-        'topo.virtual-connection-multi-layer-route']:
-        subtype = item['topo.topology-layer']
-        if subtype == topologylayer:
-            try:
-                topo_links = item['topo.tl-list']['topo.topological-link']
-            except Exception as err:
-                logging.warning("Could not process multi-layer route response, skipping this fdn...")
-                break
-            if isinstance(topo_links, list):
-                for subitem in topo_links:
-                    tmpfdn = subitem['topo.fdn']
+    if jsonresponse['com.response-message']['com.data']:
+        if jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'].has_key('topo.virtual-connection-multi-layer-route'):
+            for item in jsonresponse['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'][
+                'topo.virtual-connection-multi-layer-route']:
+                subtype = item['topo.topology-layer']
+                if subtype == topologylayer:
                     try:
-                        endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
+                        topo_links = item['topo.tl-list']['topo.topological-link']
                     except Exception as err:
-                        logging.error(
-                            "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
-                        l1hops = {}
-                        return l1hops
-                    for subsubitem in subitem['topo.endpoint-list']['topo.endpoint']:
-                        tmpep = subsubitem['topo.endpoint-ref']
-                        tmpnode = tmpep.split('!')[1].split('=')[1]
-                        tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
-                        tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
-                    for key, val in tmpl1hops.get('Nodes').items():
-                        porttype = val.get('Port')
-                        if intftype in porttype: firsthop = True
-                    if firsthop:
-                        l1hops['L1 Hop' + str(i)] = tmpl1hops
-                        l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
-                        i += 1
-                    tmpl1hops = {}
-                    tmpl1hops['Nodes'] = dict()
-                    firsthop = False
-                i = 1
-            else:
-                tmpfdn = topo_links['topo.fdn']
-                try:
-                    endpointlist = topo_links['topo.endpoint-list']['topo.endpoint']
-                except Exception as err:
-                    logging.error(
-                        "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
-                    l1hops = {}
-                    return l1hops
-                for subitem in topo_links['topo.endpoint-list']['topo.endpoint']:
-                    tmpep = subitem['topo.endpoint-ref']
-                    tmpnode = tmpep.split('!')[1].split('=')[1]
-                    tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
-                    tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
-                for key, val in tmpl1hops.get('Nodes').items():
-                    porttype = val.get('Port')
-                    if intftype in porttype: firsthop = True
-                if firsthop:
-                    l1hops['L1 Hop' + str(i)] = tmpl1hops
-                    l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
-                    i += 1
-                tmpl1hops = {}
-                tmpl1hops['Nodes'] = dict()
-                firsthop = False
-                i = 1
+                        logging.warning("Could not process multi-layer route response, skipping this fdn...")
+                        break
+                    if isinstance(topo_links, list):
+                        for subitem in topo_links:
+                            tmpfdn = subitem['topo.fdn']
+                            try:
+                                endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
+                            except Exception as err:
+                                logging.error(
+                                    "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
+                                l1hops = {}
+                                return l1hops
+                            for subsubitem in subitem['topo.endpoint-list']['topo.endpoint']:
+                                tmpep = subsubitem['topo.endpoint-ref']
+                                tmpnode = tmpep.split('!')[1].split('=')[1]
+                                tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
+                                tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
+                            for key, val in tmpl1hops.get('Nodes').items():
+                                porttype = val.get('Port')
+                                if intftype in porttype: firsthop = True
+                            if firsthop:
+                                l1hops['L1 Hop' + str(i)] = tmpl1hops
+                                l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
+                                i += 1
+                            tmpl1hops = {}
+                            tmpl1hops['Nodes'] = dict()
+                            firsthop = False
+                        i = 1
+                    else:
+                        tmpfdn = topo_links['topo.fdn']
+                        try:
+                            endpointlist = topo_links['topo.endpoint-list']['topo.endpoint']
+                        except Exception as err:
+                            logging.error(
+                                "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
+                            l1hops = {}
+                            return l1hops
+                        for subitem in topo_links['topo.endpoint-list']['topo.endpoint']:
+                            tmpep = subitem['topo.endpoint-ref']
+                            tmpnode = tmpep.split('!')[1].split('=')[1]
+                            tmpport = tmpep.split('!')[2].split('=')[2].split(';')[0]
+                            tmpl1hops['Nodes'][tmpnode] = dict([('Port', tmpport)])
+                        for key, val in tmpl1hops.get('Nodes').items():
+                            porttype = val.get('Port')
+                            if intftype in porttype: firsthop = True
+                        if firsthop:
+                            l1hops['L1 Hop' + str(i)] = tmpl1hops
+                            l1hops['L1 Hop' + str(i)]['fdn'] = tmpfdn
+                            i += 1
+                        tmpl1hops = {}
+                        tmpl1hops['Nodes'] = dict()
+                        firsthop = False
+                        i = 1
     return l1hops
 
 
