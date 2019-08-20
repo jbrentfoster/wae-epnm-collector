@@ -1713,45 +1713,46 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
     
     try:
         multilayer_route = json.loads(jsonresponse)
-
         odu_service_route_data = {}
         odu_service_otu_link_list = []
-        for layer in multilayer_route['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'] \
-            ['topo.virtual-connection-multi-layer-route']:
-            subtype = layer['topo.topology-layer']
-            if subtype == "topo:otu-link-layer":
-                try:
-                    topo_links = layer['topo.tl-list']['topo.topological-link']
-                except Exception as err:
-                    logging.warning("Could not process multi-layer route response, skipping this fdn...")
-                    break
-                if isinstance(topo_links, list):
-                    odu_service_route_data['vcfdn'] = vcfdn
-                    for tl in topo_links:
-                        odu_service_otu_link_list.append(tl['topo.fdn'])
-                    odu_service_route_data['otu-links'] = odu_service_otu_link_list
-                    return odu_service_route_data
-                else:
-                    tl = layer['topo.tl-list']['topo.topological-link']
-                    odu_service_route_data['vcfdn'] = vcfdn
-                    odu_service_otu_link_list.append(tl['topo.fdn'])
-                    odu_service_route_data['otu-links'] = odu_service_otu_link_list
-                    return odu_service_route_data
-                    # list_length = len(topo_links)
-                    # och_trail_index = list_length - 1
-                    # odu_service_och_trail_data['och-trail-fdn'] = topo_links[och_trail_index]['topo.fdn']
-                    # odu_service_och_trail_data['vcfdn'] = vcfdn
-                    # return odu_service_och_trail_data
+        if multilayer_route['com.response-message']['com.data']:
+            if multilayer_route['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'].has_key('topo.virtual-connection-multi-layer-route'):
+                for layer in multilayer_route['com.response-message']['com.data']['topo.virtual-connection-multi-layer-route-list'] \
+                    ['topo.virtual-connection-multi-layer-route']:
+                    subtype = layer['topo.topology-layer']
+                    if subtype == "topo:otu-link-layer":
+                        try:
+                            topo_links = layer['topo.tl-list']['topo.topological-link']
+                        except Exception as err:
+                            logging.warning("Could not process multi-layer route response, skipping this fdn...")
+                            break
+                        if isinstance(topo_links, list):
+                            odu_service_route_data['vcfdn'] = vcfdn
+                            for tl in topo_links:
+                                odu_service_otu_link_list.append(tl['topo.fdn'])
+                            odu_service_route_data['otu-links'] = odu_service_otu_link_list
+                            return odu_service_route_data
+                        else:
+                            tl = layer['topo.tl-list']['topo.topological-link']
+                            odu_service_route_data['vcfdn'] = vcfdn
+                            odu_service_otu_link_list.append(tl['topo.fdn'])
+                            odu_service_route_data['otu-links'] = odu_service_otu_link_list
+                            return odu_service_route_data
+                            # list_length = len(topo_links)
+                            # och_trail_index = list_length - 1
+                            # odu_service_och_trail_data['och-trail-fdn'] = topo_links[och_trail_index]['topo.fdn']
+                            # odu_service_och_trail_data['vcfdn'] = vcfdn
+                            # return odu_service_och_trail_data
 
-                    # for tl in topo_links:
-                    #     tmpfdn = tl['topo.fdn']
-                    #     try:
-                    #         endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
-                    #     except Exception as err:
-                    #         logging.error(
-                    #             "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
-                    #         l1hops = {}
-                    #         return l1hops
+                            # for tl in topo_links:
+                            #     tmpfdn = tl['topo.fdn']
+                            #     try:
+                            #         endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
+                            #     except Exception as err:
+                            #         logging.error(
+                            #             "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
+                            #         l1hops = {}
+                            #         return l1hops
     except Exception as err:
         logging.info("Multilayer_route results for vcFdn " + vcfdn + "were missing and couldn't be parsed")
 
