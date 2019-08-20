@@ -526,7 +526,7 @@ def generate_otn_lsps(plan, odu_services, conn):
     for odu_service in odu_services:
         if odu_service['bandwidth'] == 'ODU2':
             serv_bw = 10000
-        if odu_service.has_key('otu-links']:
+        if odu_service.has_key('otu-links'):
             otu_links = odu_service['otu-links']
             otn_link_hops = []
             for otu_link in otu_links:
