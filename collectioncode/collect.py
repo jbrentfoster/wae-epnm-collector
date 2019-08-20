@@ -1696,14 +1696,18 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
     logging.info("Making API call to collect multi_layer route for ODU service vc fdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    
+    try:
+        with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
+            f.write(jsonresponse)
+            f.close()
 
-    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
-        f.write(jsonresponse)
-        f.close()
-
-    with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
-        jsonresponse = f.read()
-        f.close()
+        with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
+            jsonresponse = f.read()
+            f.close()
+    except Exception as err:
+        logging.warn("Could not save or open file for multilayer route odu service for vcFDN " + vcfdn)
+        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
 
     logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
     multilayer_route = json.loads(jsonresponse)
