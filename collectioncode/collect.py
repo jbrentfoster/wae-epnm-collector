@@ -980,7 +980,14 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     except Exception as err:
         logging.warn("OTU termination point collection failed for tpfdn " + tpfdn)
 
-
+def collectvirtualconnections_json_new(baseURL, epnmuser, epnmpassword):
+    uri = "/data/v1/cisco-service-network:virtual-connection?.full=true&type=optical"
+    jsonresponse = rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    thejson = json.loads(jsonresponse)
+    with open("jsongets/vc-optical.json", 'wb') as f:
+        f.write(json.dumps(thejson, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        
+        
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
