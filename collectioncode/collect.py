@@ -50,17 +50,19 @@ def collection_router(collection_call):
                                                 collection_call['epnmpassword'])
 
         logging.info("Collecting optical virtual connections...")
-        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
-
+        #collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                               collection_call['epnmpassword'])
+        collectvirtualconnections_json_new(collection_call['baseURL'], collection_call['epnmuser'],
+                                        collection_call['epnmpassword'])
         logging.info("Adding vc-fdn to L3links...")
         add_vcfdn_l3links()
 
     if collection_call['type'] == "optical":
         logging.info("Collecting optical virtual connections...")
-        collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                       collection_call['epnmpassword'])
-
+        #collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                               collection_call['epnmpassword'])
+        collectvirtualconnections_json_new(collection_call['baseURL'], collection_call['epnmuser'],
+                                        collection_call['epnmpassword'])
         logging.info("Parsing OCH-trails...")
         parse_vc_optical_och_trails()
 
@@ -122,7 +124,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collection MPLS nodes...")
     # collectMPLSnodes()
     # logging.info("Collecting virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    #collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    #collectvirtualconnections_json_new(baseURL, epnmuser, epnmpassword])
     # logging.info("Adding vc-fdn to L3links...")
     # add_vcfdn_l3links()
     # logging.info("Parsing OCH-trails...")
