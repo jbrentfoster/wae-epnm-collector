@@ -23,7 +23,9 @@ def collection_router(collection_call):
         collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topological links...")
-        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+        #                               collection_call['epnmpassword'])
+        collect_mpls_links_json_new(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
         logging.info("Collecting MPLS nodes...")
         collectMPLSnodes()
@@ -120,7 +122,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     #     logging.critical("MPLS topological links are not valid.  Halting execution.")
     #     sys.exit("Collection error.  Halting execution.")
     # logging.info("Collecting MPLS links...")
-    # collect_mpls_links_json(baseURL,epnmuser,epnmpassword)
+    # collect_mpls_links_json_new(baseURL,epnmuser,epnmpassword)
     # logging.info("Collection MPLS nodes...")
     # collectMPLSnodes()
     # logging.info("Collecting virtual connections...")
@@ -751,6 +753,16 @@ def add_mpls_tl_data(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+        
+def collect_mpls_links_json_new(baseURL, epnmuser, epnmpassword):
+    uri = "/data/v1/cisco-resource-network:topological-link?.full=true&topo-layer=mpls-link-layer"
+    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    thejson = json.loads(jsonresponse)
+    with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
+        f.write(json.dumps(thejson, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
+        jsonresponse = f.read()
+        
 
 def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
