@@ -25,7 +25,8 @@ def collection_router(collection_call):
         collect4kNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
-        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collectlsps_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topological links...")
         #collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -161,7 +162,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     collect_termination_points_threaded(baseURL, epnmuser, epnmpassword)
     logging.info("Network collection completed!")
     logging.info("Collecting LSPs...")
-    collectlsps_json(baseURL, epnmuser, epnmpassword)
+    collectlsps_json_new(baseURL, epnmuser, epnmpassword)
 
 
 
@@ -1948,7 +1949,151 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         logging.warn(err)
         return {'tpfdn': tpfdn, 'tp-description': "", 'tp-mac': "", 'tp-mtu': ""}
 
+def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
+    uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel"
+    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    jsonaddition = json.loads(jsonresponse)
+    with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
+        f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+    with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
 
+    thejson = json.loads(jsonresponse)
+
+    lsplist = []
+    vcdict = {}
+
+    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+        tmpfdn = None
+        adminstate = None
+        affinitybits = None
+        affinitymask = None
+        # destinationIP = None
+        tunnelID = None
+        tunnelsource = None
+        tunneldestination = None
+        corouted = None
+        signalledBW = None
+        fastreroute = None
+        adminstate = None
+        fdn = None
+        erroredlsp = False
+        autoroute = None
+        # Fix - GLH - 2-18-19 #
+        setupPriority = None
+        holdPriority = None
+        # Fix - GLH - 2-18-19 #
+        adminstate = item['vc.admin-state']
+        fdn = item['vc.fdn']
+        if adminstate == "com:admin-state-up":
+            direction = item['vc.direction']
+            vcdict['fdn'] = fdn
+            vcdict['direction'] = direction
+            logging.info("Collecting LSP: " + fdn)
+            try:
+                term_point = item['vc.termination-point-list']['vc.termination-point']
+            except Exception as err:
+                logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
+                continue
+            if isinstance(term_point, dict):
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
+                subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
+                try:
+                    affinitybits = subsubsubitem['vc.affinity-bits']
+                    affinitymask = subsubsubitem['vc.affinity-mask']
+                except Exception as err2:
+                    logging.warn("LSP has no affinity bits: " + fdn)
+                try:
+                    signalledBW = subsubsubitem['vc.signalled-bw']
+                except Exception as err:
+                    logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
+                # destinationIP = subsubsubitem['vc.destination-address']
+                autoroute = subsubsubitem['vc.auto-route-announce-enabled']
+                fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                # Fix - GLH - 2-18-19 #
+                setupPriority = subsubsubitem["vc.setup-priority"]
+                holdPriority = subsubsubitem["vc.hold-priority"]
+                # Fix - GLH - 2-18-19 #
+                try:
+                    subitem = item['vc.te-tunnel']
+                    tunnelID = subitem['vc.tunnel-id']
+                    tunnelsource = subitem['vc.tunnel-source']
+                    tunneldestination = subitem['vc.tunnel-destination']
+                    corouted = subitem['vc.co-routed-enabled']
+                except Exception as err:
+                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                    logging.warn(err)
+                    erroredlsp = True
+            else:
+                logging.info("List format term_point " + fdn)
+                try:
+                    tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                except Exception as err:
+                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    continue
+                subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
+                try:
+                    affinitybits = subsubsubitem['vc.affinity-bits']
+                    affinitymask = subsubsubitem['vc.affinity-mask']
+                except Exception as err2:
+                    logging.warn("LSP has no affinity bits: " + fdn)
+                signalledBW = subsubsubitem['vc.signalled-bw']
+                # destinationIP = subsubsubitem['vc.destination-address']
+                autoroute = subsubsubitem['vc.auto-route-announce-enabled']
+                fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                # Fix - GLH - 2-18-19 #
+                holdPriority = subsubsubitem["vc.hold-priority"]
+                setupPriority = subsubsubitem["vc.setup-priority"]
+                # Fix - GLH - 2-18-19 #
+                try:
+                    subitem = item['vc.te-tunnel']
+                    tunnelID = subitem['vc.tunnel-id']
+                    tunnelsource = subitem['vc.tunnel-source']
+                    tunneldestination = subitem['vc.tunnel-destination']
+                    corouted = subitem['vc.co-routed-enabled']
+                except Exception as err:
+                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                    logging.warn(err)
+                    erroredlsp = True
+
+            if not erroredlsp:
+                vcdict['admin-state'] = adminstate
+                vcdict['tufdn'] = tmpfdn
+                vcdict['affinitybits'] = affinitybits
+                vcdict['affinitymask'] = affinitymask
+                # vcdict['Destination IP'] = destinationIP
+                vcdict['Tunnel ID'] = tunnelID
+                vcdict['Tunnel Source'] = tunnelsource
+                vcdict['Tunnel Destination'] = tunneldestination
+                vcdict['co-routed'] = corouted
+                vcdict['signalled-bw'] = signalledBW
+                vcdict['FRR'] = fastreroute
+                vcdict['auto-route-announce-enabled'] = autoroute
+                # Fix - GLH - 2-18-19 #
+                vcdict["vc.hold-priority"] = holdPriority
+                vcdict["vc.setup-priority"] = setupPriority
+                # Fix - GLH - 2-18-19 #
+                lsplist.append(vcdict)
+                logging.info(
+                    "Collected tunnel " + str(
+                        tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+            else:
+                logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
+            vcdict = {}
+        else:
+            logging.warning("Tunnel unavailable: " + fdn)
+    logging.info("Completed collecting LSPs...")
+    with open("jsonfiles/lsps.json", "wb") as f:
+        f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+        
+        
 def collectlsps_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
