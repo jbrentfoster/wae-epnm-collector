@@ -17,7 +17,8 @@ def collection_router(collection_call):
         collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == 'allnodes':
         logging.info("Collection all node equipment details...")
-        collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collectAllNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == '4knodes':
         logging.info("Collecting 4k nodes...")
         collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
@@ -101,7 +102,7 @@ def collection_router(collection_call):
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collection all nodes equipment information...")
-    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # collectAllNodes_json_new(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 nodes...")
     # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting L1 links...")
@@ -268,7 +269,42 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(l1links, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
+    uri = "/data/v1/cisco-resource-physical:node?.depth=1"
+    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    jsonaddition = json.loads(jsonresponse)
 
+    with open("jsongets/all-nodes.json", 'wb') as f:
+        f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+    with open("jsongets/all-nodes.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+
+    thejson = json.loads(jsonresponse)
+
+    nodes = []
+    # i = 1
+    with open("jsonfiles/all-nodes.json", 'wb') as f:
+        for node in thejson['com.response-message']['com.data']['nd.node']:
+            # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
+            try:
+                node_fdn = node['nd.fdn']
+                nodeName = node['nd.name']
+                logging.info("Processing for equipment information " + nodeName)
+                product_type = node['nd.product-type']
+                software_version = node['nd.software-version']
+                management_address = node['nd.management-address']
+                description = node['nd.description']
+                nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
+                              'management-address': management_address, 'description': description})
+            except Exception as err:
+                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
+            # i += 1
+        f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+        
+        
 def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
