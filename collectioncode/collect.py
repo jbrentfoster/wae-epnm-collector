@@ -23,6 +23,9 @@ def collection_router(collection_call):
         logging.info("Collecting 4k nodes...")
         #collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         collect4kNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    if collection_call['type'] == "lsps":
+        logging.info("Collecting LSPs...")
+        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topological links...")
         #collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -96,9 +99,7 @@ def collection_router(collection_call):
         logging.info("Getting multi-layer routes for OTN services...")
         collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                 collection_call['epnmpassword'])
-    if collection_call['type'] == "lsps":
-        logging.info("Collecting LSPs...")
-        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+    
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
