@@ -21,7 +21,8 @@ def collection_router(collection_call):
         collectAllNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == '4knodes':
         logging.info("Collecting 4k nodes...")
-        collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collect4kNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topological links...")
         #collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -108,7 +109,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, seednode_id):
     # logging.info("Collecting L1 links...")
     # collectL1links_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting 4k nodes...")
-    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    # collect4kNodes_json_new(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS topology...")
     # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, seednode_id)
     # logging.info("Collecting ISIS hostnames...")
@@ -354,7 +355,45 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
+        
+def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
+    uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series"
+    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    jsonaddition = json.loads(jsonresponse)
 
+    with open("jsongets/4k-nodes.json", 'wb') as f:
+        f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+    with open("jsongets/4k-nodes.json", 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+
+    thejson = json.loads(jsonresponse)
+
+    l1nodes = {}
+    i = 1
+    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
+        for node in thejson['com.response-message']['com.data']['nd.node']:
+            if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
+                nodeName = node['nd.name']
+                fdn = node['nd.fdn']
+                logging.info("Processing node " + nodeName)
+                try:
+                    latitude = node['nd.latitude']
+                    longitude = node['nd.longitude']
+                except KeyError:
+                    logging.error(
+                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                l1nodes['Node' + str(i)] = dict(
+                    [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
+                i += 1
+        # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        json.dump(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': '))
+        f.close()
+        
+        
 def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
