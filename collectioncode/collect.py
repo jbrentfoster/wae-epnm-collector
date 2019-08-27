@@ -17,22 +17,22 @@ def collection_router(collection_call):
         collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == 'allnodes':
         logging.info("Collection all node equipment details...")
-        #collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-        collectAllNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collectAllNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == '4knodes':
         logging.info("Collecting 4k nodes...")
-        #collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-        collect4kNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collect4kNodes_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "lsps":
         logging.info("Collecting LSPs...")
-        #collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-        collectlsps_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #collectlsps_json_new(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == "mpls":
         logging.info("Collecting MPLS topological links...")
-        #collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                               collection_call['epnmpassword'])
-        collect_mpls_links_json_new(collection_call['baseURL'], collection_call['epnmuser'],
+        collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
                                        collection_call['epnmpassword'])
+        #collect_mpls_links_json_new(collection_call['baseURL'], collection_call['epnmuser'],
+        #                               collection_call['epnmpassword'])
         logging.info("Collecting MPLS nodes...")
         collectMPLSnodes()
         logging.info("Collecting MPLS topology...")
