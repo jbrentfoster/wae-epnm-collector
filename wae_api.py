@@ -15,7 +15,7 @@ import argparse
 import time
 from multiprocessing.dummy import Pool as ThreadPool
 
-thread_count = 12
+thread_count = 6
 
 def main():
     # Get path for collection files from command line arguments
