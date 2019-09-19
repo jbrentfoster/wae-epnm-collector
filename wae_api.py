@@ -127,6 +127,11 @@ def main():
         fileName = os.path.join(cwd, 'planfiles/blank.pln')
         plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
 
+        #######################################
+        #
+        #  Experimental
+        #
+        #######################################
         # Read node coordinates file into a dict
         # nodecoordinates = []
         # with open('waecode/node_coordinates.csv', 'rb') as f:
@@ -165,6 +170,11 @@ def main():
             f.close()
         waecode.planbuild.generateL1links(plan, l1linksdict)
 
+        #######################################
+        #
+        #  Experimental
+        #
+        #######################################
         # # Add MPLS nodes to plan
         # logging.info("Adding nodes to plan...")
         # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
@@ -216,7 +226,12 @@ def main():
         # Add L3 links to plan and stitch to L1 links where applicable
         logging.info("Adding L3 links...")
         waecode.planbuild.generateL3circuits(plan, l3linksdict)
-
+    
+        #######################################
+        #
+        #  Experimental
+        #
+        #######################################
         # # Add OTN links to plan
         # logging.info("Adding OTN links...")
         # with open("jsonfiles/otn_links.json", 'rb') as f:
