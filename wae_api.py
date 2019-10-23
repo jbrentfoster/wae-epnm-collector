@@ -17,19 +17,30 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 thread_count = 6
 
+def get_l3_nodes(state):
+    with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+        l3linksdict = json.load(f)
+        f.close()
+    l3nodes = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {'Name': k1}
+        l3nodes.append(tmpnode)
+    return l3nodes, l3linksdict
+
+
 def main():
     # Get path for collection files from command line arguments
     parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
     parser.add_argument('archive_root', metavar='N', type=str,
-                        help='the local path for storing collections')
-    parser.add_argument('seednode_id', metavar='N', type=str,
-                        help="Host ID of the seed node (must be XR!) for network discovery")
+                        help='Please provide the local path to your archive directory')
+    parser.add_argument('state_or_states', metavar='N', type=str,
+                        help="Please provide a list of states for mplstopo discovery. 'New York, Florida'")
     parser.add_argument('epnm_ipaddr', metavar='N', type=str,
-                        help="Host ID of the seed node (must be XR!) for network discovery")
+                        help="Please provide the EPNM Server address for API calls")
     parser.add_argument('epnm_user', metavar='N', type=str,
-                        help="Host ID of the seed node (must be XR!) for network discovery")
+                        help="Please provide the EPNM User name for the EPNM Server")
     parser.add_argument('epnm_pass', metavar='N', type=str,
-                        help="Host ID of the seed node (must be XR!) for network discovery")
+                        help="Please provide the EPNM password for the EPNM Server")
     parser.add_argument('phases', metavar='N', type=str,
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('--build_plan', action='store_true',
@@ -48,6 +59,7 @@ def main():
     phases = args.phases
     build_plan = args.build_plan
     delete_previous = args.delete_previous
+    state_or_states_list = args.state_or_states.split(',')
 
     # # Set up logging
     # try:
@@ -94,7 +106,7 @@ def main():
                         {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'seednodeid': args.seednode_id},
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
                         {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         ]
     phases_to_run = []
@@ -111,7 +123,7 @@ def main():
     pool.close()
     pool.join()
 
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, args.seednode_id)
+    #collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -187,84 +199,85 @@ def main():
         # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
 
         # Add L3 nodes to plan
-        logging.info("Adding L3 nodes...")
-        with open("jsonfiles/l3Links_final.json", 'rb') as f:
-            l3linksdict = json.load(f)
-            f.close()
-        l3nodes = []
-        for k1, v1 in l3linksdict.items():
-            tmpnode = {'Name': k1}
-            l3nodes.append(tmpnode)
-        waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+        for state in state_or_states_list:
+            logging.info("Adding L3 nodes...")
+            l3nodes, l3linksdict = get_l3_nodes(state)
+            waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+            # with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+            #     l3linksdict = json.load(f)
+            #     f.close()
+            # l3nodes = []
+            # for k1, v1 in l3linksdict.items():
+            #     tmpnode = {'Name': k1}
+            #     l3nodes.append(tmpnode)
+            
 
-        # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
-        logging.info("Adding 4k nodes to plan...")
-        with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
-            four_k_nodes = json.load(f)
-            f.close()
-        added_nodes = []
-        for k, v in four_k_nodes.items():
-            matched = False
-            for l3_node in l3nodes:
-                if v['Name'] == l3_node['Name']:
-                    matched = True
-            if not matched:
-                tmpnode = {'Name': v['Name']}
-                added_nodes.append(tmpnode)
-        waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
+            # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
+            logging.info("Adding 4k nodes to plan...")
+            with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+                four_k_nodes = json.load(f)
+                f.close()
+            added_nodes = []
+            for k, v in four_k_nodes.items():
+                matched = False
+                for l3_node in l3nodes:
+                    if v['Name'] == l3_node['Name']:
+                        matched = True
+                if not matched:
+                    tmpnode = {'Name': v['Name']}
+                    added_nodes.append(tmpnode)
+            waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
 
-
-        # Add OCH-Trails (wavelengths) to plan
-        logging.info("Adding OCH Trails as L1 circuits to the plan...")
-        with open("jsonfiles/och_trails.json", 'rb') as f:
-            och_trails = json.load(f)
-            f.close()
-        waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
-
+            # Add L3 links to plan and stitch to L1 links where applicable
+            logging.info("Adding L3 links...")
+            waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails 
 
 
-        # Add L3 links to plan and stitch to L1 links where applicable
-        logging.info("Adding L3 links...")
-        waecode.planbuild.generateL3circuits(plan, l3linksdict)
-    
-        #######################################
-        #
-        #  Experimental
-        #
-        #######################################
-        # # Add OTN links to plan
-        # logging.info("Adding OTN links...")
-        # with open("jsonfiles/otn_links.json", 'rb') as f:
-        #     otn_links = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
-        #
-        # TODO see if assignSites is breaking something (seems to be)
-        waecode.planbuild.assignSites(plan)
+            # Add OCH-Trails (wavelengths) to plan
+            logging.info("Adding OCH Trails as L1 circuits to the plan...")
+            with open("jsonfiles/och_trails.json", 'rb') as f:
+                och_trails = json.load(f)
+                f.close()
+            waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-        # read FlexLSP add-on options
-        with open("waecode/options.json", 'rb') as f:
-            options = json.load(f)
-            f.close()
+            #######################################
+            #
+            #  Experimental
+            #
+            #######################################
+            # # Add OTN links to plan
+            # logging.info("Adding OTN links...")
+            # with open("jsonfiles/otn_links.json", 'rb') as f:
+            #     otn_links = json.load(f)
+            #     f.close()
+            # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
+            #
+            # TODO see if assignSites is breaking something (seems to be)
+            waecode.planbuild.assignSites(plan)
 
-        # Add LSPs to plan
-        logging.info("Adding LSP's...")
-        l3nodeloopbacks = []
-        for k1, v1 in l3linksdict.items():
-            tmpnode = {k1: v1['Loopback Address']}
-            l3nodeloopbacks.append(tmpnode)
+            # read FlexLSP add-on options
+            with open("waecode/options.json", 'rb') as f:
+                options = json.load(f)
+                f.close()
 
-        with open("jsonfiles/lsps.json", 'rb') as f:
-            lsps = json.load(f)
-            f.close()
-        waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+            # Add LSPs to plan
+            logging.info("Adding LSP's...")
+            l3nodeloopbacks = []
+            for k1, v1 in l3linksdict.items():
+                tmpnode = {k1: v1['Loopback Address']}
+                l3nodeloopbacks.append(tmpnode)
 
-        # Add OTN services to the plan
-        logging.info("Adding ODU services to the plan...")
-        with open("jsonfiles/odu_services.json", 'rb') as f:
-            odu_services = json.load(f)
-            f.close()
-        waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
+            with open("jsonfiles/lsps.json", 'rb') as f:
+                lsps = json.load(f)
+                f.close()
+            waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+
+            # Add OTN services to the plan
+            logging.info("Adding ODU services to the plan...")
+            with open("jsonfiles/odu_services.json", 'rb') as f:
+                odu_services = json.load(f)
+                f.close()
+            waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
