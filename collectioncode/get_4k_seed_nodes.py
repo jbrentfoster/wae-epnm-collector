@@ -18,23 +18,27 @@ def get_tl_mpls_ep_ref_nodes():
 
 def get_seed_nodes():
     json_list = []
+    ## test = all availabe states located in group -1
+    test = []
     nodes_4k_dict = open_file_load_data('jsongets/4k-nodes.json')
     for node in nodes_4k_dict["com.response-message"]["com.data"]["nd.node"]:
         tmp_master = {}
         tmp_master["node"] = node["nd.fdn"]
         tmp_master['group'] = node["nd.group"]
+        ##
+        test.append(node['nd.group'][-1].split('=')[-1])
         json_list.append(tmp_master)
     return json_list
 
 
 def run_get_4k_seed_nodes():
-    all_mpls_nodes = get_tl_mpls_ep_ref_nodes()
-    all_potential_seed_nodes = get_seed_nodes()
-    final_mpls_seed_node_list = []
-    for seed_node_object in all_potential_seed_nodes:
-        if seed_node_object['node'].split('=')[-1] in all_mpls_nodes:
-            final_mpls_seed_node_list.append(seed_node_object)
-    write_results("jsonfiles/all_potential_seed_nodes.json", final_mpls_seed_node_list)
+        all_mpls_nodes = get_tl_mpls_ep_ref_nodes()
+        all_potential_seed_nodes = get_seed_nodes()
+        final_mpls_seed_node_list = []
+        for seed_node_object in all_potential_seed_nodes:
+            if seed_node_object['node'].split('=')[-1] in all_mpls_nodes:
+                final_mpls_seed_node_list.append(seed_node_object)
+        write_results("jsonfiles/all_potential_seed_nodes.json", final_mpls_seed_node_list)
 
 
 def get_potential_seednode(state_or_states):
@@ -42,7 +46,7 @@ def get_potential_seednode(state_or_states):
     if isinstance(state_or_states, list):
         for state in state_or_states:
             tmp = {}
-            tmp[state] = [json_obj for json_obj in final_seed_node_dict if json_obj['group'][-1].split('=')[-1] in state]
+            tmp[state] = [json_obj for json_obj in final_seed_node_dict for group in json_obj['group'] if state in group]
             file_name = "jsonfiles/{state}_potential_seed_nodes.json".format(state=state.replace(' ', '_'))
             write_results(file_name, tmp)
 
@@ -52,6 +56,7 @@ def write_results(file_name, data):
         os.remove(file_name)
     with open(file_name, 'wb') as f:
         f.write(json.dumps(data, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
 
 def open_file_load_data(file_name):
     with open(file_name, 'rb') as f:
@@ -75,9 +80,12 @@ def get_random_nodes_for_states(state_or_states):
 
 if __name__ == "__main__":
     ### System Arguments ###
-    state_or_states = ['All Locations']
+    state_or_states = ['New York', 'Florida', 'New Jersey', 'Pennsylvania']
     ########################################
     
     run_get_4k_seed_nodes()
+    import time
+    start = time.time()
     get_potential_seednode(state_or_states)
-    print (get_random_nodes_for_states(state_or_states))
+    end = time.time()
+    total = end - start
