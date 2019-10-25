@@ -42,7 +42,7 @@ def get_potential_seednode(state_or_states):
     if isinstance(state_or_states, list):
         for state in state_or_states:
             tmp = {}
-            tmp[state] = filter(lambda x: x['group'][-1].split('=')[-1] in state, final_seed_node_dict)
+            tmp[state] = [json_obj for json_obj in final_seed_node_dict if json_obj['group'][-1].split('=')[-1] in state]
             file_name = "jsonfiles/{state}_potential_seed_nodes.json".format(state=state.replace(' ', '_'))
             write_results(file_name, tmp)
 
@@ -59,7 +59,10 @@ def open_file_load_data(file_name):
     return data
 
 def get_random_seed_node(seed_node_list):
-    return random.choice(seed_node_list)
+    try:
+        return random.choice(seed_node_list)
+    except IndexError:
+        pass
 
 
 def get_random_nodes_for_states(state_or_states):
@@ -68,7 +71,7 @@ def get_random_nodes_for_states(state_or_states):
         seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.replace(' ', '_')))
         seed_node_choice = get_random_seed_node(seed_nodes[state])
         random_node_choices.append(seed_node_choice)
-    return random_node_choices
+    return [node for node in random_node_choices if node != None]
 
 if __name__ == "__main__":
     ### System Arguments ###
