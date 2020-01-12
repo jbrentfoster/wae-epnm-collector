@@ -1,3 +1,7 @@
+## 1.1 = refactored and changed dict methods
+
+
+
 import json
 from pprint import pprint
 import re
