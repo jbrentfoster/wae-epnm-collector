@@ -15,6 +15,7 @@ import argparse
 import time
 from multiprocessing.dummy import Pool as ThreadPool
 
+
 thread_count = 6
 
 def get_l3_nodes(state):

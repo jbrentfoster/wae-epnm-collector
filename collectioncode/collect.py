@@ -9,6 +9,7 @@ import wae_api
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 
 
+
 def collection_router(collection_call):
     if collection_call['type'] == "l1nodes":
         logging.info("Collecting L1 nodes...")
@@ -98,21 +99,21 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
-    ##  "l1nodes":
-    logging.info("Collecting L1 nodes...")
-    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    ##  "l1links":
-    logging.info("Collecting L1 links...")
-    collectL1links_json(baseURL, epnmuser, epnmpassword)
-    ## 'allnodes':
-    logging.info("Collection all node equipment details...")
-    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
-    ##  '4knodes':
-    logging.info("Collecting 4k nodes...")
-    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
-    ##   "lsps":
-    logging.info("Collecting LSPs...")
-    collectlsps_json(baseURL, epnmuser, epnmpassword)
+    # ##  "l1nodes":
+    # logging.info("Collecting L1 nodes...")
+    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    # ##  "l1links":
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # ## 'allnodes':
+    # logging.info("Collection all node equipment details...")
+    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # ##  '4knodes':
+    # logging.info("Collecting 4k nodes...")
+    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    # ##   "lsps":
+    # logging.info("Collecting LSPs...")
+    # collectlsps_json(baseURL, epnmuser, epnmpassword)
     ## "mpls":
     logging.info("Collecting 4k nodes...")
     collect4kNodes_json(baseURL, epnmuser, epnmpassword)
@@ -148,40 +149,6 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
                                     epnmpassword)
     logging.info("Adding vc-fdn to L3links...")
     add_vcfdn_l3links(state_or_states)
-
-    ## "optical":
-    logging.info("Collecting optical virtual connections...")
-    collectvirtualconnections_json(baseURL, epnmuser,
-                                    epnmpassword)
-    logging.info("Parsing OCH-trails...")
-    parse_vc_optical_och_trails()
-
-    logging.info("Getting OCH-trails wavelengths...")
-    add_wavelength_vc_optical_och_trails()
-
-    logging.info("Collection OTU links...")
-    collect_otu_links_json(baseURL, epnmuser,
-                            epnmpassword)
-
-    logging.info("Collecting OTU termination points...")
-    collect_otu_termination_points_threaded(baseURL, epnmuser,
-                                            epnmpassword)
-
-    logging.info("Adding OCH trails to OTU links...")
-    add_och_trails_to_otu_links()
-
-    logging.info("Collecting L1 paths for OCH-trails...")
-    addL1hopstoOCHtrails_threaded(baseURL, epnmuser,
-                                            epnmpassword)
-    logging.info("Re-ordering L1 hops for OCH-trails...")
-    reorderl1hops_och_trails()
-    logging.info("Parsing OTN links from OTU link data...")
-    parse_otn_links()
-    logging.info("Parsing ODU services from vc-optical data...")
-    parse_odu_services()
-    logging.info("Getting multi-layer routes for OTN services...")
-    collect_multilayer_route_odu_services_threaded(baseURL, epnmuser,
-                                            epnmpassword)
 
 
 
@@ -505,7 +472,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                logging.info("Job status: " + status)
+                logging.info("Job status: " + str(status))
                 if status == "SUCCESS":
                     logging.info("Successfully collected MPLS topology...")
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get('ra.deploy-result').get('ra.transcript')
@@ -515,7 +482,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                     sys.exit("Collection error.  Ending execution.")
             except KeyError:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
-                logging.info("Run status: " + status)
+                logging.info("Run status: " + str(status))
                 if status == "COMPLETED":
                     logging.info("Successfully collected MPLS topology...")
                     results = thejson['ra.deploy-result']['ra.transcript']
@@ -567,7 +534,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                logging.info("Job status: " + status)
+                logging.info("Job status: " + str(status))
                 if status == "SUCCESS":
                     logging.info("Successfully collected ISIS hostnames...")
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get('ra.deploy-result').get('ra.transcript')
@@ -979,12 +946,12 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
                     continue
                 tp_dict = {}
                 tp_dict.setdefault('ch-fdn', tp.get('tp.fdn'))
-                tp_dict.setdefault('tp-fdn', tpfdn))
+                tp_dict.setdefault('tp-fdn', tpfdn)
                 tp_dict.setdefault('layer-rate', tp.get('tp.layer-rate'))
                 tp_dict.setdefault('bandwidth', tp.get('tp.if-speed'))
                 tp_dict.setdefault('channel', tp.get('tp.fdn').split('!')[2].split(';')[0].split('=')[2])
                 try:
-                    logging.info("OTU TP termination-mode is Ethernet " + tp.get('tp.fdn']))
+                    logging.info("OTU TP termination-mode is Ethernet " + tp.get('tp.fdn'))
                     tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
                     tp_data.append(tp_dict)
                 except Exception as error:
@@ -1091,7 +1058,7 @@ def parse_otn_links():
                 if tp.get('channels'):
                     for channel in tp.get('channels'):
                         tmp_channel = {}
-                        tmp_channel.setdefault('channel'], channel.get('channel'))
+                        tmp_channel.setdefault('channel', channel.get('channel'))
                         tmp_channel.setdefault('node', tp.get('node'))
                         if channel.get('termination-mode') == 'OTN':
                             otn_channels.append(tmp_channel)
