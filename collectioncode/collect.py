@@ -208,6 +208,8 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
     with open("jsongets/l1-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
+
+
     with open("jsongets/l1-nodes.json", 'rb') as f:
         jsonresponse = f.read()
         f.close()
@@ -216,23 +218,23 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
 
     l1nodes = {}
     i = 1
+    for node in thejson['com.response-message']['com.data']['nd.node']:
+        if node.get('nd.product-series') == "Cisco Network Convergence System 2000 Series":
+            nodeName = node.get('nd.name')
+            logging.info("Processing node " + nodeName)
+            try:
+                latitude = node.get('nd.latitude')
+                longitude = node.get('nd.longitude')
+            except KeyError:
+                logging.error(
+                    "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+            l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
+            i += 1
+
     with open("jsonfiles/l1Nodes.json", 'wb') as f:
-        for node in thejson['com.response-message']['com.data']['nd.node']:
-            if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
-                nodeName = node['nd.name']
-                logging.info("Processing node " + nodeName)
-                try:
-                    latitude = node['nd.latitude']
-                    longitude = node['nd.longitude']
-                except KeyError:
-                    logging.error(
-                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                l1nodes['Node' + str(i)] = dict([('Name', nodeName), ('Latitude', latitude), ('Longitude', longitude)])
-                i += 1
         f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def collectL1links_json(baseURL, epnmuser, epnmpassword):
@@ -244,8 +246,8 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -257,39 +259,39 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/l1-links.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/l1-links.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
 
     thejson = json.loads(jsonresponse)
 
     l1links = {}
     i = 1
+    for link in thejson.get('com.response-message').get('com.data').get('topo.topological-link'):
+        fdn = link.get('topo.fdn')
+        discovered_name = link.get('topo.discovered-name')
+        nodes = []
+        try:
+            endpointlist = link.get('topo.endpoint-list').get('topo.endpoint')
+        except Exception as err:
+            logging.warn("L1 Link missing valid endpoint-list " + fdn + " ...removing this link from L1 topology.")
+            continue
+        logging.info("Processing L1 link " + fdn)
+        if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
+            for ep in endpointlist:
+                endpoint = ep.get('topo.endpoint-ref')
+                node = endpoint.split('!')[1].split('=')[1]
+                nodes.append(node)
+            if len(nodes) > 1:
+                duplicates = False
+                if not duplicates:
+                    l1links['Link' + str(i)] = dict([('fdn', fdn)])
+                    l1links['Link' + str(i)]['Nodes'] = nodes
+                i += 1
+
     with open("jsonfiles/l1Links.json", 'wb') as f:
-        for link in thejson['com.response-message']['com.data']['topo.topological-link']:
-            fdn = link['topo.fdn']
-            discovered_name = link['topo.discovered-name']
-            nodes = []
-            try:
-                endpointlist = link['topo.endpoint-list']['topo.endpoint']
-            except Exception as err:
-                logging.warn("L1 Link missing valid endpoint-list " + fdn + " ...removing this link from L1 topology.")
-                continue
-            logging.info("Processing L1 link " + fdn)
-            if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
-                for ep in endpointlist:
-                    endpoint = ep['topo.endpoint-ref']
-                    node = endpoint.split('!')[1].split('=')[1]
-                    nodes.append(node)
-                if len(nodes) > 1:
-                    duplicates = False
-                    if not duplicates:
-                        l1links['Link' + str(i)] = dict([('fdn', fdn)])
-                        l1links['Link' + str(i)]['Nodes'] = nodes
-                    i += 1
         f.write(json.dumps(l1links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
 
 def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
     uri = "/data/v1/cisco-resource-physical:node?.depth=1"
@@ -298,33 +300,32 @@ def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/all-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/all-nodes.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
 
     thejson = json.loads(jsonresponse)
 
     nodes = []
     # i = 1
+    for node in thejson.get('com.response-message').get('com.data').get('nd.node'):
+        # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
+        try:
+            node_fdn = node.get('nd.fdn')
+            nodeName = node.get('nd.name')
+            logging.info("Processing for equipment information " + nodeName)
+            product_type = node.get('nd.product-type')
+            software_version = node.get('nd.software-version')
+            management_address = node.get('nd.management-address')
+            description = node.get('nd.description')
+            nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
+                            'management-address': management_address, 'description': description})
+        except Exception as err:
+            logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
+        # i += 1
+
     with open("jsonfiles/all-nodes.json", 'wb') as f:
-        for node in thejson['com.response-message']['com.data']['nd.node']:
-            # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
-            try:
-                node_fdn = node['nd.fdn']
-                nodeName = node['nd.name']
-                logging.info("Processing for equipment information " + nodeName)
-                product_type = node['nd.product-type']
-                software_version = node['nd.software-version']
-                management_address = node['nd.management-address']
-                description = node['nd.description']
-                nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
-                              'management-address': management_address, 'description': description})
-            except Exception as err:
-                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
-            # i += 1
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
         
         
 def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
@@ -335,8 +336,8 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
         uri = "/data/v1/cisco-resource-physical:node?.depth=1&.startIndex=" + str(startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -348,10 +349,10 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/all-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/all-nodes.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
 
     thejson = json.loads(jsonresponse)
 
@@ -384,35 +385,36 @@ def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/4k-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
+
     with open("jsongets/4k-nodes.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
 
     thejson = json.loads(jsonresponse)
 
     l1nodes = {}
     i = 1
-    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
-        for node in thejson['com.response-message']['com.data']['nd.node']:
-            if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
-                nodeName = node['nd.name']
-                fdn = node['nd.fdn']
-                logging.info("Processing node " + nodeName)
-                try:
-                    latitude = node['nd.latitude']
-                    longitude = node['nd.longitude']
-                except KeyError:
-                    logging.error(
-                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                l1nodes['Node' + str(i)] = dict(
-                    [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
-                i += 1
+    for node in thejson['com.response-message']['com.data']['nd.node']:
+        if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
+            nodeName = node['nd.name']
+            fdn = node['nd.fdn']
+            logging.info("Processing node " + nodeName)
+            try:
+                latitude = node['nd.latitude']
+                longitude = node['nd.longitude']
+            except KeyError:
+                logging.error(
+                    "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+            l1nodes['Node' + str(i)] = dict(
+                [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
+            i += 1
         # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
         json.dump(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': '))
-        f.close()
         
         
 def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
@@ -424,8 +426,8 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
             startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -437,50 +439,49 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/4k-nodes.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/4k-nodes.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
 
     thejson = json.loads(jsonresponse)
 
     l1nodes = {}
     i = 1
-    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
-        for node in thejson['com.response-message']['com.data']['nd.node']:
-            if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
-                nodeName = node['nd.name']
-                fdn = node['nd.fdn']
-                logging.info("Processing node " + nodeName)
-                try:
-                    latitude = node['nd.latitude']
-                    longitude = node['nd.longitude']
-                except KeyError:
-                    logging.error(
-                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                l1nodes['Node' + str(i)] = dict(
-                    [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
-                i += 1
+    for node in thejson['com.response-message']['com.data']['nd.node']:
+        if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
+            nodeName = node['nd.name']
+            fdn = node['nd.fdn']
+            logging.info("Processing node " + nodeName)
+            try:
+                latitude = node['nd.latitude']
+                longitude = node['nd.longitude']
+            except KeyError:
+                logging.error(
+                    "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+            l1nodes['Node' + str(i)] = dict(
+                [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
+            i += 1
         # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
         json.dump(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': '))
-        f.close()
 
 
 def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
     with open("collectioncode/post-cli-template-mpls.json", 'r') as f:
         jsonbody = f.read()
-        f.close()
+
     jsonbody_js = json.loads(jsonbody)
     ## Get Seed Nodes Based on State or States (New York, Flordia)
     run_get_4k_seed_nodes()
     get_potential_seednode(state_or_states)
     seed_node_list = get_random_nodes_for_states(state_or_states)
     for seed_node in seed_node_list:
-        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node['node']
+        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node.get('node')
         jsonbody = json.dumps(jsonbody_js)
-
         uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
         jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
         try:
@@ -489,7 +490,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
             logging.critical('EPNM server is not configured with "show mpls topology" CLI template.  Halting execution.')
             sys.exit()
 
-        jobname = thejson['ra.config-response']['ra.job-status']['ra.job-name']
+        jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
         logging.info('Successfully submitted the API call to retrieve the MPLS topology.')
         logging.info('jobname is: ' + jobname)
@@ -503,17 +504,17 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
             jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
             thejson = json.loads(jsonresponse)
             try:
-                status = thejson['ra.config-response']['ra.job-status']['ra.status']
+                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
                 logging.info("Job status: " + status)
                 if status == "SUCCESS":
                     logging.info("Successfully collected MPLS topology...")
-                    results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
+                    results = thejson.get('ra.config-response').get('ra.deploy-result-list').get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
                     logging.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except KeyError:
-                status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
+                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
                 logging.info("Run status: " + status)
                 if status == "COMPLETED":
                     logging.info("Successfully collected MPLS topology...")
@@ -524,7 +525,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                     sys.exit("Collection error.  Ending execution.")
 
         logging.info("Database received.")
-        with open("jsongets/{state}_mplstopo.txt".format(state=seed_node['group'][-1].split('=')[-1].replace(' ', '_')), 'wb') as f:
+        with open("jsongets/{state}_mplstopo.txt".format(state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 
@@ -532,14 +533,14 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
 def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
     with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
         jsonbody = f.read()
-        f.close()
+
     jsonbody_js = json.loads(jsonbody)
     ## Get Seed Nodes Based on State or States (New York, Flordia)
     run_get_4k_seed_nodes()
     get_potential_seednode(state_or_states)
     seed_node_list = get_random_nodes_for_states(state_or_states)
     for seed_node in seed_node_list:
-        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node['node']
+        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node.get('node')
         jsonbody = json.dumps(jsonbody_js)
 
         uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
@@ -551,7 +552,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
             logging.critical('EPNM server is not configured with "show isis hostname" CLI template.  Halting execution.')
             sys.exit()
 
-        jobname = thejson['ra.config-response']['ra.job-status']['ra.job-name']
+        jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
         logging.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
         logging.info('jobname is: ' + jobname)
@@ -565,28 +566,28 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
             jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
             thejson = json.loads(jsonresponse)
             try:
-                status = thejson['ra.config-response']['ra.job-status']['ra.status']
+                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
                 logging.info("Job status: " + status)
                 if status == "SUCCESS":
                     logging.info("Successfully collected ISIS hostnames...")
-                    results = thejson['ra.config-response']['ra.deploy-result-list']['ra.deploy-result']['ra.transcript']
+                    results = thejson.get('ra.config-response').get('ra.deploy-result-list').get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
                     logging.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except KeyError:
-                status = thejson['ra.config-response']['ra.job-status']['ra.run-status']
+                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
                 logging.info("Run status: " + status)
                 if status == "COMPLETED":
                     logging.info("Successfully collected ISIS hostnames...")
-                    results = thejson['ra.deploy-result']['ra.transcript']
+                    results = thejson.get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
                     logging.critical("Could not get ISIS hostnames!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
 
         logging.info("Database received.")
-        with open("jsongets/{state}_hostnames.txt".format(state=seed_node['group'][-1].split('=')[-1].replace(' ', '_')), 'wb') as f:
+        with open("jsongets/{state}_hostnames.txt".format(state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 
@@ -594,7 +595,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
 def process_hostnames(state_or_states):
     for state in state_or_states:
         nodes = []
-        with open("jsongets/{state}_hostnames.txt".format(state=state.replace(' ', '_')), 'rb') as f:
+        with open("jsongets/{state}_hostnames.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             lines = f.read().splitlines()
             ilines = lines
             c = 0
@@ -612,17 +613,15 @@ def process_hostnames(state_or_states):
                     else:
                         break
                 c += 1
-            f.close()
-        print (nodes)
-        with open("jsonfiles/{state}_hostnames.json".format(state=state.replace(' ', '_')), "wb") as f:
+
+        with open("jsonfiles/{state}_hostnames.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-            f.close()
 
 
 def processMPLS(state_or_states):
     for state in state_or_states:
         nodes = {}
-        with open("jsongets/{state}_mplstopo.txt".format(state=state.replace(' ', '_')), 'rb') as f:
+        with open("jsongets/{state}_mplstopo.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             lines = f.read().splitlines()
             ilines = lines
             c = 0
@@ -708,34 +707,33 @@ def processMPLS(state_or_states):
                         cleaned_srlgs.append(''.join(srlg.split()))
                     nodes[node]['Links'][linkid]['SRLGs'] = cleaned_srlgs
                 c += 1
-            f.close()
 
-            with open("jsonfiles/{state}_l3Links.json".format(state=state.replace(' ', '_')), "wb") as f:
+            with open("jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
                 f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-                f.close()
+
 
 
 def hostname_lookup(isis_id, state):
-    with open("jsonfiles/{state}_hostnames.json".format(state=state.replace(' ', '_')), 'rb') as f:
+    with open("jsonfiles/{state}_hostnames.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
     hostnames = json.loads(jsonresponse)
     #print (hostnames)
     for host in hostnames:
-        if host['isis_id'] == isis_id:
-            return host['hostname']
+        if host.get('isis_id') == isis_id:
+            return host.get('hostname')
     return None
 
 
 def collectMPLSnodes():
     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
         thejson = json.load(f)
-        f.close()
-    mpls_links = thejson['com.response-message']['com.data']['topo.topological-link']
+
+    mpls_links = thejson.get('com.response-message').get('com.data').get('topo.topological-link')
     mpls_nodes = []
     for mpls_link in mpls_links:
         try:
-            tmp_ep_list = mpls_link['topo.endpoint-list']['topo.endpoint']
+            tmp_ep_list = mpls_link.get('topo.endpoint-list').get('topo.endpoint')
             if len(tmp_ep_list) == 2:
                 for ep in tmp_ep_list:
                     tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
@@ -745,42 +743,17 @@ def collectMPLSnodes():
 
     with open("jsonfiles/mpls_nodes.json", "wb") as f:
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states):
-    # incomplete = True
-    # startindex = 0
-    # jsonmerged = {}
-    # while incomplete:
-    #     uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
-    #         startindex)
-    #     jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    #     jsonaddition = json.loads(jsonresponse)
-    #     firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-    #     lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
-    #     if (lastindex - firstindex) == 99 and lastindex != -1:
-    #         startindex += 100
-    #         merge(jsonmerged, jsonaddition)
-    #     elif lastindex == -1:
-    #         incomplete = False
-    #     else:
-    #         incomplete = False
-    #         merge(jsonmerged, jsonaddition)
-    #
-    # with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
-    #     f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    #     f.close()
     for state in state_or_states:
         with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
             jsonresponse = f.read()
-            f.close()
 
         thejson = json.loads(jsonresponse)
 
-        with open("jsonfiles/{state}_l3Links.json".format(state=state.replace(' ', '_')), 'rb') as f:
+        with open("jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             l3links = json.load(f)
-            f.close()
 
         names = []
         for k1, v1 in l3links.items():
@@ -794,14 +767,12 @@ def add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states):
                         name1 = n1IP + '-' + n2IP
                         name2 = n2IP + '-' + n1IP
                         matchedlink = False
-                        for item in thejson['com.response-message']['com.data']['topo.topological-link']:
-                            # for item in thexml.getElementsByTagName("ns17:topological-link"):
-                            fdn = item['topo.fdn']
-                            discoveredname = item['topo.discovered-name']
+                        for item in thejson.get('com.response-message').get('com.data').get('topo.topological-link'):
+                            fdn = item.get('topo.fdn')
+                            discoveredname = item.get('topo.discovered-name')
                             if (name1 == discoveredname or name2 == discoveredname):
                                 logging.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
                                 matchedlink = True
-                                # names.append(discoveredname)
                                 v3['discoveredname'] = discoveredname
                                 # try:
                                 #     if isinstance(item['topo.endpoint-list']['topo.endpoint'], list):
@@ -813,17 +784,17 @@ def add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states):
                                 #     logging.warn("Removing link from topology...")
                                 #     v2.pop(k3)
                                 try:
-                                    parse1 = item['topo.endpoint-list']['topo.endpoint'][0]['topo.endpoint-ref']
+                                    parse1 = item.get('topo.endpoint-list').get('topo.endpoint')[0].get('topo.endpoint-ref')
                                     node1 = parse1.split('!')[1].split('=')[1]
                                     node1intf = parse1.split('!')[2].split('=')[2]
                                     node1intfparsed = node1intf.split('-')[0]
 
-                                    parse2 = item['topo.endpoint-list']['topo.endpoint'][1]['topo.endpoint-ref']
+                                    parse2 = item.get('topo.endpoint-list').get('topo.endpoint')[1].get('topo.endpoint-ref')
                                     node2 = parse2.split('!')[1].split('=')[1]
                                     node2intf = parse2.split('!')[2].split('=')[2]
                                     node2intfparsed = node2intf.split('-')[0]
 
-                                    if node2 == v3['Neighbor']:
+                                    if node2 == v3.get('Neighbor'):
                                         v3['Neighbor Intf'] = node2intfparsed
                                         v3['Local Intf'] = node1intfparsed
                                         v3['Link Speed'], v3['lr type'], v3['Bandwidth'] = parseintftype(node1intfparsed)
@@ -846,19 +817,9 @@ def add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states):
                                 "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
                             logging.warn("Removing link from topology...")
                             v2.pop(k3)
-        with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.replace(' ', '_')), "wb") as f:
+        with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-            f.close()
 
-        
-def collect_mpls_links_json_new(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-resource-network:topological-link?.full=true&topo-layer=mpls-link-layer"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    thejson = json.loads(jsonresponse)
-    with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
-        f.write(json.dumps(thejson, f, sort_keys=True, indent=4, separators=(',', ': ')))
-    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
-        jsonresponse = f.read()
         
 
 def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
@@ -870,8 +831,8 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
             startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -883,46 +844,6 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/tl-mpls-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
-    with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
-        jsonresponse = f.read()
-        f.close()
-#
-#     thejson = json.loads(jsonresponse)
-#     mpls_links = []
-#     for item in thejson['com.response-message']['com.data']['topo.topological-link']:
-#         try:
-#             mpls_link = {}
-#             termination_points = []
-#             fdn = item['topo.fdn']
-#             logging.info("Collecting MPLS link " + fdn)
-#             discoveredname = item['topo.discovered-name']
-#             ep_list = item['topo.endpoint-list']['topo.endpoint']
-#             endpoints = []
-#             for ep in ep_list:
-#                 tmptp = {}
-#                 tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-#                 tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
-#                 # tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
-#                 #     'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
-#                 tmptp['tp-fdn'] = ep['topo.endpoint-ref'] + "&containedCTP=true"
-#                 # try:
-#                 #     tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
-#                 # except Exception as err:
-#                 #     tmptp['port-num'] = tmptp['port'].split('OTU4')[1]
-#                 termination_points.append(tmptp)
-#             mpls_link['fdn'] = fdn
-#             mpls_link['discoveredname'] = discoveredname
-#             mpls_link['termination-points'] = termination_points
-#             if len(ep_list) == 2:
-#                 mpls_links.append(mpls_link)
-#             else:
-#                 logging.warn("Endpoint list for " + fdn + " is incomplete!")
-#         except Exception as error:
-#             logging.warn("Invalid MPLS topo link!")
-#     with open("jsonfiles/mpls_links.json", "wb") as f:
-#         f.write(json.dumps(mpls_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-#         f.close()
 
 
 def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
@@ -934,8 +855,8 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
             startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -947,60 +868,56 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/tl-otu-link-layer.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/tl-otu-link-layer.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
 
     thejson = json.loads(jsonresponse)
 
     otu_links = []
-    for item in thejson['com.response-message']['com.data']['topo.topological-link']:
+    for item in thejson.get('com.response-message').get('com.data').get('topo.topological-link'):
         try:
             otu_link = {}
             termination_points = []
-            fdn = item['topo.fdn']
+            fdn = item.get('topo.fdn')
             logging.info("Collecting OTU link " + fdn)
-            discoveredname = item['topo.discovered-name']
-            capacity = item['topo.total-capacity']
-            ep_list = item['topo.endpoint-list']['topo.endpoint']
+            discoveredname = item.get('topo.discovered-name')
+            capacity = item.get('topo.total-capacity')
+            ep_list = item.get('topo.endpoint-list').get('topo.endpoint')
             endpoints = []
             for ep in ep_list:
                 tmptp = {}
-                tmptp['node'] = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
-                tmptp['port'] = ep['topo.endpoint-ref'].split('!')[2].split('=')[2].split(';')[0]
-                # tmptp['tp-fdn'] = "MD=CISCO_EPNM!ND=" + tmptp['node'] + "!CTP=name=" + tmptp[
-                #     'port'] + ";lr=lr-och-transport-unit-c2&containedCTP=true"
-                tmptp['tp-fdn'] = ep['topo.endpoint-ref'] + "&containedCTP=true"
+                tmptp.setdefault('node', ep.get('topo.endpoint-ref').split('!')[1].split('=')[1])
+                tmptp.setdefault('port', ep.get('topo.endpoint-ref').split('!')[2].split('=')[2].split(';')[0])
+                tmptp.setdefault('tp-fdn', ep.get('topo.endpoint-ref') + "&containedCTP=true")
                 try:
-                    tmptp['port-num'] = tmptp['port'].split('OTUC2')[1]
+                    tmptp['port-num'] = tmptp.get('port').split('OTUC2')[1]
                 except Exception as err:
-                    tmptp['port-num'] = tmptp['port'].split('OTU4')[1]
+                    tmptp['port-num'] = tmptp.get('port').split('OTU4')[1]
                 termination_points.append(tmptp)
-            otu_link['fdn'] = fdn
-            otu_link['discoveredname'] = discoveredname
-            otu_link['capacity'] = capacity
-            # otu_link['endpoints'] = endpoints
-            otu_link['termination-points'] = termination_points
+            otu_link.setdefault('fdn', fdn)
+            otu_link.setdefault('discoveredname', discoveredname)
+            otu_link.setdefault('capacity', capacity)
+            otu_link.setdefault('termination-points', termination_points)
             if len(ep_list) == 2:
                 otu_links.append(otu_link)
             else:
                 logging.warn("Endpoint list for " + fdn + " is incomplete!")
         except Exception as error:
             logging.warn("Invalid OTU topo link!")
+
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/otu_links.json", 'rb') as f:
         otu_links = json.load(f)
-        f.close()
+
     tpfdns = []
     for otu_link in otu_links:
-        for tp in otu_link['termination-points']:
-            tpfdn = tp['tp-fdn']
+        for tp in otu_link.get('termination-points'):
+            tpfdn = tp.get('tp-fdn')
             tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'tpfdn': tpfdn}
             tpfdns.append(tpfdn_dict)
 
@@ -1011,22 +928,23 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
     pool.join()
 
     for otu_link in otu_links:
-        for tp in otu_link['termination-points']:
-            channels = []
-            for tmptp in termination_points:
-                try:
-                    for channel in tmptp:
-                        if channel['tp-fdn'] == tp['tp-fdn']:
-                            tmpchannel = channel.copy()
-                            tmpchannel.pop('tp-fdn', None)
-                            channels.append(tmpchannel)
-                except Exception as err:
-                    logging.warn("TP for OTU link is invalid.")
-            tp['channels'] = channels
+        if otu_link.get('termination-points'):
+            for tp in otu_link.get('termination-points'):
+                channels = []
+                for tmptp in termination_points:
+                    try:
+                        for channel in tmptp:
+                            if channel.get('tp-fdn') and tp.get('tp-fdn'):
+                                if channel.get('tp-fdn') == tp.get('tp-fdn'):
+                                    tmpchannel = channel.copy()
+                                    tmpchannel.pop('tp-fdn', None)
+                                    channels.append(tmpchannel)
+                    except Exception as err:
+                        logging.warn("TP for OTU link is invalid.")
+                tp.setdefault('channels', channels)
 
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def process_otu_tpfdn(tpfdn_dict):
@@ -1046,28 +964,27 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         logging.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
-            f.close()
+
         with open(filename, 'rb') as f:
             jsonresponse = json.load(f)
-            f.close()
 
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
-        termination_points = jsonresponse['com.response-message']['com.data']['tp.termination-point']
+        termination_points = jsonresponse.get('com.response-message').get('com.data').get('tp.termination-point')
         tp_data = []
         if isinstance(termination_points, list):
             is_first_tp = True
             for tp in termination_points:
-                if tp['tp.layer-rate'] == "oc:lr-och-data-unit-c2" or tp['tp.layer-rate'] == "oc:lr-och-data-unit-2":
+                if tp.get('tp.layer-rate') == "oc:lr-och-data-unit-c2" or tp.get('tp.layer-rate') == "oc:lr-och-data-unit-2":
                     logging.info("vcFDN " + tpfdn + " tp.layer-rate is oc:lr-och-data-unit-c2...skipping this tp")
                     continue
                 tp_dict = {}
-                tp_dict['ch-fdn'] = tp['tp.fdn']
-                tp_dict['tp-fdn'] = tpfdn
-                tp_dict['layer-rate'] = tp['tp.layer-rate']
-                tp_dict['bandwidth'] = tp['tp.if-speed']
-                tp_dict['channel'] = tp['tp.fdn'].split('!')[2].split(';')[0].split('=')[2]
+                tp_dict.setdefault('ch-fdn', tp.get('tp.fdn'))
+                tp_dict.setdefault('tp-fdn', tpfdn))
+                tp_dict.setdefault('layer-rate', tp.get('tp.layer-rate'))
+                tp_dict.setdefault('bandwidth', tp.get('tp.if-speed'))
+                tp_dict.setdefault('channel', tp.get('tp.fdn').split('!')[2].split(';')[0].split('=')[2])
                 try:
-                    logging.info("OTU TP termination-mode is Ethernet " + tp['tp.fdn'])
+                    logging.info("OTU TP termination-mode is Ethernet " + tp.get('tp.fdn']))
                     tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
                     tp_data.append(tp_dict)
                 except Exception as error:
@@ -1076,11 +993,11 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
                     tp_data.append(tp_dict)
         else:
             tp_dict = {}
-            tp_dict['ch-fdn'] = termination_points['tp.fdn']
-            tp_dict['tp-fdn'] = tpfdn
-            tp_dict['layer-rate'] = termination_points['tp.layer-rate']
-            tp_dict['bandwidth'] = termination_points['tp.if-speed']
-            tp_dict['channel'] = termination_points['tp.fdn'].split('!')[2].split(';')[0].split('=')[2]
+            tp_dict.setdefault('ch-fdn', termination_points.get('tp.fdn'))
+            tp_dict.setdefault('tp-fdn', tpfdn)
+            tp_dict.setdefault('layer-rate', termination_points.get('tp.layer-rate'))
+            tp_dict.setdefault('bandwidth', termination_points.get('tp.if-speed'))
+            tp_dict.setdefault('channel', termination_points.get('tp.fdn').split('!')[2].split(';')[0].split('=')[2])
             try:
                 tp_dict['termination-mode'] = termination_points['tp.optical-attributes']['tp.termination-mode']
                 tp_data.append(tp_dict)
@@ -1091,13 +1008,6 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         return tp_data
     except Exception as err:
         logging.warn("OTU termination point collection failed for tpfdn " + tpfdn)
-
-def collectvirtualconnections_json_new(baseURL, epnmuser, epnmpassword):
-    uri = "/data/v1/cisco-service-network:virtual-connection?.full=true&type=optical"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-    thejson = json.loads(jsonresponse)
-    with open("jsongets/vc-optical.json", 'wb') as f:
-        f.write(json.dumps(thejson, f, sort_keys=True, indent=4, separators=(',', ': ')))
         
         
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
@@ -1108,8 +1018,8 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -1121,34 +1031,30 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def add_vcfdn_l3links(state_or_states):
     for state in state_or_states:
-        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             l3links = json.load(f)
-            f.close()
 
         with open("jsongets/vc-optical.json", 'rb') as f:
             jsonresponse = f.read()
-            f.close()
 
         thejson = json.loads(jsonresponse)
 
-        for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+        for item in thejson.get('com.response-message').get('com.data').get('vc.virtual-connection'):
             matched_fdn = False
-            fdn = item['vc.fdn']
-            subtype = item['vc.subtype']
+            fdn = item.get('vc.fdn')
+            subtype = item.get('vc.subtype')
             if subtype == "oc:och-trail-uni":
                 vcdict = {}
-                # logging.info("Processing virtual connection: " + fdn)
                 try:
-                    for subitem in item['vc.termination-point-list']['vc.termination-point']:
-                        tmpfdn = subitem['vc.fdn']
+                    for subitem in item.get('vc.termination-point-list').get('vc.termination-point'):
+                        tmpfdn = subitem.get('vc.fdn')
                         tmpnode = tmpfdn.split('!')[1].split('=')[1]
                         tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
-                        vcdict[tmpnode] = tmpoptics
+                        vcdict.setdefault(tmpnode, tmpoptics)
                     for k1, v1 in l3links.items():
                         # logging.info "**************Nodename is: " + k1
                         for k2, v2 in v1.items():
@@ -1158,105 +1064,101 @@ def add_vcfdn_l3links(state_or_states):
                                     for node, intf in vcdict.items():
                                         if node == k1:
                                             if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
-                                                v3['vc-fdn'] = fdn
+                                                v3.setdefault('vc-fdn', fdn)
                                                 matched_fdn = True
                                                 logging.info("Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
                     if not matched_fdn:
-                        # logging.info("Could not match vc-fdn " + fdn)
                         pass
                 except KeyError:
                     logging.error("Could not get virtual connection for " + fdn)
                 except TypeError:
                     logging.error("Missing or invalid end-point list for  " + fdn)
         logging.info("Completed collecting virtual connections...")
-        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), "wb") as f:
-        # with open("jsonfiles/l3Links_add_vc.json", "wb") as f:
+        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-            f.close()
 
 
 def parse_otn_links():
     with open("jsonfiles/otu_links.json", 'rb') as f:
         otu_links = json.load(f)
-        f.close()
 
     otn_links = []
     for otu_link in otu_links:
         mpls_channels = []
         otn_channels = []
-        for tp in otu_link['termination-points']:
-            for channel in tp['channels']:
-                tmp_channel = {}
-                tmp_channel['channel'] = channel['channel']
-                tmp_channel['node'] = tp['node']
-                if channel['termination-mode'] == 'OTN':
-                    otn_channels.append(tmp_channel)
-                elif channel['termination-mode'] == 'ETHERNET_PACKET':
-                    mpls_channels.append(tmp_channel)
+        if otu_link.get('termination-points'):
+            for tp in otu_link['termination-points']:
+                if tp.get('channels'):
+                    for channel in tp.get('channels'):
+                        tmp_channel = {}
+                        tmp_channel.setdefault('channel'], channel.get('channel'))
+                        tmp_channel.setdefault('node', tp.get('node'))
+                        if channel.get('termination-mode') == 'OTN':
+                            otn_channels.append(tmp_channel)
+                        elif channel.get('termination-mode') == 'ETHERNET_PACKET':
+                            mpls_channels.append(tmp_channel)
 
         for otn_channel in otn_channels:
             if len(otn_channel) == 0: continue
             for otn_channel_compare in otn_channels:
                 if len(otn_channel_compare) == 0: continue
                 try:
-                    ch = otn_channel['channel'].split('/')[4]
-                    ch_compare = otn_channel_compare['channel'].split('/')[4]
+                    ch = otn_channel.get('channel').split('/')[4]
+                    ch_compare = otn_channel_compare.get('channel').split('/')[4]
                 except:
                     logging.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
                     ch = 1
                     ch_compare = 1
-                if otn_channel['node'] != otn_channel_compare['node'] and ch == ch_compare:
+                if otn_channel.get('node') != otn_channel_compare.get('node') and ch == ch_compare:
                     otn_link = {}
                     otn_link_ep = {}
-                    otn_link['name'] = "OTN link " + otn_channel['node'] + " to " + otn_channel_compare['node'] + " " + otn_channel['channel']
-                    otn_link['name'] = otu_link['fdn'].split("=")[2] + " ODU4 channel " + ch
+                    otn_link.setdefault('name', "OTN link " + otn_channel.get('node') + " to " + otn_channel_compare.get('node') + " " + otn_channel.get('channel'))
+                    otn_link.setdefault('name', otu_link.get('fdn').split("=")[2] + " ODU4 channel " + ch)
                     try:
-                        otn_link['och-trail-fdn'] = otu_link['och-trail-fdn']
-                        otn_link['otu-link-fdn'] = otu_link['fdn']
+                        otn_link.setdefault('och-trail-fdn', otu_link.get('och-trail-fdn'))
+                        otn_link.setdefault('otu-link-fdn', otu_link.get('fdn'))
                         otn_link_endpoints = []
-                        otn_link_endpoints.append({'node': otn_channel['node'], 'channel': otn_channel['channel']})
-                        otn_link_endpoints.append({'node': otn_channel_compare['node'], 'channel': otn_channel_compare['channel']})
-                        otn_link['endpoints'] = otn_link_endpoints
+                        otn_link_endpoints.append({'node': otn_channel.get('node'), 'channel': otn_channel.get('channel')})
+                        otn_link_endpoints.append({'node': otn_channel_compare.get('node'), 'channel': otn_channel_compare.get('channel')})
+                        otn_link.setdefault('endpoints', otn_link_endpoints)
                         otn_links.append(otn_link)
                         otn_channels.pop(0)
-                        logging.info("Successfully parsed OTN link from OTU link " + otu_link['fdn'])
+                        logging.info("Successfully parsed OTN link from OTU link " + otu_link.get('fdn'))
                     except Exception as err:
-                        logging.warn("Could not parse OTN link from OTU link for " + otu_link['fdn'])
+                        logging.warn("Could not parse OTN link from OTU link for " + otu_link.get('fdn'))
 
     with open("jsonfiles/otn_links.json", "wb") as f:
         f.write(json.dumps(otn_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def parse_vc_optical_och_trails():
     with open("jsongets/vc-optical.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
     thejson = json.loads(jsonresponse)
     och_trails = []
-    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+    for item in thejson.get('com.response-message').get('com.data').get('vc.virtual-connection'):
         vcdict = {}
-        fdn = item['vc.fdn']
-        subtype = item['vc.subtype']
+        fdn = item.get('vc.fdn')
+        subtype = item.get('vc.subtype')
         termination_points = []
         if subtype == "oc:och-trail-uni":
-            vcdict['fdn'] = fdn
-            vcdict['subtype'] = subtype
-            vcdict['termination-points'] = termination_points
-            # logging.info("Processing virtual connection: " + fdn)
+            vcdict.setdefault('fdn', fdn)
+            vcdict.setdefault('subtype', subtype)
+            vcdict.setdefault('termination-points', termination_points)
             try:
-                vcdict['trail-fdn'] = item['vc.carried-by-vc-ref-list']['vc.carried-by-vc-ref']
+                vcdict.setdefault('trail-fdn', item.get('vc.carried-by-vc-ref-list').get('vc.carried-by-vc-ref'))
             except Exception as error:
                 logging.warn("Could not determine trail-fdn for OCH-trail " + fdn)
             try:
-                item_tps = item['vc.termination-point-list']['vc.termination-point']
+                item_tps = item.get('vc.termination-point-list').get('vc.termination-point')
                 if len(item_tps) == 2:
                     for subitem in item_tps:
                         tmptp = {}
-                        tmpfdn = subitem['vc.fdn']
-                        tmptp['node'] = tmpfdn.split('!')[1].split('=')[1]
-                        tmptp['port'] = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
-                        tmptp['port-num'] = tmptp['port'].split('Optics')[1]
+                        tmpfdn = subitem.get('vc.fdn')
+                        tmptp.setdefault('node', tmpfdn.split('!')[1].split('=')[1])
+                        tmptp.setdefault('port', tmpfdn.split('!')[2].split('=')[2].split(';')[0])
+                        tmptp.setdefault('port-num', tmptp['port'].split('Optics')[1])
                         termination_points.append(tmptp)
                     och_trails.append(vcdict)
                 else:
@@ -1275,52 +1177,52 @@ def parse_vc_optical_och_trails():
 def add_wavelength_vc_optical_och_trails():
     with open("jsongets/vc-optical.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
     thejson = json.loads(jsonresponse)
 
     with open("jsonfiles/och_trails.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
+
     och_trails = json.loads(jsonresponse)
-    virtual_connections = thejson['com.response-message']['com.data']['vc.virtual-connection']
+    virtual_connections = thejson.get('com.response-message').get('com.data').get('vc.virtual-connection')
 
     for och_trail in och_trails:
         for vc in virtual_connections:
-            fdn = vc['vc.fdn']
-            subtype = vc['vc.subtype']
+            fdn = vc.get('vc.fdn')
+            subtype = vc.get('vc.subtype')
             if subtype == "oc:och-nc":
-                if fdn == och_trail['trail-fdn']:
-                    och_trail['wavelength'] = vc['vc.och-nc']['vc.wavelength']
+                if fdn == och_trail.get('trail-fdn'):
+                    och_trail.setdefault('wavelength', vc['vc.och-nc']['vc.wavelength'])
 
     logging.info("Completed getting OCH Trails wavelengths...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def parse_odu_services():
     with open("jsongets/vc-optical.json", 'rb') as f:
         thejson = json.load(f)
-        f.close()
-    virtual_connections = thejson['com.response-message']['com.data']['vc.virtual-connection']
+
+    virtual_connections = thejson.get('com.response-message').get('com.data').get('vc.virtual-connection')
     odu_services = []
     for vc in virtual_connections:
-        if vc['vc.subtype'] == "oc:och-odu-uni":
+        if vc.get('vc.subtype') == "oc:och-odu-uni":
             try:
                 odu_service = {}
-                odu_service['fdn'] = vc['vc.fdn']
-                odu_service['discovered-name'] = vc['vc.discovered-name']
-                odu_service['carrying-odu-tunnel'] = vc['vc.carrying-vc-ref-list']['vc.carrying-vc-ref']
-                termination_points = vc['vc.termination-point-list']['vc.termination-point']
+                odu_service.setdefault('fdn', vc.get('vc.fdn'))
+                odu_service.setdefault('discovered-name', vc.get('vc.discovered-name'))
+                odu_service.setdefault('carrying-odu-tunnel', vc.get('vc.carrying-vc-ref-list').get('vc.carrying-vc-ref'))
+                termination_points = vc.get('vc.termination-point-list').get('vc.termination-point')
                 if len(termination_points) == 2:
-                    odu_service['node-A'] = termination_points[0]['vc.fdn'].split('!')[1].split('=')[1]
-                    odu_service['node-A-intf'] = termination_points[0]['vc.alias-name']
-                    odu_service['node-B'] = termination_points[1]['vc.fdn'].split('!')[1].split('=')[1]
-                    odu_service['node-B-intf'] = termination_points[1]['vc.alias-name']
+                    odu_service.setdefault('node-A', termination_points[0]['vc.fdn'].split('!')[1].split('=')[1])
+                    odu_service.setdefault('node-A-intf', termination_points[0]['vc.alias-name'])
+                    odu_service.setdefault('node-B', termination_points[1]['vc.fdn'].split('!')[1].split('=')[1])
+                    odu_service.setdefault('node-B-intf', termination_points[1].get('vc.alias-name'))
                 for tmp_vc in virtual_connections:
-                    if tmp_vc['vc.fdn'] == odu_service['carrying-odu-tunnel']:
-                        odu_service['bandwidth'] = tmp_vc['vc.odu-tunnel']['vc.bandwidth']
-                        break
+                    if tmp_vc.get('vc.fdn') and odu_service.get('carrying-odu-tunnel'):
+                        if tmp_vc.get('vc.fdn') == odu_service.get('carrying-odu-tunnel'):
+                            odu_service.setdefault('bandwidth', tmp_vc.get('vc.odu-tunnel').get('vc.bandwidth'))
+                            break
                 odu_services.append(odu_service)
             except Exception as err:
                 logging.warn("Problem processing ODU service, skipping...")
@@ -1328,22 +1230,19 @@ def parse_odu_services():
 
     with open("jsonfiles/odu_services.json", "wb") as f:
         f.write(json.dumps(odu_services, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/odu_services.json", 'rb') as f:
         odu_services = json.load(f)
-        f.close()
+
     vcfdns = []
     for odu_service in odu_services:
-        vcfdn = odu_service['fdn']
+        vcfdn = odu_service.get('fdn')
         vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'vcfdn': vcfdn}
-        # if not vcfdn_dict in vcfdns:
         vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
-    # pool = ThreadPool(1)
     otu_links = pool.map(process_vcfdn_odu_service, vcfdns)
     pool.close()
     pool.join()
@@ -1351,110 +1250,62 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
     logging.info("Completed collecting multi-layer routes...")
     logging.info("Processing multi-layer routes...")
     for odu_service in odu_services:
-        tmp_vcfdn = odu_service['fdn']
+        tmp_vcfdn = odu_service.get('fdn')
         if len(otu_links) > 0:
             for result in otu_links:
                 if result:
                     if 'otu-links' in result:
-                        if result['vcfdn'] == tmp_vcfdn:
+                        if result.get('vcfdn') == tmp_vcfdn:
                             logging.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
-                            odu_service['otu-links'] = result['otu-links']
-                            # odu_service['L1 Hops'] = l1hopset.copy()
-                            # odu_service['L1 Hops'].pop('vcfdn')
+                            odu_service.setdefault('otu-links', result.get('otu-links'))
+
 
     logging.info("Completed collecting OTU links for ODU services...")
     with open("jsonfiles/odu_services.json", "wb") as f:
         f.write(json.dumps(odu_services, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def add_och_trails_to_otu_links():
     with open("jsonfiles/otu_links.json", 'rb') as f:
         otu_links = json.load(f)
-        f.close()
+
     with open("jsonfiles/och_trails.json", 'rb') as f:
         och_trails = json.load(f)
-        f.close()
 
     for otu_link in otu_links:
         otu_ports = []
         matched = False
-        for otu_tp in otu_link['termination-points']:
-            tp_dict = {'node': otu_tp['node'], 'port-num': otu_tp['port-num']}
-            otu_ports.append(tp_dict)
-            for och_trail in och_trails:
-                och_ports = []
-                for och_trail_tp in och_trail['termination-points']:
-                    tmp_tp = {'node': och_trail_tp['node'], 'port-num': och_trail_tp['port-num']}
-                    och_ports.append(tmp_tp)
-                for tp in och_ports:
-                    if tp not in otu_ports:
-                        matched = False
-                    elif tp in otu_ports:
-                        matched = True
-                if matched:
-                    otu_link['och-trail-fdn'] = och_trail['fdn']
-                    break
+        if otu_link.get('termination-points'):
+            for otu_tp in otu_link.get('termination-points'):
+                tp_dict = {'node': otu_tp.get('node'), 'port-num': otu_tp.get('port-num')}
+                otu_ports.append(tp_dict)
+                for och_trail in och_trails:
+                    och_ports = []
+                    if och_trail.get('termination-points'):
+                        for och_trail_tp in och_trail.get('termination-points'):
+                            tmp_tp = {'node': och_trail_tp.get('node'), 'port-num': och_trail_tp.get('port-num')}
+                            och_ports.append(tmp_tp)
+                        for tp in och_ports:
+                            if tp not in otu_ports:
+                                matched = False
+                            elif tp in otu_ports:
+                                matched = True
+                        if matched:
+                            otu_link.setdefault('och-trail-fdn', och_trail.get('fdn'))
+                            break
         if not matched:
-            logging.warn("Could not find och-trail-fdn for otu_link " + otu_link['fdn'])
+            logging.warn("Could not find och-trail-fdn for otu_link " + otu_link.get('fdn'))
 
     logging.info("Completed adding OCH trails to OTU links...")
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
-
-# def addL1hopstol3links(baseURL, epnmuser, epnmpassword):
-#     with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
-#         l3links = json.load(f)
-#         f.close()
-#
-#     for k1, v1 in l3links.items():
-#         # logging.info "**************Nodename is: " + k1
-#         for k2, v2 in v1.items():
-#             if isinstance(v2, dict):
-#                 for k3, v3 in v2.items():
-#                     # logging.info "***************Linkname is: " + k3
-#                     if 'vc-fdn' in v3:
-#                         vcfdn = v3['vc-fdn']
-#                         logging.info("Collecting multilayer route for node " + k1 + " " + k3 + " vcFdn is " + vcfdn)
-#                         # if vcfdn == "MD=CISCO_EPNM!VC=DWDM_INY01GBO_304A_404A_0925181320":
-#                         #     pass
-#                         try:
-#                             l1hops = collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn)
-#                             if len(l1hops) > 0:
-#                                 logging.info("Multi-layer route collection successful.")
-#                                 v3['L1 Hops'] = l1hops
-#                                 v3['L1 Hops'].pop('vcfdn')
-#                             else:
-#                                 logging.warn("Could not get multilayer route for " + k1 + " " + k3)
-#                                 logging.warn("vcFDN is " + vcfdn)
-#                                 logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
-#                         except Exception as err:
-#                             logging.warn("Could not get parse multilayer_route for node " + k1 + " link " + k3)
-#                             logging.warn("vcFDN is " + vcfdn)
-#                             logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
-#
-#                     else:
-#                         logging.info(
-#                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
-#                         try:
-#                             logging.info("    Neighbor: " + v3['Neighbor'])
-#                             logging.info("    Local Intf: " + v3['Local Intf'])
-#                             logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
-#                         except Exception as err:
-#                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
-#
-#     logging.info("completed collecting L1 paths...")
-#     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
-#         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-#         f.close()
 
 
 def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
     with open("jsonfiles/och_trails.json", 'rb') as f:
         och_trails = json.load(f)
-        f.close()
+
     vcfdns = []
     for och_trail in och_trails:
         if 'fdn' in och_trail:
@@ -1465,7 +1316,6 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
                 vcfdns.append(vcfdn_dict)
     logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
-    # pool = ThreadPool(1)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
@@ -1474,7 +1324,7 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
     logging.info("Processing multi-layer routes...")
     for och_trail in och_trails:
         if 'fdn' in och_trail:
-            tmp_vcfdn = och_trail['fdn']
+            tmp_vcfdn = och_trail.get('fdn')
             if len(l1hops) > 0:
                 for l1hopset in l1hops:
                     if len(l1hopset) > 1:
@@ -1487,66 +1337,6 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
     logging.info("Completed collecting L1 paths for OCH-trails...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
-
-
-# def addL1hopstol3links_threaded(baseURL, epnmuser, epnmpassword):
-#     with open("jsonfiles/l3Links_add_vc.json", 'rb') as f:
-#         l3links = json.load(f)
-#         f.close()
-#     vcfdns = []
-#     for k1, v1 in l3links.items():
-#         # logging.info "**************Nodename is: " + k1
-#         for k2, v2 in v1.items():
-#             if isinstance(v2, dict):
-#                 for k3, v3 in v2.items():
-#                     # logging.info "***************Linkname is: " + k3
-#                     if 'vc-fdn' in v3:
-#                         vcfdn = v3['vc-fdn']
-#                         logging.info("Node " + k1 + " " + k3 + " has L1 hops and vcFdn is " + vcfdn)
-#                         vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
-#                                       'vcfdn': vcfdn}
-#                         if not vcfdn_dict in vcfdns:
-#                             vcfdns.append(vcfdn_dict)
-#                     else:
-#                         logging.info(
-#                             "Node " + k1 + ":  " + k3 + " has no vcFDN.  Assuming it is a non-optical L3 link.")
-#                         try:
-#                             logging.info("    Neighbor: " + v3['Neighbor'])
-#                             logging.info("    Local Intf: " + v3['Local Intf'])
-#                             logging.info("    Neighbor Intf: " + v3['Neighbor Intf'])
-#                         except Exception as err:
-#                             logging.warn("    Serious error encountered.  EPNM is likely in partial state!!!")
-#
-#     logging.info("Spawning threads to collect multi-layer routes...")
-#     pool = ThreadPool(wae_api.thread_count)
-#     l1hops = pool.map(process_vcfdn, vcfdns)
-#     pool.close()
-#     pool.join()
-#
-#     logging.info("Completed collecting multi-layer routes...")
-#     logging.info("Processing multi-layer routes...")
-#     for k1, v1 in l3links.items():
-#         # logging.info "**************Nodename is: " + k1
-#         for k2, v2 in v1.items():
-#             if isinstance(v2, dict):
-#                 for k3, v3 in v2.items():
-#                     # logging.info "***************Linkname is: " + k3
-#                     if 'vc-fdn' in v3:
-#                         tmp_vcfdn = v3['vc-fdn']
-#                         if len(l1hops) > 0:
-#                             for l1hopset in l1hops:
-#                                 if len(l1hopset) > 1:
-#                                     if l1hopset['vcfdn'] == tmp_vcfdn:
-#                                         logging.info(
-#                                             "Multi-layer route collection successful for node " + k1 + " vcFdn " + tmp_vcfdn)
-#                                         v3['L1 Hops'] = l1hopset.copy()
-#                                         v3['L1 Hops'].pop('vcfdn')
-#
-#     logging.info("Completed collecting L1 paths...")
-#     with open("jsonfiles/l3Links_add_l1hops.json", "wb") as f:
-#         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-#         f.close()
 
 
 def process_vcfdn(vcfdn_dict):

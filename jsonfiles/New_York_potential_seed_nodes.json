@@ -1,0 +1,1467 @@
+{
+    "New York": [
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYTR-0335017A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PTVYNYPY-0110306A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY30-02201A06A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PSVLNYPV-0112145A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYPS-0995404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=GLCVNYGC-0110209A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SYOSNYSY-0112317A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYVS-02220404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYBH-0440010A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY36-0555605A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYBS-15153211A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MTKSNYMK-0111315A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WHPLNYWP-0225209A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WBYNNYWE-0111115A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PRDYNYPD-0115305A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PTWANYPW-0114108A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY50-0991305A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY37-0771105A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY73-0224304A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY79-0446406A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY18-0777203A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY56-0880501A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=ARVGNYAV-0000719A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=CRMLNYCL-0111103A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=GRSNNYGA-0111104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=LRMTNYLA-0220612A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MHPCNYMP-0110105A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYCL-0112807A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PCHGNYPH-0111315A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PLVWNYPV-0110810A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PRRVNYNP-0111925A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=RNKNNYRN-0110303A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=RVHDNYRV-0119208A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=TRTWNYTT-0221824A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PKSKNYPS-0110520A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYBW-0333818A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYIA-0224919A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=YRTWNYYT-0112008A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=OSNGNYOS-0222110A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=GRCYNYGC-0151207A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY13-0991815A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=OOF 4K Needs Upgrade",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYWS-CSCX68Y08A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=FRDLNYFM-0222408A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=FRPTNYFP-0224111A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYMH-0223404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=CRHDNYCH-0160104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=STKTNYSK-0111405A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCRNYWS-0112703A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=BRWDNYBW-0222313A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYFR-0330206A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SCDLNYSR-0115704A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WHPLNYWP-0225007A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCRNYSS-0111914A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=FLPKNYFP-0330608A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYRA-0225410A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=RYE-NYRY-0116104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY54-MSCX68Y14A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYNJ-0110506A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=BBYLNYBN-0225322A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=LHSTNYLH-0220610A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=LNBHNYLB-0220209A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=DRPKNYDP-0112326A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SPVYNYSV-0223504A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=CHPQNYCP-0111104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=HMPSNYHS-0332417A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYAY-0335316A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MMRNNYMA-0220408A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=DBFYNYDF-0112213A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNY77-0111702A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYFA-0442607A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=CNGRNYCN-0110705A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PTCHNYPC-0221440A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNY14-0440915A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PJSTNYPJ-0110107A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=YNKRNYYN-0337806A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYFH-0554131A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SATNNYSN-0110636A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WHVRNYWH-0001104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=RSLNNYRO-0222109A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYAU-0220024A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYBA-0330235A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WNTGNYWT-0114509A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=CMMKNYCM-0112007A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MSPQNYMP-0223209A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYFT-0223604A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYACNYNK-0220608A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=ORBGNYOB-01108906A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYHS-0332217A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCRNYND-0111610A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYLI-0220414A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MINLNYMI-0223308A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYGC-0228703A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=GNBGNYFV-0000805A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=WDMRNYFR-0222642A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYHO-0550314A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MSTCNYMC-0111608A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYAS-0332644A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYAR-0113021A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYCO-0111404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYCA-0221601A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYLA-0116508A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYFL-0220205A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=HRSNNYHN-0111125A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYRH-0225206A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCRNYNS-0330110A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYKP-0335507A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYBU-0338008A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYOP-0330052A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYJE-0220814A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYTB-0444505A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MNHSNYMH-0221108A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYAI-0113602A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNY71-0330507A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYTY-0115404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYJA-0110505A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SMTWNYSM-0001008A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=OYBANYOY-0112313A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYKB-0224404A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=TKHONYTU-0110604A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNYWS-03304104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=LVTWNYLT-0111908A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=MTVRNYMV-01117A24A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCXNYCR-0555804A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=HCVLNYHV-0115208A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCMNY97-0446104A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=HNSTNYHU-0115430A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NWRCNYNR-0330604A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SYOSNYGN-0121201A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=SYOSNYGN-0121217A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=OOF",
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYAL-0223502A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYNW-0221109A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYWM-0555112A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=LYBRNYLB-01153A08A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCKNYBR-0110304A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=NYCQNYLN-0223913A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=PASNNYPN-0110009A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=GRNKNYGN-0223934A"
+        },
+        {
+            "group": [
+                "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+                "MD=CISCO_EPNM!GR=Optical Networking",
+                "MD=CISCO_EPNM!GR=6.1.42",
+                "MD=CISCO_EPNM!GR=All Locations",
+                "MD=CISCO_EPNM!GR=New York"
+            ],
+            "node": "MD=CISCO_EPNM!ND=HMBYNYHB-0111220A"
+        }
+    ]
+}

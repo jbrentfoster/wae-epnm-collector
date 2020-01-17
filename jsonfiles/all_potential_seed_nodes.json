@@ -1,0 +1,3942 @@
+[
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Denver",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=Colorado",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=AURRCO20-0114T08A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMPFLXAW0E1210202A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WLMGDEPR-0115405A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HKTNNJHT-0112116A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CARTNJCA-0110315A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SHLNPASH-0112205A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=JMBGNJJA-0111408A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SPWDNJSW-0110602A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYTR-0335017A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Stamford-Bridgeport",
+            "MD=CISCO_EPNM!GR=Connecticut"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GNWCCTGN-0221311A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTVYNYPY-0110306A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=UNINNJUV-0220808A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KHVLPAKU-0112305A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DOVRNJDO-0222008A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DNVLNJRK-0110406A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WDPTNJWP-0110409A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY30-02201A06A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTCHNJMT-0111114A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PSVLNYPV-0112145A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYPS-0995404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GLCVNYGC-0110209A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SUCCNJSU-0115114A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KMTNPAXK-0110004A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SYOSNYSY-0112317A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWPVNJMH-0111117A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTVWNJMV-0111236A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYVS-02220404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYBH-0440010A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PAMBNJPM-0330754A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY36-0555605A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYBS-15153211A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SNSPPASS-0110605A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTKSNYMK-0111315A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WHPLNYWP-0225209A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=EMMSPAXE-0110216A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WBYNNYWE-0111115A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LRDLPALB-0221410A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MNJTNJ01-0110416A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MNHMNJMD-0112147A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MGTNNJMI-0111217A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PRDYNYPD-0115305A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=QKTWPAQT-0110811A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=EDSNNJED-0223103A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTWANYPW-0114108A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HLTWPAHE-0100905A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NTCNNJ01-0113211A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY50-0991305A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LNNGNJHC-0112608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WASHNJWA-0112620A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY37-0771105A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTHLNJMH-0111010A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NZRTPANA-0111094A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY73-0224304A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NRTWPANR-0112207A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRDSNJFR-0110525A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY79-0446406A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PITBPADT-16160515A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY18-0777203A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY56-0880501A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BLFDNJBL-0110914A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BLVLNJBE-0112609A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BYNNNJ02-0111509A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CFPKNJCS-0114302A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CLWLNJCW-0113202A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ALTWPAAL-0226511A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BDBKNJBD-0111508A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CNFRNJCR-0114315A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FTLENJLE-0221808A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KRNYNJKN-0220422A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LTFYNJLF-0220444A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MLBNNJMB-0220810A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RGWDNJRW-0110427A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RMSYNJRM-0111607A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SOVLNJSM-0221021A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WORNNJWO-0330323A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ARVGNYAV-0000719A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CRMLNYCL-0111103A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GRSNNYGA-0111104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LRMTNYLA-0220612A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MHPCNYMP-0110105A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYCL-0112807A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PCHGNYPH-0111315A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PLVWNYPV-0110810A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PRRVNYNP-0111925A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RNKNNYRN-0110303A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RVHDNYRV-0119208A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TRTWNYTT-0221824A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HRTNDEHA-0111404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CRVVPACA-0110603A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MDTWDEMT-0116019A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DYTWPADB-0112410A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWCSDENC-0117913A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MLBODEMB-0110404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWRKDENB-0114705A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OXFRPAOX-0110520A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAEV-0111705A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SPTWPASP-0110502A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAJE-0114305A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SEFRDESF-0110212A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPALO-12121302A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAMK-0995501A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAPO-0110602A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PKSKNYPS-0110520A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYBW-0333818A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DNLNNJDU-0111603A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WLMGDEWL-0117815A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPALO-12121208A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAMK-0995604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CHESPACA-0221505A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPADE-0118404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CHESPACB-0111005A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FETNDEFE-0111503A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TULYPATU-0225829A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GRTWDEGR-0115011A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KGPRPAKP-0112418A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MLFRDEMF-0112504A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=STGRFL17H020110102A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYIA-0224919A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ALTWPAMT-0111613A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Denver",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=Colorado",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ENWECOATH070124206A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Denver",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=Colorado",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ENWDCOBJ-011603A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HMSQNJHS-0003235A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Denver",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=Colorado",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DNVRCO26-0992102A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=YRTWNYYT-0112008A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CDKNNJCK-0004720A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTCYFLBK-0130307A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=4016 - 4009 Monitor Policy",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPADB-0110911A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LNDLPALD-0222708A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GMBODEGB-0110501A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BRVLNJBE-0221603A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTCLNJMC-0221102A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OSNGNYOS-0222110A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HYBKPAHB-0110513A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRHDNJFH-0111114A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DGBODEDG-0110604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OCVWDEOC-0113205A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SMMTNJSM-0110907A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SPMLNJ01-0110508A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TRCKPATC-0331401A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Atlanta",
+            "MD=CISCO_EPNM!GR=Georgia",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ATLCGABX-0113302A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LNSDPALD-0111405A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GRCYNYGC-0151207A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY13-0991815A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FTWSPAFW-0330506A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=OOF 4K Needs Upgrade",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYWS-CSCX68Y08A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWRKNJ03-0113104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LEWSDELW-0112506A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Deleware"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ANGLDEAN-0111904A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MRSLPAMV-0110605A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KMVLPAKV-0111703A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRDLNYFM-0222408A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRPTNYFP-0224111A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PLFDNJPF-0220603A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PSSCNJPS-0333312A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OLDSFLAU-0110202A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WNRTPAAHW010130204A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYMH-0223404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CRHDNYCH-0160104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NBWKNJNB-0550215A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RSLLNJRL-0223325A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WAYNPAWY-0226704A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPABA-0118620A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAGE-0332707A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=STKTNYSK-0111405A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PSWYNJPI-0220608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMPFLPW-0110001A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCRNYWS-0112703A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BRWDNYBW-0222313A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYFR-0330206A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CFTNNJCF-0110608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SCDLNYSR-0115704A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPATR-0225502A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WCHSPAWC-0220619A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PRBGPAPB-0111906A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WHPLNYWP-0225007A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SLTTPAES-0115104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WAYNNJAWW010120411A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCRNYSS-0111914A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HLDNNJ01-0113503A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPASH-0113118A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FLPKNYFP-0330608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYRA-0225410A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RYE-NYRY-0116104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MOVLPAMO-0110304A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FLWDPAFL-0110808A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY54-MSCX68Y14A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTTWPAPT-0220906A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYNJ-0110506A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BBYLNYBN-0225322A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WDBRNJWD-0110112A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LHSTNYLH-0220610A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PRTNNJPC-0111902A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHBGNJPH-0111408A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LNBHNYLB-0220209A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DRPKNYDP-0112326A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SPVYNYSV-0223504A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CHPQNYCP-0111104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAPI-0112607A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAWV-0331212A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HMPSNYHS-0332417A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYAY-0335316A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MMRNNYMA-0220408A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HPWLNJHP-0111004A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DBFYNYDF-0112213A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWRKNJ02-0662317A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNY77-0111702A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=EORNNJEO-0112349A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYFA-0442607A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RHWYNJRA-0112808A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CNGRNYCN-0110705A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTCHNYPC-0221440A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NATNPANR-0111804A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNY14-0440915A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PJSTNYPJ-0110107A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=YNKRNYYN-0337806A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTSNNJAR-013707A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RVEDNJOR-0110319A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYFH-0554131A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PITBPAEL-0112604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ESTNPAEA-0222208A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WLGRPAWG-0110229A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BATHPABT-0113904A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PYVLPAPE-0110717A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SYRVNJSA-0110508A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPARE-0114411A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SATNNYSN-0110636A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WHVRNYWH-0001104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPASA-0111011A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RSLNNYRO-0222109A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYAU-0220024A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BDMNNJ01-0113703A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WHIPNJWH-0114208A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYBA-0330235A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WNRTPAAHW010130217A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WRTWNJFD-0112506A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ALTWNJAL-0110906A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=AMBLPAAM-0222509A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WNTGNYWT-0114509A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAKR-0222604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KZTNPAKZ-0111005A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ENWDNJEN-0228312A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRDLNJ01-0112306A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRLNNJFL-0221974A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RDNGPARE-0332836A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SORVNJSR-0111728A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ARMRPAAR-0110312A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CMMKNYCM-0112007A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RTFRNJRU-0114229A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MSPQNYMP-0223209A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OKLDNJ01-0110115A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYFT-0223604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYACNYNK-0220608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LVLTNJSP-0110612A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FRFDNJFA-0113315A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ORBGNYOB-01108906A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYHS-0332217A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCRNYND-0111610A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PTPLNJPP-0110509A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=KYPTNJKY-0111820A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=DRMTPADO-0110604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYLI-0220414A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FNPKNJFP-0110116A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CRPLPACO-0222003A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MINLNYMI-0223308A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SORGNJSO-0112602A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MDSNNJMA-01112A07A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAPE-0222216A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYGC-0228703A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GNBGNYFV-0000805A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WDMRNYFR-0222642A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYHO-0550314A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MSTCNYMC-0111608A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYAS-0332644A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYAR-0113021A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYCO-0111404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ELZBNJEL-0330403A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CLSTNJCO-0110510A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYCA-0221601A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYLA-0116508A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYFL-0220205A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HRSNNYHN-0111125A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYRH-0225206A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RCPKNJ01-0222116A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=FTWSPAFW-0330606A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LKWDNJLK-0221008A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCRNYNS-0330110A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYKP-0335507A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYBU-0338008A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYOP-0330052A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYJE-0220814A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYTB-0444505A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=JRCYNJBR-0330524A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CMDNNJCE-0662225A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MNHSNYMH-0221108A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYAI-0113602A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNY71-0330507A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=IVTNNJES-0220509A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYTY-0115404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYJA-0110505A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SMTWNYSM-0001008A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=ASPKNJAP-0331616A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HLDLNJWE-0110805A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LTFLNJLF-0112325A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=OYBANYOY-0112313A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYKB-0224404A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TKHONYTU-0110604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMQFLDQ-0110001A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNYWS-03304104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MRTWNJMR-0221305A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LVTWNYLT-0111908A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NBRGNJNB-0113129A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MTVRNYMV-01117A24A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WAYNNJAWW010120111A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=JRCYNJJO-0223312A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WSFDNJWS-0223203A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMQFLSZ-01828A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=UNCYNJ02-0220109A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PHLAPAEW-0113405A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCXNYCR-0555804A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HCVLNYHV-0115208A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LGBRNJLB-0111502A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BHLHPABE-0111112A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCMNY97-0446104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMQFLHU-0131104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HMBGPAHB-0113201A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HRBGPAHA-0220613A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HNSTNYHU-0115430A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWRCNYNR-0330604A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GLNMPAGL-0110613A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWRKNJ02-0662311A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RVDLNJPL-0226429A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=CPHLPACH-0115405A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HCKNNJHK-0440411A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SYOSNYGN-0121201A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NBWKNJNB-0550221A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=MCNGPAXM-0110108A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=SYOSNYGN-0121217A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TRSPFL06-0110104A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMQFLHU-0131106A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYAL-0223502A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYNW-0221109A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYWM-0555112A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LYBRNYLB-01153A08A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCKNYBR-0110304A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NYCQNYLN-0223913A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=WGRVPAWG-0110302A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PASNNYPN-0110009A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LNLKFLKF-0110103A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=VNHSNJVH-0110708A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=Tampa",
+            "MD=CISCO_EPNM!GR=Florida"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TAMPFLCMH0206316A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HUMLPAHM-0120001A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=BLLVPABE-0220704A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PITBPANS-0114309A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NWSMPAXN-0110307A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=GRNKNYGN-0223934A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations",
+            "MD=CISCO_EPNM!GR=New York"
+        ],
+        "node": "MD=CISCO_EPNM!ND=HMBYNYHB-0111220A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=NSHNNJ01-0110627A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=TMRVNJTR-0112109A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=YRDLPAYL-0116110A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=EAGLPAEG-0111205A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=New Jersey",
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=LVTNNJLI-0221002A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=OOF",
+            "MD=CISCO_EPNM!GR=Philadelphia",
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=RYFRPARF-0112033A"
+    },
+    {
+        "group": [
+            "MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series",
+            "MD=CISCO_EPNM!GR=Pennsylvania",
+            "MD=CISCO_EPNM!GR=Optical Networking",
+            "MD=CISCO_EPNM!GR=6.1.42",
+            "MD=CISCO_EPNM!GR=All Locations"
+        ],
+        "node": "MD=CISCO_EPNM!ND=PGTWPAPT-0110703A"
+    }
+]

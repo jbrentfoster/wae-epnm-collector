@@ -1,0 +1,125 @@
+{
+  "com.response-message": {
+    "com.data": {
+      "tp.termination-point": [
+        {
+          "tp.is-edge-point": true, 
+          "tp.is-span-monitored": false, 
+          "tp.otn-odu-attributes": {
+            "tp.tcm-state": "DISABLED", 
+            "tp.performance-monitoring-enable": false, 
+            "tp.tcm-id": 5, 
+            "tp.signal-degrade-ber-threshold": "E_7", 
+            "tp.signal-failure-ber-threshold": "E_6", 
+            "tp.tcm-name": "ODUC20/9/0/11"
+          }, 
+          "tp.layer-rate": "oc:lr-och-data-unit-c2", 
+          "tp.if-speed": "208712 Mbps", 
+          "tp.admin-state": "com:admin-state-up", 
+          "tp.fdn": "MD=CISCO_EPNM!ND=BLTNMN86H0301A10103A!CTP=name=ODUC20/9/0/11;lr=lr-och-data-unit-c2", 
+          "tp.type": "CTP", 
+          "tp.duplex-mode": "FullDuplex", 
+          "tp.alias-name": "ODUC2 0/9/0/11", 
+          "tp.oduk-attributes": {
+            "tp.flex-tolerance": 0, 
+            "tp.bit-rate": 0, 
+            "tp.gcc1": false, 
+            "tp.is-ttp-present": false, 
+            "tp.tpn-value": 0, 
+            "tp.flex-bandwidth": 208711950, 
+            "tp.number-of-timeslots": 160, 
+            "tp.flex-type": "NA", 
+            "tp.position-seq-current-size": 0, 
+            "tp.ts-g": "1_25G"
+          }, 
+          "tp.discovered-name": "ODUC20/9/0/11", 
+          "tp.oper-state": "com:oper-state-up", 
+          "tp.directionality": "com:tp-bidirectional", 
+          "tp.optical-attributes": "", 
+          "tp.loopback": "NO_LOOPBACK", 
+          "tp.is-promiscuous": false
+        }, 
+        {
+          "tp.is-edge-point": true, 
+          "tp.is-span-monitored": false, 
+          "tp.otn-odu-attributes": {
+            "tp.tcm-state": "DISABLED", 
+            "tp.performance-monitoring-enable": false, 
+            "tp.tcm-id": 6, 
+            "tp.signal-degrade-ber-threshold": "E_7", 
+            "tp.signal-failure-ber-threshold": "E_6", 
+            "tp.tcm-name": "ODU40/9/0/11/1"
+          }, 
+          "tp.layer-rate": "oc:lr-och-data-unit-4", 
+          "tp.if-speed": "104794 Mbps", 
+          "tp.admin-state": "com:admin-state-up", 
+          "tp.fdn": "MD=CISCO_EPNM!ND=BLTNMN86H0301A10103A!CTP=name=ODU40/9/0/11/1;lr=lr-och-data-unit-4", 
+          "tp.type": "CTP", 
+          "tp.duplex-mode": "FullDuplex", 
+          "tp.alias-name": "ODU4 0/9/0/11/1", 
+          "tp.oduk-attributes": {
+            "tp.flex-tolerance": 0, 
+            "tp.bit-rate": 0, 
+            "tp.gcc1": false, 
+            "tp.is-ttp-present": false, 
+            "tp.tpn-value": 0, 
+            "tp.flex-bandwidth": 104794446, 
+            "tp.number-of-timeslots": 80, 
+            "tp.flex-type": "NA", 
+            "tp.used-ts": "1-80", 
+            "tp.position-seq-current-size": 0, 
+            "tp.ts-g": "1_25G"
+          }, 
+          "tp.discovered-name": "ODU40/9/0/11/1", 
+          "tp.oper-state": "com:oper-state-up", 
+          "tp.directionality": "com:tp-bidirectional", 
+          "tp.optical-attributes": "", 
+          "tp.loopback": "NO_LOOPBACK", 
+          "tp.is-promiscuous": false
+        }, 
+        {
+          "tp.is-edge-point": true, 
+          "tp.is-span-monitored": false, 
+          "tp.otn-odu-attributes": {
+            "tp.tcm-state": "DISABLED", 
+            "tp.performance-monitoring-enable": false, 
+            "tp.tcm-id": 5, 
+            "tp.signal-degrade-ber-threshold": "E_7", 
+            "tp.signal-failure-ber-threshold": "E_6", 
+            "tp.tcm-name": "ODU40/9/0/11/2"
+          }, 
+          "tp.layer-rate": "oc:lr-och-data-unit-4", 
+          "tp.if-speed": "104794 Mbps", 
+          "tp.admin-state": "com:admin-state-up", 
+          "tp.fdn": "MD=CISCO_EPNM!ND=BLTNMN86H0301A10103A!CTP=name=ODU40/9/0/11/2;lr=lr-och-data-unit-4", 
+          "tp.type": "CTP", 
+          "tp.duplex-mode": "FullDuplex", 
+          "tp.alias-name": "ODU4 0/9/0/11/2", 
+          "tp.oduk-attributes": {
+            "tp.flex-tolerance": 0, 
+            "tp.bit-rate": 0, 
+            "tp.gcc1": false, 
+            "tp.is-ttp-present": false, 
+            "tp.tpn-value": 0, 
+            "tp.flex-bandwidth": 104794446, 
+            "tp.number-of-timeslots": 80, 
+            "tp.flex-type": "NA", 
+            "tp.used-ts": "1-80", 
+            "tp.position-seq-current-size": 0, 
+            "tp.ts-g": "1_25G"
+          }, 
+          "tp.discovered-name": "ODU40/9/0/11/2", 
+          "tp.oper-state": "com:oper-state-up", 
+          "tp.directionality": "com:tp-bidirectional", 
+          "tp.optical-attributes": "", 
+          "tp.loopback": "NO_LOOPBACK", 
+          "tp.is-promiscuous": false
+        }
+      ]
+    }, 
+    "com.header": {
+      "com.lastIndex": 2, 
+      "com.firstIndex": 0
+    }
+  }
+}
