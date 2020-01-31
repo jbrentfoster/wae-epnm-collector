@@ -59,7 +59,7 @@ def open_file_load_data(file_name):
 def get_random_nodes_for_states(state_or_states):
     random_node_choices = []
     for state in state_or_states:
-        seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.replace(' ', '_')))
+        seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
         random_node_choices.append(random.choice(seed_nodes[state]))
     return random_node_choices
 
