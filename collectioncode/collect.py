@@ -115,20 +115,20 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # logging.info("Collecting LSPs...")
     # collectlsps_json(baseURL, epnmuser, epnmpassword)
     ## "mpls":
-    logging.info("Collecting 4k nodes...")
-    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
-    logging.info("Collecting MPLS topological links...")
-    collect_mpls_links_json(baseURL, epnmuser,
-                                    epnmpassword)
-    logging.info("Collecting MPLS nodes...")
-    collectMPLSnodes()
-    logging.info("Collecting MPLS topology...")
-    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword,
-                            state_or_states)
-    logging.info("Collecting ISIS hostnames...")
-    collect_hostnames_json(baseURL, epnmuser, epnmpassword,
-                            state_or_states)
-    process_hostnames(state_or_states)
+    # logging.info("Collecting 4k nodes...")
+    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting MPLS topological links...")
+    # collect_mpls_links_json(baseURL, epnmuser,
+    #                                 epnmpassword)
+    # logging.info("Collecting MPLS nodes...")
+    # collectMPLSnodes()
+    # logging.info("Collecting MPLS topology...")
+    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword,
+    #                         state_or_states)
+    # logging.info("Collecting ISIS hostnames...")
+    # collect_hostnames_json(baseURL, epnmuser, epnmpassword,
+    #                         state_or_states)
+    # process_hostnames(state_or_states)
     logging.info("Processing MPLS topology...")
     processMPLS(state_or_states)
 
@@ -2096,7 +2096,7 @@ def parseintftype(nodeintf):
         nodeintftype = 'BDI'
         nodeintf_lr_type = 'lr-bridge'
         nodeintf_bw = 0
-        return nodeintftype, nodeintf_lr_type
+        return nodeintftype, nodeintf_lr_type, nodeintf_bw
     except:
         pass
     if nodeintfnum == "":
