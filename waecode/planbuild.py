@@ -198,8 +198,9 @@ def generateL3circuits(plan, l3linksdict):
                     lastnode_intf = v3['Neighbor Intf']
                     te_metric = int(v3['TE Metric'])
                     igp_metric = int(v3['IGP Metric'])
+                    phy_bw = float(v3['Phy BW'].split(' ')[0])
                     rsvpbw = float(v3['RSVP BW'].split(' ')[0])
-                    intfbw = getintfbw(rsvpbw)
+                    intfbw = getintfbw(phy_bw)
                     try:
                         tp_description = v3['tp-description']
                     except Exception as err:
@@ -558,15 +559,15 @@ def getnodename(loopback, nodelist):
                 return k
 
 
-def getintfbw(rsvpbw):
+def getintfbw(bw):
     intfbw = 0
-    if rsvpbw > 0 and rsvpbw <= 1000000:
+    if bw > 0 and bw <= 1000000:
         intfbw = 1000
-    elif rsvpbw > 1000000 and rsvpbw <= 10000000:
+    elif bw > 1000000 and bw <= 10000000:
         intfbw = 10000
-    elif rsvpbw > 10000000 and rsvpbw <= 40000000:
+    elif bw > 10000000 and bw <= 40000000:
         intfbw = 40000
-    elif rsvpbw > 40000000 and rsvpbw <= 100000000:
+    elif bw > 40000000 and bw <= 100000000:
         intfbw = 100000
     else:
         logging.warn("Error determining interface bandwidth!!!")
