@@ -1,0 +1,6 @@
+*.pyc
+*.log
+planfiles/latest.pln
+jsonfiles/
+jsongets/
+.idea/
