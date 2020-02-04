@@ -97,34 +97,34 @@ def main():
     else:
         logging.info("Keeping collection files from previous collection, building plan file only...")
 
-    phase_list = []
-    for phase in phases:
-        phase_list.append(int(phase))
+    # phase_list = []
+    # for phase in phases:
+    #     phase_list.append(int(phase))
+    #
+    # # Run the collector...
+    # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
+    #                     {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+    #                     ]
+    # phases_to_run = []
+    # c = 1
+    # for call in collection_calls:
+    #     for phase_num in phase_list:
+    #         if phase_num == c:
+    #             phases_to_run.append(call)
+    #             break
+    #     c +=1
+    #
+    # pool = ThreadPool(7)
+    # pool.map(collectioncode.collect.collection_router, phases_to_run)
+    # pool.close()
+    # pool.join()
 
-    # Run the collector...
-    collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
-                        {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        ]
-    phases_to_run = []
-    c = 1
-    for call in collection_calls:
-        for phase_num in phase_list:
-            if phase_num == c:
-                phases_to_run.append(call)
-                break
-        c +=1
-
-    pool = ThreadPool(7)
-    pool.map(collectioncode.collect.collection_router, phases_to_run)
-    pool.close()
-    pool.join()
-
-    #collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
