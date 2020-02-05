@@ -61,6 +61,7 @@ def main():
     build_plan = args.build_plan
     delete_previous = args.delete_previous
     state_or_states_list = args.state_or_states.split(',')
+    state_or_states_list = [state.strip(' ') for state in state_or_states_list]
 
     # # Set up logging
     # try:
