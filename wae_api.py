@@ -19,7 +19,8 @@ from multiprocessing.dummy import Pool as ThreadPool
 thread_count = 6
 
 def get_l3_nodes(state):
-    with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+    # with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+    with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.replace(' ', '_')), 'rb') as f:
         l3linksdict = json.load(f)
         f.close()
     l3nodes = []
@@ -154,35 +155,35 @@ def main():
         #         nodecoordinates.append(row)
         #     f.close()
 
-        # Add L1 nodes to plan
-        logging.info("Adding L1 nodes...")
-        with open("jsonfiles/l1Nodes.json", 'rb') as f:
-            l1nodesdict = json.load(f)
-            f.close()
-        l1nodes = []
-        sites = []
-        site_manager = plan.getNetwork().getSiteManager()
-        # found = False
-        for k1, v1 in l1nodesdict.items():
-            tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
-            site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
-            try:
-                tmpsite = site_manager.newSite(siteRec=site_rec)
-                tmpnode['sitekey'] = tmpsite.getKey()
-                sites.append(tmpsite)
-                l1nodes.append(tmpnode)
-                logging.info("successfully added node " + tmpnode['Name'])
-            except Exception as err:
-                logging.warn('Could not process node ' + tmpnode['Name'])
-                logging.warn(err)
-        waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
-
-        # Add L1 links to plan
-        logging.info("Adding L1 links...")
-        with open("jsonfiles/l1Links.json", 'rb') as f:
-            l1linksdict = json.load(f)
-            f.close()
-        waecode.planbuild.generateL1links(plan, l1linksdict)
+        # # Add L1 nodes to plan
+        # logging.info("Adding L1 nodes...")
+        # with open("jsonfiles/l1Nodes.json", 'rb') as f:
+        #     l1nodesdict = json.load(f)
+        #     f.close()
+        # l1nodes = []
+        # sites = []
+        # site_manager = plan.getNetwork().getSiteManager()
+        # # found = False
+        # for k1, v1 in l1nodesdict.items():
+        #     tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+        #     site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+        #     try:
+        #         tmpsite = site_manager.newSite(siteRec=site_rec)
+        #         tmpnode['sitekey'] = tmpsite.getKey()
+        #         sites.append(tmpsite)
+        #         l1nodes.append(tmpnode)
+        #         logging.info("successfully added node " + tmpnode['Name'])
+        #     except Exception as err:
+        #         logging.warn('Could not process node ' + tmpnode['Name'])
+        #         logging.warn(err)
+        # waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
+        #
+        # # Add L1 links to plan
+        # logging.info("Adding L1 links...")
+        # with open("jsonfiles/l1Links.json", 'rb') as f:
+        #     l1linksdict = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generateL1links(plan, l1linksdict)
 
         #######################################
         #
@@ -235,12 +236,12 @@ def main():
             waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails 
 
 
-            # Add OCH-Trails (wavelengths) to plan
-            logging.info("Adding OCH Trails as L1 circuits to the plan...")
-            with open("jsonfiles/och_trails.json", 'rb') as f:
-                och_trails = json.load(f)
-                f.close()
-            waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
+            # # Add OCH-Trails (wavelengths) to plan
+            # logging.info("Adding OCH Trails as L1 circuits to the plan...")
+            # with open("jsonfiles/och_trails.json", 'rb') as f:
+            #     och_trails = json.load(f)
+            #     f.close()
+            # waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
             #######################################
             #
@@ -274,12 +275,12 @@ def main():
                 f.close()
             waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
-            # Add OTN services to the plan
-            logging.info("Adding ODU services to the plan...")
-            with open("jsonfiles/odu_services.json", 'rb') as f:
-                odu_services = json.load(f)
-                f.close()
-            waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
+            # # Add OTN services to the plan
+            # logging.info("Adding ODU services to the plan...")
+            # with open("jsonfiles/odu_services.json", 'rb') as f:
+            #     odu_services = json.load(f)
+            #     f.close()
+            # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
