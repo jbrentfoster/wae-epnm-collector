@@ -40,6 +40,9 @@ def get_potential_seednode(state_or_states):
         for state in state_or_states:
             tmp = {}
             tmp[state] = [seed_node for seed_node in final_seed_node_dict for item in seed_node.get('group') if state in item.split('=')[-1]]
+            for tmp_dict in tmp.items():
+                for tmp_node in tmp_dict[1]:
+                    tmp_node['state'] = state
             file_name = "jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_'))
             write_results(file_name, tmp)
 

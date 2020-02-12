@@ -489,7 +489,8 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
 
         logging.info("Database received.")
         with open("jsongets/{state}_mplstopo.txt".format(
-                state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 
@@ -554,7 +555,8 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
 
         logging.info("Database received.")
         with open("jsongets/{state}_hostnames.txt".format(
-                state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 

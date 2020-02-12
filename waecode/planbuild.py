@@ -116,6 +116,9 @@ def generateL3nodes(plan, l3nodelist):
     all_nodes = json.loads(jsonresponse)
     for l3node in l3nodelist:
         name = l3node['Name']
+        if check_node_exists(plan, name):
+            logging.warn("Node already exists in plan file, will not add duplicate: " + name)
+            continue
         vendor = 'Cisco'
         model = ""
         os = ""
@@ -235,7 +238,7 @@ def generateL3circuits(plan, l3linksdict):
                                 l1circuit_name = val.getName()
                                 # logging.info("L1 circuit name is " + l1circuit_name)
                                 if v3['vc-fdn'] == val.getName():
-                                    logging.info("Name matched!")
+                                    # logging.info("Name matched!")
                                     l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
                                     l3circuit.setL1Circuit(l1circuit)
                                     # TODO recode setting the L3 node site based on connected L1 node site
@@ -290,8 +293,8 @@ def generate_OTN_circuits(plan, otn_links):
             for attr, val in l1circuits.items():
                 if otn_link['och-trail-fdn'] == val.getName():
                     l1circuit_name = val.getName()
-                    logging.info("L1 circuit name is " + l1circuit_name)
-                    logging.info("Name matched!")
+                    # logging.info("L1 circuit name is " + l1circuit_name)
+                    # logging.info("Name matched!")
                     l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
                     circuit.setL1Circuit(l1circuit)
                     # TODO recode setting the L3 node site based on connected L1 node site
@@ -350,6 +353,14 @@ def process_srlgs(plan, circ_srlgs):
                 srlg_rec = SRLGRecord(circuitKeys=circ_keys_list, name=hex(int(srlg)), description="Foo")
                 srlg_mgr.newSRLG(srlg_rec)
 
+def check_node_exists(plan, node_name):
+    node_manager = plan.getNetwork().getNodeManager()
+    all_node_keys = node_manager.getAllNodeKeys()
+    for node_key in all_node_keys:
+        if node_key.name == node_name:
+            # logging.info("4k node already exists in plan, skipping this one...")
+            return True
+    return False
 
 def assignSites(plan):
     node_manager = plan.getNetwork().getNodeManager()
@@ -360,7 +371,7 @@ def assignSites(plan):
         node_site = node_manager.getNode(node).getSite()
         if node_site != None:
             node_site_name = node_site.getName()
-            logging.info("Node: " + node_name + " Site: " + node_site_name)
+            # logging.info("Node: " + node_name + " Site: " + node_site_name)
         else:
             logging.info("Node " + node_name + " does not have a site.")
             intf_dict = node_manager.getNode(node).getAllInterfaces()
@@ -437,13 +448,12 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
             lspSetupPriority = lsp["vc.setup-priority"]
             lspHoldPriority = lsp["vc.hold-priority"]
             # Fix - GLH - 2-18-19 #
-            logging.info(lspName)
+            # logging.info(lspName)
             demandName = "Demand for " + lspName
             src = getnodename(lsp['Tunnel Source'], l3nodeloopbacks)
             dest = getnodename(lsp['Tunnel Destination'], l3nodeloopbacks)
             if src == None or dest == None:
-                logging.warn("Could not get valid source or destination node from Tu IP address")
-                logging.warn("Could not add LSP to plan file: " + lspName)
+                logging.warn("Could not get valid source or destination node from Tu IP address: " + lspName)
             else:
                 if direction == "com:bi-direction":
                     logging.info("Processing FlexLSP: " + src + " to " + dest + " Tu" + str(tuID))
@@ -457,7 +467,7 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                             "Could not add LSP to topology due to FlexLSP routing errors: " + src + " to " + dest + " Tu" + str(
                                 tuID))
                 elif lsp['auto-route-announce-enabled'] == True:
-                    logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
+                    # logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
                     try:
                         new_private_lsp(plan, src, dest, lspName, lspBW, frr, lspSetupPriority,
                                         lspHoldPriority)  # Fix - GLH - 2-18-19
