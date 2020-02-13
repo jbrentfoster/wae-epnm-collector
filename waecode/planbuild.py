@@ -32,7 +32,7 @@ from com.cisco.wae.design.model.net import DemandRecord
 from com.cisco.wae.design.model.net import ServiceClassRecord
 from com.cisco.wae.design.model.net import LSPRecord
 from com.cisco.wae.design.model.net import SRLGRecord
-
+from com.cisco.wae.design.model.net import SiteRecord
 
 def generateL1nodes(plan, l1nodelist):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
@@ -404,6 +404,36 @@ def assignSites(plan):
                 else:
                     logging.info("Could not match a site name!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
+def assignSites_l3nodes(plan):
+    node_manager = plan.getNetwork().getNodeManager()
+    site_manager = plan.getNetwork().getSiteManager()
+    nodes = node_manager.getAllNodes()
+    for node in nodes:
+        node_name = node_manager.getNode(node).getName()
+        node_obj = node_manager.getNode(node)
+        node_site = node_manager.getNode(node).getSite()
+        if node_site != None:
+            node_site_name = node_site.getName()
+            # logging.info("Node: " + node_name + " Site: " + node_site_name)
+        else:
+            # logging.info("Node " + node_name + " does not have a site.")
+            site_name = set_site_using_name(site_manager, node_manager, node)
+            if site_name is not None:
+                # logging.info("Setting site based on node name to " + site_name)
+                pass
+            else:
+                # logging.info("Could not match a site name, creating new site.")
+                site_name = node_name[0:12]
+                site_rec = SiteRecord(name=site_name, latitude=node_obj.getLatitude(), longitude=node_obj.getLongitude())
+                try:
+                    tmpsite = site_manager.newSite(siteRec=site_rec)
+                    # logging.info("successfuly created site: " + site_name)
+                    node_obj.setSite(tmpsite)
+                    # logging.info("successfully added node " + node_name)
+                except Exception as err:
+                    logging.warn('Could not create or add site for node: ' + node_name)
+                    logging.warn(err)
+
 
 def set_site_using_name(site_manager, node_manager, node):
     sites = site_manager.getAllSites()
@@ -417,7 +447,7 @@ def set_site_using_name(site_manager, node_manager, node):
             except Exception as err:
                 logging.info("Site or node name is less than " + x + " characters.")
             if site_name_prefix == node_name_prefix:
-                logging.info("Setting site to " + site_name)
+                # logging.info("Setting site to " + site_name)
                 node_manager.getNode(node).setSite(site_manager.getSite(site))
                 return site_name
 

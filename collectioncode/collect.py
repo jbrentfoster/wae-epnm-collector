@@ -45,8 +45,7 @@ def collection_router(collection_call):
 
         logging.info("Adding MPLS TL data to L3 links...")
         try:
-            add_mpls_tl_data(collection_call['baseURL'], collection_call['epnmuser'],
-                             collection_call['epnmpassword'], collection_call['state_or_states'])
+            add_mpls_tl_data(collection_call['state_or_states'])
         except Exception as err:
             logging.critical("MPLS topological links are not valid.  Halting execution.")
             sys.exit("Collection error.  Halting execution.")
@@ -97,21 +96,16 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
-    # ##  "l1nodes":
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # ##  "l1links":
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
     # 'allnodes':
     logging.info("Collection all node equipment details...")
     collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # 4k nodes
+    logging.info("Collecting 4k nodes...")
+    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     #   "lsps":
     logging.info("Collecting LSPs...")
     collectlsps_json(baseURL, epnmuser, epnmpassword)
     ## "mpls":
-    logging.info("Collecting 4k nodes...")
-    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
     logging.info("Collecting MPLS topological links...")
     collect_mpls_links_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS nodes...")
@@ -128,7 +122,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
 
     logging.info("Adding MPLS TL data to L3 links...")
     try:
-        add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states)
+        add_mpls_tl_data(state_or_states)
     except Exception as err:
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
@@ -137,11 +131,47 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # collect_termination_points_threaded(baseURL, epnmuser,
     #                                         epnmpassword, state_or_states)
     #
-    # logging.info("Collecting optical virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser,
-    #                                 epnmpassword)
+    logging.info("Collecting optical virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+
     # logging.info("Adding vc-fdn to L3links...")
     # add_vcfdn_l3links(state_or_states)
+
+    # Collect optical
+    #  "l1nodes":
+    # logging.info("Collecting L1 nodes...")
+    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    # ##  "l1links":
+    # logging.info("Collecting L1 links...")
+    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+
+    # logging.info("Collecting optical virtual connections...")
+    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Parsing OCH-trails...")
+    # parse_vc_optical_och_trails()
+    #
+    # logging.info("Getting OCH-trails wavelengths...")
+    # add_wavelength_vc_optical_och_trails()
+    #
+    # logging.info("Collection OTU links...")
+    # collect_otu_links_json(baseURL, epnmuser, epnmpassword)
+    #
+    # logging.info("Collecting OTU termination points...")
+    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+
+    # logging.info("Adding OCH trails to OTU links...")
+    # add_och_trails_to_otu_links()
+    #
+    # logging.info("Collecting L1 paths for OCH-trails...")
+    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    # logging.info("Re-ordering L1 hops for OCH-trails...")
+    # reorderl1hops_och_trails()
+    # logging.info("Parsing OTN links from OTU link data...")
+    # parse_otn_links()
+    # logging.info("Parsing ODU services from vc-optical data...")
+    # parse_odu_services()
+    # logging.info("Getting multi-layer routes for OTN services...")
+    # collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -713,7 +743,7 @@ def collectMPLSnodes():
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def add_mpls_tl_data(baseURL, epnmuser, epnmpassword, state_or_states):
+def add_mpls_tl_data(state_or_states):
     for state in state_or_states:
         with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
             jsonresponse = f.read()

@@ -127,7 +127,7 @@ def main():
     # pool.close()
     # pool.join()
 
-    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
+    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -155,6 +155,95 @@ def main():
         #     for row in reader:
         #         nodecoordinates.append(row)
         #     f.close()
+
+        #######################################
+        #
+        #  Experimental
+        #
+        #######################################
+        # # Add MPLS nodes to plan
+        # logging.info("Adding nodes to plan...")
+        # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
+        #     mpls_nodes = json.load(f)
+        #     f.close()
+        # l3nodes = []
+        # for mpls_node in mpls_nodes:
+        #     tmpnode = {'Name': mpls_node}
+        #     l3nodes.append(tmpnode)
+        # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
+        # Check 4k_nodes_db.json for duplicate entries
+        logging.info("Checking 4k-nodes_db.json for duplicate entries...")
+        with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+            four_k_nodes = json.load(f)
+            f.close()
+        for k, v in four_k_nodes.items():
+            count = 0
+            for k1, v1 in four_k_nodes.items():
+                if v['Name'] == v1['Name']:
+                    count += 1
+            if count > 1:
+                logging.info("Found a dup, removing this node: " + v['Name'])
+                four_k_nodes.pop(k)
+
+        #######################################
+        #
+        #  Build MPLS Plan Components
+        #
+        #######################################
+
+        l3nodeloopbacks = []
+        # Add L3 nodes to plan
+        for state in state_or_states_list:
+            logging.info("Adding L3 nodes...")
+            l3nodes, l3linksdict = get_l3_nodes(state)
+            waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+
+            # Add L3 links to plan and stitch to L1 links where applicable
+            logging.info("Adding L3 links...")
+            waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails
+
+            # read FlexLSP add-on options
+            with open("waecode/options.json", 'rb') as f:
+                options = json.load(f)
+                f.close()
+
+            # Make/update list of nodenames and loopbacks
+            for k1, v1 in l3linksdict.items():
+                tmpnode = {k1: v1['Loopback Address']}
+                l3nodeloopbacks.append(tmpnode)
+
+            # Set node coordinates
+            logging.info("Setting node coordinates...")
+            node_manager = plan.getNetwork().getNodeManager()
+            with open("jsonfiles/all-nodes.json", 'rb') as f:
+                nodesdict = json.load(f)
+                f.close()
+            for l3_node in l3nodes:
+                tmp_name = l3_node['Name']
+                tmp_node = next(
+                    (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+                    None)
+                node = node_manager.getNode(NodeKey(l3_node['Name']))
+                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+
+        # Add LSPs to plan
+        logging.info("Adding LSP's...")
+        with open("jsonfiles/lsps.json", 'rb') as f:
+            lsps = json.load(f)
+            f.close()
+        waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+
+        # Create and assign nodes to Sites
+        logging.info("Assigning nodes to sites...")
+        waecode.planbuild.assignSites_l3nodes(plan)
+
+        #######################################
+        #
+        #  Build Optical Plan Components
+        #
+        #######################################
 
         # # Add L1 nodes to plan
         # logging.info("Adding L1 nodes...")
@@ -185,145 +274,62 @@ def main():
         #     l1linksdict = json.load(f)
         #     f.close()
         # waecode.planbuild.generateL1links(plan, l1linksdict)
-
-        #######################################
         #
-        #  Experimental
-        #
-        #######################################
-        # # Add MPLS nodes to plan
-        # logging.info("Adding nodes to plan...")
-        # with open("jsonfiles/mpls_nodes.json", 'rb') as f:
-        #     mpls_nodes = json.load(f)
+        # # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
+        # logging.info("Adding 4k nodes to plan...")
+        # with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+        #     four_k_nodes = json.load(f)
         #     f.close()
+        # added_nodes = []
         # l3nodes = []
-        # for mpls_node in mpls_nodes:
-        #     tmpnode = {'Name': mpls_node}
-        #     l3nodes.append(tmpnode)
-        # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+        # for k, v in four_k_nodes.items():
+        #     exists = waecode.planbuild.check_node_exists(plan,v['Name'])
+        #     if not exists:
+        #         tmpnode = {'Name': v['Name']}
+        #         added_nodes.append(tmpnode)
+        #         l3nodes.append({'Name': v['Name']})
+        #
+        # waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
+        #
+        # # Set node coordinates
+        # logging.info("Setting node coordinates...")
+        # node_manager = plan.getNetwork().getNodeManager()
+        # with open("jsonfiles/all-nodes.json", 'rb') as f:
+        #     nodesdict = json.load(f)
+        #     f.close()
+        # for l3_node in l3nodes:
+        #     tmp_name = l3_node['Name']
+        #     tmp_node = next(
+        #         (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+        #         None)
+        #     node = node_manager.getNode(NodeKey(l3_node['Name']))
+        #     node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+        #     node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+        #
+        # # Add OCH-Trails (wavelengths) to plan
+        # logging.info("Adding OCH Trails as L1 circuits to the plan...")
+        # with open("jsonfiles/och_trails.json", 'rb') as f:
+        #     och_trails = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-        # Check 4k_nodes_db.json for duplicate entries
-        with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
-            four_k_nodes = json.load(f)
-            f.close()
-        for k, v in four_k_nodes.items():
-            count = 0
-            for k1, v1 in four_k_nodes.items():
-                if v['Name'] == v1['Name']:
-                    count += 1
-            if count > 1:
-                logging.info("Found a dup, removing this node: " + v['Name'])
-                four_k_nodes.pop(k)
-
-        l3nodeloopbacks = []
-        # Add L3 nodes to plan
-        for state in state_or_states_list:
-            logging.info("Adding L3 nodes...")
-            l3nodes, l3linksdict = get_l3_nodes(state)
-            waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
-            # with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
-            #     l3linksdict = json.load(f)
-            #     f.close()
-            # l3nodes = []
-            # for k1, v1 in l3linksdict.items():
-            #     tmpnode = {'Name': k1}
-            #     l3nodes.append(tmpnode)
-
-            # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
-            # logging.info("Adding 4k nodes to plan...")
-            # with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
-            #     four_k_nodes = json.load(f)
-            #     f.close()
-            # added_nodes = []
-            # for k, v in four_k_nodes.items():
-            #     if v['Name'] == 'SLGVPAXS-0110407A':
-            #         logging.info("Found it!")
-            #     exists = waecode.planbuild.check_node_exists(plan,v['Name'])
-            #     if not exists:
-            #         tmpnode = {'Name': v['Name']}
-            #         added_nodes.append(tmpnode)
-            #     # matched = False
-            #     # for l3_node in l3nodes:
-            #     #     if v['Name'] == l3_node['Name']:
-            #     #         matched = True
-            #     # if not matched:
-            #     #     tmpnode = {'Name': v['Name']}
-            #     #     added_nodes.append(tmpnode)
-            # waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
-
-            # Add L3 links to plan and stitch to L1 links where applicable
-            logging.info("Adding L3 links...")
-            waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails 
-
-            # # Add OCH-Trails (wavelengths) to plan
-            # logging.info("Adding OCH Trails as L1 circuits to the plan...")
-            # with open("jsonfiles/och_trails.json", 'rb') as f:
-            #     och_trails = json.load(f)
-            #     f.close()
-            # waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
-
-            #######################################
-            #
-            #  Experimental
-            #
-            #######################################
-            # # Add OTN links to plan
-            # logging.info("Adding OTN links...")
-            # with open("jsonfiles/otn_links.json", 'rb') as f:
-            #     otn_links = json.load(f)
-            #     f.close()
-            # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
-            #
-            # TODO see if assignSites is breaking something (seems to be)
-            # waecode.planbuild.assignSites(plan)
-
-            # read FlexLSP add-on options
-            with open("waecode/options.json", 'rb') as f:
-                options = json.load(f)
-                f.close()
-
-            # Add LSPs to plan
-            # logging.info("Adding LSP's...")
-            # l3nodeloopbacks = []
-
-            # Make/update list of nodenames and loopbacks
-            for k1, v1 in l3linksdict.items():
-                tmpnode = {k1: v1['Loopback Address']}
-                l3nodeloopbacks.append(tmpnode)
-
-            # with open("jsonfiles/lsps.json", 'rb') as f:
-            #     lsps = json.load(f)
-            #     f.close()
-            # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
-
-            # # Add OTN services to the plan
-            # logging.info("Adding ODU services to the plan...")
-            # with open("jsonfiles/odu_services.json", 'rb') as f:
-            #     odu_services = json.load(f)
-            #     f.close()
-            # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
-
-            # Set node coordinates
-            logging.info("Setting node coordinates...")
-            node_manager = plan.getNetwork().getNodeManager()
-            with open("jsonfiles/all-nodes.json", 'rb') as f:
-                nodesdict = json.load(f)
-                f.close()
-            for l3_node in l3nodes:
-                tmp_name = l3_node['Name']
-                tmp_node = next(
-                    (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
-                    None)
-                node = node_manager.getNode(NodeKey(l3_node['Name']))
-                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
-
-        # Add LSPs to plan
-        logging.info("Adding LSP's...")
-        with open("jsonfiles/lsps.json", 'rb') as f:
-            lsps = json.load(f)
-            f.close()
-        waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+        # # Add OTN links to plan
+        # logging.info("Adding OTN links...")
+        # with open("jsonfiles/otn_links.json", 'rb') as f:
+        #     otn_links = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generate_OTN_circuits(plan, otn_links)
+        #
+        # # TODO see if assignSites is breaking something (seems to be)
+        # waecode.planbuild.assignSites(plan)
+        #
+        #
+        # # Add OTN services to the plan
+        # logging.info("Adding ODU services to the plan...")
+        # with open("jsonfiles/odu_services.json", 'rb') as f:
+        #     odu_services = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
