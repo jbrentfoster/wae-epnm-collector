@@ -127,7 +127,7 @@ def main():
     # pool.close()
     # pool.join()
 
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
