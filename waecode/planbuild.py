@@ -423,7 +423,10 @@ def assignSites_l3nodes(plan):
                 pass
             else:
                 # logging.info("Could not match a site name, creating new site.")
-                site_name = node_name[0:12]
+                if '-' in node_name:
+                    site_name = node_name[0:8]
+                else:
+                    site_name = node_name[0:11]
                 site_rec = SiteRecord(name=site_name, latitude=node_obj.getLatitude(), longitude=node_obj.getLongitude())
                 try:
                     tmpsite = site_manager.newSite(siteRec=site_rec)
@@ -438,7 +441,7 @@ def assignSites_l3nodes(plan):
 def set_site_using_name(site_manager, node_manager, node):
     sites = site_manager.getAllSites()
     node_name = node_manager.getNode(node).getName()
-    for x in range(14, 10, -1):
+    for x in range(11, 6, -1):
         for site in sites:
             site_name = site_manager.getSite(site).getName()
             try:

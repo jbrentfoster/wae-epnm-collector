@@ -221,12 +221,16 @@ def main():
                 f.close()
             for l3_node in l3nodes:
                 tmp_name = l3_node['Name']
-                tmp_node = next(
-                    (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
-                    None)
-                node = node_manager.getNode(NodeKey(l3_node['Name']))
-                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+                try:
+                    tmp_node = next(
+                        (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+                        None)
+                    node = node_manager.getNode(NodeKey(l3_node['Name']))
+                    node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+                    node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+                except Exception as err:
+                    logging.warn("Unable to set node coordinates, node not in EPNM inventory: " + tmp_name)
+
 
         # Add LSPs to plan
         logging.info("Adding LSP's...")
