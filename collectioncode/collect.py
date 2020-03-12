@@ -127,18 +127,18 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
 
-    # logging.info("Collecting L3 link termination points...")
-    # collect_termination_points_threaded(baseURL, epnmuser,
-    #                                         epnmpassword, state_or_states)
-    #
+    logging.info("Collecting L3 link termination points...")
+    collect_termination_points_threaded(baseURL, epnmuser,
+                                            epnmpassword, state_or_states)
+
     logging.info("Collecting optical virtual connections...")
     collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
 
-    # logging.info("Adding vc-fdn to L3links...")
-    # add_vcfdn_l3links(state_or_states)
+    logging.info("Adding vc-fdn to L3links...")
+    add_vcfdn_l3links(state_or_states)
 
-    # Collect optical
-    #  "l1nodes":
+    # # Collect optical
+    # #  "l1nodes":
     # logging.info("Collecting L1 nodes...")
     # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
     # ##  "l1links":
