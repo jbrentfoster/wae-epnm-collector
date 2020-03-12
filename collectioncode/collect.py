@@ -1037,7 +1037,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
 
 def add_vcfdn_l3links(state_or_states):
     for state in state_or_states:
-        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             l3links = json.load(f)
 
         with open("jsongets/vc-optical.json", 'rb') as f:
