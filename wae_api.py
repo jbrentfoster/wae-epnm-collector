@@ -63,7 +63,7 @@ def main():
     build_plan = args.build_plan
     delete_previous = args.delete_previous
     state_or_states_list = args.state_or_states.split(',')
-    state_or_states_list = [state.strip(' ') for state in state_or_states_list]
+    state_or_states_list = [state.strip(' ').title() for state in state_or_states_list]
 
     # # Set up logging
     # try:
@@ -84,6 +84,7 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
     logging.info("Collection start time is " + current_time)
+    logging.info("State list is " + str(state_or_states_list))
 
     # Delete all output files
     if delete_previous:
