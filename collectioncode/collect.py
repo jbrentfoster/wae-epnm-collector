@@ -565,7 +565,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
                 logging.info("Job status: " + str(status))
                 if status == "SUCCESS":
-                    logging.info("Successfully collected ISIS hostnames...")
+                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node.get('state')))
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
                         'ra.deploy-result').get('ra.transcript')
                     notDone = False
@@ -576,7 +576,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
                 logging.info("Run status: " + status)
                 if status == "COMPLETED":
-                    logging.info("Successfully collected ISIS hostnames...")
+                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node.get('state')))
                     results = thejson.get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
