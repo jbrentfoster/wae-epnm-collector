@@ -15,6 +15,7 @@ import shutil
 import argparse
 import time
 from multiprocessing.dummy import Pool as ThreadPool
+import configparser
 
 thread_count = 6
 
@@ -32,25 +33,35 @@ def get_l3_nodes(state):
 
 
 def main():
+    #Code for the new properties file
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
     # Get path for collection files from command line arguments
     parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
-    parser.add_argument('archive_root', metavar='N', type=str,
+    parser.add_argument('-a', '--archive_root', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Archive_root'],
                         help='Please provide the local path to your archive directory')
-    parser.add_argument('state_or_states', metavar='N', type=str,
+    parser.add_argument('-s', '--state_or_states', metavar='N', type=str, nargs='?', default=config['DEFAULT']['State_or_states'],
                         help="Please provide a list of states for mplstopo discovery. 'New York, Florida'")
-    parser.add_argument('epnm_ipaddr', metavar='N', type=str,
+    parser.add_argument('-i', '--epnm_ipaddr', metavar='N', type=str, nargs='?', default=config['DEFAULT']['EPNM_ipaddr'],
                         help="Please provide the EPNM Server address for API calls")
-    parser.add_argument('epnm_user', metavar='N', type=str,
+    parser.add_argument('-u', '--epnm_user', metavar='N', type=str, nargs='?', default=config['DEFAULT']['EPNM_user'],
                         help="Please provide the EPNM User name for the EPNM Server")
-    parser.add_argument('epnm_pass', metavar='N', type=str,
+    parser.add_argument('-p', '--epnm_pass', metavar='N', type=str, nargs='?', default=config['DEFAULT']['EPNM_pass'],
                         help="Please provide the EPNM password for the EPNM Server")
-    parser.add_argument('phases', metavar='N', type=str,
+    parser.add_argument('-ph', '--phases', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Phases'],
                         help="List of the collection phases to run(1-6), example '1356'")
-    parser.add_argument('--build_plan', action='store_true',
+    parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
-    parser.add_argument('--delete_previous', action='store_true',
+    parser.add_argument('-d', '--delete_previous', action='store_true',
                         help="Add this flag to delete previous collection files.")
     args = parser.parse_args()
+    print(args.archive_root)
+    print(args.epnm_ipaddr)
+    print(args.epnm_user)
+    print(args.epnm_pass)
+    print(args.state_or_states)
+    print(args.phases)
 
     epnmipaddr = args.epnm_ipaddr
     baseURL = "https://" + epnmipaddr + "/restconf"

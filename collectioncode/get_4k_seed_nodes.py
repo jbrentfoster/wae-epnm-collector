@@ -61,9 +61,15 @@ def open_file_load_data(file_name):
 
 def get_random_nodes_for_states(state_or_states):
     random_node_choices = []
+    valid_seed_nodes = open_file_load_data("valid_seed_node.json")
     for state in state_or_states:
-        seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
-        random_node_choices.append(random.choice(seed_nodes[state]))
+        state = state.strip()
+        if state in valid_seed_nodes:
+            random_node_choices.append(valid_seed_nodes[state])
+        else:
+            seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+            random_node_choices.append(random.choice(seed_nodes[state]))
+        logging.info('The valid seed-node for {} is: {}'.format(state, random_node_choices[-1]))
     return random_node_choices
 
 if __name__ == "__main__":
@@ -71,6 +77,6 @@ if __name__ == "__main__":
     state_or_states = ['New York', 'New Jersey']
     ########################################
     
+    pprint (get_random_nodes_for_states(state_or_states))
     run_get_4k_seed_nodes()
     get_potential_seednode(state_or_states)
-    pprint (get_random_nodes_for_states(state_or_states))
