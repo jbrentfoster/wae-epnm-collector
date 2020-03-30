@@ -517,10 +517,23 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                     logging.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
 
+        #Getting the state for this particular node
+        seed_node = seed_node.get('node')
+        seed_node_state = ""
+        for state in state_or_states:
+            with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                data = json.loads(f.read())
+                list_of_nodes = data[state]
+                for node in list_of_nodes:
+                    if node["node"] == seed_node:
+                        seed_node_state = node["state"]
+                        break
+
         logging.info("Database received.")
         with open("jsongets/{state}_mplstopo.txt".format(
                 # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                state=seed_node_state.replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 
@@ -556,6 +569,18 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         notDone = True
         logging.info('Checking job status...')
         results = ""
+        #Getting the state for this particular node
+        seed_node = seed_node.get('node')
+        seed_node_state = ""
+        for state in state_or_states:
+            with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                data = json.loads(f.read())
+                list_of_nodes = data[state]
+                for node in list_of_nodes:
+                    if node["node"] == seed_node:
+                        seed_node_state = node["state"]
+                        break
+
         while notDone:
             time.sleep(5)
             uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
@@ -565,7 +590,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
                 logging.info("Job status: " + str(status))
                 if status == "SUCCESS":
-                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node.get('state')))
+                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
                         'ra.deploy-result').get('ra.transcript')
                     notDone = False
@@ -576,7 +601,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
                 logging.info("Run status: " + status)
                 if status == "COMPLETED":
-                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node.get('state')))
+                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
                     results = thejson.get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
@@ -586,7 +611,8 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         logging.info("Database received.")
         with open("jsongets/{state}_hostnames.txt".format(
                 # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                # state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                state=seed_node_state.replace(' ', '_')), 'wb') as f:
             f.write(results)
             f.close()
 
