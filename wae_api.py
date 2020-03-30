@@ -34,7 +34,7 @@ def get_l3_nodes(state):
 
 def main():
     #Code for the new properties file
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     config.read('config.ini')
 
     # Get path for collection files from command line arguments
