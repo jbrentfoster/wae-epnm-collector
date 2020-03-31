@@ -17,7 +17,7 @@ def collection_router(collection_call):
         logging.info("Collecting L1 links...")
         collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == 'allnodes':
-        logging.info("Collection all node equipment details...")
+        logging.info("Collecting all node equipment details...")
         collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
     if collection_call['type'] == '4knodes':
         logging.info("Collecting 4k nodes...")
@@ -97,7 +97,7 @@ def collection_router(collection_call):
 
 def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # 'allnodes':
-    logging.info("Collection all node equipment details...")
+    logging.info("Collecting all node equipment details...")
     collectAllNodes_json(baseURL, epnmuser, epnmpassword)
     # 4k nodes
     logging.info("Collecting 4k nodes...")

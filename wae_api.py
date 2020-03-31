@@ -51,17 +51,13 @@ def main():
                         help="Please provide the EPNM password for the EPNM Server")
     parser.add_argument('-ph', '--phases', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Phases'],
                         help="List of the collection phases to run(1-6), example '1356'")
+    parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
+                        help="Add this flag to set the logging level.")
     parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
                         help="Add this flag to delete previous collection files.")
     args = parser.parse_args()
-    print(args.archive_root)
-    print(args.epnm_ipaddr)
-    print(args.epnm_user)
-    print(args.epnm_pass)
-    print(args.state_or_states)
-    print(args.phases)
 
     epnmipaddr = args.epnm_ipaddr
     baseURL = "https://" + epnmipaddr + "/restconf"
@@ -75,6 +71,7 @@ def main():
     delete_previous = args.delete_previous
     state_or_states_list = args.state_or_states.split(',')
     state_or_states_list = [state.strip(' ').title() for state in state_or_states_list]
+    logging_level = args.logging.upper()
 
     # # Set up logging
     # try:
@@ -84,7 +81,7 @@ def main():
 
     logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
     rootLogger = logging.getLogger()
-    rootLogger.level = logging.INFO
+    rootLogger.level = eval('logging.{}'.format(logging_level))
 
     log_file_name = 'collection-' + current_time + '.log'
     fileHandler = logging.FileHandler(filename=log_file_name)
@@ -96,6 +93,12 @@ def main():
     rootLogger.addHandler(consoleHandler)
     logging.info("Collection start time is " + current_time)
     logging.info("State list is " + str(state_or_states_list))
+    logging.debug("Archive_root is: {}".format(args.archive_root))
+    logging.debug("Epnm_ipaddr is: {}".format(args.epnm_ipaddr))
+    logging.debug("Epnm_user is: {}".format(args.epnm_user))
+    logging.debug("Epnm_pass is: {}".format(args.epnm_pass))
+    logging.debug("State_or_states is: {}".format(args.state_or_states))
+    logging.debug("Phases is: {}".format(args.phases))
 
     # Delete all output files
     if delete_previous:
@@ -115,7 +118,7 @@ def main():
     # phase_list = []
     # for phase in phases:
     #     phase_list.append(int(phase))
-    #
+    
     # # Run the collector...
     # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
     #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
@@ -133,7 +136,7 @@ def main():
     #             phases_to_run.append(call)
     #             break
     #     c +=1
-    #
+    
     # pool = ThreadPool(7)
     # pool.map(collectioncode.collect.collection_router, phases_to_run)
     # pool.close()

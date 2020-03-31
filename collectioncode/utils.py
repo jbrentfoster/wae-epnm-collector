@@ -4,6 +4,7 @@ from urllib3.exceptions import InsecureRequestWarning
 import json
 import errors
 import xml.dom.minidom
+import logging
 
 urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -19,14 +20,16 @@ def rest_get_json(baseURL, uri, user, password):
     try:
         r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False)
         # print "HTTP response code is: " + str(r.status_code)
+        logging.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
         if r.status_code == 200:
             return json.dumps(r.json(), indent=2)
         else:
             raise errors.InputError(restURI, "HTTP status code: " + str(r.status_code))
     except errors.InputError as err:
-        print "Exception raised: " + str(type(err))
-        print err.expression
-        print err.message
+        # print "Exception raised: " + str(type(err))
+        # print err.expression
+        # print err.message
+        logging.error('Exception raised: ' + str(type(err)) + '\n{}\n{}'.format(err.expression, err.message))
         return
 
 
