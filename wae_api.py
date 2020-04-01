@@ -14,7 +14,8 @@ import logging
 import shutil
 import argparse
 import time
-from multiprocessing.dummy import Pool as ThreadPool
+# from multiprocessing.dummy import Pool as ThreadPool
+from concurrent.futures import ThreadPoolExecutor as ThreadPool
 import configparser
 
 thread_count = 6
@@ -64,6 +65,7 @@ def main():
     epnmuser = args.epnm_user
     epnmpassword = args.epnm_pass
     current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
+    start_time = time.time()
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
     phases = args.phases
@@ -115,9 +117,9 @@ def main():
     else:
         logging.info("Keeping collection files from previous collection, building plan file only...")
 
-    # phase_list = []
-    # for phase in phases:
-    #     phase_list.append(int(phase))
+    phase_list = []
+    for phase in phases:
+        phase_list.append(int(phase))
     
     # # Run the collector...
     # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
@@ -139,8 +141,7 @@ def main():
     
     # pool = ThreadPool(7)
     # pool.map(collectioncode.collect.collection_router, phases_to_run)
-    # pool.close()
-    # pool.join()
+    # pool.shutdown(wait=True)
 
     collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
@@ -370,6 +371,7 @@ def main():
     # Script completed
     finish_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
     logging.info("Collection finish time is " + finish_time)
+    logging.info("Total script completion time is {} seconds.".format(time.time() - start_time))
     time.sleep(2)
 
 

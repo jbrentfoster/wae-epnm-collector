@@ -26,10 +26,7 @@ def rest_get_json(baseURL, uri, user, password):
         else:
             raise errors.InputError(restURI, "HTTP status code: " + str(r.status_code))
     except errors.InputError as err:
-        # print "Exception raised: " + str(type(err))
-        # print err.expression
-        # print err.message
-        logging.error('Exception raised: ' + str(type(err)) + '\n{}\n{}'.format(err.expression, err.message))
+        logging.error('Exception raised: ' + str(type(err)) + '\nURL: {}\n{}'.format(err.expression, err.message))
         return
 
 
