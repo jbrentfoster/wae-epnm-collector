@@ -98,7 +98,6 @@ def main():
     logging.debug("Archive_root is: {}".format(args.archive_root))
     logging.debug("Epnm_ipaddr is: {}".format(args.epnm_ipaddr))
     logging.debug("Epnm_user is: {}".format(args.epnm_user))
-    logging.debug("Epnm_pass is: {}".format(args.epnm_pass))
     logging.debug("State_or_states is: {}".format(args.state_or_states))
     logging.debug("Phases is: {}".format(args.phases))
 

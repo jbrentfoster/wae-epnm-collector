@@ -19,7 +19,6 @@ def rest_get_json(baseURL, uri, user, password):
     restURI = baseURL + uri
     try:
         r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False)
-        # print "HTTP response code is: " + str(r.status_code)
         logging.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
         if r.status_code == 200:
             return json.dumps(r.json(), indent=2)
@@ -84,17 +83,14 @@ def rest_post_json(baseURL, uri, thejson, user, password):
         headers = {'content-type': appformat, 'accept': appformat}
         restURI = baseURL + uri
         try:
-            r = requests.post(restURI, data=thejson, headers=headers, proxies=proxies, auth=(user, password),
-                              verify=False)
-            # print "HTTP response code is: " + str(r.status_code)
+            r = requests.post(restURI, data=thejson, headers=headers, proxies=proxies, auth=(user, password),verify=False)
+            logging.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
             if r.status_code == 200:
                 return json.dumps(r.json(), indent=2)
             else:
                 raise errors.InputError(restURI, "HTTP status code: " + str(r.status_code))
         except errors.InputError as err:
-            print "Exception raised: " + str(type(err))
-            print err.expression
-            print err.message
+            logging.error('Exception raised: ' + str(type(err)) + '\nURL: {}\n{}'.format(err.expression, err.message))
             return
 
 # def cleanxml(thexml):
