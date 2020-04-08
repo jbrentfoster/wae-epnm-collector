@@ -136,8 +136,8 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # collect_termination_points_threaded(baseURL, epnmuser,
     #                                         epnmpassword, state_or_states)
 
-    # logging.info("Collecting optical virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting optical virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
 
     # logging.info("Adding vc-fdn to L3links...")
     # add_vcfdn_l3links(state_or_states)
