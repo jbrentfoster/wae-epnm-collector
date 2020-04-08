@@ -1083,11 +1083,12 @@ def add_vcfdn_l3links(state_or_states):
             if subtype == "oc:och-trail-uni":
                 vcdict = {}
                 try:
-                    for subitem in item.get('vc.termination-point-list').get('vc.termination-point'):
-                        tmpfdn = subitem.get('vc.fdn')
-                        tmpnode = tmpfdn.split('!')[1].split('=')[1]
-                        tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
-                        vcdict.setdefault(tmpnode, tmpoptics)
+                    if 'vc.termination-point-list' in item:
+                        for subitem in item.get('vc.termination-point-list').get('vc.termination-point'):
+                            tmpfdn = subitem.get('vc.fdn')
+                            tmpnode = tmpfdn.split('!')[1].split('=')[1]
+                            tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
+                            vcdict.setdefault(tmpnode, tmpoptics)
                     for k1, v1 in l3links.items():
                         # logging.info "**************Nodename is: " + k1
                         for k2, v2 in v1.items():
