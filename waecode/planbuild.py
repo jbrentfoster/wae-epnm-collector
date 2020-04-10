@@ -139,6 +139,36 @@ def generateL3nodes(plan, l3nodelist):
                              ipManage=ipManage)
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
 
+def generateL3nodes_combined(plan, l3nodelist, instance):
+    with open("jsonfiles/all-nodes_{}.json".format(instance), 'rb') as f:
+        jsonresponse = f.read()
+        f.close()
+    all_nodes = json.loads(jsonresponse)
+    for l3node in l3nodelist:
+        name = l3node['Name']
+        if check_node_exists(plan, name):
+            logging.warn("Node already exists in plan file, will not add duplicate: " + name)
+            continue
+        vendor = 'Cisco'
+        model = ""
+        os = ""
+        description = ""
+        ipManage = ""
+        for node in all_nodes:
+            if node['name'] == name:
+                model = node['product-type']
+                os = node['software-version']
+                description = node['description']
+                ipManage = node['management-address']
+                break
+        nodeRec = NodeRecord(name=name,
+                             model=model,
+                             vendor=vendor,
+                             os=os,
+                             description=description,
+                             ipManage=ipManage)
+        newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
+
 
 def generateL1circuits(plan, och_trails):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
@@ -231,25 +261,27 @@ def generateL3circuits(plan, l3linksdict):
                                 name = tp_description
                         l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                       lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
-                        if 'vc-fdn' in v3:
-                            l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
-                            l1circuits = l1CircuitManager.getAllL1Circuits()
-                            for attr, val in l1circuits.items():
-                                l1circuit_name = val.getName()
-                                # logging.info("L1 circuit name is " + l1circuit_name)
-                                if v3['vc-fdn'] == val.getName():
-                                    # logging.info("Name matched!")
-                                    l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
-                                    l3circuit.setL1Circuit(l1circuit)
-                                    # TODO recode setting the L3 node site based on connected L1 node site
-                        l3circuit.setCapacity(intfbw)
-                        intfdict = l3circuit.getAllInterfaces()
-                        for k6, v6 in intfdict.items():
-                            v6.setResvBW(int(rsvpbw / 1000))
-                        circ_name = l3circuit.getName()
-                        circ_key = l3circuit.getKey()
-                        circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
-                        circ_srlgs[circ_name] = circ_dict
+                            
+                        if l3circuit:   
+                            if 'vc-fdn' in v3:
+                                l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
+                                l1circuits = l1CircuitManager.getAllL1Circuits()
+                                for attr, val in l1circuits.items():
+                                    l1circuit_name = val.getName()
+                                    # logging.info("L1 circuit name is " + l1circuit_name)
+                                    if v3['vc-fdn'] == val.getName():
+                                        # logging.info("Name matched!")
+                                        l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
+                                        l3circuit.setL1Circuit(l1circuit)
+                                        # TODO recode setting the L3 node site based on connected L1 node site
+                            l3circuit.setCapacity(intfbw)
+                            intfdict = l3circuit.getAllInterfaces()
+                            for k6, v6 in intfdict.items():
+                                v6.setResvBW(int(rsvpbw / 1000))
+                            circ_name = l3circuit.getName()
+                            circ_key = l3circuit.getKey()
+                            circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                            circ_srlgs[circ_name] = circ_dict
                     duplicatelink = False
 
     logging.info("Processing SRLG's...")
@@ -326,9 +358,12 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
                                ipAddresses=l3nodeB_ip, igpMetric=igp_metric, teMetric=te_metric)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
-    circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
-
-    return circuit
+    try:
+        circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
+        return circuit
+    except Exception as err:
+        logging.warn('Could not create circuit for: ' + name)
+        logging.warn(err)
 
 
 def process_srlgs(plan, circ_srlgs):
