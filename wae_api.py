@@ -69,6 +69,8 @@ def main():
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
                         help="Add this flag to delete previous collection files.")
+    parser.add_argument('-in', '--instance', action='store_true',
+                        help="Add this flag to pass in the instance run value.")
     parser.add_argument('-sa', '--save', action='store_true',
                         help="Add this flag to save the states list and the instance to the instance.json file, and add the instance string to the names of all the data files.")
     parser.add_argument('-c', '--combine', action='store_true',
@@ -160,7 +162,7 @@ def main():
     # pool.map(collectioncode.collect.collection_router, phases_to_run)
     # pool.shutdown(wait=True)
 
-    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
+    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
