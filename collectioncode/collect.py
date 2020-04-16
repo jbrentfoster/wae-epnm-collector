@@ -101,54 +101,54 @@ def collection_router(collection_call):
 
 
 def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
-    # 'allnodes':
-    logging.info("Collecting all node equipment details...")
-    collectAllNodes_json(baseURL, epnmuser, epnmpassword)
-    # 4k nodes
-    logging.info("Collecting 4k nodes...")
-    collect4kNodes_json(baseURL, epnmuser, epnmpassword)
-    #   "lsps":
-    logging.info("Collecting LSPs...")
-    collectlsps_json(baseURL, epnmuser, epnmpassword)
-    ## "mpls":
-    logging.info("Collecting MPLS topological links...")
-    collect_mpls_links_json(baseURL, epnmuser, epnmpassword)
+    # # 'allnodes':
+    # logging.info("Collecting all node equipment details...")
+    # collectAllNodes_json(baseURL, epnmuser, epnmpassword)
+    # # 4k nodes
+    # logging.info("Collecting 4k nodes...")
+    # collect4kNodes_json(baseURL, epnmuser, epnmpassword)
+    # #   "lsps":
+    # logging.info("Collecting LSPs...")
+    # collectlsps_json(baseURL, epnmuser, epnmpassword)
+    # # "mpls":
+    # logging.info("Collecting MPLS topological links...")
+    # collect_mpls_links_json(baseURL, epnmuser, epnmpassword)
     # logging.info("Collecting MPLS nodes...")
     # collectMPLSnodes()
-    logging.info("Collecting MPLS topology...")
-    collect_mpls_topo_json(baseURL, epnmuser, epnmpassword,
-                           state_or_states)
-    logging.info("Collecting ISIS hostnames...")
-    collect_hostnames_json(baseURL, epnmuser, epnmpassword,
-                           state_or_states)
-    process_hostnames(state_or_states)
-    logging.info("Processing MPLS topology...")
-    processMPLS(state_or_states)
+    # logging.info("Collecting MPLS topology...")
+    # collect_mpls_topo_json(baseURL, epnmuser, epnmpassword,
+    #                        state_or_states)
+    # logging.info("Collecting ISIS hostnames...")
+    # collect_hostnames_json(baseURL, epnmuser, epnmpassword,
+    #                        state_or_states)
+    # process_hostnames(state_or_states)
+    # logging.info("Processing MPLS topology...")
+    # processMPLS(state_or_states)
 
-    logging.info("Adding MPLS TL data to L3 links...")
-    try:
-        add_mpls_tl_data(state_or_states)
-    except Exception as err:
-        logging.critical("MPLS topological links are not valid.  Halting execution.")
-        sys.exit("Collection error.  Halting execution.")
+    # logging.info("Adding MPLS TL data to L3 links...")
+    # try:
+    #     add_mpls_tl_data(state_or_states)
+    # except Exception as err:
+    #     logging.critical("MPLS topological links are not valid.  Halting execution.")
+    #     sys.exit("Collection error.  Halting execution.")
 
     # logging.info("Collecting L3 link termination points...")
     # collect_termination_points_threaded(baseURL, epnmuser,
     #                                         epnmpassword, state_or_states)
 
-    logging.info("Collecting optical virtual connections...")
-    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    # logging.info("Collecting optical virtual connections...")
+    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
 
     # logging.info("Adding vc-fdn to L3links...")
     # add_vcfdn_l3links(state_or_states)
 
-    # # Collect optical
-    # #  "l1nodes":
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # ##  "l1links":
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # Collect optical
+    #  "l1nodes":
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    # "l1links":
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
 
     # logging.info("Collecting optical virtual connections...")
     # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
@@ -158,7 +158,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # logging.info("Getting OCH-trails wavelengths...")
     # add_wavelength_vc_optical_och_trails()
     #
-    # logging.info("Collection OTU links...")
+    # logging.info("Collecting OTU links...")
     # collect_otu_links_json(baseURL, epnmuser, epnmpassword)
     #
     # logging.info("Collecting OTU termination points...")

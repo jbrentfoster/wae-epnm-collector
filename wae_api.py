@@ -95,12 +95,6 @@ def main():
     save = args.save
     combine = args.combine
 
-    # # Set up logging
-    # try:
-    #     os.remove('collection.log')
-    # except Exception as err:
-    #     print("No log file to delete...")
-
     logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
