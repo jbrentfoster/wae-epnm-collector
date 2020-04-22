@@ -22,8 +22,8 @@ thread_count = 6
 
 
 def get_l3_nodes(state):
-    # with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
-    with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.replace(' ', '_')), 'rb') as f:
+    with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
+    # with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.replace(' ', '_')), 'rb') as f:
         l3linksdict = json.load(f)
         f.close()
     l3nodes = []
@@ -136,33 +136,33 @@ def main():
     else:
         logging.info("Keeping collection files from previous collection, building plan file only...")
 
-    # phase_list = []
-    # for phase in phases:
-    #     phase_list.append(int(phase))
+    phase_list = []
+    for phase in phases:
+        phase_list.append(int(phase))
     
-    # # Run the collector...
-    # collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
-    #                     {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-    #                     ]
-    # phases_to_run = []
-    # c = 1
-    # for call in collection_calls:
-    #     for phase_num in phase_list:
-    #         if phase_num == c:
-    #             phases_to_run.append(call)
-    #             break
-    #     c +=1
-    
-    # pool = ThreadPool(7)
-    # pool.map(collectioncode.collect.collection_router, phases_to_run)
-    # pool.shutdown(wait=True)
+    # Run the collector...
+    collection_calls = [{'type': 'l1nodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'l1links', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
+                        {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
+                        ]
+    phases_to_run = []
+    c = 1
+    for call in collection_calls:
+        for phase_num in phase_list:
+            if phase_num == c:
+                phases_to_run.append(call)
+                break
+        c +=1
 
-    collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
+    pool = ThreadPool(7)
+    pool.map(collectioncode.collect.collection_router, phases_to_run)
+    pool.shutdown(wait=True)
+
+    # collectioncode.collect.runcollector(baseURL, epnmuser, epnmpassword, state_or_states_list)
 
     # print "PYTHONPATH=" + os.getenv('PYTHONPATH')
     # print "PATH=" + os.getenv('PATH')
@@ -197,7 +197,7 @@ def main():
                 
                     
 
-    if build_plan and combine == None:
+    if build_plan and combine == False:
         logging.info("Building plan file...")
 
         # Create a service to be used by this script
@@ -259,34 +259,34 @@ def main():
         #######################################
 
         # Add L1 nodes to plan
-        # logging.info("Adding L1 nodes...")
-        # with open("jsonfiles/l1Nodes.json", 'rb') as f:
-        #     l1nodesdict = json.load(f)
-        #     f.close()
-        # l1nodes = []
-        # sites = []
-        # site_manager = plan.getNetwork().getSiteManager()
-        # # found = False
-        # for k1, v1 in l1nodesdict.items():
-        #     tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
-        #     site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
-        #     try:
-        #         tmpsite = site_manager.newSite(siteRec=site_rec)
-        #         tmpnode['sitekey'] = tmpsite.getKey()
-        #         sites.append(tmpsite)
-        #         l1nodes.append(tmpnode)
-        #         logging.info("successfully added node " + tmpnode['Name'])
-        #     except Exception as err:
-        #         logging.warn('Could not process node ' + tmpnode['Name'])
-        #         logging.warn(err)
-        # waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
+        logging.info("Adding L1 nodes...")
+        with open("jsonfiles/l1Nodes.json", 'rb') as f:
+            l1nodesdict = json.load(f)
+            f.close()
+        l1nodes = []
+        sites = []
+        site_manager = plan.getNetwork().getSiteManager()
+        # found = False
+        for k1, v1 in l1nodesdict.items():
+            tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+            site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+            try:
+                tmpsite = site_manager.newSite(siteRec=site_rec)
+                tmpnode['sitekey'] = tmpsite.getKey()
+                sites.append(tmpsite)
+                l1nodes.append(tmpnode)
+                logging.info("successfully added node " + tmpnode['Name'])
+            except Exception as err:
+                logging.warn('Could not process node ' + tmpnode['Name'])
+                logging.warn(err)
+        waecode.planbuild.generateL1nodes(plan, l1nodelist=l1nodes)
 
-        # # Add L1 links to plan
-        # logging.info("Adding L1 links...")
-        # with open("jsonfiles/l1Links.json", 'rb') as f:
-        #     l1linksdict = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generateL1links(plan, l1linksdict)
+        # Add L1 links to plan
+        logging.info("Adding L1 links...")
+        with open("jsonfiles/l1Links.json", 'rb') as f:
+            l1linksdict = json.load(f)
+            f.close()
+        waecode.planbuild.generateL1links(plan, l1linksdict)
 
         # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
         logging.info("Adding 4k nodes to plan...")
@@ -320,11 +320,11 @@ def main():
             node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
 
         # Add OCH-Trails (wavelengths) to plan
-        # logging.info("Adding OCH Trails as L1 circuits to the plan...")
-        # with open("jsonfiles/och_trails.json", 'rb') as f:
-        #     och_trails = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
+        logging.info("Adding OCH Trails as L1 circuits to the plan...")
+        with open("jsonfiles/och_trails.json", 'rb') as f:
+            och_trails = json.load(f)
+            f.close()
+        waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
 
         # TODO see if assignSites is breaking something (seems to be)
@@ -332,11 +332,11 @@ def main():
 
 
         # Add OTN services to the plan
-        # logging.info("Adding ODU services to the plan...")
-        # with open("jsonfiles/odu_services.json", 'rb') as f:
-        #     odu_services = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
+        logging.info("Adding ODU services to the plan...")
+        with open("jsonfiles/odu_services.json", 'rb') as f:
+            odu_services = json.load(f)
+            f.close()
+        waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         #######################################
         #

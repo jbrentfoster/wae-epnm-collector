@@ -52,9 +52,9 @@ def collection_router(collection_call):
                 logging.critical("MPLS topological links are not valid.  Halting execution.")
                 sys.exit("Collection error.  Halting execution.")
 
-            logging.info("Collecting L3 link termination points...")
-            collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                collection_call['epnmpassword'], collection_call['state_or_states'])
+            # logging.info("Collecting L3 link termination points...")
+            # collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+            #                                     collection_call['epnmpassword'], collection_call['state_or_states'])
 
             logging.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -139,44 +139,44 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     logging.info("Collecting optical virtual connections...")
     collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
 
-    # logging.info("Adding vc-fdn to L3links...")
-    # add_vcfdn_l3links(state_or_states)
+    logging.info("Adding vc-fdn to L3links...")
+    add_vcfdn_l3links(state_or_states)
 
-    # # Collect optical
-    # #  "l1nodes":
-    # logging.info("Collecting L1 nodes...")
-    # collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
-    # ##  "l1links":
-    # logging.info("Collecting L1 links...")
-    # collectL1links_json(baseURL, epnmuser, epnmpassword)
+    # Collect optical
+    #  "l1nodes":
+    logging.info("Collecting L1 nodes...")
+    collectL1Nodes_json(baseURL, epnmuser, epnmpassword)
+    ##  "l1links":
+    logging.info("Collecting L1 links...")
+    collectL1links_json(baseURL, epnmuser, epnmpassword)
 
-    # logging.info("Collecting optical virtual connections...")
-    # collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
-    # logging.info("Parsing OCH-trails...")
-    # parse_vc_optical_och_trails()
-    #
-    # logging.info("Getting OCH-trails wavelengths...")
-    # add_wavelength_vc_optical_och_trails()
-    #
-    # logging.info("Collection OTU links...")
-    # collect_otu_links_json(baseURL, epnmuser, epnmpassword)
-    #
-    # logging.info("Collecting OTU termination points...")
-    # collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Collecting optical virtual connections...")
+    collectvirtualconnections_json(baseURL, epnmuser, epnmpassword)
+    logging.info("Parsing OCH-trails...")
+    parse_vc_optical_och_trails()
 
-    # logging.info("Adding OCH trails to OTU links...")
-    # add_och_trails_to_otu_links()
-    #
-    # logging.info("Collecting L1 paths for OCH-trails...")
-    # addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
-    # logging.info("Re-ordering L1 hops for OCH-trails...")
-    # reorderl1hops_och_trails()
-    # logging.info("Parsing OTN links from OTU link data...")
-    # parse_otn_links()
-    # logging.info("Parsing ODU services from vc-optical data...")
-    # parse_odu_services()
-    # logging.info("Getting multi-layer routes for OTN services...")
-    # collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Getting OCH-trails wavelengths...")
+    add_wavelength_vc_optical_och_trails()
+
+    logging.info("Collection OTU links...")
+    collect_otu_links_json(baseURL, epnmuser, epnmpassword)
+
+    logging.info("Collecting OTU termination points...")
+    collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword)
+
+    logging.info("Adding OCH trails to OTU links...")
+    add_och_trails_to_otu_links()
+
+    logging.info("Collecting L1 paths for OCH-trails...")
+    addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword)
+    logging.info("Re-ordering L1 hops for OCH-trails...")
+    reorderl1hops_och_trails()
+    logging.info("Parsing OTN links from OTU link data...")
+    parse_otn_links()
+    logging.info("Parsing ODU services from vc-optical data...")
+    parse_odu_services()
+    logging.info("Getting multi-layer routes for OTN services...")
+    collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword)
 
 
 def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
@@ -1150,7 +1150,7 @@ def parse_otn_links():
                     otn_link.setdefault('name',
                                         "OTN link " + otn_channel.get('node') + " to " + otn_channel_compare.get(
                                             'node') + " " + otn_channel.get('channel'))
-                    otn_link.setdefault('name', otu_link.get('fdn').split("=")[2] + " ODU4 channel " + ch)
+                    # otn_link.setdefault('name', otu_link.get('fdn').split("=")[2] + " ODU4 channel " + str(ch))
                     try:
                         otn_link.setdefault('och-trail-fdn', otu_link.get('och-trail-fdn'))
                         otn_link.setdefault('otu-link-fdn', otu_link.get('fdn'))
@@ -1554,57 +1554,57 @@ def reorderl1hops_och_trails():
         f.close()
 
 
-def reorderl1hops():
-    ##### unused function #######
-    with open("jsonfiles/l3Links_add_l1hops.json", 'rb') as f:
-        l3links = json.load(f)
-        f.close()
-
-    for k1, v1 in l3links.items():
-        # logging.info "**************Nodename is: " + k1
-        for k2, v2 in v1.items():
-            if isinstance(v2, dict):
-                for k3, v3 in v2.items():
-                    # logging.info "***************Linkname is: " + k3
-                    if 'L1 Hops' in v3:
-                        logging.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
-                        l1hops = []
-                        vcfdn = v3['vc-fdn']
-                        for k4, v4 in v3.get('L1 Hops').items():
-                            nodelist = []
-                            for k5, v5 in v4.get('Nodes').items():
-                                nodelist.append(k5)
-                            l1hops.append(nodelist)
-                        if k1 == "LYBRNYLB-01153A08A" and k3 == "Link9":
-                            pass
-                        l1hopsordered = returnorderedlist(k1, l1hops)
-                        if l1hopsordered == None:
-                            logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
-                            logging.warn(
-                                "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
-                            v3.pop('L1 Hops')
-                            break
-                        tmphops = []
-                        completed = False
-                        while not completed:
-                            if len(l1hopsordered) == 0: completed = True
-                            for hop in l1hopsordered:
-                                for k4, v4 in v3.get('L1 Hops').items():
-                                    tmpnodes = []
-                                    for k5, v5 in v4.get('Nodes').items():
-                                        tmpnodes.append(k5)
-                                    if (hop[0] == tmpnodes[0] and hop[1] == tmpnodes[1]) or \
-                                            (hop[0] == tmpnodes[1] and hop[1] == tmpnodes[0]):
-                                        tmphops.append(v4)
-                                        l1hopsordered.remove(hop)
-                                        break
-                                break
-                        v3['Ordered L1 Hops'] = tmphops
-                        v3.pop('L1 Hops')
-                        # logging.info "next L1 hop..."
-    with open("jsonfiles/l3Links_final.json", "wb") as f:
-        f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+# def reorderl1hops():
+#     ##### unused function #######
+#     with open("jsonfiles/l3Links_add_l1hops.json", 'rb') as f:
+#         l3links = json.load(f)
+#         f.close()
+#
+#     for k1, v1 in l3links.items():
+#         # logging.info "**************Nodename is: " + k1
+#         for k2, v2 in v1.items():
+#             if isinstance(v2, dict):
+#                 for k3, v3 in v2.items():
+#                     # logging.info "***************Linkname is: " + k3
+#                     if 'L1 Hops' in v3:
+#                         logging.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
+#                         l1hops = []
+#                         vcfdn = v3['vc-fdn']
+#                         for k4, v4 in v3.get('L1 Hops').items():
+#                             nodelist = []
+#                             for k5, v5 in v4.get('Nodes').items():
+#                                 nodelist.append(k5)
+#                             l1hops.append(nodelist)
+#                         if k1 == "LYBRNYLB-01153A08A" and k3 == "Link9":
+#                             pass
+#                         l1hopsordered = returnorderedlist(k1, l1hops)
+#                         if l1hopsordered == None:
+#                             logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
+#                             logging.warn(
+#                                 "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
+#                             v3.pop('L1 Hops')
+#                             break
+#                         tmphops = []
+#                         completed = False
+#                         while not completed:
+#                             if len(l1hopsordered) == 0: completed = True
+#                             for hop in l1hopsordered:
+#                                 for k4, v4 in v3.get('L1 Hops').items():
+#                                     tmpnodes = []
+#                                     for k5, v5 in v4.get('Nodes').items():
+#                                         tmpnodes.append(k5)
+#                                     if (hop[0] == tmpnodes[0] and hop[1] == tmpnodes[1]) or \
+#                                             (hop[0] == tmpnodes[1] and hop[1] == tmpnodes[0]):
+#                                         tmphops.append(v4)
+#                                         l1hopsordered.remove(hop)
+#                                         break
+#                                 break
+#                         v3['Ordered L1 Hops'] = tmphops
+#                         v3.pop('L1 Hops')
+#                         # logging.info "next L1 hop..."
+#     with open("jsonfiles/l3Links_final.json", "wb") as f:
+#         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+#         f.close()
 
 
 def returnorderedlist(firstnode, l1hops):
@@ -1754,7 +1754,7 @@ def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword, state_o
                                 v3['tp-mtu'] = tp['tp-mtu']
                                 break
 
-        with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), "wb") as f:
+        with open("jsonfiles/{state}_l3Links_add_tp.json".format(state=state.replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
 
