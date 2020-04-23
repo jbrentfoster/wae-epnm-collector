@@ -61,19 +61,19 @@ def collection_router(collection_call):
                                         collection_call['epnmpassword'])
             logging.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
-        if collection_call['type'] == "optical_ph_a":
-            # Optical phase 1
-            logging.info("Collecting optical virtual connections...")
-            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                           collection_call['epnmpassword'])
+        if collection_call['type'] == "optical_phase_a":
             logging.info("Collection OTU links...")
             collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
                                    collection_call['epnmpassword'])
             logging.info("Collecting OTU termination points...")
             collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                     collection_call['epnmpassword'])
-        if collection_call['type'] == "optical_ph_b":
-            # Optical phase 2
+            logging.info("Parsing OTN links from OTU link data...")
+            parse_otn_links()
+        if collection_call['type'] == "optical_phase_b":
+            logging.info("Collecting optical virtual connections...")
+            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                           collection_call['epnmpassword'])
             logging.info("Parsing OCH-trails...")
             parse_vc_optical_och_trails()
             logging.info("Getting OCH-trails wavelengths...")
@@ -85,10 +85,7 @@ def collection_router(collection_call):
                                           collection_call['epnmpassword'])
             logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
-            logging.info("Parsing OTN links from OTU link data...")
-            parse_otn_links()
-        if collection_call['type'] == "optical_ph_c":
-            # Optical phase 3
+        if collection_call['type'] == "optical_phase_c":
             logging.info("Parsing ODU services from vc-optical data...")
             parse_odu_services()
             logging.info("Getting multi-layer routes for OTN services...")
