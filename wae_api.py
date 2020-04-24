@@ -96,12 +96,25 @@ def main():
     combine = args.combine
 
     #Implementing a basic spellchecker for the states
-    WORDS = {'New York', 'New Jersey', 'Pennsylvania', 'Deleware'}
-    def known(words):
-        return set(w for w in words if w in WORDS)
-    def variation1(word):
+    STATES = {
+
+         'Alabama','Alaska','Arizona','Arkansas','California','Colorado',
+         'Connecticut','Deleware','Florida','Georgia','Hawaii','Idaho', 
+         'Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana',
+         'Maine' 'Maryland','Massachusetts','Michigan','Minnesota',
+         'Mississippi', 'Missouri','Montana','Nebraska','Nevada',
+         'New Hampshire','New Jersey','New Mexico','New York',
+         'North Carolina','North Dakota','Ohio',    
+         'Oklahoma','Oregon','Pennsylvania','Rhode Island',
+         'South  Carolina','South Dakota','Tennessee','Texas','Utah',
+         'Vermont','Virginia','Washington','West Virginia',
+         'Wisconsin','Wyoming'
+    }
+    def known(state):
+        return set(w for w in state if w in STATES)
+    def variation1(state):
         letters = 'abcdefghijklmnopqrstuvwxyz'
-        splits = [(word[:i],word[i:])  for i in range(len(word) + 1)]
+        splits = [(state[:i],state[i:])  for i in range(len(state) + 1)]
         deletes = [l + r[1:] for l, r in splits if r]
         transposes = [l + r[1] + r[0] + r[2:] for l, r in splits if len(r) > 1]
         replaces = [l + c + r[1:] for l, r in splits if r for c in letters]
