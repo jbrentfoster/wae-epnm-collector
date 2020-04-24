@@ -95,11 +95,19 @@ def main():
     save = args.save
     combine = args.combine
 
-    # # Set up logging
-    # try:
-    #     os.remove('collection.log')
-    # except Exception as err:
-    #     print("No log file to delete...")
+    #Implementing a basic spellchecker for the states
+    WORDS = {'New York', 'New Jersey', 'Pennsylvania', 'Deleware'}
+    def known(words):
+        return set(w for w in words if w in WORDS)
+    def variation1(word):
+        letters = 'abcdefghijklmnopqrstuvwxyz'
+        splits = [(word[:i],word[i:])  for i in range(len(word) + 1)]
+        deletes = [l + r[1:] for l, r in splits if r]
+        transposes = [l + r[1] + r[0] + r[2:] for l, r in splits if len(r) > 1]
+        replaces = [l + c + r[1:] for l, r in splits if r for c in letters]
+        inserts = [l + c + r for l, r in splits for c in letters]
+        return set(deletes + transposes + replaces + inserts)
+    state_or_states_list = [''.join(known(variation1(state))) for state in state_or_states_list]
 
     logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
     rootLogger = logging.getLogger()
@@ -127,6 +135,14 @@ def main():
         try:
             remove_tree('jsonfiles')
             remove_tree('jsongets')
+
+            instance_json = {
+                "instances": [],
+                "states": []
+            }
+            with open('instance.json', 'wb') as f:
+                f.write(json.dumps(instance_json, sort_keys=True, indent=4, separators=(',', ': ')))
+
         except Exception as err:
             logging.info("No files to cleanup...")
         # Recreate output directories
