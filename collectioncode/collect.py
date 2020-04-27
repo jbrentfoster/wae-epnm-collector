@@ -62,15 +62,6 @@ def collection_router(collection_call):
             logging.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
         if collection_call['type'] == "optical_phase_a":
-            logging.info("Collection OTU links...")
-            collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                   collection_call['epnmpassword'])
-            logging.info("Collecting OTU termination points...")
-            collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                    collection_call['epnmpassword'])
-            logging.info("Parsing OTN links from OTU link data...")
-            parse_otn_links()
-        if collection_call['type'] == "optical_phase_b":
             logging.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                            collection_call['epnmpassword'])
@@ -78,13 +69,22 @@ def collection_router(collection_call):
             parse_vc_optical_och_trails()
             logging.info("Getting OCH-trails wavelengths...")
             add_wavelength_vc_optical_och_trails()
-            logging.info("Adding OCH trails to OTU links...")
-            add_och_trails_to_otu_links()
             logging.info("Collecting L1 paths for OCH-trails...")
             addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                           collection_call['epnmpassword'])
             logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
+        if collection_call['type'] == "optical_phase_b":
+            logging.info("Collection OTU links...")
+            collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                   collection_call['epnmpassword'])
+            logging.info("Collecting OTU termination points...")
+            # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+            #                                         collection_call['epnmpassword'])
+            logging.info("Adding OCH trails to OTU links...")
+            add_och_trails_to_otu_links()
+            logging.info("Parsing OTN links from OTU link data...")
+            parse_otn_links()
         if collection_call['type'] == "optical_phase_c":
             logging.info("Parsing ODU services from vc-optical data...")
             parse_odu_services()
@@ -933,6 +933,18 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                 logging.warn("Endpoint list for " + fdn + " is incomplete!")
         except Exception as error:
             logging.warn("Invalid OTU topo link!")
+
+        #Add OTUC2 channel to each termination-point
+        for otu_link in otu_links:
+            if otu_link.get('termination-points'):
+                for tp in otu_link.get('termination-points'):
+                    channels = []
+                    tmpchannel = {}
+                    tmpchannel['channel'] = tp['port']
+                    tmpchannel['layer-rate'] = "oc:lr-och-transport-unit-c2"
+                    tmpchannel['termination-mode'] = "OTN"
+                    channels.append(tmpchannel)
+                    tp.setdefault('channels', channels)
 
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
