@@ -122,7 +122,7 @@ def main():
         return set(deletes + transposes + replaces + inserts)
     state_or_states_list = [''.join(known(variation1(state))) for state in state_or_states_list]
 
-    logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
+    logFormatter = logging.Formatter('%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
 
