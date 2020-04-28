@@ -61,7 +61,7 @@ def collection_router(collection_call):
                                         collection_call['epnmpassword'])
             logging.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
-        if collection_call['type'] == "optical_phase_a":
+        if collection_call['type'] == "optical":
             logging.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                            collection_call['epnmpassword'])
@@ -74,7 +74,7 @@ def collection_router(collection_call):
                                           collection_call['epnmpassword'])
             logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
-        if collection_call['type'] == "optical_phase_b":
+        # if collection_call['type'] == "optical_phase_b":
             logging.info("Collection OTU links...")
             collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
                                    collection_call['epnmpassword'])
@@ -85,7 +85,7 @@ def collection_router(collection_call):
             add_och_trails_to_otu_links()
             logging.info("Parsing OTN links from OTU link data...")
             parse_otn_links()
-        if collection_call['type'] == "optical_phase_c":
+        # if collection_call['type'] == "optical_phase_c":
             logging.info("Parsing ODU services from vc-optical data...")
             parse_odu_services()
             logging.info("Getting multi-layer routes for OTN services...")
