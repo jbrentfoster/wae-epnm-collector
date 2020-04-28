@@ -1115,7 +1115,9 @@ def add_vcfdn_l3links(state_or_states):
                 except KeyError:
                     logging.error("Could not get virtual connection for " + fdn)
                 except TypeError:
-                    logging.error("Missing or invalid end-point list for  " + fdn)
+                    logging.error("Could not get virtual connection for " + fdn)
+                except AttributeError:
+                    logging.error("Could not get virtual connection for " + fdn)
         logging.info("Completed collecting virtual connections...")
         with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
