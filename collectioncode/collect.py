@@ -1186,36 +1186,39 @@ def parse_vc_optical_och_trails():
 
     thejson = json.loads(jsonresponse)
     och_trails = []
-    for item in thejson.get('com.response-message').get('com.data').get('vc.virtual-connection'):
+    # for item in thejson.get('com.response-message').get('com.data').get('vc.virtual-connection'):
+    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
         vcdict = {}
-        fdn = item.get('vc.fdn')
-        subtype = item.get('vc.subtype')
+        fdn = item['vc.fdn']
+        subtype = item['vc.subtype']
         termination_points = []
         if subtype == "oc:och-trail-uni":
             vcdict.setdefault('fdn', fdn)
             vcdict.setdefault('subtype', subtype)
             vcdict.setdefault('termination-points', termination_points)
             try:
-                vcdict.setdefault('trail-fdn', item.get('vc.carried-by-vc-ref-list').get('vc.carried-by-vc-ref'))
+                # vcdict.setdefault('trail-fdn', item.get('vc.carried-by-vc-ref-list').get('vc.carried-by-vc-ref'))
+                vcdict.setdefault('trail-fdn', item['vc.carried-by-vc-ref-list']['vc.carried-by-vc-ref'])
             except Exception as error:
-                logging.warn("Could not determine trail-fdn for OCH-trail " + fdn)
+                logging.error("Could not determine trail-fdn for OCH-trail " + fdn)
             try:
-                item_tps = item.get('vc.termination-point-list').get('vc.termination-point')
+                # item_tps = item.get('vc.termination-point-list').get('vc.termination-point')
+                item_tps = item['vc.termination-point-list']['vc.termination-point']
                 if len(item_tps) == 2:
                     for subitem in item_tps:
                         tmptp = {}
-                        tmpfdn = subitem.get('vc.fdn')
+                        tmpfdn = subitem['vc.fdn']
                         tmptp.setdefault('node', tmpfdn.split('!')[1].split('=')[1])
                         tmptp.setdefault('port', tmpfdn.split('!')[2].split('=')[2].split(';')[0])
                         tmptp.setdefault('port-num', tmptp['port'].split('Optics')[1])
                         termination_points.append(tmptp)
                     och_trails.append(vcdict)
                 else:
-                    logging.warn("OCH-trail " + fdn + " has incomplete termination points!")
+                    logging.error("OCH-trail " + fdn + " has incomplete termination points!")
             except KeyError:
-                logging.error("Could not get virtual connection for " + fdn)
+                logging.error("OCH-trail " + fdn + " has incomplete termination points!")
             except TypeError:
-                logging.error("Missing or invalid end-point list for  " + fdn)
+                logging.error("OCH-trail " + fdn + " has incomplete termination points!")
 
     logging.info("Completed parsing OCH Trails...")
     with open("jsonfiles/och_trails.json", "wb") as f:
