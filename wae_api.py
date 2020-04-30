@@ -358,8 +358,8 @@ def main():
         waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
 
-        # TODO see if assignSites is breaking something (seems to be)
-        waecode.planbuild.assignSites(plan)
+        # # TODO see if assignSites is breaking something (seems to be)
+        # waecode.planbuild.assignSites(plan)
 
 
         # Add OTN services to the plan
@@ -421,8 +421,8 @@ def main():
         waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
         # Create and assign nodes to Sites
-        # logging.info("Assigning nodes to sites...")
-        # waecode.planbuild.assignSites_l3nodes(plan)
+        logging.info("Assigning nodes to sites...")
+        waecode.planbuild.assignSites_l3nodes(plan)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')

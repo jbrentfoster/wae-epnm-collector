@@ -1276,6 +1276,8 @@ def parse_odu_services():
                         if tmp_vc.get('vc.fdn') == odu_service.get('carrying-odu-tunnel'):
                             odu_service.setdefault('bandwidth', tmp_vc.get('vc.odu-tunnel').get('vc.bandwidth'))
                             break
+                # if bandwidth attribute is not set, set to ODU2 as default
+                # odu_service['bandwidth'] = odu_service.get('bandwidth', 'ODU2')
                 odu_services.append(odu_service)
             except Exception as err:
                 logging.warn("Problem processing ODU service, skipping...")
@@ -1343,6 +1345,7 @@ def add_och_trails_to_otu_links():
                             elif tp in otu_ports:
                                 matched = True
                         if matched:
+                            logging.info("Found och-trail-fdn for otu_link " + otu_link.get('fdn'))
                             otu_link.setdefault('och-trail-fdn', och_trail.get('fdn'))
                             break
         if not matched:
@@ -1543,7 +1546,7 @@ def reorderl1hops_och_trails():
                 logging.warn(
                     "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
                 och_trail.pop('L1 Hops')
-                break
+                continue
             tmphops = []
             completed = False
             while not completed:

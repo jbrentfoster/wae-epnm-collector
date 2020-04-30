@@ -34,6 +34,7 @@ from com.cisco.wae.design.model.net import LSPRecord
 from com.cisco.wae.design.model.net import SRLGRecord
 from com.cisco.wae.design.model.net import SiteRecord
 
+
 def generateL1nodes(plan, l1nodelist):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
     for l1node in l1nodelist:
@@ -139,6 +140,7 @@ def generateL3nodes(plan, l3nodelist):
                              ipManage=ipManage)
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
 
+
 def generateL3nodes_combined(plan, l3nodelist, instance):
     with open("jsonfiles/all-nodes_{}.json".format(instance), 'rb') as f:
         jsonresponse = f.read()
@@ -200,7 +202,8 @@ def generateL1circuits(plan, och_trails):
                 except Exception as err:
                     logging.critical(
                         "Could not generate L1 circuit for OCH Trail " + fdn)
-                    break
+                    # break
+                    continue
         else:
             logging.warn("OCH Trail " + fdn + " has no L1 hops!")
 
@@ -261,8 +264,8 @@ def generateL3circuits(plan, l3linksdict):
                                 name = tp_description
                         l3circuit = generateL3circuit(plan, name, firstnode, lastnode, affinity, firstnode_ip,
                                                       lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
-                            
-                        if l3circuit:   
+
+                        if l3circuit:
                             if 'vc-fdn' in v3:
                                 l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
                                 l1circuits = l1CircuitManager.getAllL1Circuits()
@@ -388,6 +391,7 @@ def process_srlgs(plan, circ_srlgs):
                 srlg_rec = SRLGRecord(circuitKeys=circ_keys_list, name=hex(int(srlg)), description="Foo")
                 srlg_mgr.newSRLG(srlg_rec)
 
+
 def check_node_exists(plan, node_name):
     node_manager = plan.getNetwork().getNodeManager()
     all_node_keys = node_manager.getAllNodeKeys()
@@ -396,6 +400,7 @@ def check_node_exists(plan, node_name):
             # logging.info("4k node already exists in plan, skipping this one...")
             return True
     return False
+
 
 def assignSites(plan):
     node_manager = plan.getNetwork().getNodeManager()
@@ -439,6 +444,7 @@ def assignSites(plan):
                 else:
                     logging.info("Could not match a site name!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
+
 def assignSites_l3nodes(plan):
     node_manager = plan.getNetwork().getNodeManager()
     site_manager = plan.getNetwork().getSiteManager()
@@ -462,7 +468,8 @@ def assignSites_l3nodes(plan):
                     site_name = node_name[0:8]
                 else:
                     site_name = node_name[0:11]
-                site_rec = SiteRecord(name=site_name, latitude=node_obj.getLatitude(), longitude=node_obj.getLongitude())
+                site_rec = SiteRecord(name=site_name, latitude=node_obj.getLatitude(),
+                                      longitude=node_obj.getLongitude())
                 try:
                     tmpsite = site_manager.newSite(siteRec=site_rec)
                     # logging.info("successfuly created site: " + site_name)
@@ -537,8 +544,9 @@ def generate_lsps(plan, lsps, l3nodeloopbacks, options, conn):
                 elif lsp['auto-route-announce-enabled'] == True:
                     # logging.info("Processing Data LSP: " + src + " to " + dest + " Tu" + str(tuID))
                     try:
+                        affinity = "0x01"
                         new_private_lsp(plan, src, dest, lspName, lspBW, frr, lspSetupPriority,
-                                        lspHoldPriority)  # Fix - GLH - 2-18-19
+                                        lspHoldPriority, affinity)  # Fix - GLH - 2-18-19
                         new_demand_for_LSP(plan, src, dest, lspName, demandName, lspBW)
                     except Exception as err:
                         logging.warn("Could not process Data LSP: " + lspName)
@@ -581,7 +589,7 @@ def new_demand_for_LSP(id, src, dest, lspName, demandName, val):
     dmdTrafficMgr.setTraffic(dmdTraffKey, val)
 
 
-def new_private_lsp(id, src, dest, name, lspBW, frr, lspSetupPriority, lspHoldPriority):
+def new_private_lsp(id, src, dest, name, lspBW, frr, lspSetupPriority, lspHoldPriority, affinity):
     lspRec = LSPRecord(
         sourceKey=NodeKey(name=src),
         name=name,
@@ -592,11 +600,25 @@ def new_private_lsp(id, src, dest, name, lspBW, frr, lspSetupPriority, lspHoldPr
         isPrivate=True,
         setupBW=lspBW,
         FRREnabled=True,
-        type=LSPType.RSVP
+        type=LSPType.RSVP,
+        includeAffinities=get_affinities(affinity)
     )
     lspMgr = id.getNetwork().getLSPManager()
     lspMgr.newLSP(lspRec)
 
+def get_affinities(affinity):
+    scale = 16  ## equals to hexadecimal
+    num_of_bits = 32
+    # print bin(int(affinity, scale))[2:].zfill(num_of_bits)
+    affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
+
+    affinities = []
+    c = 0
+    for afbit in reversed(affinitylist):
+        if afbit == '1':
+            affinities.append(c)
+        c += 1
+    return affinities
 
 def generate_otn_lsps(plan, odu_services, conn):
     with open("jsonfiles/otn_links.json", 'rb') as f:
@@ -610,6 +632,10 @@ def generate_otn_lsps(plan, odu_services, conn):
                 serv_bw = 40000
             elif odu_service['bandwidth'] == 'ODU4':
                 serv_bw = 100000
+        else:
+            logging.warn(
+                "ODU Service is missing bandwidth attribute, setting to ODU2: " + odu_service['discovered-name'])
+            serv_bw = 10000
         if odu_service.has_key('otu-links'):
             otu_links = odu_service['otu-links']
             otn_link_hops = []
@@ -621,14 +647,26 @@ def generate_otn_lsps(plan, odu_services, conn):
                         otn_link_hops.append(otn_link)
                         # otn_link_hops.append(otn_link['name'])
                         break
-            generate_OTN_circuits(plan,otn_link_hops)
+            generate_OTN_circuits(plan, otn_link_hops)
             otn_link_hop_names = []
             for hop in otn_link_hops:
                 otn_link_hop_names.append(hop['name'])
-            flexlsp_creator.create_otn_lsp(conn, plan, odu_service['node-A'], odu_service['node-B'],
-                                           odu_service['discovered-name'], serv_bw, otn_link_hop_names)
-            new_demand_for_LSP(plan, odu_service['node-A'], odu_service['node-B'], odu_service['discovered-name'] + "_forward", odu_service['discovered-name'] + "_forward", 10000)
-            new_demand_for_LSP(plan, odu_service['node-B'], odu_service['node-A'], odu_service['discovered-name'] + "_reverse", odu_service['discovered-name'] + "_reverse", 10000)
+            try:
+                flexlsp_creator.create_otn_lsp(conn, plan, odu_service['node-A'], odu_service['node-B'],
+                                               odu_service['discovered-name'], serv_bw, otn_link_hop_names)
+            except:
+                logging.error("Could not create OTN LSP for service " + odu_service['discovered-name'])
+                continue
+            new_demand_for_LSP(plan, odu_service['node-A'],
+                               odu_service['node-B'],
+                               odu_service['discovered-name'] + "_forward", odu_service['discovered-name'] + "_forward",
+                               serv_bw)
+            new_demand_for_LSP(plan, odu_service['node-B'], odu_service['node-A'],
+                               odu_service['discovered-name'] + "_reverse", odu_service['discovered-name'] + "_reverse",
+                               serv_bw)
+        else:
+            logging.error("ODU Service missing otu-links attribute " + odu_service['discovered-name'])
+
 
 def getnodename(loopback, nodelist):
     for node in nodelist:
