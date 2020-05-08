@@ -521,7 +521,7 @@ def set_site_using_name(site_manager, node_manager, node):
     node_name = node_manager.getNode(node).getName()
     for site in sites:
         site_name = site_manager.getSite(site).getName()
-        for x in range(11, 6, -1):
+        for x in range(11, 7, -1):
             try:
                 site_name_prefix = site_name[0:x]
                 node_name_prefix = node_name[0:x]
