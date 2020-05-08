@@ -78,7 +78,10 @@ def collection_router(collection_call):
             logging.info("Collection OTU links...")
             collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
                                    collection_call['epnmpassword'])
-            logging.info("Collecting OTU termination points...")
+            logging.info("Collection OCH links...")
+            collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                   collection_call['epnmpassword'])
+            # logging.info("Collecting OTU termination points...")
             # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
             #                                         collection_call['epnmpassword'])
             logging.info("Adding OCH trails to OTU links...")
@@ -948,6 +951,82 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+
+def collect_och_links_json(baseURL, epnmuser, epnmpassword):
+    incomplete = True
+    startindex = 0
+    jsonmerged = {}
+    while incomplete:
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=och-link-layer&.startIndex=" + str(
+            startindex)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        jsonaddition = json.loads(jsonresponse)
+        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        if (lastindex - firstindex) == 99 and lastindex != -1:
+            startindex += 100
+            merge(jsonmerged, jsonaddition)
+        elif lastindex == -1:
+            incomplete = False
+        else:
+            incomplete = False
+            merge(jsonmerged, jsonaddition)
+
+    with open("jsongets/tl-och-link-layer.json", 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    # with open("jsongets/tl-och-link-layer.json", 'rb') as f:
+    #     jsonresponse = f.read()
+    #
+    # thejson = json.loads(jsonresponse)
+    #
+    # otu_links = []
+    # for item in thejson.get('com.response-message').get('com.data').get('topo.topological-link'):
+    #     try:
+    #         otu_link = {}
+    #         termination_points = []
+    #         fdn = item.get('topo.fdn')
+    #         logging.info("Collecting OTU link " + fdn)
+    #         discoveredname = item.get('topo.discovered-name')
+    #         capacity = item.get('topo.total-capacity')
+    #         ep_list = item.get('topo.endpoint-list').get('topo.endpoint')
+    #         endpoints = []
+    #         for ep in ep_list:
+    #             tmptp = {}
+    #             tmptp.setdefault('node', ep.get('topo.endpoint-ref').split('!')[1].split('=')[1])
+    #             tmptp.setdefault('port', ep.get('topo.endpoint-ref').split('!')[2].split('=')[2].split(';')[0])
+    #             tmptp.setdefault('tp-fdn', ep.get('topo.endpoint-ref') + "&containedCTP=true")
+    #             try:
+    #                 tmptp['port-num'] = tmptp.get('port').split('OTUC2')[1]
+    #             except Exception as err:
+    #                 tmptp['port-num'] = tmptp.get('port').split('OTU4')[1]
+    #             termination_points.append(tmptp)
+    #         otu_link.setdefault('fdn', fdn)
+    #         otu_link.setdefault('discoveredname', discoveredname)
+    #         otu_link.setdefault('capacity', capacity)
+    #         otu_link.setdefault('termination-points', termination_points)
+    #         if len(ep_list) == 2:
+    #             otu_links.append(otu_link)
+    #         else:
+    #             logging.warn("Endpoint list for " + fdn + " is incomplete!")
+    #     except Exception as error:
+    #         logging.warn("Invalid OTU topo link!")
+    #
+    #     #Add OTUC2 channel to each termination-point
+    #     for otu_link in otu_links:
+    #         if otu_link.get('termination-points'):
+    #             for tp in otu_link.get('termination-points'):
+    #                 channels = []
+    #                 tmpchannel = {}
+    #                 tmpchannel['channel'] = tp['port']
+    #                 tmpchannel['layer-rate'] = "oc:lr-och-transport-unit-c2"
+    #                 tmpchannel['termination-mode'] = "OTN"
+    #                 channels.append(tmpchannel)
+    #                 tp.setdefault('channels', channels)
+    #
+    # with open("jsonfiles/otu_links.json", "wb") as f:
+    #     f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):

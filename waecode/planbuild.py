@@ -38,7 +38,8 @@ from com.cisco.wae.design.model.net import SiteRecord
 def generateL1nodes(plan, l1nodelist):
     l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
     for l1node in l1nodelist:
-        l1nodeRec = L1NodeRecord(name=l1node['Name'], site=l1node['sitekey'])
+        # l1nodeRec = L1NodeRecord(name=l1node['Name'], site=l1node['sitekey'])
+        l1nodeRec = L1NodeRecord(name=l1node['Name'], latitude = float(l1node['Y']), longitude = float(l1node['X']))
         newl1node = l1NodeManager.newL1Node(l1nodeRec)
 
 
@@ -187,16 +188,16 @@ def generateL1circuits(plan, och_trails):
                 lastnode = term_points[1]['node']
                 l1hops, firstl1node, lastl1node = getfirstlastl1node(och_trail['Ordered L1 Hops'], firstnode,
                                                                      lastnode)
-                firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
-                try:
-                    nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
-                except Exception as err:
-                    pass
-                try:
-                    lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
-                    nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
-                except Exception as err:
-                    logging.warn("Could not get site for " + lastl1node)
+                # firstsite = l1NodeManager.getL1Node(L1NodeKey(firstl1node)).getSite()
+                # try:
+                #     nodemanager.getNode(NodeKey(firstnode)).setSite(firstsite)
+                # except Exception as err:
+                #     pass
+                # try:
+                #     lastsite = l1NodeManager.getL1Node(L1NodeKey(lastl1node)).getSite()
+                #     nodemanager.getNode(NodeKey(lastnode)).setSite(lastsite)
+                # except Exception as err:
+                #     logging.warn("Could not get site for " + lastl1node)
                 try:
                     l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000)
                 except Exception as err:
@@ -457,8 +458,43 @@ def assignSites_l3nodes(plan):
             node_site_name = node_site.getName()
             # logging.info("Node: " + node_name + " Site: " + node_site_name)
         else:
-            # logging.info("Node " + node_name + " does not have a site.")
+            logging.info("L3 Node " + node_name + " does not have a site.  Assigning site...")
             site_name = set_site_using_name(site_manager, node_manager, node)
+            if site_name is not None:
+                # logging.info("Setting site based on node name to " + site_name)
+                pass
+            else:
+                # logging.info("Could not match a site name, creating new site.")
+                if '-' in node_name:
+                    site_name = node_name[0:8]
+                else:
+                    site_name = node_name[0:11]
+                site_rec = SiteRecord(name=site_name, latitude=node_obj.getLatitude(),
+                                      longitude=node_obj.getLongitude())
+                try:
+                    tmpsite = site_manager.newSite(siteRec=site_rec)
+                    # logging.info("successfuly created site: " + site_name)
+                    node_obj.setSite(tmpsite)
+                    # logging.info("successfully added node " + node_name)
+                except Exception as err:
+                    logging.warn('Could not create or add site for node: ' + node_name)
+                    logging.warn(err)
+
+
+def assignSites_l1nodes(plan):
+    l1node_manager = plan.getNetwork().getL1Network().getL1NodeManager()
+    site_manager = plan.getNetwork().getSiteManager()
+    nodes = l1node_manager.getAllL1Nodes()
+    for node in nodes:
+        node_name = l1node_manager.getL1Node(node).getName()
+        node_obj = l1node_manager.getL1Node(node)
+        node_site = l1node_manager.getL1Node(node).getSite()
+        if node_site is not None:
+            node_site_name = node_site.getName()
+            # logging.info("Node: " + node_name + " Site: " + node_site_name)
+        else:
+            logging.info("L1 Node " + node_name + " does not have a site.  Assigning site...")
+            site_name = set_site_using_name_l1(site_manager, l1node_manager, node)
             if site_name is not None:
                 # logging.info("Setting site based on node name to " + site_name)
                 pass
@@ -483,9 +519,9 @@ def assignSites_l3nodes(plan):
 def set_site_using_name(site_manager, node_manager, node):
     sites = site_manager.getAllSites()
     node_name = node_manager.getNode(node).getName()
-    for x in range(11, 6, -1):
-        for site in sites:
-            site_name = site_manager.getSite(site).getName()
+    for site in sites:
+        site_name = site_manager.getSite(site).getName()
+        for x in range(11, 6, -1):
             try:
                 site_name_prefix = site_name[0:x]
                 node_name_prefix = node_name[0:x]
@@ -494,6 +530,23 @@ def set_site_using_name(site_manager, node_manager, node):
             if site_name_prefix == node_name_prefix:
                 # logging.info("Setting site to " + site_name)
                 node_manager.getNode(node).setSite(site_manager.getSite(site))
+                return site_name
+
+
+def set_site_using_name_l1(site_manager, l1node_manager, node):
+    sites = site_manager.getAllSites()
+    node_name = l1node_manager.getL1Node(node).getName()
+    for site in sites:
+        site_name = site_manager.getSite(site).getName()
+        for x in range(11, 7, -1):
+            try:
+                site_name_prefix = site_name[0:x]
+                node_name_prefix = node_name[0:x]
+            except Exception as err:
+                logging.info("Site or node name is less than " + x + " characters.")
+            if site_name_prefix == node_name_prefix:
+                # logging.info("Setting site to " + site_name)
+                l1node_manager.getL1Node(node).setSite(site_manager.getSite(site))
                 return site_name
 
 

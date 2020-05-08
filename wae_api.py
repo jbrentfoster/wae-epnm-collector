@@ -225,8 +225,7 @@ def main():
                         file = re.sub('.txt', '_{}.txt'.format(instance), file)
                         new_file_path = path + '\\{}'.format(file)
                         os.rename(filePath, new_file_path)
-                
-                    
+
 
     if build_plan and combine == False:
         logging.info("Building plan file...")
@@ -281,8 +280,6 @@ def main():
                 logging.info("Found a dup, removing this node: " + v['Name'])
                 four_k_nodes.pop(k)
 
-
-
         #######################################
         #
         #  Build Optical Plan Components
@@ -295,16 +292,16 @@ def main():
             l1nodesdict = json.load(f)
             f.close()
         l1nodes = []
-        sites = []
-        site_manager = plan.getNetwork().getSiteManager()
+        # sites = []
+        # site_manager = plan.getNetwork().getSiteManager()
         # found = False
         for k1, v1 in l1nodesdict.items():
             tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
-            site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
+            # site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
             try:
-                tmpsite = site_manager.newSite(siteRec=site_rec)
-                tmpnode['sitekey'] = tmpsite.getKey()
-                sites.append(tmpsite)
+                # tmpsite = site_manager.newSite(siteRec=site_rec)
+                # tmpnode['sitekey'] = tmpsite.getKey()
+                # sites.append(tmpsite)
                 l1nodes.append(tmpnode)
                 logging.info("successfully added node " + tmpnode['Name'])
             except Exception as err:
@@ -356,11 +353,6 @@ def main():
             och_trails = json.load(f)
             f.close()
         waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
-
-
-        # # TODO see if assignSites is breaking something (seems to be)
-        # waecode.planbuild.assignSites(plan)
-
 
         # Add OTN services to the plan
         logging.info("Adding ODU services to the plan...")
@@ -422,6 +414,7 @@ def main():
 
         # Create and assign nodes to Sites
         logging.info("Assigning nodes to sites...")
+        waecode.planbuild.assignSites_l1nodes(plan)
         waecode.planbuild.assignSites_l3nodes(plan)
 
         # Save the plan file
