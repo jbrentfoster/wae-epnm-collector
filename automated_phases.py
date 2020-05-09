@@ -54,7 +54,7 @@ def run_phases(arg):
             if counter == 7: break
             counter += 1  
 
-    print("The async test run with all phases was successful")
+    print("The EPNM script phases were run asynchronously.")
 
 run_phases(build_plan)
 
