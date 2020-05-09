@@ -81,7 +81,7 @@ def main():
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = args.epnm_user
     epnmpassword = args.epnm_pass
-    current_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
+    current_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     start_time = time.time()
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
@@ -126,7 +126,8 @@ def main():
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
 
-    log_file_name = 'collection-' + current_time + '.log'
+    milli = str(datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f'))[-6:-3]
+    log_file_name = 'collection-' + current_time + '-' + milli + '.log'
     fileHandler = logging.FileHandler(filename=log_file_name)
     fileHandler.setFormatter(logFormatter)
     rootLogger.addHandler(fileHandler)
@@ -657,9 +658,9 @@ def main():
         logging.info("No log file to copy...")
 
     # Script completed
-    finish_time = str(datetime.now().strftime('%Y-%m-%d-%H%M-%S'))
+    finish_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     logging.info("Collection finish time is " + finish_time)
-    logging.info("Total script completion time is {} seconds.".format(time.time() - start_time))
+    logging.info("Total script completion time is {0:.2f} seconds.".format(time.time() - start_time))
     time.sleep(2)
 
 
