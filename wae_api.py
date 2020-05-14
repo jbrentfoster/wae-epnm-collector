@@ -17,6 +17,12 @@ import time
 import re
 from concurrent.futures import ThreadPoolExecutor as ThreadPool
 import configparser
+import getpass
+from pbkdf2 import PBKDF2
+from Crypto.Cipher import AES
+from Crypto import Random
+import base64
+import sys
 
 thread_count = 6
 
@@ -47,7 +53,7 @@ def get_l3_nodes_combined(state, instance):
 def main():
     #Code for the new properties file
     config = configparser.ConfigParser(interpolation=None)
-    config.read('config.ini')
+    config.read('configs/config.ini')
 
     # Get path for collection files from command line arguments
     parser = argparse.ArgumentParser(description='A WAE collection tool for EPNM')
@@ -65,6 +71,8 @@ def main():
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
                         help="Add this flag to set the logging level.")
+    parser.add_argument('-sec', '--secure', metavar='N', type=str, nargs='?',
+                        help="Please provide the EPNM password to be encrypted for storage.")
     parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
@@ -81,7 +89,30 @@ def main():
     baseURL = "https://" + epnmipaddr + "/restconf"
     epnmuser = args.epnm_user
     epnmpassword = args.epnm_pass
-    current_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
+    encryption_check = 'enCrYpted'
+    #Decrypting the EPNM password for later use
+    if epnmpassword.startswith(encryption_check):
+        pass_key = getpass.getpass()
+        pb_key = PBKDF2('{}'.format(pass_key), '0').read(32)
+        decoded_str = base64.b64decode(epnmpassword[len(encryption_check):])
+        iv = decoded_str[:16]
+        pb_key_check = decoded_str[-32:]
+        if pb_key != pb_key_check:
+            raise Exception('Incorrect password')
+        cipher = AES.new(pb_key, AES.MODE_CFB, iv)
+        password = cipher.decrypt(decoded_str[16:-32])
+        with open('configs/config.ini', 'rb') as f:
+            data = f.readlines()
+        
+        with open('configs/config.ini', 'wb') as f:
+            for line in data:
+                if line.startswith('EPNM_pass'):
+                    line = 'EPNM_pass = {}\n'.format(password)
+                f.write(line)
+
+        epnmpassword = password
+
+    current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
     start_time = time.time()
     archive_root = args.archive_root + "/captures/" + current_time
     planfiles_root = args.archive_root + "/planfiles/"
@@ -94,6 +125,7 @@ def main():
     instance = config['INSTANCE']['Instance']
     save = args.save
     combine = args.combine
+    secure = args.secure
 
     #Implementing a basic spellchecker for the states
     STATES = {
@@ -154,7 +186,7 @@ def main():
                 "instances": [],
                 "states": []
             }
-            with open('instance.json', 'wb') as f:
+            with open('configs/instance.json', 'wb') as f:
                 f.write(json.dumps(instance_json, sort_keys=True, indent=4, separators=(',', ': ')))
 
         except Exception as err:
@@ -201,7 +233,7 @@ def main():
     # print "CARIDEN_HOME=" + os.getenv('CARIDEN_HOME')
     if save:
         #Add the states list and the instance to the instance.json file
-        with open('instance.json', 'rb') as f:
+        with open('configs/instance.json', 'rb') as f:
             instance_dict = json.load(f)
 
         instance_dict['states'].append(state_or_states_list)
@@ -209,7 +241,7 @@ def main():
         instance_dict = json.dumps(instance_dict, sort_keys=True, indent=4, separators=(',', ': '))
         logging.info('***********\n{}'.format(instance_dict))
 
-        with open('instance.json', 'wb') as f:
+        with open('configs/instance.json', 'wb') as f:
             f.write(instance_dict)
         #Append the instance string to the name of all the data file in the jsongets and jsonfiles folders
         #directories to look in
@@ -435,7 +467,7 @@ def main():
         plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
 
         #Get the information from the instance.json file
-        with open('instance.json', 'rb') as f:
+        with open('configs/instance.json', 'rb') as f:
             instance_dict = json.load(f)
 
         list_of_state_lists = instance_dict['states']
@@ -656,6 +688,23 @@ def main():
         shutil.copy(log_file_name, archive_root + '/collection.log')
     except Exception as err:
         logging.info("No log file to copy...")
+
+    #Encrypting and storing the password for storage
+    if secure != None:
+        pb_key = PBKDF2('{}'.format(secure), '0').read(32)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(pb_key, AES.MODE_CFB, iv)
+        encrypted_obj = cipher.encrypt(secure)
+        password = base64.b64encode(iv + encrypted_obj + pb_key)
+        password = encryption_check + password
+        with open('configs/config.ini', 'rb') as f:
+            data = f.readlines()
+        
+        with open('configs/config.ini', 'wb') as f:
+            for line in data:
+                if line.startswith('EPNM_pass'):
+                    line = 'EPNM_pass = {}\n'.format(password)
+                f.write(line)
 
     # Script completed
     finish_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))

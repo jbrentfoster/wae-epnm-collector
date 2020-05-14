@@ -61,7 +61,7 @@ def open_file_load_data(file_name):
 
 def get_random_nodes_for_states(state_or_states):
     random_node_choices = []
-    valid_seed_nodes = open_file_load_data("valid_seed_node.json")
+    valid_seed_nodes = open_file_load_data("configs/valid_seed_node.json")
     for state in state_or_states:
         state = state.strip()
         if state in valid_seed_nodes:
