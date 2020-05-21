@@ -5,9 +5,9 @@ import json
 import logging
 import sys
 from multiprocessing.dummy import Pool as ThreadPool
-import wae_api
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 import traceback
+import wae_api
 
 
 def collection_router(collection_call):
