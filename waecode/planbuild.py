@@ -2,6 +2,8 @@ import com.cisco.wae.design
 import json
 import logging
 import flexlsp_creator
+import csv
+import os
 from com.cisco.wae.design.model.net import HopType
 from com.cisco.wae.design.model.net import LSPType
 # keys
@@ -215,6 +217,11 @@ def generateL3circuits(plan, l3linksdict):
     linkslist = []
     duplicatelink = False
     circ_srlgs = {}
+    circuit_name_list = []
+    name_reader = csv.DictReader(open('configs/circuit_names.csv'), fieldnames=('0', '1', '2', '3', '4', '5'))
+    for row in name_reader:
+        circuit_name_list.append(row)
+
     for k1, v1 in l3linksdict.items():
         # logging.info "**************Nodename is: " + k1
         firstnode = k1
@@ -252,8 +259,14 @@ def generateL3circuits(plan, l3linksdict):
                         linkslist.append(discoveredname)
                         c += 1
                         i += 1
+                        name = ""
                         if tp_description == "":
-                            name = "L3_circuit_" + str(i)
+                            for elem in circuit_name_list:
+                                if elem['2'] == firstnode and elem['4'] == lastnode:
+                                    name = elem['1']
+                                    break
+                            if name == "":
+                                name = 'l3_circuit_{}/{}/{}'.format(int(i), firstnode, lastnode)
                         else:
                             if 'CktId: ' in tp_description:
                                 name = tp_description.split('CktId: ')[1]
@@ -766,3 +779,16 @@ def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
         elif nodelist[1] == lastnode:
             lastl1node = nodelist[0]
     return l1hops, firstl1node, lastl1node
+
+if __name__ == '__main__':
+    
+    # Create a service to be used by this script
+    conn = com.cisco.wae.design.ServiceConnectionManager.newService()
+
+    cwd = os.getcwd()
+    fileName = os.path.join(cwd, 'planfiles/blank.pln')
+    plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
+    with open("jsonfiles/New_York_l3Links_final.json", 'rb') as f:
+        l3linksdict = json.load(f)
+
+    generateL3circuits(plan, l3linksdict)

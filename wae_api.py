@@ -22,16 +22,14 @@ from pbkdf2 import PBKDF2
 from Crypto.Cipher import AES
 from Crypto import Random
 import base64
-import sys
 
 thread_count = 6
 
 
 def get_l3_nodes(state):
     with open("jsonfiles/{state}_l3Links_final.json".format(state=state.replace(' ', '_')), 'rb') as f:
-    # with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.replace(' ', '_')), 'rb') as f:
         l3linksdict = json.load(f)
-        f.close()
+        
     l3nodes = []
     for k1, v1 in l3linksdict.items():
         tmpnode = {'Name': k1}
