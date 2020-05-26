@@ -265,6 +265,9 @@ def generateL3circuits(plan, l3linksdict):
                                 if elem['2'] == firstnode and elem['4'] == lastnode:
                                     name = elem['1']
                                     break
+                                elif elem['2'] == firstnode and elem['3'].startswith('BDI'):
+                                    name = elem['1']
+                                    break
                             if name == "":
                                 name = 'l3_circuit_{}/{}/{}'.format(int(i), firstnode, lastnode)
                         else:
