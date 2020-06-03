@@ -90,8 +90,8 @@ def main():
     encryption_check = 'enCrYpted'
     #Decrypting the EPNM password for later use
     if epnmpassword.startswith(encryption_check):
-        pass_key = getpass.getpass()
-        pb_key = PBKDF2('{}'.format(pass_key), '0').read(32)
+        encoded_pb_key = config['DEFAULT']['EPNM_key']
+        pb_key = base64.b64decode(encoded_pb_key)
         decoded_str = base64.b64decode(epnmpassword[len(encryption_check):])
         iv = decoded_str[:16]
         pb_key_check = decoded_str[-32:]
@@ -99,15 +99,6 @@ def main():
             raise Exception('Incorrect password')
         cipher = AES.new(pb_key, AES.MODE_CFB, iv)
         password = cipher.decrypt(decoded_str[16:-32])
-        with open('configs/config.ini', 'rb') as f:
-            data = f.readlines()
-        
-        with open('configs/config.ini', 'wb') as f:
-            for line in data:
-                if line.startswith('EPNM_pass'):
-                    line = 'EPNM_pass = {}\n'.format(password)
-                f.write(line)
-
         epnmpassword = password
 
     current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
@@ -689,7 +680,7 @@ def main():
 
     #Encrypting and storing the password for storage
     if secure != None:
-        pb_key = PBKDF2('{}'.format(secure), '0').read(32)
+        pb_key = '\xe7\\\x01\xf8\x19p\xec/zg\x89\x93\x94?qcp\x04M:\\ \x10\xbc\xd1l\x18\x84\xd9d\x9fP'
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(pb_key, AES.MODE_CFB, iv)
         encrypted_obj = cipher.encrypt(secure)
