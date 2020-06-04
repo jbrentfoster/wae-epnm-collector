@@ -678,23 +678,6 @@ def main():
     except Exception as err:
         logging.info("No log file to copy...")
 
-    #Encrypting and storing the password for storage
-    if secure != None:
-        pb_key = '\xe7\\\x01\xf8\x19p\xec/zg\x89\x93\x94?qcp\x04M:\\ \x10\xbc\xd1l\x18\x84\xd9d\x9fP'
-        iv = Random.new().read(AES.block_size)
-        cipher = AES.new(pb_key, AES.MODE_CFB, iv)
-        encrypted_obj = cipher.encrypt(secure)
-        password = base64.b64encode(iv + encrypted_obj + pb_key)
-        password = encryption_check + password
-        with open('configs/config.ini', 'rb') as f:
-            data = f.readlines()
-        
-        with open('configs/config.ini', 'wb') as f:
-            for line in data:
-                if line.startswith('EPNM_pass'):
-                    line = 'EPNM_pass = {}\n'.format(password)
-                f.write(line)
-
     # Script completed
     finish_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     logging.info("Collection finish time is " + finish_time)
