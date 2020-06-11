@@ -69,8 +69,6 @@ def main():
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
                         help="Add this flag to set the logging level.")
-    parser.add_argument('-sec', '--secure', metavar='N', type=str, nargs='?',
-                        help="Please provide the EPNM password to be encrypted for storage.")
     parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
@@ -114,7 +112,6 @@ def main():
     instance = config['INSTANCE']['Instance']
     save = args.save
     combine = args.combine
-    secure = args.secure
 
     #Implementing a basic spellchecker for the states
     STATES = {

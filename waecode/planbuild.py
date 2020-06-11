@@ -212,13 +212,12 @@ def generateL1circuits(plan, och_trails):
 
 
 def generateL3circuits(plan, l3linksdict):
-    c = 0
     i = 0
     linkslist = []
     duplicatelink = False
     circ_srlgs = {}
     circuit_name_list = []
-    name_reader = csv.DictReader(open('configs/circuit_names.csv'), fieldnames=('0', '1', '2', '3', '4', '5'))
+    name_reader = csv.DictReader(open('configs/may_19_circuit_names.csv'), fieldnames=('0', '1', '2', '3', '4', '5'))
     for row in name_reader:
         circuit_name_list.append(row)
 
@@ -257,18 +256,19 @@ def generateL3circuits(plan, l3linksdict):
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if not duplicatelink:
                         linkslist.append(discoveredname)
-                        c += 1
-                        i += 1
                         name = ""
                         if tp_description == "":
                             for elem in circuit_name_list:
-                                if elem['2'] == firstnode and elem['4'] == lastnode:
-                                    name = elem['1']
+                                node_check = elem['1'] == firstnode and elem['3'] == lastnode
+                                interface_check = elem['2'] == firstnode_intf and elem['4'] == lastnode_intf
+                                if node_check and interface_check:
+                                    name = elem['0']
                                     break
-                                elif elem['2'] == firstnode and elem['3'].startswith('BDI'):
-                                    name = elem['1']
+                                elif elem['1'] == firstnode and elem['2'].startswith('BDI'):
+                                    name = elem['0']
                                     break
                             if name == "":
+                                i += 1
                                 name = 'l3_circuit_{}/{}/{}'.format(int(i), firstnode, lastnode)
                         else:
                             if 'CktId: ' in tp_description:
