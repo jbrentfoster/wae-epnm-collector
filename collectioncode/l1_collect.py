@@ -7,11 +7,11 @@ from multiprocessing.dummy import Pool as ThreadPool
 import traceback
 import utils
 import configparser
-import collect
+import collect 
 
 #Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
+config.read('resources/config.ini')
 name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}

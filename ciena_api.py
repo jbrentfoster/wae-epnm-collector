@@ -16,6 +16,10 @@ from com.cisco.wae.design.model.net import NodeKey
 from com.cisco.wae.design.model.net import SiteRecord
 from collectioncode import collect
 from waecode import planbuild, l1_planbuild, l3_planbuild
+from pbkdf2 import PBKDF2
+from Crypto.Cipher import AES
+from Crypto import Random
+import base64
 
 
 urllib3.disable_warnings(InsecureRequestWarning)
@@ -23,7 +27,7 @@ urllib3.disable_warnings(InsecureRequestWarning)
 def main():
     #Setting up the properties file
     config = configparser.ConfigParser(interpolation=None)
-    config.read('config.ini')
+    config.read('resources/config.ini')
 
     # Getting inputs for the script from cli args
     parser = argparse.ArgumentParser(description='A WAE collection tool for Ciena')
@@ -49,6 +53,20 @@ def main():
     baseURL = 'https://' + cienaipaddr
     cienauser = args.ciena_user
     cienapassw = args.ciena_pass
+    encryption_check = 'enCrYpted'
+    #Decrypting the Ciena password for later use
+    if cienapassw.startswith(encryption_check):
+        encoded_pb_key = config['DEFAULT']['CIENA_key']
+        pb_key = base64.b64decode(encoded_pb_key)
+        decoded_str = base64.b64decode(cienapassw[len(encryption_check):])
+        iv = decoded_str[:16]
+        pb_key_check = decoded_str[-32:]
+        if pb_key != pb_key_check:
+            raise Exception('Incorrect password')
+        cipher = AES.new(pb_key, AES.MODE_CFB, iv)
+        password = cipher.decrypt(decoded_str[16:-32])
+        cienapassw = password
+
     current_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     archive_root = args.archive_root + '/captures/' + current_time
     planfiles_root = args.archive_root + '/planfiles/'
