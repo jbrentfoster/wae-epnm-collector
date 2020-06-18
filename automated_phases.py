@@ -13,7 +13,34 @@ def run_phases(arg):
     if arg:
         while measure:
             if counter == 1:
+                #Running phase 1 blocking to ensure the previous collection files are deleted
                 process_1 = subprocess.Popen(["python", "wae_api.py", "-d", "-ph", "1"])
+                process_1.wait()
+            elif counter == 2:
+                process_2 = subprocess.Popen(["python", "wae_api.py", "-ph", "2"])
+            elif counter == 3:
+                process_3 = subprocess.Popen(["python", "wae_api.py", "-ph", "3"])
+            elif counter == 4:
+                process_4 = subprocess.Popen(["python", "wae_api.py", "-ph", "4"])
+            elif counter == 5:
+                process_5 = subprocess.Popen(["python", "wae_api.py", "-ph", "5"])
+            # elif counter == 6:
+            #     process_6 = subprocess.Popen(["python", "wae_api.py", "-ph", "6"])
+            # if counter == 6: break
+            if counter == 5: break
+            counter += 1
+
+        process_2.wait() and process_3.wait() and process_4.wait() and process_5.wait()
+        # process_6.wait()
+        process_6 = subprocess.Popen(["python", "wae_api.py", "-b", "-ph", "6"])  
+        process_6.wait()
+
+    else:
+        while measure:
+            if counter == 1:
+                # Running phase 1 blocking to ensure the previous collection files are deleted
+                process_1 = subprocess.Popen(["python", "wae_api.py", "-d", "-ph", "1"])
+                process_1.wait()
             elif counter == 2:
                 process_2 = subprocess.Popen(["python", "wae_api.py", "-ph", "2"])
             elif counter == 3:
@@ -24,35 +51,13 @@ def run_phases(arg):
                 process_5 = subprocess.Popen(["python", "wae_api.py", "-ph", "5"])
             elif counter == 6:
                 process_6 = subprocess.Popen(["python", "wae_api.py", "-ph", "6"])
+            # elif counter == 7:
+            #     subprocess.Popen(["python", "wae_api.py", "-ph", "7"])
+            # if counter == 7: break
             if counter == 6: break
-            counter += 1
-
-        process_1.wait()
-        process_2.wait()
-        process_3.wait()
-        process_4.wait()
-        process_5.wait()
-        process_6.wait()
-        subprocess.Popen(["python", "wae_api.py", "-b", "-ph", "7"])  
-
-    else:
-        while measure:
-            if counter == 1:
-                subprocess.Popen(["python", "wae_api.py", "-d", "-ph", "1"])
-            elif counter == 2:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "2"])
-            elif counter == 3:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "3"])
-            elif counter == 4:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "4"])
-            elif counter == 5:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "5"])
-            elif counter == 6:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "6"])
-            elif counter == 7:
-                subprocess.Popen(["python", "wae_api.py", "-ph", "7"])
-            if counter == 7: break
             counter += 1  
+        
+        process_2.wait() and process_3.wait() and process_4.wait() and process_5.wait() and process_6.wait()
 
     print("The EPNM script phases were run asynchronously.")
 

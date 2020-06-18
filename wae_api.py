@@ -194,8 +194,8 @@ def main():
                         {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
-                        {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list}
+                        # {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
                         # {'type': 'optical_phase_b', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         # {'type': 'optical_phase_c', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
                         ]
@@ -373,12 +373,12 @@ def main():
             f.close()
         waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-        # Add OTN services to the plan
-        logging.info("Adding ODU services to the plan...")
-        with open("jsonfiles/odu_services.json", 'rb') as f:
-            odu_services = json.load(f)
-            f.close()
-        waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
+        # # Add OTN services to the plan
+        # logging.info("Adding ODU services to the plan...")
+        # with open("jsonfiles/odu_services.json", 'rb') as f:
+        #     odu_services = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         #######################################
         #
