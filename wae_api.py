@@ -69,6 +69,7 @@ def main():
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
                         help="Add this flag to set the logging level.")
+    parser.add_argument('-t', '--timeout', metavar='N', type=str, nargs='?', help="Add this flag to set the timeout value manually.")               
     parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
@@ -98,6 +99,18 @@ def main():
         cipher = AES.new(pb_key, AES.MODE_CFB, iv)
         password = cipher.decrypt(decoded_str[16:-32])
         epnmpassword = password
+
+    #Taking the timeout cl argument and setting it for future use
+    timeout = args.timeout
+    if timeout:
+        with open('configs/config.ini', 'rb') as f:
+            data = f.readlines()
+
+        with open('configs/config.ini', 'wb') as f:
+            for line in data:
+                if line.startswith('Timeout'):
+                    line = 'TImeout_limit = {}\n'.format(timeout)
+                f.write(line)
 
     current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
     start_time = time.time()

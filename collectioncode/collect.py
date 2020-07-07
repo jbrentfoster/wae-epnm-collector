@@ -4,11 +4,17 @@ import re
 import json
 import logging
 import sys
-from multiprocessing.dummy import Pool as ThreadPool
-from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 import traceback
 import wae_api
+import configparser
+from multiprocessing.dummy import Pool as ThreadPool
+from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 
+
+config = configparser.ConfigParser(interpolation=None)
+config.read('configs/config.ini')
+timeout = config['DEFAULT']['Timeout_limit']
+timeout_limit = float(timeout) * 3 
 
 def collection_router(collection_call):
     try:
@@ -31,16 +37,13 @@ def collection_router(collection_call):
             logging.info("Collecting 4k nodes...")
             collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
             logging.info("Collecting MPLS topological links...")
-            collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                    collection_call['epnmpassword'])
+            collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
             logging.info("Collecting MPLS nodes...")
             collectMPLSnodes()
             logging.info("Collecting MPLS topology...")
-            collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-                                collection_call['state_or_states'])
+            collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
             logging.info("Collecting ISIS hostnames...")
-            collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'],
-                                collection_call['state_or_states'])
+            collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
             process_hostnames(collection_call['state_or_states'])
             logging.info("Processing MPLS topology...")
             processMPLS(collection_call['state_or_states'])
@@ -57,8 +60,7 @@ def collection_router(collection_call):
             #                                     collection_call['epnmpassword'], collection_call['state_or_states'])
 
             logging.info("Collecting optical virtual connections...")
-            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                        collection_call['epnmpassword'])
+            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
             logging.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
         # if collection_call['type'] == "optical":
@@ -70,8 +72,7 @@ def collection_router(collection_call):
             logging.info("Getting OCH-trails wavelengths...")
             add_wavelength_vc_optical_och_trails()
             logging.info("Collecting L1 paths for OCH-trails...")
-            addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                          collection_call['epnmpassword'])
+            addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
             logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
         # if collection_call['type'] == "optical_phase_b":
@@ -185,7 +186,10 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 2000 Series&.depth=1&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse2 = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition2 = json.loads(jsonresponse2)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
@@ -236,7 +240,10 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -287,7 +294,10 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
 
 def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
     uri = "/data/v1/cisco-resource-physical:node?.depth=2"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonaddition = json.loads(jsonresponse)
+    circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+    jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     jsonaddition = json.loads(jsonresponse)
 
     with open("jsongets/all-nodes.json", 'wb') as f:
@@ -326,7 +336,10 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
     jsonmerged = {}
     while incomplete:
         uri = "/data/v1/cisco-resource-physical:node?.depth=1&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -378,7 +391,10 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
 
 def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
     uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonaddition = json.loads(jsonresponse)
+    circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+    jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     jsonaddition = json.loads(jsonresponse)
 
     with open("jsongets/4k-nodes.json", 'wb') as f:
@@ -420,7 +436,10 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -497,7 +516,10 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
         while notDone:
             time.sleep(5)
             uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
-            jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+            # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+            # thejson = json.loads(jsonresponse)
+            circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+            jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
@@ -588,7 +610,10 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         while notDone:
             time.sleep(5)
             uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
-            jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+            # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+            # thejson = json.loads(jsonresponse)
+            circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+            jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
@@ -860,7 +885,10 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -884,7 +912,10 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=otu-link-layer&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -960,7 +991,10 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
     while incomplete:
         uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=och-link-layer&.startIndex=" + str(
             startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -1076,10 +1110,10 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     try:
         logging.info("Making API call to collect OTU termination point for tpFdn " + tpfdn)
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-
-        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/',
-                                                                                                         '-') + ".json"
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+        filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/', '-') + ".json"
         logging.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
@@ -1136,7 +1170,10 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
     jsonmerged = {}
     while incomplete:
         uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
         lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
@@ -1483,7 +1520,9 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     logging.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     try:
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     except Exception as err:
         logging.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
@@ -1741,7 +1780,9 @@ def process_vcfdn_odu_service(vcfdn_dict):
 def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcfdn):
     logging.info("Making API call to collect multi_layer route for ODU service vc fdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+    jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
 
     try:
         with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
@@ -1864,17 +1905,17 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     try:
         logging.info("Making API call to collect termination point for tpFdn " + tpfdn)
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
 
         filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/',
                                                                                                          '-') + ".json"
         logging.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
-            f.close()
         with open(filename, 'rb') as f:
             thejson = json.load(f)
-            f.close()
 
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
 
@@ -1902,7 +1943,10 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
 
 def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
     uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel"
-    jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+    # jsonaddition = json.loads(jsonresponse)
+    circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+    jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     jsonaddition = json.loads(jsonresponse)
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -2051,7 +2095,10 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
     jsonmerged = {}
     while incomplete:
         uri = "/data/v1/cisco-service-network:virtual-connection?type=mpls-te-tunnel&.startIndex=" + str(startindex)
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
         firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
         lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
