@@ -98,7 +98,7 @@ def main():
             raise Exception('Incorrect password')
         cipher = AES.new(pb_key, AES.MODE_CFB, iv)
         password = cipher.decrypt(decoded_str[16:-32])
-        epnmpassword = password
+        epnmpassword = password    
 
     #Taking the timeout cl argument and setting it for future use
     timeout = args.timeout
@@ -173,6 +173,7 @@ def main():
     logging.debug("Epnm_user is: {}".format(args.epnm_user))
     logging.debug("State_or_states is: {}".format(args.state_or_states))
     logging.debug("Phases is: {}".format(args.phases))
+    logging.debug("Timeout value is: {} seconds".format(timeout))
 
     # Delete all output files
     if delete_previous:
@@ -259,7 +260,12 @@ def main():
                         os.rename(filePath, new_file_path)
 
 
-    if build_plan and combine == False:
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('configs/config.ini')
+    check = config['CHECK']['Build_plan_check']
+    build_plan_check = True if check == 'True' else False
+
+    if build_plan and build_plan_check and combine == False:
         logging.info("Building plan file...")
 
         # Create a service to be used by this script
@@ -454,8 +460,8 @@ def main():
         plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
         logging.info("Plan file created.")
 
-    #The building combined plan file section
-    if build_plan and combine:
+    #The building 'combined' plan file section
+    if build_plan and combine and build_plan_check:
         logging.info("Building combined plan file...")
 
         # Create a service to be used by this script
@@ -689,6 +695,15 @@ def main():
         logging.info("No log file to copy...")
 
     # Script completed
+    if build_plan_check == False:
+        with open('configs/config.ini', 'rb') as f:
+            data = f.readlines()
+
+        with open('configs/config.ini', 'wb') as f:
+            for line in data:
+                if line.startswith('Build_plan'):
+                    line = 'Build_plan_check = {}\n'.format(True)
+                f.write(line)
     finish_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     logging.info("Collection finish time is " + finish_time)
     logging.info("Total script completion time is {0:.2f} seconds.".format(time.time() - start_time))

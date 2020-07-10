@@ -11,8 +11,8 @@ from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 config = configparser.ConfigParser(interpolation=None)
 config.read('configs/config.ini')
-timeout_limit = config['DEFAULT']['Timeout_limit']
-
+timeout = config['DEFAULT']['Timeout_limit']
+timeout_limit = float(timeout)
 
 def rest_get_json(baseURL, uri, user, password):
     proxies = {

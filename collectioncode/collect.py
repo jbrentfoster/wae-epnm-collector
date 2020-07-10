@@ -96,7 +96,16 @@ def collection_router(collection_call):
         #     collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                         #    collection_call['epnmpassword'])
     except Exception as err:
-        logging.exception('**********\n\nCaught an exception on thread: {}\n\n'.format(collection_call['type']))                                                
+        logging.debug('Exception: Setting the build_plan_check variable to False')                                         
+        with open('configs/config.ini', 'rb') as f:
+            data = f.readlines()
+
+        with open('configs/config.ini', 'wb') as f:
+            for line in data:
+                if line.startswith('Build_plan'):
+                    line = 'Build_plan_check = {}\n'.format(False)
+                f.write(line)    
+        logging.exception('**********\n\nCaught an exception on thread: {}\n\n'.format(collection_call['type']))   
         raise
 
 
@@ -191,8 +200,13 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        try:
+            firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+            lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -245,8 +259,13 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -310,21 +329,25 @@ def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
 
     nodes = []
     # i = 1
-    for node in thejson.get('com.response-message').get('com.data').get('nd.node'):
-        # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
-        try:
-            node_fdn = node.get('nd.fdn')
-            nodeName = node.get('nd.name')
-            logging.info("Processing for equipment information " + nodeName)
-            product_type = node.get('nd.product-type')
-            software_version = node.get('nd.software-version')
-            management_address = node.get('nd.management-address')
-            description = node.get('nd.description')
-            nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
-                          'management-address': management_address, 'description': description})
-        except Exception as err:
-            logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
-        # i += 1
+    try:
+        for node in thejson.get('com.response-message').get('com.data').get('nd.node'):
+            # if node['nd.product-series'] == "Cisco Network Convergence System 2000 Series":
+            try:
+                node_fdn = node.get('nd.fdn')
+                nodeName = node.get('nd.name')
+                logging.info("Processing for equipment information " + nodeName)
+                product_type = node.get('nd.product-type')
+                software_version = node.get('nd.software-version')
+                management_address = node.get('nd.management-address')
+                description = node.get('nd.description')
+                nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
+                            'management-address': management_address, 'description': description})
+            except Exception as err:
+                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
+            # i += 1
+    except Exception:
+        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        raise
 
     with open("jsonfiles/all-nodes.json", 'wb') as f:
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -341,8 +364,13 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+        
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -407,23 +435,27 @@ def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
 
     l1nodes = {}
     i = 1
-    for node in thejson['com.response-message']['com.data']['nd.node']:
-        if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
-            nodeName = node['nd.name']
-            fdn = node['nd.fdn']
-            logging.info("Processing node " + nodeName)
-            try:
-                latitude = node['nd.latitude']
-                longitude = node['nd.longitude']
-            except KeyError:
-                logging.error(
-                    "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
-                latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-                longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
-            l1nodes['Node' + str(i)] = dict(
-                [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
-            i += 1
-        # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    try:
+        for node in thejson['com.response-message']['com.data']['nd.node']:
+            if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
+                nodeName = node['nd.name']
+                fdn = node['nd.fdn']
+                logging.info("Processing node " + nodeName)
+                try:
+                    latitude = node['nd.latitude']
+                    longitude = node['nd.longitude']
+                except KeyError:
+                    logging.error(
+                        "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
+                    latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                    longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
+                l1nodes['Node' + str(i)] = dict(
+                    [('Name', nodeName), ('fdn', fdn), ('Latitude', latitude), ('Longitude', longitude)])
+                i += 1
+            # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    except Exception:
+        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        raise
 
     with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
         json.dump(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': '))
@@ -441,8 +473,13 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -542,6 +579,9 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 elif status == "FAILURE":
                     logging.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
+            except AttributeError:
+                logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                raise
 
         #Getting the state for this particular node
         seed_node = seed_node.get('node')
@@ -636,6 +676,9 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 elif status == "FAILURE":
                     logging.critical("Could not get ISIS hostnames!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
+            except AttributeError:
+                logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                raise
 
         logging.info("Database received.")
         with open("jsongets/{state}_hostnames.txt".format(
@@ -890,8 +933,13 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -917,8 +965,13 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -996,8 +1049,12 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -1122,7 +1179,12 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
             jsonresponse = json.load(f)
 
         logging.info("Parsing termination_point results for vcFdn " + tpfdn)
-        termination_points = jsonresponse.get('com.response-message').get('com.data').get('tp.termination-point')
+        try:
+            termination_points = jsonresponse.get('com.response-message').get('com.data').get('tp.termination-point')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         tp_data = []
         if isinstance(termination_points, list):
             is_first_tp = True
@@ -1175,8 +1237,13 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-        lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        try:
+            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -1531,11 +1598,10 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     try:
         with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
             f.write(jsonresponse)
-            f.close()
 
         with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
             jsonresponse = f.read()
-            f.close()
+
     except Exception as err:
         logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
@@ -1564,6 +1630,7 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     except Exception as err:
         logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        logging.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
         return l1hops
 
 
@@ -1787,11 +1854,10 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
     try:
         with open("jsongets/multilayer_route_" + vcfdn + ".json", 'wb') as f:
             f.write(jsonresponse)
-            f.close()
 
         with open("jsongets/multilayer_route_" + vcfdn + ".json", 'rb') as f:
             jsonresponse = f.read()
-            f.close()
+
     except Exception as err:
         logging.warn("Could not save or open file for multilayer route odu service for vcFDN " + vcfdn)
         logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
@@ -1844,6 +1910,7 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
                             #         return l1hops
     except Exception as err:
         logging.info("Multilayer_route results for vcFdn " + vcfdn + "were missing and couldn't be parsed")
+        logging.debug("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
 
 
 def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword, state_or_states):
@@ -1937,6 +2004,7 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
         return {'tpfdn': tpfdn, 'tp-description': tp_description, 'tp-mac': tp_mac_addr, 'tp-mtu': tp_mtu}
     except Exception as err:
         logging.warn("Could not get termination point for tpfdn " + tpfdn)
+        logging.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(thejson))
         logging.warn(err)
         return {'tpfdn': tpfdn, 'tp-description': "", 'tp-mac': "", 'tp-mtu': ""}
 
@@ -1950,139 +2018,140 @@ def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
     jsonaddition = json.loads(jsonresponse)
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonaddition, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
     with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
 
     thejson = json.loads(jsonresponse)
 
     lsplist = []
     vcdict = {}
-
-    for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
-        tmpfdn = None
-        adminstate = None
-        affinitybits = None
-        affinitymask = None
-        # destinationIP = None
-        tunnelID = None
-        tunnelsource = None
-        tunneldestination = None
-        corouted = None
-        signalledBW = None
-        fastreroute = None
-        adminstate = None
-        fdn = None
-        erroredlsp = False
-        autoroute = None
-        # Fix - GLH - 2-18-19 #
-        setupPriority = None
-        holdPriority = None
-        # Fix - GLH - 2-18-19 #
-        adminstate = item['vc.admin-state']
-        fdn = item['vc.fdn']
-        if adminstate == "com:admin-state-up":
-            direction = item['vc.direction']
-            vcdict['fdn'] = fdn
-            vcdict['direction'] = direction
-            logging.info("Collecting LSP: " + fdn)
-            try:
-                term_point = item['vc.termination-point-list']['vc.termination-point']
-            except Exception as err:
-                logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
-                continue
-            if isinstance(term_point, dict):
+    try:
+        for item in thejson['com.response-message']['com.data']['vc.virtual-connection']:
+            tmpfdn = None
+            adminstate = None
+            affinitybits = None
+            affinitymask = None
+            # destinationIP = None
+            tunnelID = None
+            tunnelsource = None
+            tunneldestination = None
+            corouted = None
+            signalledBW = None
+            fastreroute = None
+            adminstate = None
+            fdn = None
+            erroredlsp = False
+            autoroute = None
+            # Fix - GLH - 2-18-19 #
+            setupPriority = None
+            holdPriority = None
+            # Fix - GLH - 2-18-19 #
+            adminstate = item['vc.admin-state']
+            fdn = item['vc.fdn']
+            if adminstate == "com:admin-state-up":
+                direction = item['vc.direction']
+                vcdict['fdn'] = fdn
+                vcdict['direction'] = direction
+                logging.info("Collecting LSP: " + fdn)
                 try:
-                    tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                    term_point = item['vc.termination-point-list']['vc.termination-point']
                 except Exception as err:
-                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
                     continue
-                subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
-                try:
-                    affinitybits = subsubsubitem['vc.affinity-bits']
-                    affinitymask = subsubsubitem['vc.affinity-mask']
-                except Exception as err2:
-                    logging.warn("LSP has no affinity bits: " + fdn)
-                try:
+                if isinstance(term_point, dict):
+                    try:
+                        tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
+                    except Exception as err:
+                        logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                        continue
+                    subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
+                    try:
+                        affinitybits = subsubsubitem['vc.affinity-bits']
+                        affinitymask = subsubsubitem['vc.affinity-mask']
+                    except Exception as err2:
+                        logging.warn("LSP has no affinity bits: " + fdn)
+                    try:
+                        signalledBW = subsubsubitem['vc.signalled-bw']
+                    except Exception as err:
+                        logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
+                    # destinationIP = subsubsubitem['vc.destination-address']
+                    autoroute = subsubsubitem['vc.auto-route-announce-enabled']
+                    fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                    # Fix - GLH - 2-18-19 #
+                    setupPriority = subsubsubitem["vc.setup-priority"]
+                    holdPriority = subsubsubitem["vc.hold-priority"]
+                    # Fix - GLH - 2-18-19 #
+                    try:
+                        subitem = item['vc.te-tunnel']
+                        tunnelID = subitem['vc.tunnel-id']
+                        tunnelsource = subitem['vc.tunnel-source']
+                        tunneldestination = subitem['vc.tunnel-destination']
+                        corouted = subitem['vc.co-routed-enabled']
+                    except Exception as err:
+                        logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                        logging.warn(err)
+                        erroredlsp = True
+                else:
+                    logging.info("List format term_point " + fdn)
+                    try:
+                        tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
+                    except Exception as err:
+                        logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                        continue
+                    subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
+                    try:
+                        affinitybits = subsubsubitem['vc.affinity-bits']
+                        affinitymask = subsubsubitem['vc.affinity-mask']
+                    except Exception as err2:
+                        logging.warn("LSP has no affinity bits: " + fdn)
                     signalledBW = subsubsubitem['vc.signalled-bw']
-                except Exception as err:
-                    logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
-                # destinationIP = subsubsubitem['vc.destination-address']
-                autoroute = subsubsubitem['vc.auto-route-announce-enabled']
-                fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
-                # Fix - GLH - 2-18-19 #
-                setupPriority = subsubsubitem["vc.setup-priority"]
-                holdPriority = subsubsubitem["vc.hold-priority"]
-                # Fix - GLH - 2-18-19 #
-                try:
-                    subitem = item['vc.te-tunnel']
-                    tunnelID = subitem['vc.tunnel-id']
-                    tunnelsource = subitem['vc.tunnel-source']
-                    tunneldestination = subitem['vc.tunnel-destination']
-                    corouted = subitem['vc.co-routed-enabled']
-                except Exception as err:
-                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                    logging.warn(err)
-                    erroredlsp = True
-            else:
-                logging.info("List format term_point " + fdn)
-                try:
-                    tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
-                except Exception as err:
-                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
-                    continue
-                subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
-                try:
-                    affinitybits = subsubsubitem['vc.affinity-bits']
-                    affinitymask = subsubsubitem['vc.affinity-mask']
-                except Exception as err2:
-                    logging.warn("LSP has no affinity bits: " + fdn)
-                signalledBW = subsubsubitem['vc.signalled-bw']
-                # destinationIP = subsubsubitem['vc.destination-address']
-                autoroute = subsubsubitem['vc.auto-route-announce-enabled']
-                fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
-                # Fix - GLH - 2-18-19 #
-                holdPriority = subsubsubitem["vc.hold-priority"]
-                setupPriority = subsubsubitem["vc.setup-priority"]
-                # Fix - GLH - 2-18-19 #
-                try:
-                    subitem = item['vc.te-tunnel']
-                    tunnelID = subitem['vc.tunnel-id']
-                    tunnelsource = subitem['vc.tunnel-source']
-                    tunneldestination = subitem['vc.tunnel-destination']
-                    corouted = subitem['vc.co-routed-enabled']
-                except Exception as err:
-                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                    logging.warn(err)
-                    erroredlsp = True
+                    # destinationIP = subsubsubitem['vc.destination-address']
+                    autoroute = subsubsubitem['vc.auto-route-announce-enabled']
+                    fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
+                    # Fix - GLH - 2-18-19 #
+                    holdPriority = subsubsubitem["vc.hold-priority"]
+                    setupPriority = subsubsubitem["vc.setup-priority"]
+                    # Fix - GLH - 2-18-19 #
+                    try:
+                        subitem = item['vc.te-tunnel']
+                        tunnelID = subitem['vc.tunnel-id']
+                        tunnelsource = subitem['vc.tunnel-source']
+                        tunneldestination = subitem['vc.tunnel-destination']
+                        corouted = subitem['vc.co-routed-enabled']
+                    except Exception as err:
+                        logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                        logging.warn(err)
+                        erroredlsp = True
 
-            if not erroredlsp:
-                vcdict['admin-state'] = adminstate
-                vcdict['tufdn'] = tmpfdn
-                vcdict['affinitybits'] = affinitybits
-                vcdict['affinitymask'] = affinitymask
-                # vcdict['Destination IP'] = destinationIP
-                vcdict['Tunnel ID'] = tunnelID
-                vcdict['Tunnel Source'] = tunnelsource
-                vcdict['Tunnel Destination'] = tunneldestination
-                vcdict['co-routed'] = corouted
-                vcdict['signalled-bw'] = signalledBW
-                vcdict['FRR'] = fastreroute
-                vcdict['auto-route-announce-enabled'] = autoroute
-                # Fix - GLH - 2-18-19 #
-                vcdict["vc.hold-priority"] = holdPriority
-                vcdict["vc.setup-priority"] = setupPriority
-                # Fix - GLH - 2-18-19 #
-                lsplist.append(vcdict)
-                logging.info(
-                    "Collected tunnel " + str(
-                        tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+                if not erroredlsp:
+                    vcdict['admin-state'] = adminstate
+                    vcdict['tufdn'] = tmpfdn
+                    vcdict['affinitybits'] = affinitybits
+                    vcdict['affinitymask'] = affinitymask
+                    # vcdict['Destination IP'] = destinationIP
+                    vcdict['Tunnel ID'] = tunnelID
+                    vcdict['Tunnel Source'] = tunnelsource
+                    vcdict['Tunnel Destination'] = tunneldestination
+                    vcdict['co-routed'] = corouted
+                    vcdict['signalled-bw'] = signalledBW
+                    vcdict['FRR'] = fastreroute
+                    vcdict['auto-route-announce-enabled'] = autoroute
+                    # Fix - GLH - 2-18-19 #
+                    vcdict["vc.hold-priority"] = holdPriority
+                    vcdict["vc.setup-priority"] = setupPriority
+                    # Fix - GLH - 2-18-19 #
+                    lsplist.append(vcdict)
+                    logging.info(
+                        "Collected tunnel " + str(
+                            tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+                else:
+                    logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
+                vcdict = {}
             else:
-                logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
-            vcdict = {}
-        else:
-            logging.warning("Tunnel unavailable: " + fdn)
+                logging.warning("Tunnel unavailable: " + fdn)
+    except Exception:
+        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        raise
     logging.info("Completed collecting LSPs...")
     with open("jsonfiles/lsps.json", "wb") as f:
         f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -2100,8 +2169,13 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
         circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         jsonaddition = json.loads(jsonresponse)
-        firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
-        lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        try:
+            firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
+            lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
+        except Exception:
+            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -2113,10 +2187,9 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
 
     with open("jsongets/vc-mpls-te-tunnel.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+
     with open("jsongets/vc-mpls-te-tunnel.json", 'rb') as f:
         jsonresponse = f.read()
-        f.close()
 
     thejson = json.loads(jsonresponse)
 
@@ -2238,9 +2311,7 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict["vc.setup-priority"] = setupPriority
                 # Fix - GLH - 2-18-19 #
                 lsplist.append(vcdict)
-                logging.info(
-                    "Collected tunnel " + str(
-                        tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+                logging.info("Collected tunnel " + str(tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
             else:
                 logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
             vcdict = {}
@@ -2249,7 +2320,6 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
     logging.info("Completed collecting LSPs...")
     with open("jsonfiles/lsps.json", "wb") as f:
         f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
 
 
 def parseintfnum(nodeintf):
