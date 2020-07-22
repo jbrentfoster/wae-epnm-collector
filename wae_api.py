@@ -109,7 +109,7 @@ def main():
         with open('configs/config.ini', 'wb') as f:
             for line in data:
                 if line.startswith('Timeout'):
-                    line = 'TImeout_limit = {}\n'.format(timeout)
+                    line = 'Timeout_limit = {}\n'.format(timeout)
                 f.write(line)
 
     current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
@@ -153,6 +153,7 @@ def main():
         return set(deletes + transposes + replaces + inserts)
     state_or_states_list = [''.join(known(variation1(state))) for state in state_or_states_list]
 
+    #Setting up the main log file 
     logFormatter = logging.Formatter('%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
@@ -222,6 +223,13 @@ def main():
                 break
         c +=1
 
+    #Creating the log for each thread
+    mkpath(archive_root)
+    for phase in phases_to_run:
+        phase_type = phase['type']
+        logger = create_log(phase_type, logging_level, archive_root)
+        logger.info('{} logger instantiated'.format(phase_type))
+    
     pool = ThreadPool(7)
     pool.map(collectioncode.collect.collection_router, phases_to_run)
     pool.shutdown(wait=True)
@@ -687,13 +695,6 @@ def main():
     except Exception as err:
         logging.info("No output files to backup...")
 
-    logging.info("Copying log file...")
-    try:
-        mkpath(archive_root)
-        shutil.copy(log_file_name, archive_root + '/collection.log')
-    except Exception as err:
-        logging.info("No log file to copy...")
-
     # Script completed
     if build_plan_check == False:
         with open('configs/config.ini', 'rb') as f:
@@ -707,7 +708,31 @@ def main():
     finish_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     logging.info("Collection finish time is " + finish_time)
     logging.info("Total script completion time is {0:.2f} seconds.".format(time.time() - start_time))
+
+    logging.info("Copying log file...")
+    try:
+        shutil.copy(log_file_name, archive_root + '/collection.log')
+    except Exception as err:
+        logging.info("No log file to copy...")
     time.sleep(2)
+
+
+#Creating a new log object and the file to store the logs in the /archive/captures dir
+def create_log(log_name, logging_level, archive_root):
+    log_name = log_name
+    logging_level = logging_level
+    current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
+    logFormatter = logging.Formatter('%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    Logger = logging.getLogger(log_name)
+    Logger.level = eval('logging.{}'.format(logging_level))
+    
+    milli = str(datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f'))[-6:-3]
+    log_file_name = archive_root + '/{}-'.format(log_name) + current_time + '-' + milli + '.log'
+    fileHandler = logging.FileHandler(filename=log_file_name)
+    fileHandler.setFormatter(logFormatter)
+    Logger.addHandler(fileHandler)
+    Logger.propagate = False
+    return Logger
 
 
 if __name__ == '__main__':

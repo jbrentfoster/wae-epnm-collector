@@ -8,6 +8,7 @@ import re
 import logging
 import os
 import random
+import collect
 
 
 def get_tl_mpls_ep_ref_nodes():
@@ -66,7 +67,7 @@ def get_random_nodes_for_states(state_or_states):
         state = state.strip()
         if state in valid_seed_nodes:
             node_id = valid_seed_nodes[state]['node']
-            logging.debug('The seed node ID in the valid_seed_node.json file is: {}'.format(node_id))
+            collect.thread_data.logger.debug('The seed node ID in the valid_seed_node.json file is: {}'.format(node_id))
             if node_id.startswith('MD'):
                 pass
             else: valid_seed_nodes[state]['node'] = "MD=CISCO_EPNM!ND=" + node_id
@@ -74,7 +75,7 @@ def get_random_nodes_for_states(state_or_states):
         else:
             seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
             random_node_choices.append(random.choice(seed_nodes[state]))
-        logging.info('The valid seed-node for {} is: {}'.format(state, random_node_choices[-1]))
+        collect.thread_data.logger.info('The valid seed-node for {} is: {}'.format(state, random_node_choices[-1]))
     return random_node_choices
 
 if __name__ == "__main__":

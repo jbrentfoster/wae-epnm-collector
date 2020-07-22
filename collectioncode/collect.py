@@ -7,96 +7,127 @@ import sys
 import traceback
 import wae_api
 import configparser
+import threading
 from multiprocessing.dummy import Pool as ThreadPool
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 
 
-config = configparser.ConfigParser(interpolation=None)
-config.read('configs/config.ini')
-timeout = config['DEFAULT']['Timeout_limit']
-timeout_limit = float(timeout) * 3 
+thread_data = threading.local()
+
 
 def collection_router(collection_call):
+    global timeout_limit
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('configs/config.ini')
+    timeout = config['DEFAULT']['Timeout_limit']
+    timeout_limit = float(timeout) * 3 if timeout.isnumeric() else None
+
     try:
         if collection_call['type'] == "l1nodes":
             logging.info("Collecting L1 nodes...")
+            #Getting the l1 nodes log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect L1 nodes')
             collectL1Nodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         if collection_call['type'] == "l1links":
             logging.info("Collecting L1 links...")
+            #Getting the l1 links log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect L1 links')
             collectL1links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         if collection_call['type'] == 'allnodes':
             logging.info("Collecting all node equipment details...")
+            #Getting the all nodes log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect all nodes')
             collectAllNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         if collection_call['type'] == '4knodes':
             logging.info("Collecting 4k nodes...")
+            #Getting the 4k nodes log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect 4knodes')
             collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         if collection_call['type'] == "lsps":
             logging.info("Collecting LSPs...")
+            #Getting the lsps log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect LSPs')
             collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
         if collection_call['type'] == "mpls":
-            logging.info("Collecting 4k nodes...")
+            logging.info("Starting to collect mpls data")
+            #Getting the mpls log object
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect mpls data')
             collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            logging.info("Collecting MPLS topological links...")
+            thread_data.logger.info("Collecting MPLS topological links...")
             collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            logging.info("Collecting MPLS nodes...")
+            thread_data.logger.info("Collecting MPLS nodes...")
             collectMPLSnodes()
-            logging.info("Collecting MPLS topology...")
+            thread_data.logger.info("Collecting MPLS topology...")
             collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
-            logging.info("Collecting ISIS hostnames...")
+            thread_data.logger.info("Collecting ISIS hostnames...")
             collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
             process_hostnames(collection_call['state_or_states'])
-            logging.info("Processing MPLS topology...")
+            thread_data.logger.info("Processing MPLS topology...")
             processMPLS(collection_call['state_or_states'])
 
-            logging.info("Adding MPLS TL data to L3 links...")
+            thread_data.logger.info("Adding MPLS TL data to L3 links...")
             try:
                 add_mpls_tl_data(collection_call['state_or_states'])
             except Exception as err:
-                logging.critical("MPLS topological links are not valid.  Halting execution.")
+                thread_data.logger.propagate = True
+                thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
                 sys.exit("Collection error.  Halting execution.")
 
-            # logging.info("Collecting L3 link termination points...")
+            # thread_data.logger.info("Collecting L3 link termination points...")
             # collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
             #                                     collection_call['epnmpassword'], collection_call['state_or_states'])
 
-            logging.info("Collecting optical virtual connections...")
+            thread_data.logger.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            logging.info("Adding vc-fdn to L3links...")
+            thread_data.logger.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
         # if collection_call['type'] == "optical":
-        #     logging.info("Collecting optical virtual connections...")
+        #     thread_data.logger.info("Collecting optical virtual connections...")
         #     collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                         #    collection_call['epnmpassword'])
-            logging.info("Parsing OCH-trails...")
+            thread_data.logger.info("Parsing OCH-trails...")
             parse_vc_optical_och_trails()
-            logging.info("Getting OCH-trails wavelengths...")
+            thread_data.logger.info("Getting OCH-trails wavelengths...")
             add_wavelength_vc_optical_och_trails()
-            logging.info("Collecting L1 paths for OCH-trails...")
+            thread_data.logger.info("Collecting L1 paths for OCH-trails...")
             addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            logging.info("Re-ordering L1 hops for OCH-trails...")
+            thread_data.logger.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
         # if collection_call['type'] == "optical_phase_b":
-        #     logging.info("Collection OTU links...")
+        #     thread_data.logger.info("Collection OTU links...")
         #     collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
         #                            collection_call['epnmpassword'])
-        #     logging.info("Collection OCH links...")
+        #     thread_data.logger.info("Collection OCH links...")
         #     collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
         #                            collection_call['epnmpassword'])
-        #     # logging.info("Collecting OTU termination points...")
+        #     # thread_data.logger.info("Collecting OTU termination points...")
         #     # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
         #     #                                         collection_call['epnmpassword'])
-        #     logging.info("Adding OCH trails to OTU links...")
+        #     thread_data.logger.info("Adding OCH trails to OTU links...")
         #     add_och_trails_to_otu_links()
-        #     logging.info("Parsing OTN links from OTU link data...")
+        #     thread_data.logger.info("Parsing OTN links from OTU link data...")
         #     parse_otn_links()
         # # if collection_call['type'] == "optical_phase_c":
-        #     logging.info("Parsing ODU services from vc-optical data...")
+        #     thread_data.logger.info("Parsing ODU services from vc-optical data...")
         #     parse_odu_services()
-        #     logging.info("Getting multi-layer routes for OTN services...")
+        #     thread_data.logger.info("Getting multi-layer routes for OTN services...")
         #     collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                         #    collection_call['epnmpassword'])
     except Exception as err:
-        logging.debug('Exception: Setting the build_plan_check variable to False')                                         
+        thread_data.logger.propagate = True
+        thread_data.logger.debug('Exception: Setting the build_plan_check variable to False')                                         
         with open('configs/config.ini', 'rb') as f:
             data = f.readlines()
 
@@ -105,7 +136,7 @@ def collection_router(collection_call):
                 if line.startswith('Build_plan'):
                     line = 'Build_plan_check = {}\n'.format(False)
                 f.write(line)    
-        logging.exception('**********\n\nCaught an exception on thread: {}\n\n'.format(collection_call['type']))   
+        thread_data.logger.exception('**********\n\nCaught an exception on thread: {}\n\n'.format(collection_call['type']))   
         raise
 
 
@@ -204,7 +235,8 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
             lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -231,12 +263,13 @@ def collectL1Nodes_json(baseURL, epnmuser, epnmpassword):
     for node in thejson['com.response-message']['com.data']['nd.node']:
         if node.get('nd.product-series') == "Cisco Network Convergence System 2000 Series":
             nodeName = node.get('nd.name')
-            logging.info("Processing node " + nodeName)
+            thread_data.logger.info("Processing node " + nodeName)
             try:
                 latitude = node.get('nd.latitude')
                 longitude = node.get('nd.longitude')
             except KeyError:
-                logging.error(
+                thread_data.logger.propagate = True
+                thread_data.logger.error(
                     "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
                 latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                 longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
@@ -263,7 +296,8 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.info("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -292,9 +326,9 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
         try:
             endpointlist = link.get('topo.endpoint-list').get('topo.endpoint')
         except Exception as err:
-            logging.warn("L1 Link missing valid endpoint-list " + fdn + " ...removing this link from L1 topology.")
+            thread_data.logger.warn("L1 Link missing valid endpoint-list " + fdn + " ...removing this link from L1 topology.")
             continue
-        logging.info("Processing L1 link " + fdn)
+        thread_data.logger.info("Processing L1 link " + fdn)
         if len(endpointlist) > 1 and isinstance(endpointlist, list) and 'WDMSIDE' in discovered_name:
             for ep in endpointlist:
                 endpoint = ep.get('topo.endpoint-ref')
@@ -335,7 +369,7 @@ def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
             try:
                 node_fdn = node.get('nd.fdn')
                 nodeName = node.get('nd.name')
-                logging.info("Processing for equipment information " + nodeName)
+                thread_data.logger.info("Processing for equipment information " + nodeName)
                 product_type = node.get('nd.product-type')
                 software_version = node.get('nd.software-version')
                 management_address = node.get('nd.management-address')
@@ -343,10 +377,11 @@ def collectAllNodes_json_new(baseURL, epnmuser, epnmpassword):
                 nodes.append({'name': nodeName, 'product-type': product_type, 'software-version': software_version,
                             'management-address': management_address, 'description': description})
             except Exception as err:
-                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
+                thread_data.logger.warn("Node equipment details could not be retrieved!  " + node_fdn)
             # i += 1
     except Exception:
-        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        thread_data.logger.propagate = True
+        thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
         raise
 
     with open("jsonfiles/all-nodes.json", 'wb') as f:
@@ -368,7 +403,8 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
         
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -396,7 +432,7 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
             try:
                 node_fdn = node['nd.fdn']
                 nodeName = node['nd.name']
-                logging.info("Processing for equipment information " + nodeName)
+                thread_data.logger.info("Processing for equipment information " + nodeName)
                 product_type = node['nd.product-type']
                 software_version = node['nd.software-version']
                 management_address = node['nd.management-address']
@@ -411,7 +447,7 @@ def collectAllNodes_json(baseURL, epnmuser, epnmpassword):
                               'management-address': management_address, 'description': description,
                               'Latitude': latitude, 'Longitude': longitude}, )
             except Exception as err:
-                logging.warn("Node equipment details could not be retrieved!  " + node_fdn)
+                thread_data.logger.warn("Node equipment details could not be retrieved!  " + node_fdn)
             # i += 1
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -440,12 +476,12 @@ def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
             if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
                 nodeName = node['nd.name']
                 fdn = node['nd.fdn']
-                logging.info("Processing node " + nodeName)
+                thread_data.logger.info("Processing node " + nodeName)
                 try:
                     latitude = node['nd.latitude']
                     longitude = node['nd.longitude']
                 except KeyError:
-                    logging.error(
+                    thread_data.logger.error(
                         "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
                     latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                     longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
@@ -454,7 +490,8 @@ def collect4kNodes_json_new(baseURL, epnmuser, epnmpassword):
                 i += 1
             # f.write(json.dumps(l1nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
     except Exception:
-        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        thread_data.logger.propagate = True
+        thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
         raise
 
     with open("jsonfiles/4k-nodes_db.json", 'wb') as f:
@@ -477,7 +514,8 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -503,12 +541,12 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
         if node['nd.product-series'] == "Cisco Network Convergence System 4000 Series":
             nodeName = node['nd.name']
             fdn = node['nd.fdn']
-            logging.info("Processing node " + nodeName)
+            thread_data.logger.info("Processing node " + nodeName)
             try:
                 latitude = node['nd.latitude']
                 longitude = node['nd.longitude']
             except KeyError:
-                logging.error(
+                thread_data.logger.error(
                     "Could not get longitude or latitidude for node " + nodeName + ".  Setting to 0.0 and 0.0")
                 latitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
                 longitude = {'fdtn.double-amount': 0.0, 'fdtn.units': 'DEGREES_DECIMAL'}
@@ -538,17 +576,18 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
         try:
             thejson = json.loads(jsonresponse)
         except Exception as err:
-            logging.critical(
+            thread_data.logger.propagate = True
+            thread_data.logger.critical(
                 'EPNM server is not configured with "show mpls topology" CLI template.  Halting execution.')
             sys.exit()
 
         jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
-        logging.info('Successfully submitted the API call to retrieve the MPLS topology.')
-        logging.info('jobname is: ' + jobname)
+        thread_data.logger.info('Successfully submitted the API call to retrieve the MPLS topology.')
+        thread_data.logger.info('jobname is: ' + jobname)
 
         notDone = True
-        logging.info('Checking job status...')
+        thread_data.logger.info('Checking job status...')
         results = ""
         while notDone:
             time.sleep(5)
@@ -560,27 +599,30 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                logging.info("Job status: " + str(status))
+                thread_data.logger.info("Job status: " + str(status))
                 if status == "SUCCESS":
-                    logging.info("Successfully collected MPLS topology...")
+                    thread_data.logger.info("Successfully collected MPLS topology...")
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
                         'ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
-                    logging.critical("Could not get MPLS topology!!!!!!")
+                    thread_data.logger.propagate = True
+                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except KeyError:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
-                logging.info("Run status: " + str(status))
+                thread_data.logger.info("Run status: " + str(status))
                 if status == "COMPLETED":
-                    logging.info("Successfully collected MPLS topology...")
+                    thread_data.logger.info("Successfully collected MPLS topology...")
                     results = thejson['ra.deploy-result']['ra.transcript']
                     notDone = False
                 elif status == "FAILURE":
-                    logging.critical("Could not get MPLS topology!!!!!!")
+                    thread_data.logger.propagate = True
+                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except AttributeError:
-                logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                thread_data.logger.propagate = True
+                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
                 raise
 
         #Getting the state for this particular node
@@ -595,7 +637,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                         seed_node_state = node["state"]
                         break
 
-        logging.info("Database received.")
+        thread_data.logger.info("Database received.")
         with open("jsongets/{state}_mplstopo.txt".format(
                 # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
                 # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
@@ -623,17 +665,18 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         try:
             thejson = json.loads(jsonresponse)
         except Exception as err:
-            logging.critical(
+            thread_data.logger.propagate = True
+            thread_data.logger.critical(
                 'EPNM server is not configured with "show isis hostname" CLI template.  Halting execution.')
             sys.exit()
 
         jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
-        logging.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
-        logging.info('jobname is: ' + jobname)
+        thread_data.logger.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
+        thread_data.logger.info('jobname is: ' + jobname)
 
         notDone = True
-        logging.info('Checking job status...')
+        thread_data.logger.info('Checking job status...')
         results = ""
         #Getting the state for this particular node
         seed_node = seed_node.get('node')
@@ -657,30 +700,33 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
             thejson = json.loads(jsonresponse)
             try:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                logging.info("Job status: " + str(status))
+                thread_data.logger.info("Job status: " + str(status))
                 if status == "SUCCESS":
-                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                    thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
                     results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
                         'ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
-                    logging.critical("Could not get MPLS topology!!!!!!")
+                    thread_data.logger.propagate = True
+                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except KeyError:
                 status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
-                logging.info("Run status: " + status)
+                thread_data.logger.info("Run status: " + status)
                 if status == "COMPLETED":
-                    logging.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                    thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
                     results = thejson.get('ra.deploy-result').get('ra.transcript')
                     notDone = False
                 elif status == "FAILURE":
-                    logging.critical("Could not get ISIS hostnames!!!!!!")
+                    thread_data.logger.propagate = True
+                    thread_data.logger.critical("Could not get ISIS hostnames!!!!!!")
                     sys.exit("Collection error.  Ending execution.")
             except AttributeError:
-                logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                thread_data.logger.propagate = True
+                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
                 raise
 
-        logging.info("Database received.")
+        thread_data.logger.info("Database received.")
         with open("jsongets/{state}_hostnames.txt".format(
                 # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
                 # state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
@@ -732,7 +778,7 @@ def processMPLS(state_or_states):
                         otn_flag = False
                     isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.', 1)[0]
                     node = hostname_lookup(isis_id, state)
-                    logging.info("processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c))
+                    thread_data.logger.info("processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c))
                     # if isis_id == "0010.0040.1069":
                     #     print "found it!"
                     loopback = line.split(',')[1].split(':')[1].split(' ')[1]
@@ -748,16 +794,18 @@ def processMPLS(state_or_states):
                         if neighbor_node_id == "-1":
                             continue
                         if neighbor == None:
-                            logging.warn("There was a problem parsing the neighbor!")
-                            logging.critical("Critical error!")
+                            thread_data.logger.propagate = True
+                            thread_data.logger.warn("There was a problem parsing the neighbor!")
+                            thread_data.logger.critical("Critical error!")
                             sys.exit("MPLS topology is not complete for node " + node + "!!! Halting execution!")
                         i += 1
                         linkid = "Link" + str(i)
                         nodes[node]['Links'][linkid] = dict([('Neighbor', neighbor)])
                     except Exception as err:
-                        logging.warn("There was a problem parsing the neighbor!")
-                        logging.exception(err)
-                        logging.critical("Critical error!")
+                        thread_data.logger.propagate = True
+                        thread_data.logger.warn("There was a problem parsing the neighbor!")
+                        thread_data.logger.exception(err)
+                        thread_data.logger.critical("Critical error!")
                         sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
                     foundfirstlink = True
                 elif "TE Metric:" in line and foundfirstlink and not otn_flag:
@@ -767,9 +815,10 @@ def processMPLS(state_or_states):
                         igp_metric = line.split(',')[1].split(':')[1]
                         nodes[node]['Links'][linkid]['IGP Metric'] = igp_metric
                     except Exception as err:
-                        logging.warn("There was a problem parsing the metric!")
-                        logging.exception(err)
-                        logging.critical("Critical error!")
+                        thread_data.logger.propagate = True
+                        thread_data.logger.warn("There was a problem parsing the metric!")
+                        thread_data.logger.exception(err)
+                        thread_data.logger.critical("Critical error!")
                         sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
                 elif "Attribute Flags:" in line and foundfirstlink and not otn_flag:
                     affinity = line.split(':')[1].strip()
@@ -835,7 +884,7 @@ def collectMPLSnodes():
                     tmp_node = ep['topo.endpoint-ref'].split('!')[1].split('=')[1]
                     if tmp_node not in mpls_nodes:  mpls_nodes.append(tmp_node)
         except Exception as err:
-            logging.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
+            thread_data.logger.warn("Invalid or missing end-point list for " + mpls_link['topo.fdn'])
 
     with open("jsonfiles/mpls_nodes.json", "wb") as f:
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -853,11 +902,11 @@ def add_mpls_tl_data(state_or_states):
 
         names = []
         for k1, v1 in l3links.items():
-            logging.info("Nodename is: " + k1)
+            thread_data.logger.info("Nodename is: " + k1)
             for k2, v2 in v1.items():
                 if isinstance(v2, dict):
                     for k3, v3 in v2.items():
-                        logging.info("Linkname is: " + k3)
+                        thread_data.logger.info("Linkname is: " + k3)
                         n1IP = v3.get('Local IP')
                         n2IP = v3.get('Neighbor IP')
                         name1 = n1IP + '-' + n2IP
@@ -867,17 +916,17 @@ def add_mpls_tl_data(state_or_states):
                             fdn = item.get('topo.fdn')
                             discoveredname = item.get('topo.discovered-name')
                             if (name1 == discoveredname or name2 == discoveredname):
-                                logging.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
+                                thread_data.logger.info("Matched link in EPNM MPLS TL with discovered-name: " + discoveredname)
                                 matchedlink = True
                                 v3['discoveredname'] = discoveredname
                                 # try:
                                 #     if isinstance(item['topo.endpoint-list']['topo.endpoint'], list):
-                                #         logging.info("End point list is valid...")
+                                #         thread_data.logger.info("End point list is valid...")
                                 #     else:
-                                #         logging.info(("!!!End point list is not valid!!!"))
+                                #         thread_data.logger.info(("!!!End point list is not valid!!!"))
                                 # except Exception as err:
-                                #     logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                                #     logging.warn("Removing link from topology...")
+                                #     thread_data.logger.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+                                #     thread_data.logger.warn("Removing link from topology...")
                                 #     v2.pop(k3)
                                 try:
                                     parse1 = item.get('topo.endpoint-list').get('topo.endpoint')[0].get(
@@ -903,19 +952,19 @@ def add_mpls_tl_data(state_or_states):
                                         v3['Link Speed'], v3['lr type'], v3['Bandwidth'] = parseintftype(
                                             node2intfparsed)
                                     else:
-                                        logging.warn(
+                                        thread_data.logger.warn(
                                             "Could not match node names for interface assignment for node " + k1 + " link " + k3)
-                                        logging.warn("Removing link from topology...")
+                                        thread_data.logger.warn("Removing link from topology...")
                                         v2.pop(k3)
                                     break
                                 except Exception as err:
-                                    logging.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
-                                    logging.warn("Removing link from topology...")
+                                    thread_data.logger.critical("Missing endpoint-ref for " + k1 + " " + k3 + " " + discoveredname)
+                                    thread_data.logger.warn("Removing link from topology...")
                                     v2.pop(k3)
                         if not matchedlink:
-                            logging.warn(
+                            thread_data.logger.warn(
                                 "Could not match discovered name for node " + k1 + " link " + k3 + ": " + name1 + " or " + name2)
-                            logging.warn("Removing link from topology...")
+                            thread_data.logger.warn("Removing link from topology...")
                             v2.pop(k3)
         with open("jsonfiles/{state}_l3Links_add_tl.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -937,7 +986,8 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -969,7 +1019,8 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -995,7 +1046,7 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
             otu_link = {}
             termination_points = []
             fdn = item.get('topo.fdn')
-            logging.info("Collecting OTU link " + fdn)
+            thread_data.logger.info("Collecting OTU link " + fdn)
             discoveredname = item.get('topo.discovered-name')
             capacity = item.get('topo.total-capacity')
             ep_list = item.get('topo.endpoint-list').get('topo.endpoint')
@@ -1017,9 +1068,9 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
             if len(ep_list) == 2:
                 otu_links.append(otu_link)
             else:
-                logging.warn("Endpoint list for " + fdn + " is incomplete!")
+                thread_data.logger.warn("Endpoint list for " + fdn + " is incomplete!")
         except Exception as error:
-            logging.warn("Invalid OTU topo link!")
+            thread_data.logger.warn("Invalid OTU topo link!")
 
         #Add OTUC2 channel to each termination-point
         for otu_link in otu_links:
@@ -1053,8 +1104,10 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
+
         if (lastindex - firstindex) == 99 and lastindex != -1:
             startindex += 100
             merge(jsonmerged, jsonaddition)
@@ -1078,7 +1131,7 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
     #         otu_link = {}
     #         termination_points = []
     #         fdn = item.get('topo.fdn')
-    #         logging.info("Collecting OTU link " + fdn)
+    #         thread_data.logger.info("Collecting OTU link " + fdn)
     #         discoveredname = item.get('topo.discovered-name')
     #         capacity = item.get('topo.total-capacity')
     #         ep_list = item.get('topo.endpoint-list').get('topo.endpoint')
@@ -1100,9 +1153,9 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
     #         if len(ep_list) == 2:
     #             otu_links.append(otu_link)
     #         else:
-    #             logging.warn("Endpoint list for " + fdn + " is incomplete!")
+    #             thread_data.logger.warn("Endpoint list for " + fdn + " is incomplete!")
     #     except Exception as error:
-    #         logging.warn("Invalid OTU topo link!")
+    #         thread_data.logger.warn("Invalid OTU topo link!")
     #
     #     #Add OTUC2 channel to each termination-point
     #     for otu_link in otu_links:
@@ -1131,7 +1184,7 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
             tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'tpfdn': tpfdn}
             tpfdns.append(tpfdn_dict)
 
-    logging.info("Spawning threads to collect termination points...")
+    thread_data.logger.info("Spawning threads to collect termination points...")
     pool = ThreadPool(wae_api.thread_count)
     termination_points = pool.map(process_otu_tpfdn, tpfdns)
     pool.close()
@@ -1150,7 +1203,7 @@ def collect_otu_termination_points_threaded(baseURL, epnmuser, epnmpassword):
                                     tmpchannel.pop('tp-fdn', None)
                                     channels.append(tmpchannel)
                     except Exception as err:
-                        logging.warn("TP for OTU link is invalid.")
+                        thread_data.logger.warn("TP for OTU link is invalid.")
                 tp.setdefault('channels', channels)
 
     with open("jsonfiles/otu_links.json", "wb") as f:
@@ -1165,24 +1218,25 @@ def process_otu_tpfdn(tpfdn_dict):
 
 def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     try:
-        logging.info("Making API call to collect OTU termination point for tpFdn " + tpfdn)
+        thread_data.logger.info("Making API call to collect OTU termination point for tpFdn " + tpfdn)
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
         filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/', '-') + ".json"
-        logging.info("Filename is " + filename)
+        thread_data.logger.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
 
         with open(filename, 'rb') as f:
             jsonresponse = json.load(f)
 
-        logging.info("Parsing termination_point results for vcFdn " + tpfdn)
+        thread_data.logger.info("Parsing termination_point results for vcFdn " + tpfdn)
         try:
             termination_points = jsonresponse.get('com.response-message').get('com.data').get('tp.termination-point')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         tp_data = []
@@ -1191,7 +1245,7 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
             for tp in termination_points:
                 if tp.get('tp.layer-rate') == "oc:lr-och-data-unit-c2" or tp.get(
                         'tp.layer-rate') == "oc:lr-och-data-unit-2":
-                    logging.info("vcFDN " + tpfdn + " tp.layer-rate is oc:lr-och-data-unit-c2...skipping this tp")
+                    thread_data.logger.info("vcFDN " + tpfdn + " tp.layer-rate is oc:lr-och-data-unit-c2...skipping this tp")
                     continue
                 tp_dict = {}
                 tp_dict.setdefault('ch-fdn', tp.get('tp.fdn'))
@@ -1200,11 +1254,11 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
                 tp_dict.setdefault('bandwidth', tp.get('tp.if-speed'))
                 tp_dict.setdefault('channel', tp.get('tp.fdn').split('!')[2].split(';')[0].split('=')[2])
                 try:
-                    logging.info("OTU TP termination-mode is Ethernet " + tp.get('tp.fdn'))
+                    thread_data.logger.info("OTU TP termination-mode is Ethernet " + tp.get('tp.fdn'))
                     tp_dict['termination-mode'] = tp['tp.optical-attributes']['tp.termination-mode']
                     tp_data.append(tp_dict)
                 except Exception as error:
-                    logging.info("OTU TP termination-mode is OTN " + tp['tp.fdn'])
+                    thread_data.logger.info("OTU TP termination-mode is OTN " + tp['tp.fdn'])
                     tp_dict['termination-mode'] = "OTN"
                     tp_data.append(tp_dict)
         else:
@@ -1218,12 +1272,12 @@ def collect_otu_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
                 tp_dict['termination-mode'] = termination_points['tp.optical-attributes']['tp.termination-mode']
                 tp_data.append(tp_dict)
             except Exception as error:
-                logging.info("OTU TP termination-mode is OTN " + termination_points['tp.fdn'])
+                thread_data.logger.info("OTU TP termination-mode is OTN " + termination_points['tp.fdn'])
                 tp_dict['termination-mode'] = "OTN"
                 tp_data.append(tp_dict)
         return tp_data
     except Exception as err:
-        logging.warn("OTU termination point collection failed for tpfdn " + tpfdn)
+        thread_data.logger.warn("OTU termination point collection failed for tpfdn " + tpfdn)
 
 
 def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
@@ -1241,7 +1295,8 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
             lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -1281,27 +1336,27 @@ def add_vcfdn_l3links(state_or_states):
                             tmpoptics = tmpfdn.split('!')[2].split('=')[2].split(';')[0]
                             vcdict.setdefault(tmpnode, tmpoptics)
                     for k1, v1 in l3links.items():
-                        # logging.info "**************Nodename is: " + k1
+                        # thread_data.logger.info "**************Nodename is: " + k1
                         for k2, v2 in v1.items():
                             if isinstance(v2, dict):
                                 for k3, v3 in v2.items():
-                                    # logging.info "***************Linkname is: " + k3
+                                    # thread_data.logger.info "***************Linkname is: " + k3
                                     for node, intf in vcdict.items():
                                         if node == k1:
                                             if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
                                                 v3.setdefault('vc-fdn', fdn)
                                                 matched_fdn = True
-                                                logging.info(
+                                                thread_data.logger.info(
                                                     "Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
                     if not matched_fdn:
                         pass
                 except KeyError:
-                    logging.error("Could not get virtual connection for " + fdn)
+                    thread_data.logger.error("Could not get virtual connection for " + fdn)
                 except TypeError:
-                    logging.error("Could not get virtual connection for " + fdn)
+                    thread_data.logger.error("Could not get virtual connection for " + fdn)
                 except AttributeError:
-                    logging.error("Could not get virtual connection for " + fdn)
-        logging.info("Completed collecting virtual connections...")
+                    thread_data.logger.error("Could not get virtual connection for " + fdn)
+        thread_data.logger.info("Completed collecting virtual connections...")
         with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -1334,7 +1389,7 @@ def parse_otn_links():
                     ch = otn_channel.get('channel').split('/')[4]
                     ch_compare = otn_channel_compare.get('channel').split('/')[4]
                 except:
-                    logging.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
+                    thread_data.logger.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
                     ch = 1
                     ch_compare = 1
                 if otn_channel.get('node') != otn_channel_compare.get('node') and ch == ch_compare:
@@ -1355,9 +1410,9 @@ def parse_otn_links():
                         otn_link.setdefault('endpoints', otn_link_endpoints)
                         otn_links.append(otn_link)
                         otn_channels.pop(0)
-                        logging.info("Successfully parsed OTN link from OTU link " + otu_link.get('fdn'))
+                        thread_data.logger.info("Successfully parsed OTN link from OTU link " + otu_link.get('fdn'))
                     except Exception as err:
-                        logging.warn("Could not parse OTN link from OTU link for " + otu_link.get('fdn'))
+                        thread_data.logger.warn("Could not parse OTN link from OTU link for " + otu_link.get('fdn'))
 
     with open("jsonfiles/otn_links.json", "wb") as f:
         f.write(json.dumps(otn_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -1383,7 +1438,7 @@ def parse_vc_optical_och_trails():
                 # vcdict.setdefault('trail-fdn', item.get('vc.carried-by-vc-ref-list').get('vc.carried-by-vc-ref'))
                 vcdict.setdefault('trail-fdn', item['vc.carried-by-vc-ref-list']['vc.carried-by-vc-ref'])
             except Exception as error:
-                logging.error("Could not determine trail-fdn for OCH-trail " + fdn)
+                thread_data.logger.error("Could not determine trail-fdn for OCH-trail " + fdn)
             try:
                 # item_tps = item.get('vc.termination-point-list').get('vc.termination-point')
                 item_tps = item['vc.termination-point-list']['vc.termination-point']
@@ -1397,13 +1452,13 @@ def parse_vc_optical_och_trails():
                         termination_points.append(tmptp)
                     och_trails.append(vcdict)
                 else:
-                    logging.error("OCH-trail " + fdn + " has incomplete termination points!")
+                    thread_data.logger.error("OCH-trail " + fdn + " has incomplete termination points!")
             except KeyError:
-                logging.error("OCH-trail " + fdn + " has incomplete termination points!")
+                thread_data.logger.error("OCH-trail " + fdn + " has incomplete termination points!")
             except TypeError:
-                logging.error("OCH-trail " + fdn + " has incomplete termination points!")
+                thread_data.logger.error("OCH-trail " + fdn + " has incomplete termination points!")
 
-    logging.info("Completed parsing OCH Trails...")
+    thread_data.logger.info("Completed parsing OCH Trails...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -1429,7 +1484,7 @@ def add_wavelength_vc_optical_och_trails():
                 if fdn == och_trail.get('trail-fdn'):
                     och_trail.setdefault('wavelength', vc['vc.och-nc']['vc.wavelength'])
 
-    logging.info("Completed getting OCH Trails wavelengths...")
+    thread_data.logger.info("Completed getting OCH Trails wavelengths...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -1463,7 +1518,7 @@ def parse_odu_services():
                 # odu_service['bandwidth'] = odu_service.get('bandwidth', 'ODU2')
                 odu_services.append(odu_service)
             except Exception as err:
-                logging.warn("Problem processing ODU service, skipping...")
+                thread_data.logger.warn("Problem processing ODU service, skipping...")
                 continue
 
     with open("jsonfiles/odu_services.json", "wb") as f:
@@ -1479,14 +1534,14 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
         vcfdn = odu_service.get('fdn')
         vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'vcfdn': vcfdn}
         vcfdns.append(vcfdn_dict)
-    logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
+    thread_data.logger.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
     otu_links = pool.map(process_vcfdn_odu_service, vcfdns)
     pool.close()
     pool.join()
 
-    logging.info("Completed collecting multi-layer routes...")
-    logging.info("Processing multi-layer routes...")
+    thread_data.logger.info("Completed collecting multi-layer routes...")
+    thread_data.logger.info("Processing multi-layer routes...")
     for odu_service in odu_services:
         tmp_vcfdn = odu_service.get('fdn')
         if len(otu_links) > 0:
@@ -1494,10 +1549,10 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
                 if result:
                     if 'otu-links' in result:
                         if result.get('vcfdn') == tmp_vcfdn:
-                            logging.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
+                            thread_data.logger.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
                             odu_service.setdefault('otu-links', result.get('otu-links'))
 
-    logging.info("Completed collecting OTU links for ODU services...")
+    thread_data.logger.info("Completed collecting OTU links for ODU services...")
     with open("jsonfiles/odu_services.json", "wb") as f:
         f.write(json.dumps(odu_services, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -1528,13 +1583,13 @@ def add_och_trails_to_otu_links():
                             elif tp in otu_ports:
                                 matched = True
                         if matched:
-                            logging.info("Found och-trail-fdn for otu_link " + otu_link.get('fdn'))
+                            thread_data.logger.info("Found och-trail-fdn for otu_link " + otu_link.get('fdn'))
                             otu_link.setdefault('och-trail-fdn', och_trail.get('fdn'))
                             break
         if not matched:
-            logging.warn("Could not find och-trail-fdn for otu_link " + otu_link.get('fdn'))
+            thread_data.logger.warn("Could not find och-trail-fdn for otu_link " + otu_link.get('fdn'))
 
-    logging.info("Completed adding OCH trails to OTU links...")
+    thread_data.logger.info("Completed adding OCH trails to OTU links...")
     with open("jsonfiles/otu_links.json", "wb") as f:
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -1551,14 +1606,14 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
                           'vcfdn': vcfdn}
             if not vcfdn_dict in vcfdns:
                 vcfdns.append(vcfdn_dict)
-    logging.info("Spawning threads to collect multi-layer routes for OCH-trails...")
+    thread_data.logger.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
     l1hops = pool.map(process_vcfdn, vcfdns)
     pool.close()
     pool.join()
 
-    logging.info("Completed collecting multi-layer routes...")
-    logging.info("Processing multi-layer routes...")
+    thread_data.logger.info("Completed collecting multi-layer routes...")
+    thread_data.logger.info("Processing multi-layer routes...")
     for och_trail in och_trails:
         if 'fdn' in och_trail:
             tmp_vcfdn = och_trail.get('fdn')
@@ -1566,12 +1621,12 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
                 for l1hopset in l1hops:
                     if len(l1hopset) > 1:
                         if l1hopset['vcfdn'] == tmp_vcfdn:
-                            logging.info(
+                            thread_data.logger.info(
                                 "Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
                             och_trail['L1 Hops'] = l1hopset.copy()
                             och_trail['L1 Hops'].pop('vcfdn')
 
-    logging.info("Completed collecting L1 paths for OCH-trails...")
+    thread_data.logger.info("Completed collecting L1 paths for OCH-trails...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -1584,15 +1639,16 @@ def process_vcfdn(vcfdn_dict):
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     l1hops = {}
-    logging.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
+    mpls_logger = logging.getLogger('mpls')
+    mpls_logger.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     try:
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     except Exception as err:
-        logging.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
-        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        mpls_logger.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
+        mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")
         return l1hops
 
     try:
@@ -1603,11 +1659,11 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
             jsonresponse = f.read()
 
     except Exception as err:
-        logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
-        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        mpls_logger.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
+        mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")
         return l1hops
 
-    logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
+    mpls_logger.info("Parsing multilayer_route results for vcFdn " + vcfdn)
     try:
         thejson = json.loads(jsonresponse)
 
@@ -1615,8 +1671,8 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
         l1hopsots = parsemultilayerroute_json(thejson, "topo:ots-link-layer", "LINE")
         if len(l1hopsops) == 0 or len(
                 l1hopsots) == 0:  # check if either multilayer route parsing fails and exit the function if so
-            logging.warn("Could not get multilayer route for vcFDN " + vcfdn)
-            logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+            mpls_logger.warn("Could not get multilayer route for vcFDN " + vcfdn)
+            mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")
             return l1hops
         i = 1
         for k, v in l1hopsops.items():
@@ -1628,9 +1684,9 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
         l1hops['vcfdn'] = vcfdn
         return l1hops
     except Exception as err:
-        logging.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
-        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
-        logging.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
+        mpls_logger.warn("Could not save or open file for multilayer route for vcFDN " + vcfdn)
+        mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        mpls_logger.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
         return l1hops
 
 
@@ -1651,7 +1707,7 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
                     try:
                         topo_links = item['topo.tl-list']['topo.topological-link']
                     except Exception as err:
-                        logging.warning("Could not process multi-layer route response, skipping this fdn...")
+                        thread_data.logger.warning("Could not process multi-layer route response, skipping this fdn...")
                         break
                     if isinstance(topo_links, list):
                         for subitem in topo_links:
@@ -1659,7 +1715,7 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
                             try:
                                 endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
                             except Exception as err:
-                                logging.error(
+                                thread_data.logger.error(
                                     "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
                                 l1hops = {}
                                 return l1hops
@@ -1684,7 +1740,7 @@ def parsemultilayerroute_json(jsonresponse, topologylayer, intftype):
                         try:
                             endpointlist = topo_links['topo.endpoint-list']['topo.endpoint']
                         except Exception as err:
-                            logging.error(
+                            thread_data.logger.error(
                                 "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
                             l1hops = {}
                             return l1hops
@@ -1714,7 +1770,7 @@ def reorderl1hops_och_trails():
 
     for och_trail in och_trails:
         if 'L1 Hops' in och_trail:
-            logging.info("OCH-trail " + och_trail['fdn'] + " has L1 hops.  Processing...")
+            thread_data.logger.info("OCH-trail " + och_trail['fdn'] + " has L1 hops.  Processing...")
             l1hops = []
             vcfdn = och_trail['fdn']
             for k4, v4 in och_trail['L1 Hops'].items():
@@ -1727,8 +1783,8 @@ def reorderl1hops_och_trails():
             ref_node = och_trail['termination-points'][0]['node']
             l1hopsordered = returnorderedlist(ref_node, l1hops)
             if l1hopsordered == None:
-                logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
-                logging.warn(
+                thread_data.logger.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
+                thread_data.logger.warn(
                     "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
                 och_trail.pop('L1 Hops')
                 continue
@@ -1749,7 +1805,7 @@ def reorderl1hops_och_trails():
                     break
             och_trail['Ordered L1 Hops'] = tmphops
             och_trail.pop('L1 Hops')
-            # logging.info "next L1 hop..."
+            # thread_data.logger.info "next L1 hop..."
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -1762,13 +1818,13 @@ def reorderl1hops_och_trails():
 #         f.close()
 #
 #     for k1, v1 in l3links.items():
-#         # logging.info "**************Nodename is: " + k1
+#         # thread_data.logger.info "**************Nodename is: " + k1
 #         for k2, v2 in v1.items():
 #             if isinstance(v2, dict):
 #                 for k3, v3 in v2.items():
-#                     # logging.info "***************Linkname is: " + k3
+#                     # thread_data.logger.info "***************Linkname is: " + k3
 #                     if 'L1 Hops' in v3:
-#                         logging.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
+#                         thread_data.logger.info("Node " + k1 + " " + k3 + " has L1 hops.  Processing...")
 #                         l1hops = []
 #                         vcfdn = v3['vc-fdn']
 #                         for k4, v4 in v3.get('L1 Hops').items():
@@ -1780,8 +1836,8 @@ def reorderl1hops_och_trails():
 #                             pass
 #                         l1hopsordered = returnorderedlist(k1, l1hops)
 #                         if l1hopsordered == None:
-#                             logging.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
-#                             logging.warn(
+#                             thread_data.logger.warn("Error generating ordered L1 hops for vcFdn=" + vcfdn)
+#                             thread_data.logger.warn(
 #                                 "Removing L1 hops from this link.  Check this vcFdn and debug with EPNM team if necessary.")
 #                             v3.pop('L1 Hops')
 #                             break
@@ -1802,7 +1858,7 @@ def reorderl1hops_och_trails():
 #                                 break
 #                         v3['Ordered L1 Hops'] = tmphops
 #                         v3.pop('L1 Hops')
-#                         # logging.info "next L1 hop..."
+#                         # thread_data.logger.info "next L1 hop..."
 #     with open("jsonfiles/l3Links_final.json", "wb") as f:
 #         f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 #         f.close()
@@ -1818,7 +1874,7 @@ def returnorderedlist(firstnode, l1hops):
         if len(l1hops) == 0: completed = True
         for hop in l1hops:
             if len(hop) != 2:
-                logging.warn("Invalid L1 hop!  Could not process L1 hops!")
+                thread_data.logger.warn("Invalid L1 hop!  Could not process L1 hops!")
                 return None
             elif hop[0] == firstnode or hop[1] == firstnode:
                 l1hopsordered.insert(0, hop)
@@ -1831,7 +1887,7 @@ def returnorderedlist(firstnode, l1hops):
                 hopa = hop[0]
                 hopb = hop[1]
             elif loopcount > 200:
-                logging.warn("Could not process L1 hops!")
+                thread_data.logger.warn("Could not process L1 hops!")
                 return None
             loopcount += 1
     return l1hopsordered
@@ -1845,7 +1901,7 @@ def process_vcfdn_odu_service(vcfdn_dict):
 
 
 def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcfdn):
-    logging.info("Making API call to collect multi_layer route for ODU service vc fdn " + vcfdn)
+    thread_data.logger.info("Making API call to collect multi_layer route for ODU service vc fdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
     circuit_breaker1 = collectioncode.utils.Circuit_breaker()
@@ -1859,10 +1915,10 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
             jsonresponse = f.read()
 
     except Exception as err:
-        logging.warn("Could not save or open file for multilayer route odu service for vcFDN " + vcfdn)
-        logging.warn("Check this vcFdn and debug with EPNM team if necessary.")
+        thread_data.logger.warn("Could not save or open file for multilayer route odu service for vcFDN " + vcfdn)
+        thread_data.logger.warn("Check this vcFdn and debug with EPNM team if necessary.")
 
-    logging.info("Parsing multilayer_route results for vcFdn " + vcfdn)
+    thread_data.logger.info("Parsing multilayer_route results for vcFdn " + vcfdn)
 
     try:
         multilayer_route = json.loads(jsonresponse)
@@ -1879,7 +1935,7 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
                         try:
                             topo_links = layer['topo.tl-list']['topo.topological-link']
                         except Exception as err:
-                            logging.warning("Could not process multi-layer route response, skipping this fdn...")
+                            thread_data.logger.warning("Could not process multi-layer route response, skipping this fdn...")
                             break
                         if isinstance(topo_links, list):
                             odu_service_route_data['vcfdn'] = vcfdn
@@ -1904,13 +1960,13 @@ def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcf
                             #     try:
                             #         endpointlist = subitem['topo.endpoint-list']['topo.endpoint']
                             #     except Exception as err:
-                            #         logging.error(
+                            #         thread_data.logger.error(
                             #             "No endpoint-list or valid endpoints found in the " + topologylayer + " for this vcFdn!")
                             #         l1hops = {}
                             #         return l1hops
     except Exception as err:
-        logging.info("Multilayer_route results for vcFdn " + vcfdn + "were missing and couldn't be parsed")
-        logging.debug("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
+        thread_data.logger.info("Multilayer_route results for vcFdn " + vcfdn + "were missing and couldn't be parsed")
+        thread_data.logger.debug("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(jsonresponse))
 
 
 def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword, state_or_states):
@@ -1920,35 +1976,35 @@ def collect_termination_points_threaded(baseURL, epnmuser, epnmpassword, state_o
             f.close()
         tpfdns = []
         for k1, v1 in l3links.items():
-            # logging.info "**************Nodename is: " + k1
+            # thread_data.logger.info "**************Nodename is: " + k1
             for k2, v2 in v1.items():
                 if isinstance(v2, dict):
                     for k3, v3 in v2.items():
-                        # logging.info "***************Linkname is: " + k3
+                        # thread_data.logger.info "***************Linkname is: " + k3
                         # if 'vc-fdn' in v3 and not ('Ordered L1 Hops' in v3):
                         #     tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr=lr-ethernet"
                         # else:
                         #     tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr=" + v3['lr type']
                         tpfdn = "MD=CISCO_EPNM!ND=" + k1 + "!FTP=name=" + v3['Local Intf'] + ";lr=" + v3['lr type']
-                        logging.info("Node " + k1 + " " + k3 + " tpFdn is " + tpfdn)
+                        thread_data.logger.info("Node " + k1 + " " + k3 + " tpFdn is " + tpfdn)
                         tpfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
                                       'tpfdn': tpfdn}
                         v3['tpfdn'] = tpfdn
                         if not tpfdn_dict in tpfdns:
                             tpfdns.append(tpfdn_dict)
 
-        logging.info("Spawning threads to collect termination points...")
+        thread_data.logger.info("Spawning threads to collect termination points...")
         pool = ThreadPool(wae_api.thread_count)
         termination_points = pool.map(process_tpfdn, tpfdns)
         pool.close()
         pool.join()
 
         for k1, v1 in l3links.items():
-            # logging.info "**************Nodename is: " + k1
+            # thread_data.logger.info "**************Nodename is: " + k1
             for k2, v2 in v1.items():
                 if isinstance(v2, dict):
                     for k3, v3 in v2.items():
-                        # logging.info "***************Linkname is: " + k3
+                        # thread_data.logger.info "***************Linkname is: " + k3
                         tpfdn = v3['tpfdn']
                         for tp in termination_points:
                             if tp['tpfdn'] == tpfdn:
@@ -1970,7 +2026,7 @@ def process_tpfdn(tpfdn_dict):
 
 def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
     try:
-        logging.info("Making API call to collect termination point for tpFdn " + tpfdn)
+        thread_data.logger.info("Making API call to collect termination point for tpFdn " + tpfdn)
         uri = "/data/v1/cisco-resource-ems:termination-point?fdn=" + tpfdn
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
@@ -1978,34 +2034,34 @@ def collect_termination_point(baseURL, epnmuser, epnmpassword, tpfdn):
 
         filename = "jsongets/tp-data-" + tpfdn.split('!')[1] + tpfdn.split('!')[2].split(';')[0].replace('/',
                                                                                                          '-') + ".json"
-        logging.info("Filename is " + filename)
+        thread_data.logger.info("Filename is " + filename)
         with open(filename, 'wb') as f:
             f.write(jsonresponse)
         with open(filename, 'rb') as f:
             thejson = json.load(f)
 
-        logging.info("Parsing termination_point results for vcFdn " + tpfdn)
+        thread_data.logger.info("Parsing termination_point results for vcFdn " + tpfdn)
 
         tp_description = ""
         try:
             tp_description = thejson['com.response-message']['com.data']['tp.termination-point']['tp.description']
         except Exception as err:
-            logging.warn("termination point " + tpfdn + " not configured with description!")
+            thread_data.logger.warn("termination point " + tpfdn + " not configured with description!")
         try:
             tp_mac_addr = thejson['com.response-message']['com.data']['tp.termination-point']['tp.mac-address']
         except Exception as err:
-            logging.warn("Could not get mac-address for tpFdn " + tpfdn)
+            thread_data.logger.warn("Could not get mac-address for tpFdn " + tpfdn)
             tp_mac_addr = ""
         try:
             tp_mtu = str(thejson['com.response-message']['com.data']['tp.termination-point']['tp.mtu'])
         except Exception as err:
-            logging.warn("Could not get MTU for tpFdn " + tpfdn)
+            thread_data.logger.warn("Could not get MTU for tpFdn " + tpfdn)
             tp_mtu = ""
         return {'tpfdn': tpfdn, 'tp-description': tp_description, 'tp-mac': tp_mac_addr, 'tp-mtu': tp_mtu}
     except Exception as err:
-        logging.warn("Could not get termination point for tpfdn " + tpfdn)
-        logging.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(thejson))
-        logging.warn(err)
+        thread_data.logger.warn("Could not get termination point for tpfdn " + tpfdn)
+        thread_data.logger.warn("Also possibly a bad (empty) response from an API call. API response:\n\n{}".format(thejson))
+        thread_data.logger.warn(err)
         return {'tpfdn': tpfdn, 'tp-description': "", 'tp-mac': "", 'tp-mtu': ""}
 
 
@@ -2052,28 +2108,28 @@ def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
                 direction = item['vc.direction']
                 vcdict['fdn'] = fdn
                 vcdict['direction'] = direction
-                logging.info("Collecting LSP: " + fdn)
+                thread_data.logger.info("Collecting LSP: " + fdn)
                 try:
                     term_point = item['vc.termination-point-list']['vc.termination-point']
                 except Exception as err:
-                    logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
+                    thread_data.logger.warn("LSP does not have valid termination points!  Will not be included in plan.")
                     continue
                 if isinstance(term_point, dict):
                     try:
                         tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
                     except Exception as err:
-                        logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                        thread_data.logger.warn("LSP has no vc.fdn, skipping this LSP...")
                         continue
                     subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
                     try:
                         affinitybits = subsubsubitem['vc.affinity-bits']
                         affinitymask = subsubsubitem['vc.affinity-mask']
                     except Exception as err2:
-                        logging.warn("LSP has no affinity bits: " + fdn)
+                        thread_data.logger.warn("LSP has no affinity bits: " + fdn)
                     try:
                         signalledBW = subsubsubitem['vc.signalled-bw']
                     except Exception as err:
-                        logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
+                        thread_data.logger.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
                     # destinationIP = subsubsubitem['vc.destination-address']
                     autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                     fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
@@ -2088,22 +2144,22 @@ def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
                         tunneldestination = subitem['vc.tunnel-destination']
                         corouted = subitem['vc.co-routed-enabled']
                     except Exception as err:
-                        logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                        logging.warn(err)
+                        thread_data.logger.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                        thread_data.logger.warn(err)
                         erroredlsp = True
                 else:
-                    logging.info("List format term_point " + fdn)
+                    thread_data.logger.info("List format term_point " + fdn)
                     try:
                         tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
                     except Exception as err:
-                        logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                        thread_data.logger.warn("LSP has no vc.fdn, skipping this LSP...")
                         continue
                     subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
                     try:
                         affinitybits = subsubsubitem['vc.affinity-bits']
                         affinitymask = subsubsubitem['vc.affinity-mask']
                     except Exception as err2:
-                        logging.warn("LSP has no affinity bits: " + fdn)
+                        thread_data.logger.warn("LSP has no affinity bits: " + fdn)
                     signalledBW = subsubsubitem['vc.signalled-bw']
                     # destinationIP = subsubsubitem['vc.destination-address']
                     autoroute = subsubsubitem['vc.auto-route-announce-enabled']
@@ -2119,8 +2175,8 @@ def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
                         tunneldestination = subitem['vc.tunnel-destination']
                         corouted = subitem['vc.co-routed-enabled']
                     except Exception as err:
-                        logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                        logging.warn(err)
+                        thread_data.logger.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                        thread_data.logger.warn(err)
                         erroredlsp = True
 
                 if not erroredlsp:
@@ -2141,18 +2197,20 @@ def collectlsps_json_new(baseURL, epnmuser, epnmpassword):
                     vcdict["vc.setup-priority"] = setupPriority
                     # Fix - GLH - 2-18-19 #
                     lsplist.append(vcdict)
-                    logging.info(
+                    thread_data.logger.info(
                         "Collected tunnel " + str(
                             tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
                 else:
-                    logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
+                    thread_data.logger.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
                 vcdict = {}
             else:
-                logging.warning("Tunnel unavailable: " + fdn)
+                thread_data.logger.warning("Tunnel unavailable: " + fdn)
     except Exception:
-        logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+        thread_data.logger.propagate = True
+        thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
         raise
-    logging.info("Completed collecting LSPs...")
+
+    thread_data.logger.info("Completed collecting LSPs...")
     with open("jsonfiles/lsps.json", "wb") as f:
         f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
@@ -2173,7 +2231,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             firstindex = jsonaddition['com.response-message']['com.header']['com.firstIndex']
             lastindex = jsonaddition['com.response-message']['com.header']['com.lastIndex']
         except Exception:
-            logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+            thread_data.logger.propagate = True
+            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
             raise
 
         if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -2222,28 +2281,28 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
             direction = item['vc.direction']
             vcdict['fdn'] = fdn
             vcdict['direction'] = direction
-            logging.info("Collecting LSP: " + fdn)
+            thread_data.logger.info("Collecting LSP: " + fdn)
             try:
                 term_point = item['vc.termination-point-list']['vc.termination-point']
             except Exception as err:
-                logging.warn("LSP does not have valid termination points!  Will not be included in plan.")
+                thread_data.logger.warn("LSP does not have valid termination points!  Will not be included in plan.")
                 continue
             if isinstance(term_point, dict):
                 try:
                     tmpfdn = item['vc.termination-point-list']['vc.termination-point']['vc.fdn']
                 except Exception as err:
-                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    thread_data.logger.warn("LSP has no vc.fdn, skipping this LSP...")
                     continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point']['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']
                     affinitymask = subsubsubitem['vc.affinity-mask']
                 except Exception as err2:
-                    logging.warn("LSP has no affinity bits: " + fdn)
+                    thread_data.logger.warn("LSP has no affinity bits: " + fdn)
                 try:
                     signalledBW = subsubsubitem['vc.signalled-bw']
                 except Exception as err:
-                    logging.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
+                    thread_data.logger.warn("Exception: LSP missing signalled-bw attribute, setting to 0 for " + fdn)
                 # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
                 fastreroute = subsubsubitem['vc.fast-reroute']['vc.is-enabled']
@@ -2258,22 +2317,22 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                     tunneldestination = subitem['vc.tunnel-destination']
                     corouted = subitem['vc.co-routed-enabled']
                 except Exception as err:
-                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                    logging.warn(err)
+                    thread_data.logger.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                    thread_data.logger.warn(err)
                     erroredlsp = True
             else:
-                logging.info("List format term_point " + fdn)
+                thread_data.logger.info("List format term_point " + fdn)
                 try:
                     tmpfdn = item['vc.termination-point-list']['vc.termination-point'][0]['vc.fdn']
                 except Exception as err:
-                    logging.warn("LSP has no vc.fdn, skipping this LSP...")
+                    thread_data.logger.warn("LSP has no vc.fdn, skipping this LSP...")
                     continue
                 subsubsubitem = item['vc.termination-point-list']['vc.termination-point'][0]['vc.mpls-te-tunnel-tp']
                 try:
                     affinitybits = subsubsubitem['vc.affinity-bits']
                     affinitymask = subsubsubitem['vc.affinity-mask']
                 except Exception as err2:
-                    logging.warn("LSP has no affinity bits: " + fdn)
+                    thread_data.logger.warn("LSP has no affinity bits: " + fdn)
                 signalledBW = subsubsubitem['vc.signalled-bw']
                 # destinationIP = subsubsubitem['vc.destination-address']
                 autoroute = subsubsubitem['vc.auto-route-announce-enabled']
@@ -2289,8 +2348,8 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                     tunneldestination = subitem['vc.tunnel-destination']
                     corouted = subitem['vc.co-routed-enabled']
                 except Exception as err:
-                    logging.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
-                    logging.warn(err)
+                    thread_data.logger.warn("Exception: could not get LSP te-tunnel attributes for " + fdn)
+                    thread_data.logger.warn(err)
                     erroredlsp = True
 
             if not erroredlsp:
@@ -2311,13 +2370,13 @@ def collectlsps_json(baseURL, epnmuser, epnmpassword):
                 vcdict["vc.setup-priority"] = setupPriority
                 # Fix - GLH - 2-18-19 #
                 lsplist.append(vcdict)
-                logging.info("Collected tunnel " + str(tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
+                thread_data.logger.info("Collected tunnel " + str(tunnelID) + " Source: " + tunnelsource + " Destination " + tunneldestination)
             else:
-                logging.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
+                thread_data.logger.warn("Could not retrieve necessary attributes.  LSP will be left out of plan: " + fdn)
             vcdict = {}
         else:
-            logging.warning("Tunnel unavailable: " + fdn)
-    logging.info("Completed collecting LSPs...")
+            thread_data.logger.warning("Tunnel unavailable: " + fdn)
+    thread_data.logger.info("Completed collecting LSPs...")
     with open("jsonfiles/lsps.json", "wb") as f:
         f.write(json.dumps(lsplist, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -2344,7 +2403,7 @@ def parseintfnum(nodeintf):
     except:
         pass
     if nodeintfnum == "":
-        logging.info("Could not parse interface number!!!!!!!!!")
+        thread_data.logger.info("Could not parse interface number!!!!!!!!!")
     else:
         if len(nodeintfnum.split('/')) == 5:
             shortnodeintfnum = nodeintfnum.split('/')[:-1]
@@ -2389,7 +2448,7 @@ def parseintftype(nodeintf):
     except:
         pass
     if nodeintfnum == "":
-        logging.info("Could not parse interface type!!!!!!!!!")
+        thread_data.logger.info("Could not parse interface type!!!!!!!!!")
         return None
     else:
         return nodeintftype, nodeintf_lr_type, nodeintf_bw
