@@ -5,9 +5,10 @@ import logging
 import sys
 from multiprocessing.dummy import Pool as ThreadPool
 import traceback
-import utils
 import configparser
 import l1_collect
+import l3_collect
+from collectioncode import utils
 
 
 def get_all_nodes(baseURL, cienauser, cienapassw, token):
@@ -30,7 +31,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
 
 
 def get_l3_nodes():
-    l1_collect.get_l1_nodes()
+    l3_collect.get_l3_nodes()
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
     l1_collect.get_l1_links(baseURL, cienauser, cienapassw, token)

@@ -1,9 +1,10 @@
-import requests
-import urllib3
-from urllib3.exceptions import InsecureRequestWarning
 import json
-import xml.dom.minidom
+import errors
+import urllib3
 import logging
+import requests
+import xml.dom.minidom
+from urllib3.exceptions import InsecureRequestWarning
 
 urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -26,8 +27,8 @@ def rest_get_json(URL, cienauser, cienapassw, token):
         if r.status_code == 200:
             return json.dumps(r.json(), indent=2)
         else:
-            r.raise_for_status()
-    except requests.exceptions.RequestException as err:
+            raise errors.InputError(URL, "HTTP status code: " + str(r.status_code))
+    except errors.InputError as err:
         logging.error('Exception raised: ' + str(type(err)) + '\nURL: {}\nMessage: {}'.format(str(err), err.message))
         return
 

@@ -38,7 +38,7 @@ def get_l3_nodes():
 
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
-            match_object = re.search('SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
+            match_object = re.search('SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
             if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
                 node['longitude'] = 0
                 node['latitude'] = 0
@@ -61,8 +61,8 @@ def get_l3_nodes():
                 node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the L1 nodes:\n{}'.format(node_list))
-    with open('jsonfiles/l1nodes.json', 'wb') as f:
+    logging.debug('These are the L3 nodes:\n{}'.format(node_list))
+    with open('jsonfiles/l3nodes.json', 'wb') as f:
         f.write(node_list)
 
     #Creating the sites.json file
@@ -91,8 +91,8 @@ def get_l3_nodes():
         site_list.append(obj)
 
     site_list = json.dumps(site_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the sites:\n{}'.format(site_list))
-    with open('jsonfiles/sites.json', 'wb') as f:
+    logging.debug('These are the l3 sites:\n{}'.format(site_list))
+    with open('jsonfiles/l3_sites.json', 'wb') as f:
         f.write(site_list)
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
@@ -107,12 +107,12 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
     included = link_data['included']
     logging.debug('This is the API response for the [included] field:\n{}'.format(included))
 
-    #Making a dictionary w/ the l1node's id and wae_site_name as the key/value pairs for later use
-    node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
+    #Making a dictionary w/ the l3node's id and wae_site_name as the key/value pairs for later use
+    node_data = utils.open_file_load_data("jsonfiles/l3nodes.json")
     for node in node_data:
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
 
-    l1links_list = []
+    l3links_list = []
     dupl_check = {}
     
     for i in range(len(included)):
@@ -129,30 +129,35 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
             networkConstructA_id = id1
             networkConstructB_id = id2
             if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
-                new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
-                new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
+                new_obj['l3nodeA'] = node_key_val[networkConstructA_id]
+                new_obj['l3nodeB'] = node_key_val[networkConstructB_id]
             else: continue
-            new_obj['description'] = new_obj['l1nodeA'] + '-' + new_obj['l1nodeB'] + '-' + str(i)
+            new_obj['description'] = new_obj['l3nodeA'] + '-' + new_obj['l3nodeB'] + '-' + str(i)
             dupl_check[new_obj['name']] = i
-            l1links_list.append(new_obj)
+            l3links_list.append(new_obj)
 
-    l1links_list = json.dumps(l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l1 links:\n{}'.format(l1links_list))
-    with open('jsonfiles/l1links.json', 'wb') as f:
-        f.write(l1links_list)
+    l3links_list = json.dumps(l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
+    logging.debug('These are the l3 links:\n{}'.format(l3links_list))
+    with open('jsonfiles/l3links.json', 'wb') as f:
+        f.write(l3links_list)
 
 def get_l3_circuits(baseURL, cienauser, cienapassw, token):
-    l1_circuit_list = []
+    l3_circuit_list = []
     #Setting up the links and l1 nodes data for use later on
-    l1nodes_dict = utils.open_file_load_data('jsonfiles/l1nodes.json')
-    l1nodes_dict = {val: 1 for node in l1nodes_dict for (key, val) in node.items() if key == 'id'}
+    l3nodes_dict = utils.open_file_load_data('jsonfiles/l3nodes.json')
+    l3nodes_dict = {val: 1 for node in l3nodes_dict for (key, val) in node.items() if key == 'id'}
     all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
     data = all_links_dict['data']
     included = all_links_dict['included']
+    #Making a dictionary w/ the l3node's id and wae_site_name as the key/value pairs for later use
+    node_data = utils.open_file_load_data("jsonfiles/l3nodes.json")
+    for node in node_data:
+        node_key_val['{}'.format(node['id'])] = node['attributes']['name']
    
     for obj in data:
+        #What is the thought process for the circuit check? I'll need to check w/ Andrew on this
         circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
-        #Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l1nodes_dict
+        #Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
         circuit_id = obj['id']
         #This block of code is faulty. It'll keep going and won't stop, expensive operation.  
         for node in included:
@@ -163,54 +168,51 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
                 if node['id'][:-2] == circuit_id:
                     ending_node = node['relationships']['tpes']['data'][0]['id'][:36]
                     break
-        l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict
-        if circuit_check and  l1_check:
-            #and if so then make the call to get_l1_circuit() to get the supporting nodes
+        l3_check = starting_node in l3nodes_dict and ending_node in l3nodes_dict
+        if circuit_check and  l3_check:
+            #and if so then make the call to get the supporting nodes
             link_list = collect.get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token)
-            #Check based on the returned nodes to see if they're valid l1 nodes
+            #Check based on the returned nodes to see if they're valid l3 nodes
             supporting_link_check = False
             for link_obj in link_list:
-                if link_obj['NodeA'] in l1nodes_dict and link_obj['NodeB'] in l1nodes_dict:
+                if link_obj['NodeA'] in l3nodes_dict and link_obj['NodeB'] in l3nodes_dict:
                     supporting_link_check = True
                 else: supporting_link_check = False
             if supporting_link_check: 
                 temp_obj = {
                     "Name": "",
                     "CircuitID": "",
-                    "StartL1Node": "",
-                    "EndL1Node": "",
+                    "StartL3Node": "",
+                    "EndL3Node": "",
                     "Channel": "",
                     "BW": "0",
                     "status": "",
                     "Ordered_Hops": []
                 }
-                #Checking for the node_key_val to be populated, and if not setting the l1node's id and name as the key/value pairs for later use
-                if len(node_key_val) == 0:
-                    node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
-                    for node in node_data:
-                        node_key_val['{}'.format(node['id'])] = node['attributes']['name']
+                #Getting the wae_site_name for use as the node name
                 starting_node_name = node_key_val['{}'.format(starting_node)]
                 ending_node_name = node_key_val['{}'.format(ending_node)]        
                 temp_obj['Name'] = obj['attributes']['userLabel']
                 temp_obj['CircuitID'] = circuit_id
-                temp_obj['StartL1Node'] = starting_node_name
-                temp_obj['EndL1Node'] = ending_node_name
+                temp_obj['StartL3Node'] = starting_node_name
+                temp_obj['EndL3Node'] = ending_node_name
                 #Setting the channel value. Unsure of what exactly the channel is in this situation so either setting it to the channel value that exists in the api data or the name value for now. 
                 try:
                     temp_obj['Channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel'] 
                 except: 
                     temp_obj['Channel'] = obj['attributes']['userLabel']
-                #Hmm how do i get the BW?? Perhaps i'll need to create some kind of chart and the BW is determined by the layer rate?
+                #Code to get the BW if necessary here. Perhaps need to create some kind of chart and the BW is determined by the layer rate?
                 temp_obj['status'] = obj['attributes']['operationState']
+                #What is going on here? I'm replacing the attribute called 'NodeA' and 'NodeB' which looks to be the ID's and replacing them w/ the wae_site_names for 'link_list' (the api response for the supporting nodes). Then inserting into 'link_list' 2 new objects w/ the beginning node and ending node. 
                 for link in link_list:
                     link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
                     link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
                 link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
                 link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(link_list[1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
                 temp_obj['Ordered_Hops'] = link_list
-                l1_circuit_list.append(temp_obj)
+                l3_circuit_list.append(temp_obj)
                 
-    l1_circuit_list = json.dumps(l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l1 circuits:\n{}'.format(l1_circuit_list))
-    with open('jsonfiles/l1circuits.json', 'wb') as f:
-        f.write(l1_circuit_list)
+    l3_circuit_list = json.dumps(l3_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
+    logging.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
+    with open('jsonfiles/l3circuits.json', 'wb') as f:
+        f.write(l3_circuit_list)
