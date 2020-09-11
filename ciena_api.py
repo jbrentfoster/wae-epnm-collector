@@ -11,6 +11,9 @@ import logging
 from datetime import datetime
 import time
 import os
+import distutils.dir_util
+from distutils.dir_util import remove_tree
+from distutils.dir_util import mkpath
 import com.cisco.wae.design
 from com.cisco.wae.design.model.net import NodeKey
 from com.cisco.wae.design.model.net import SiteRecord
@@ -24,13 +27,15 @@ import base64
 
 urllib3.disable_warnings(InsecureRequestWarning)
 
+
 def main():
-    #Setting up the properties file
+    # Setting up the properties file
     config = configparser.ConfigParser(interpolation=None)
     config.read('resources/config.ini')
 
     # Getting inputs for the script from cli args
-    parser = argparse.ArgumentParser(description='A WAE collection tool for Ciena')
+    parser = argparse.ArgumentParser(
+        description='A WAE collection tool for Ciena')
     parser.add_argument('-a', '--archive_root', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Archive_root'],
                         help='Please provide the local path to your archive directory')
     parser.add_argument('-i', '--ciena_ipaddr', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_ipaddr'],
@@ -54,7 +59,7 @@ def main():
     cienauser = args.ciena_user
     cienapassw = args.ciena_pass
     encryption_check = 'enCrYpted'
-    #Decrypting the Ciena password for later use
+    # Decrypting the Ciena password for later use
     if cienapassw.startswith(encryption_check):
         encoded_pb_key = config['DEFAULT']['CIENA_key']
         pb_key = base64.b64decode(encoded_pb_key)
@@ -75,6 +80,7 @@ def main():
     delete_previous = args.delete_previous
     logging_level = args.logging.upper()
 
+    # Setting up the main log file
     logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
@@ -92,6 +98,28 @@ def main():
     logging.debug("Ciena ip address is: {}".format(args.ciena_ipaddr))
     logging.debug("Ciena user is: {}".format(args.ciena_user))
     # logging.debug("Phases is: {}".format(args.phases))
+
+    # Delete all output files
+    if delete_previous:
+        logging.info("Cleaning files from last collection...")
+        try:
+            remove_tree('jsonfiles')
+            remove_tree('jsongets')
+
+        except Exception as err:
+            logging.info("No files to cleanup...")
+        # Recreate output directories
+        mkpath('jsonfiles')
+        mkpath('jsongets')
+        mkpath(planfiles_root)
+    else:
+        # Create path for archive root and loggger
+        mkpath(archive_root)
+        mkpath(planfiles_root)
+        logger = create_log('collection', logging_level, archive_root)
+
+        logging.info(
+            "Keeping collection files from previous collection, building plan file only...")
 
     # Create a service to be used by this script
     conn = com.cisco.wae.design.ServiceConnectionManager.newService()
@@ -113,7 +141,8 @@ def main():
 
     if token == None:
         try:
-            r = requests.post(resttokenURI, proxies=proxies, headers=headers, json=data, verify=False)
+            r = requests.post(resttokenURI, proxies=proxies,
+                              headers=headers, json=data, verify=False)
             if r.status_code == 201:
                 token = json.dumps(r.json(), indent=2)
                 print token
@@ -122,27 +151,36 @@ def main():
 
         except requests.exceptions.RequestException as err:
             print "Exception raised: " + str(err)
-            return 
-    
+            return
+
     token = json.loads(token)
     token_string = token['token']
 
-    #Get all the nodes
+    # Get all the nodes
     collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
 
-    #Get all the l1nodes
+    # Get all the l1nodes
     collect.get_l1_nodes()
 
-    #Get all the l1 links
+    # Get all the l1 links
     collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
 
-    #Code to get the l1 circuits
+    # Code to get the l1 circuits
     collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
-    
+
+    # Get all the l3nodes
+    collect.get_l3_nodes()
+
+    # Get all the l3 links
+    collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
+
+    # Code to get the l1 circuits
+    collect.get_l3_circuits(baseURL, cienauser, cienapassw, token_string)
+
     if build_plan:
         # Add sites to plan
         logging.info("Adding sites")
-        with open("jsonfiles/sites.json", 'rb') as f:
+        with open("jsonfiles/l1sites.json", 'rb') as f:
             sitelist = json.load(f)
         planbuild.generateSites(plan, sitelist)
 
@@ -164,35 +202,37 @@ def main():
             l1circuitlist = json.load(f)
         l1_planbuild.generateL1circuits(plan, och_trails=l1circuitlist)
 
-        '''
-        # Add L3 nodes to plan
-        logging.info("Adding L3 nodes")
-        with open("jsonfiles/l3nodes.json", 'rb') as f:
-            l3nodeslist = json.load(f)
-        planbuild.generateL3nodes(plan, l3nodeslist)
-
-        # Add L3 links to plan
-        logging.info("Adding L3 links (ROADM degrees) ...")
-        with open("jsonfiles/l3links.json", 'rb') as f:
-            l3linkslist = json.load(f)
-        planbuild.generateL3links(plan, l3linkslist)
-
-        # Add L3 circuits to plan
-        logging.info("Adding L3 circuits to the plan...")
-        with open("jsonfiles/l3circuits.json", 'rb') as f:
-            l3circuitlist = json.load(f)
-        planbuild.generateL3circuits(plan, och_trails=l3circuitlist)
-        '''
-
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
         plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
         logging.info("Plan file created")
 
-
     end_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
     logging.info("Script finish time is: {}".format(end_time))
-    logging.info("Completed in {0:.2f} seconds".format(time.time() - start_time))
+    logging.info("Completed in {0:.2f} seconds".format(
+        time.time() - start_time))
+
+# Creating a new log object and the file to store the logs in the /archive/captures dir
+
+
+def create_log(log_name, logging_level, archive_root):
+    log_name = log_name
+    logging_level = logging_level
+    current_time = str(datetime.now().strftime('%Y-%m-%d__%H-%M-%S'))
+    logFormatter = logging.Formatter(
+        '%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    Logger = logging.getLogger(log_name)
+    Logger.level = eval('logging.{}'.format(logging_level))
+
+    milli = str(datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f'))[-6:-3]
+    log_file_name = archive_root + \
+        '/{}-'.format(log_name) + current_time + '-' + milli + '.log'
+    fileHandler = logging.FileHandler(filename=log_file_name)
+    fileHandler.setFormatter(logFormatter)
+    Logger.addHandler(fileHandler)
+    Logger.propagate = False
+    return Logger
+
 
 if __name__ == "__main__":
     main()
