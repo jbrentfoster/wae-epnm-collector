@@ -3,11 +3,11 @@ import re
 import json
 import logging
 import sys
-from multiprocessing.dummy import Pool as ThreadPool
 import traceback
 import utils
 import configparser
 import collect 
+from multiprocessing.dummy import Pool as ThreadPool
 
 #Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
@@ -15,14 +15,6 @@ config.read('resources/config.ini')
 name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
-
-def get_all_nodes(baseURL, cienauser, cienapassw, token):
-    uri = '/nsi/api/v6/networkConstructs?limit=300'
-    URL = baseURL + uri
-    data = utils.rest_get_json(URL, cienauser, cienapassw, token)
-    #Saving the data for future use
-    with open('jsonfiles/all_nodes.json', 'wb') as f:
-        f.write(data)
 
 def get_l1_nodes():
     data, node_list, site_list = '', [], []
@@ -54,7 +46,7 @@ def get_l1_nodes():
                 node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the L1 nodes:\n{}'.format(node_list))
+    collect.thread_data.logger.debug('These are the L1 nodes:\n\n{}'.format(node_list))
     with open('jsonfiles/l1nodes.json', 'wb') as f:
         f.write(node_list)
 
@@ -80,25 +72,26 @@ def get_l1_nodes():
             obj['id'] = node['attributes']['siteId']
         obj['description'] = node['relationships']['managementSession']['data']['id']
         #Making the duplicate check valid
-        dupl_check[obj['name']] = 'Random_string'
+        dupl_check[obj['name']] = 'xxxxx'
         site_list.append(obj)
 
     site_list = json.dumps(site_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the sites:\n{}'.format(site_list))
-    with open('jsonfiles/sites.json', 'wb') as f:
+    collect.thread_data.logger.debug('These are the L1 sites:\n\n{}'.format(site_list))
+    with open('jsonfiles/l1_sites.json', 'wb') as f:
         f.write(site_list)
 
 def get_l1_links(baseURL, cienauser, cienapassw, token):
 
     uri = "/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs%2Cplanned&limit=200&offset=0&searchFields=data.attributes.mgmtName%2Cdata.attributes.userLabel%2Cdata.attributes.nativeName%2Cdata.attributes.serviceClass%2Cdata.attributes.displayData.operationState%2Cdata.attributes.layerRate%2Cdata.attributes.layerRateQualifier%2Cdata.attributes.note%2Cdata.attributes.tpeLocations%2Cdata.attributes.neNames%2Cdata.attributes.displayData.adminState%2Cdata.attributes.displayData.intentLifeCyclePhaseString%2Cdata.attributes.displayData.intentDeploymentStateString%2Cdata.attributes.resilienceLevel%2Cdata.attributes.domainTypes%2Cdata.attributes.customerName%2Cdata.attributes.displayData.displayPhotonicSpectrumData.frequency%2Cdata.attributes.displayData.displayPhotonicSpectrumData.channel%2Cdata.attributes.displayData.displayPhotonicSpectrumData.wavelength%2Cdata.attributes.lqsData.fiber.measuredLoss%2Cdata.attributes.lqsData.fiber.modeledLoss%2Cdata.attributes.lqsData.fiber.modeledMargin%2Cdata.attributes.lqsData.fiber.method%2Cdata.attributes.lqsData.fiber.reconciled%2Cdata.attributes.description%2Cdata.attributes.tags&searchText=&serviceClass=Fiber%2COTU%2COSRP%20Line%2COSRP%20Link%2CROADM%20Line&sortBy=name"
     URL = baseURL + uri
-    link_data = utils.rest_get_json(URL, cienauser, cienapassw, token)
+    circuit_breaker1 = utils.Circuit_breaker()
+    link_data = circuit_breaker1.request(URL, cienauser, cienapassw, token)
     #Inserting this line for testing since the response is too large to print it
     with open('jsongets/all_links.json', 'wb') as f:
         f.write(link_data)
     link_data = json.loads(link_data)
     included = link_data['included']
-    logging.debug('This is the API response for the [included] field:\n{}'.format(included))
+    collect.thread_data.logger.debug('This is the API response for the [included] field:\n{}'.format(included))
 
     #Making a dictionary w/ the l1node's id and wae_site_name as the key/value pairs for later use
     node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
@@ -115,9 +108,9 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
                 break
         new_obj = {}
         if included[i]['type'] == 'endPoints':
-            new_obj['name'] = included[i]['id'][:-2]
-            if new_obj['name'] in dupl_check or len(included[i]['relationships']) == 0 or len(included[i+1]['relationships']) == 0:
+            if included[i]['id'][:-2] in dupl_check or len(included[i]['relationships']) == 0 or len(included[i+1]['relationships']) == 0:
                 continue
+            new_obj['name'] = included[i]['id'][:-2]
             #Duplicate but okay for readability
             networkConstructA_id = id1
             networkConstructB_id = id2
@@ -130,38 +123,9 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
             l1links_list.append(new_obj)
 
     l1links_list = json.dumps(l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l1 links:\n{}'.format(l1links_list))
+    collect.thread_data.logger.debug('These are the l1 links:\n{}'.format(l1links_list))
     with open('jsonfiles/l1links.json', 'wb') as f:
         f.write(l1links_list)
-
-'''
-#Generate the l1 circuits
-#So i like this amendment to break the circuit generation into 2 parts, get_l1_circuit() and get_l1_circuits() coz otherwise the function would be too big
-
-Example l1 circuit object from EPNM/NAUTILUS
-
-{
-    "CircuitID": "I1001/OTUC2/ALPRGAXV/NRCSGAHX",
-    "StartL1Node": "ALPRGAXV-0110212A",
-    "EndL1Node": "NRCSGAHX-0110800A",
-    "Channel": "I1001/OTUC2/ALPRGAXV/NRCSGAHX",
-    "BW": "200000",
-    "status": "IN EFFECT",
-    "Ordered_Hops": [
-      {
-        "Name": "I1001/OM96/ALPRGAXV/NRCSGAHX",
-        "NodeA": "ALPRGAXV-0110212A",
-        "NodeB": "NRCSGAHX-0110800A"
-      }
-    ]
-}
-
-Make the temp object w/ the l1 circuit info
-Get the starting and ending nodes and verify that they're l1 nodes
-If so then put them into the temp object
-Get the supporting nodes from the get_l1_circuit() and put them into the temp object
-I know that i'm changing up the logic, getting the info mainly from the get_l1_circuits() instead but it works better this way
-'''
 
 def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     l1_circuit_list = []
@@ -171,6 +135,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
     data = all_links_dict['data']
     included = all_links_dict['included']
+    #Making a dictionary w/ the l1node's id and wae_site_name as the key/value pairs for later use
+    node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
+    for node in node_data:
+        node_key_val['{}'.format(node['id'])] = node['attributes']['name']
    
     for obj in data:
         circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
@@ -187,11 +155,12 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     break
         l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict
         if circuit_check and  l1_check:
-            #and if so then make the call to get_l1_circuit() to get the supporting nodes
+            #and if so then make the call to get the supporting nodes
             link_list = collect.get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token)
             #Check based on the returned nodes to see if they're valid l1 nodes
             supporting_link_check = False
             for link_obj in link_list:
+                #This check should work if link_list is an empty list as well
                 if link_obj['NodeA'] in l1nodes_dict and link_obj['NodeB'] in l1nodes_dict:
                     supporting_link_check = True
                 else: supporting_link_check = False
@@ -206,11 +175,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     "status": "",
                     "Ordered_Hops": []
                 }
-                #Checking for the node_key_val to be populated, and if not setting the l1node's id and name as the key/value pairs for later use
-                if len(node_key_val) == 0:
-                    node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
-                    for node in node_data:
-                        node_key_val['{}'.format(node['id'])] = node['attributes']['name']
                 starting_node_name = node_key_val['{}'.format(starting_node)]
                 ending_node_name = node_key_val['{}'.format(ending_node)]        
                 temp_obj['Name'] = obj['attributes']['userLabel']
@@ -222,17 +186,21 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     temp_obj['Channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel'] 
                 except: 
                     temp_obj['Channel'] = obj['attributes']['userLabel']
-                #Hmm how do i get the BW?? Perhaps i'll need to create some kind of chart and the BW is determined by the layer rate?
+                #Code to get the BW if necessary here. Perhaps need to create some kind of chart and the BW is determined by the layer rate?
                 temp_obj['status'] = obj['attributes']['operationState']
                 for link in link_list:
                     link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
                     link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
-                link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
-                link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(link_list[1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
+                link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(starting_node_name), 'NodeB': '{}'.format(link_list[0]['Name'])})
+                link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(link_list[-1]['Name']), 'NodeB': '{}'.format(ending_node_name)})
                 temp_obj['Ordered_Hops'] = link_list
                 l1_circuit_list.append(temp_obj)
                 
-    l1_circuit_list = json.dumps(l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l1 circuits:\n{}'.format(l1_circuit_list))
+    l1_circuit_list = json.dumps(l1_circuit_list, indent=4, separators=(',', ': '))
+    collect.thread_data.logger.debug('These are the l1 circuits:\n{}'.format(l1_circuit_list))
     with open('jsonfiles/l1circuits.json', 'wb') as f:
         f.write(l1_circuit_list)
+
+if __name__ == "__main__":
+    baseURL, cienauser, cienapassw, token = 'https://165.122.92.244', 'ciscowae', 'Verizon123!', '<Change me to new api token>'
+    get_l1_circuits(baseURL, cienauser, cienapassw, token)

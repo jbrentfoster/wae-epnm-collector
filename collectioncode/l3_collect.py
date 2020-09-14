@@ -1,32 +1,17 @@
-#===================================================
-#===================================================
-
-
-
-#Stub in for the l3 code
-
-
-
-#===================================================
-#===================================================
-
-
-
-
 import time
 import re
 import json
 import logging
 import sys
-from multiprocessing.dummy import Pool as ThreadPool
 import traceback
 import utils
 import configparser
 import collect
+from multiprocessing.dummy import Pool as ThreadPool
 
 #Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
+config.read('resources/config.ini')
 name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
@@ -38,6 +23,7 @@ def get_l3_nodes():
 
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
+            #Identifying the l3 ndoes via the shelf number. Shelves 21+ are l3, and 0-20 are l1 nodes.
             match_object = re.search('SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
             if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
                 node['longitude'] = 0
@@ -61,7 +47,7 @@ def get_l3_nodes():
                 node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the L3 nodes:\n{}'.format(node_list))
+    collect.thread_data.logger.debug('These are the L3 nodes:\n{}'.format(node_list))
     with open('jsonfiles/l3nodes.json', 'wb') as f:
         f.write(node_list)
 
@@ -91,21 +77,22 @@ def get_l3_nodes():
         site_list.append(obj)
 
     site_list = json.dumps(site_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l3 sites:\n{}'.format(site_list))
+    collect.thread_data.logger.debug('These are the l3 sites:\n{}'.format(site_list))
     with open('jsonfiles/l3_sites.json', 'wb') as f:
         f.write(site_list)
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
-
+    #API may be pared down, will need to play around w/ the response to see what can be taken out.
     uri = "/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs%2Cplanned&limit=200&offset=0&searchFields=data.attributes.mgmtName%2Cdata.attributes.userLabel%2Cdata.attributes.nativeName%2Cdata.attributes.serviceClass%2Cdata.attributes.displayData.operationState%2Cdata.attributes.layerRate%2Cdata.attributes.layerRateQualifier%2Cdata.attributes.note%2Cdata.attributes.tpeLocations%2Cdata.attributes.neNames%2Cdata.attributes.displayData.adminState%2Cdata.attributes.displayData.intentLifeCyclePhaseString%2Cdata.attributes.displayData.intentDeploymentStateString%2Cdata.attributes.resilienceLevel%2Cdata.attributes.domainTypes%2Cdata.attributes.customerName%2Cdata.attributes.displayData.displayPhotonicSpectrumData.frequency%2Cdata.attributes.displayData.displayPhotonicSpectrumData.channel%2Cdata.attributes.displayData.displayPhotonicSpectrumData.wavelength%2Cdata.attributes.lqsData.fiber.measuredLoss%2Cdata.attributes.lqsData.fiber.modeledLoss%2Cdata.attributes.lqsData.fiber.modeledMargin%2Cdata.attributes.lqsData.fiber.method%2Cdata.attributes.lqsData.fiber.reconciled%2Cdata.attributes.description%2Cdata.attributes.tags&searchText=&serviceClass=Fiber%2COTU%2COSRP%20Line%2COSRP%20Link%2CROADM%20Line&sortBy=name"
     URL = baseURL + uri
-    link_data = utils.rest_get_json(URL, cienauser, cienapassw, token)
+    circuit_breaker1 = utils.Circuit_breaker()
+    link_data = circuit_breaker1.request(URL, cienauser, cienapassw, token)
     #Inserting this line for testing since the response is too large to print it
     with open('jsongets/all_links.json', 'wb') as f:
         f.write(link_data)
     link_data = json.loads(link_data)
     included = link_data['included']
-    logging.debug('This is the API response for the [included] field:\n{}'.format(included))
+    collect.thread_data.logger.debug('This is the API response for the [included] field:\n{}'.format(included))
 
     #Making a dictionary w/ the l3node's id and wae_site_name as the key/value pairs for later use
     node_data = utils.open_file_load_data("jsonfiles/l3nodes.json")
@@ -137,15 +124,16 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
             l3links_list.append(new_obj)
 
     l3links_list = json.dumps(l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l3 links:\n{}'.format(l3links_list))
+    collect.thread_data.logger.debug('These are the l3 links:\n{}'.format(l3links_list))
     with open('jsonfiles/l3links.json', 'wb') as f:
         f.write(l3links_list)
 
 def get_l3_circuits(baseURL, cienauser, cienapassw, token):
     l3_circuit_list = []
-    #Setting up the links and l1 nodes data for use later on
+    #Setting up the links and l3 nodes data for use later on
     l3nodes_dict = utils.open_file_load_data('jsonfiles/l3nodes.json')
     l3nodes_dict = {val: 1 for node in l3nodes_dict for (key, val) in node.items() if key == 'id'}
+    #Look into replacing 'all_links.json' w/ 'l3links.json' instead
     all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
     data = all_links_dict['data']
     included = all_links_dict['included']
@@ -155,9 +143,9 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
    
     for obj in data:
-        #What is the thought process for the circuit check? I'll need to check w/ Andrew on this
+        #OMS and OTS tags correspond to links, or circuits w/ only 2 nodes, so excluding them
         circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
-        #Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
+        #Implemented the starting and ending l3 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
         circuit_id = obj['id']
         #This block of code is faulty. It'll keep going and won't stop, expensive operation.  
         for node in included:
@@ -203,7 +191,7 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
                     temp_obj['Channel'] = obj['attributes']['userLabel']
                 #Code to get the BW if necessary here. Perhaps need to create some kind of chart and the BW is determined by the layer rate?
                 temp_obj['status'] = obj['attributes']['operationState']
-                #What is going on here? I'm replacing the attribute called 'NodeA' and 'NodeB' which looks to be the ID's and replacing them w/ the wae_site_names for 'link_list' (the api response for the supporting nodes). Then inserting into 'link_list' 2 new objects w/ the beginning node and ending node. 
+                #Getting the ordered hops for the circuit. Constructed an api to get the supporting nodes, but the call doesn't get the starting and ending nodes so adding them in. 
                 for link in link_list:
                     link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
                     link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
@@ -213,6 +201,6 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
                 l3_circuit_list.append(temp_obj)
                 
     l3_circuit_list = json.dumps(l3_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
+    collect.thread_data.logger.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
     with open('jsonfiles/l3circuits.json', 'wb') as f:
         f.write(l3_circuit_list)

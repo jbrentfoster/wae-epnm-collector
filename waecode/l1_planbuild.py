@@ -1,6 +1,7 @@
 import com.cisco.wae.design
-#import json
+import json
 import logging
+import os
 
 from com.cisco.wae.design.model.net import HopType
 #from com.cisco.wae.design.model.net import Network
@@ -47,6 +48,9 @@ def generateL1nodes(plan, l1nodelist):
         long = float(l1node['longitude'])
         lat = float(l1node['latitude'])
         site = l1node['wae_site_name']
+        #Debug this error for BaltimoreLab and DISCOVERED_SITE[23]
+        if site == 'BaltimoreLab' or site == 'DISCOVERED_SITE[23]' or site == 'DISCOVERED_SITE[24]':
+            continue
         l1nodeRec = L1NodeRecord(name=name, site=SiteKey(site), vendor=vendor, model=model, longitude=long, latitude=lat)
         newl1node = l1NodeManager.newL1Node(l1nodeRec)
 
@@ -54,15 +58,17 @@ def generateL1links(plan, l1linksdict):
     l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
     for l1link in l1linksdict:
-        print(l1link['name'])
+        name = l1link['name']
+        print(name)
         l1nodeAKey = L1NodeKey(l1link['l1nodeA'])
         l1nodeBKey = L1NodeKey(l1link['l1nodeB'])
         description = l1link['description']
-        l1linkRec = L1LinkRecord(name=l1link['name'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
+        l1linkRec = L1LinkRecord(name=name, l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
         try:
             l1LinkManager.newL1Link(l1linkRec)
         except Exception as err:
             logging.warn("Could not add L1 link to the plan!")
+            logging.debug("Link: \n\n{}".format(l1link))
             logging.warn(err)
 
 def generateL1circuits(plan, och_trails):
@@ -118,3 +124,15 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
         hops = l1circuitpath.getHops()
         c += 1
     return l1circuit
+
+
+if __name__ == '__main__':
+
+    # Setting up the testing for the l3 circuit code
+    conn = com.cisco.wae.design.ServiceConnectionManager.newService()
+    cwd = os.getcwd()
+    fileName = os.path.join(cwd, 'planfiles/blank.pln')
+    plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
+    with open("jsonfiles/l1links.json", 'rb') as f:
+        l1linkslist = json.load(f)
+    generateL1links(plan, l1linkslist)
