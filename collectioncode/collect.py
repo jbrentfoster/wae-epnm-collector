@@ -135,8 +135,10 @@ def get_all_nodes(baseURL, cienauser, cienapassw, token):
     with open('jsonfiles/all_nodes.json', 'wb') as f:
         f.write(data)
 
+
 def get_l1_nodes():
     l1_collect.get_l1_nodes()
+
 
 def get_l1_links(baseURL, cienauser, cienapassw, token):
     l1_collect.get_l1_links(baseURL, cienauser, cienapassw, token)
@@ -147,6 +149,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
 
 def get_l3_nodes():
     l3_collect.get_l3_nodes()
+
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
     l3_collect.get_l3_links(baseURL, cienauser, cienapassw, token)
@@ -182,8 +185,3 @@ def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
         pass
     #Return the network construct id's for the next hop nodes
     return ret
-
-
-if __name__ == '__main__':
-    # get_l1_circuits()
-    pass

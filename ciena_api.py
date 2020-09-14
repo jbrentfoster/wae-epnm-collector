@@ -11,6 +11,9 @@ import logging
 from datetime import datetime
 import time
 import os
+import distutils.dir_util
+from distutils.dir_util import remove_tree
+from distutils.dir_util import mkpath
 import com.cisco.wae.design
 from com.cisco.wae.design.model.net import NodeKey
 from com.cisco.wae.design.model.net import SiteRecord
@@ -28,13 +31,15 @@ from distutils.dir_util import mkpath
 
 urllib3.disable_warnings(InsecureRequestWarning)
 
+
 def main():
-    #Setting up the properties file
+    # Setting up the properties file
     config = configparser.ConfigParser(interpolation=None)
     config.read('resources/config.ini')
 
     # Getting inputs for the script from cli args
-    parser = argparse.ArgumentParser(description='A WAE collection tool for Ciena')
+    parser = argparse.ArgumentParser(
+        description='A WAE collection tool for Ciena')
     parser.add_argument('-a', '--archive_root', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Archive_root'],
                         help='Please provide the local path to your archive directory')
     parser.add_argument('-i', '--ciena_ipaddr', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_ipaddr'],
@@ -60,7 +65,7 @@ def main():
     cienauser = args.ciena_user
     cienapassw = args.ciena_pass
     encryption_check = 'enCrYpted'
-    #Decrypting the Ciena password for later use
+    # Decrypting the Ciena password for later use
     if cienapassw.startswith(encryption_check):
         encoded_pb_key = config['DEFAULT']['CIENA_key']
         pb_key = base64.b64decode(encoded_pb_key)
@@ -144,7 +149,8 @@ def main():
 
     if token == None:
         try:
-            r = requests.post(resttokenURI, proxies=proxies, headers=headers, json=data, verify=False)
+            r = requests.post(resttokenURI, proxies=proxies,
+                              headers=headers, json=data, verify=False)
             if r.status_code == 201:
                 token = json.dumps(r.json(), indent=2)
                 print token
@@ -153,8 +159,8 @@ def main():
 
         except requests.exceptions.RequestException as err:
             print "Exception raised: " + str(err)
-            return 
-    
+            return
+
     token = json.loads(token)
     token_string = token['token']
 
@@ -234,7 +240,7 @@ def main():
     if build_plan and build_plan_check:
         # Add sites to plan
         logging.info("Adding sites")
-        with open("jsonfiles/sites.json", 'rb') as f:
+        with open("jsonfiles/l1sites.json", 'rb') as f:
             sitelist = json.load(f)
         planbuild.generateSites(plan, sitelist)
 
