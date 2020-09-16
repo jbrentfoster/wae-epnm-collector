@@ -1,12 +1,3 @@
-# ===================================================
-# ===================================================
-
-
-# Stub in for the l3 code
-
-
-# ===================================================
-# ===================================================
 
 import com.cisco.wae.design
 import logging
@@ -43,19 +34,31 @@ from com.cisco.wae.design.model.net import ServiceClassRecord
 from com.cisco.wae.design.model.net import LSPRecord
 
 
-def generateL3nodes(plan, l1nodelist):
-    l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
-    for l1node in l1nodelist:
+def generateL3nodes(plan, l3nodeslist):
+    for l3node in l3nodeslist:
+        name = l3node['attributes']['name']
+        logging.debug('This is the node:\n{}'.format(l3node))
+        longitude = float(l3node['longitude'])
+        lat = float(l3node['latitude'])
+        site = l3node['wae_site_name']
         vendor = 'Ciena'
         model = 'Ciena6500'
-        name = l1node['attributes']['name']
-        logging.debug('This is the node:\n{}'.format(l1node))
-        long = float(l1node['longitude'])
-        lat = float(l1node['latitude'])
-        site = l1node['wae_site_name']
-        l1nodeRec = L1NodeRecord(name=name, site=SiteKey(
-            site), vendor=vendor, model=model, longitude=long, latitude=lat)
-        newl1node = l1NodeManager.newL1Node(l1nodeRec)
+        nodeRec = NodeRecord(name=name, vendor=vendor, model=model)
+        newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
+
+
+# l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
+# for l1node in l1nodelist:
+#     vendor = 'Ciena'
+#     model = 'Ciena6500'
+#     name = l1node['attributes']['name']
+#     logging.debug('This is the node:\n{}'.format(l1node))
+#     long = float(l1node['longitude'])
+#     lat = float(l1node['latitude'])
+#     site = l1node['wae_site_name']
+#     l1nodeRec = L1NodeRecord(name=name, site=SiteKey(
+#         site), vendor=vendor, model=model, longitude=long, latitude=lat)
+#     newl1node = l1NodeManager.newL1Node(l1nodeRec)
 
 
 def generateL3links(plan, l1linksdict):
@@ -80,7 +83,7 @@ def generateL3circuits(plan, och_trails):
         name = och_trail['CircuitID']
         firstl1node = och_trail['StartL1Node']
         lastl1node = och_trail['EndL1Node']
-        #wavelength = och_trail['Wavelength']
+        # wavelength = och_trail['Wavelength']
         bw = int(och_trail['BW'])
         portAname = och_trail['Channel']
         portBname = och_trail['Channel']
@@ -114,7 +117,7 @@ def generateL3circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
     l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
     l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
 
-    #l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
+    # l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
     hoptype = HopType('PathStrict', 1)
     l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1nodeA), step=0,

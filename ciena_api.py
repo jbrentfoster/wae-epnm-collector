@@ -202,6 +202,12 @@ def main():
             l1circuitlist = json.load(f)
         l1_planbuild.generateL1circuits(plan, och_trails=l1circuitlist)
 
+        # Add l3 nodes to plan
+        logging.info("Adding L3 nodes to plan file")
+        with open("jsonfiles/l3nodes.json", 'rb') as f:
+            l3nodeslist = json.load(f)
+        l3_planbuild.generateL3nodes(plan, l3nodeslist)
+
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
         plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
