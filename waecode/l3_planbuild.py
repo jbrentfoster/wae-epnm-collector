@@ -47,20 +47,6 @@ def generateL3nodes(plan, l3nodeslist):
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
 
 
-# l1NodeManager = plan.getNetwork().getL1Network().getL1NodeManager()
-# for l1node in l1nodelist:
-#     vendor = 'Ciena'
-#     model = 'Ciena6500'
-#     name = l1node['attributes']['name']
-#     logging.debug('This is the node:\n{}'.format(l1node))
-#     long = float(l1node['longitude'])
-#     lat = float(l1node['latitude'])
-#     site = l1node['wae_site_name']
-#     l1nodeRec = L1NodeRecord(name=name, site=SiteKey(
-#         site), vendor=vendor, model=model, longitude=long, latitude=lat)
-#     newl1node = l1NodeManager.newL1Node(l1nodeRec)
-
-
 def generateL3links(plan, l1linksdict):
     l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
