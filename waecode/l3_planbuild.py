@@ -1,3 +1,12 @@
+# ===================================================
+# ===================================================
+
+
+# Stub in for the l3 code
+
+
+# ===================================================
+# ===================================================
 
 import com.cisco.wae.design
 import logging
@@ -43,12 +52,13 @@ def generateL3nodes(plan, l3nodeslist):
         site = l3node['wae_site_name']
         vendor = 'Ciena'
         model = 'Ciena6500'
-        nodeRec = NodeRecord(name=name, vendor=vendor, model=model)
+        nodeRec = NodeRecord(name=name, vendor=vendor, model=model, site=SiteKey(
+            site))
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
 
 
 def generateL3links(plan, l1linksdict):
-    l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
+    l1LinkManager = plan.getNetwork().getNodeManager.getLgetManager()
 
     for l1link in l1linksdict:
         print(l1link['name'])

@@ -37,8 +37,21 @@ def generateSites(plan, sitelist):
     SiteManager = plan.getNetwork().getSiteManager()
     for site in sitelist:
         logging.debug('This is the site:\n{}'.format(site))
+        if check_site_exists(SiteManager, site['name']):
+            # logging.warn(
+            #     "site already exists in plan file, will not add duplicate: " + site['name'])
+            continue
         long = float(site['longitude'])
         lat = float(site['latitude'])
         siteRec = SiteRecord(name=site['name'], longitude=long, latitude=lat, tags=[
                              site['id'], site['description']])
         newsite = SiteManager.newSite(siteRec)
+
+
+def check_site_exists(SiteManager, site_name):
+    all_sites = SiteManager.getAllSiteKeys()
+    for site in all_sites:
+        if site.name == site_name:
+            # logging.info("site already exists in plan, skipping this one...")
+            return True
+    return False

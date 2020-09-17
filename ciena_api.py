@@ -98,7 +98,6 @@ def main():
     logging.debug("Ciena ip address is: {}".format(args.ciena_ipaddr))
     logging.debug("Ciena user is: {}".format(args.ciena_user))
     # logging.debug("Phases is: {}".format(args.phases))
-
     # Delete all output files
     if delete_previous:
         logging.info("Cleaning files from last collection...")
@@ -178,7 +177,7 @@ def main():
     collect.get_l3_circuits(baseURL, cienauser, cienapassw, token_string)
 
     if build_plan:
-        # Add sites to plan
+        # Add l1sites to plan
         logging.info("Adding sites")
         with open("jsonfiles/l1sites.json", 'rb') as f:
             sitelist = json.load(f)
@@ -201,6 +200,12 @@ def main():
         with open("jsonfiles/l1circuits.json", 'rb') as f:
             l1circuitlist = json.load(f)
         l1_planbuild.generateL1circuits(plan, och_trails=l1circuitlist)
+
+        # Add l3sites to plan
+        logging.info("Adding sites")
+        with open("jsonfiles/l3sites.json", 'rb') as f:
+            sitelist = json.load(f)
+        planbuild.generateSites(plan, sitelist)
 
         # Add l3 nodes to plan
         logging.info("Adding L3 nodes to plan file")

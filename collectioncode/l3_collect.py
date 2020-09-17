@@ -155,10 +155,11 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 
 def get_l3_circuits(baseURL, cienauser, cienapassw, token):
     l3_circuit_list = []
-    # Setting up the links and l1 nodes data for use later on
+    # Setting up the links and l3 nodes data for use later on
     l3nodes_dict = utils.open_file_load_data('jsonfiles/l3nodes.json')
     l3nodes_dict = {val: 1 for node in l3nodes_dict for (
         key, val) in node.items() if key == 'id'}
+    # Look into replacing 'all_links.json' w/ 'l3links.json' instead
     all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
     data = all_links_dict['data']
     included = all_links_dict['included']
@@ -168,9 +169,9 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
 
     for obj in data:
-        # What is the thought process for the circuit check? I'll need to check w/ Andrew on this
+        # OMS and OTS tags correspond to links, or circuits w/ only 2 nodes, so excluding them
         circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
-        # Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
+        # Implemented the starting and ending l3 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
         circuit_id = obj['id']
         # This block of code is faulty. It'll keep going and won't stop, expensive operation.
         for node in included:
@@ -220,7 +221,7 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
                     temp_obj['Channel'] = obj['attributes']['userLabel']
                 # Code to get the BW if necessary here. Perhaps need to create some kind of chart and the BW is determined by the layer rate?
                 temp_obj['status'] = obj['attributes']['operationState']
-                # What is going on here? I'm replacing the attribute called 'NodeA' and 'NodeB' which looks to be the ID's and replacing them w/ the wae_site_names for 'link_list' (the api response for the supporting nodes). Then inserting into 'link_list' 2 new objects w/ the beginning node and ending node.
+                # Getting the ordered hops for the circuit. Constructed an api to get the supporting nodes, but the call doesn't get the starting and ending nodes so adding them in.
                 for link in link_list:
                     link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
                     link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
@@ -233,6 +234,90 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
 
     l3_circuit_list = json.dumps(
         l3_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
+    logging.debug(
+        'These are the l3 circuits:\n{}'.format(l3_circuit_list))
     with open('jsonfiles/l3circuits.json', 'wb') as f:
         f.write(l3_circuit_list)
+
+    # l3_circuit_list = []
+    # # Setting up the links and l1 nodes data for use later on
+    # l3nodes_dict = utils.open_file_load_data('jsonfiles/l3nodes.json')
+    # l3nodes_dict = {val: 1 for node in l3nodes_dict for (
+    #     key, val) in node.items() if key == 'id'}
+    # all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
+    # data = all_links_dict['data']
+    # included = all_links_dict['included']
+    # # Making a dictionary w/ the l3node's id and wae_site_name as the key/value pairs for later use
+    # node_data = utils.open_file_load_data("jsonfiles/l3nodes.json")
+    # for node in node_data:
+    #     node_key_val['{}'.format(node['id'])] = node['attributes']['name']
+
+    # for obj in data:
+    #     # What is the thought process for the circuit check? I'll need to check w/ Andrew on this
+    #     circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
+    #     # Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
+    #     circuit_id = obj['id']
+    #     # This block of code is faulty. It'll keep going and won't stop, expensive operation.
+    #     for node in included:
+    #         if node['type'] == 'endPoints' and node['id'][-1] == '1':
+    #             if node['id'][:-2] == circuit_id:
+    #                 starting_node = node['relationships']['tpes']['data'][0]['id'][:36]
+    #         if node['type'] == 'endPoints' and node['id'][-1] == '2':
+    #             if node['id'][:-2] == circuit_id:
+    #                 ending_node = node['relationships']['tpes']['data'][0]['id'][:36]
+    #                 break
+    #     l3_check = starting_node in l3nodes_dict and ending_node in l3nodes_dict
+
+    #     if circuit_check and l3_check:
+    #         # and if so then make the call to get the supporting nodes
+    #         link_list = collect.get_supporting_nodes(
+    #             circuit_id, baseURL, cienauser, cienapassw, token)
+    #         # Check based on the returned nodes to see if they're valid l3 nodes
+    #         supporting_link_check = False
+
+    #         for link_obj in link_list:
+    #             if link_obj['NodeA'] in l3nodes_dict and link_obj['NodeB'] in l3nodes_dict:
+    #                 supporting_link_check = True
+    #             else:
+    #                 supporting_link_check = False
+    #         if supporting_link_check:
+    #             temp_obj = {
+    #                 "Name": "",
+    #                 "CircuitID": "",
+    #                 "StartL3Node": "",
+    #                 "EndL3Node": "",
+    #                 "Channel": "",
+    #                 "BW": "0",
+    #                 "status": "",
+    #                 "Ordered_Hops": []
+    #             }
+    #             # Getting the wae_site_name for use as the node name
+    #             starting_node_name = node_key_val['{}'.format(starting_node)]
+    #             ending_node_name = node_key_val['{}'.format(ending_node)]
+    #             temp_obj['Name'] = obj['attributes']['userLabel']
+    #             temp_obj['CircuitID'] = circuit_id
+    #             temp_obj['StartL3Node'] = starting_node_name
+    #             temp_obj['EndL3Node'] = ending_node_name
+    #             # Setting the channel value. Unsure of what exactly the channel is in this situation so either setting it to the channel value that exists in the api data or the name value for now.
+    #             try:
+    #                 temp_obj['Channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel']
+    #             except:
+    #                 temp_obj['Channel'] = obj['attributes']['userLabel']
+    #             # Code to get the BW if necessary here. Perhaps need to create some kind of chart and the BW is determined by the layer rate?
+    #             temp_obj['status'] = obj['attributes']['operationState']
+    #             # What is going on here? I'm replacing the attribute called 'NodeA' and 'NodeB' which looks to be the ID's and replacing them w/ the wae_site_names for 'link_list' (the api response for the supporting nodes). Then inserting into 'link_list' 2 new objects w/ the beginning node and ending node.
+    #             for link in link_list:
+    #                 link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
+    #                 link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
+    #             link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(
+    #                 starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
+    #             link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(
+    #                 link_list[1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
+    #             temp_obj['Ordered_Hops'] = link_list
+    #             l3_circuit_list.append(temp_obj)
+
+    # l3_circuit_list = json.dumps(
+    #     l3_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
+    # logging.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
+    # with open('jsonfiles/l3circuits.json', 'wb') as f:
+    #     f.write(l3_circuit_list)
