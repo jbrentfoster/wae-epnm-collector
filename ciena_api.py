@@ -115,6 +115,8 @@ def main():
         # Create path for archive root and loggger
         mkpath(archive_root)
         mkpath(planfiles_root)
+        mkpath('jsonfiles')
+        mkpath('jsongets')
         logger = create_log('collection', logging_level, archive_root)
 
         logging.info(
