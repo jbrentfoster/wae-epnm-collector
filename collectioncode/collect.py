@@ -285,8 +285,12 @@ def collectL1links_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(
-            startindex)
+        # uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=" + str(
+        #     startindex)
+
+        # Updating URL to fix the performance issue tac case
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.skipFiberAttributes=true&.skipPerformanceMetrics=true&.startIndex=" + str(startindex)
+
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
@@ -975,8 +979,12 @@ def collect_mpls_links_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
-            startindex)
+        # uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.startIndex=" + str(
+        #     startindex)
+
+        # Updating URL to fix the performance issue tac case
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=mpls-link-layer&.skipFiberAttributes=true&.skipPerformanceMetrics=true&.startIndex=" + str(startindex)
+
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
@@ -1008,8 +1016,12 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=otu-link-layer&.startIndex=" + str(
-            startindex)
+        # uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=otu-link-layer&.startIndex=" + str(
+        #     startindex)
+
+        # Updating URL to fix the performance issue tac case
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=otu-link-layer&.skipFiberAttributes=true&.skipPerformanceMetrics=true&.startIndex=" + str(startindex)
+
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()
@@ -1093,8 +1105,12 @@ def collect_och_links_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=och-link-layer&.startIndex=" + str(
-            startindex)
+        # uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=och-link-layer&.startIndex=" + str(
+        #     startindex)
+
+        # Updating URL to fix the performance issue tac case
+        uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=och-link-layer&.skipFiberAttributes=true&.skipPerformanceMetrics=true&.startIndex=" + str(startindex)
+
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
         circuit_breaker1 = collectioncode.utils.Circuit_breaker()

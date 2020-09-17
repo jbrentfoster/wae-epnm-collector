@@ -13,7 +13,9 @@ from mock import Mock, patch
 
 #Setting up the vars for use in the api calls
 baseurl = "https://10.135.7.222/restconf"
-uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=0"
+# uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=0"
+# Updating URI to fix the performance tac case
+uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.skipFiberAttributes=true&.skipPerformanceMetrics=true&.startIndex=0"
 user = 'root'
 password = 'Epnm1234'
 Logger = logging.getLogger(__name__)
