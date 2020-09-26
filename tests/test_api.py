@@ -1,4 +1,4 @@
-#Tests to check the api calls being made by the script
+# Tests to check the api calls being made by the script
 import pytest
 import requests
 import json
@@ -8,10 +8,7 @@ import responses
 from collectioncode import utils, collect
 from mock import Mock, patch
 
-
-
-
-#Setting up the vars for use in the api calls
+# Setting up the vars for use in the api calls
 baseurl = "https://10.135.7.222/restconf"
 # uri = "/data/v1/cisco-resource-network:topological-link?topo-layer=ots-link-layer&.startIndex=0"
 # Updating URI to fix the performance tac case
@@ -20,26 +17,36 @@ user = 'root'
 password = 'Epnm1234'
 Logger = logging.getLogger(__name__)
 
+
 def setup_module(utils):
     collect.thread_data.logger = Logger
 
-#The test names should be description enough
-def test_api_get_successful_response():
 
+# The test names should be description enough
+def test_api_get_successful_response():
     circuit_breaker1 = utils.Circuit_breaker(timeout_limit=15)
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert len(response) > 0
 
-#Setting the timeout value low to force the exception
-def test_api_timeout_return_null():
+# The test retrieve mpls with iterating over potential nodes 
+def test_api_get_mpls_response():
+    circuit_breaker1 = utils.Circuit_breaker(timeout_limit=15)
+    state_or_states = ["New York", "New Jersey"]
+    collect.collect_mpls_topo_json(baseurl, user, password, state_or_states)
+    response = circuit_breaker1.request(baseurl, uri, user, password)
+    assert len(response) > 0    
 
+
+# Setting the timeout value low to force the exception
+def test_api_timeout_return_null():
     circuit_breaker1 = utils.Circuit_breaker(timeout_limit=0)
     # with pytest.raises(Exception):
     #     assert circuit_breaker1.request(baseurl, uri, user, password)
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert response == '[]'
 
-#Delaying for the max amount of 60 seconds
+
+# Delaying for the max amount of 60 seconds
 def test_api_for_none_timeout_value():
     resp1 = {
         "test": ["Not empty"]
@@ -51,7 +58,8 @@ def test_api_for_none_timeout_value():
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert json.loads(response) == resp1
 
-#Delaying for the max amount of 60 seconds
+
+# Delaying for the max amount of 60 seconds
 def test_api_for_bad_timeout_value_with_max_delay():
     baseurl = "https://run.mocky.io/v3/fca0a56e-29b0-41fc-8f2d-5ad7f5eed27e"
     uri = "?mocky-delay=20s"
@@ -60,7 +68,8 @@ def test_api_for_bad_timeout_value_with_max_delay():
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert response == '[]'
 
-#Delaying for the max amount of 60 seconds
+
+# Delaying for the max amount of 60 seconds
 def test_api_for_good_timeout_value_with_max_delay():
     resp1 = {
         "test": ["Not empty"]
@@ -71,6 +80,7 @@ def test_api_for_good_timeout_value_with_max_delay():
     circuit_breaker1 = utils.Circuit_breaker(timeout_limit=30)
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert json.loads(response) == resp1
+
 
 # @responses.activate
 # def test_api_for_none_timeout_value():
@@ -87,7 +97,7 @@ def test_api_for_good_timeout_value_with_max_delay():
 #     circuit_breaker1 = utils.Circuit_breaker(timeout_limit=10)
 #     response = circuit_breaker1.request(baseurl, uri, user, password)
 #     assert response.json() == resp1
-    
+
 # @patch.object(requests, 'get')
 # def test_api_for_none_timeout_value(mock_request):
 
@@ -111,7 +121,6 @@ def test_api_for_good_timeout_value_with_max_delay():
 
 @patch.object(requests, 'get')
 def test_api_for_nonempty_response(mock_request):
-
     resp1 = {
         "test": ["Not empty"]
     }
@@ -124,9 +133,9 @@ def test_api_for_nonempty_response(mock_request):
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert json.loads(response) == resp1
 
+
 @patch.object(requests, 'get')
 def test_api_for_empty_response(mock_request):
-
     resp1 = {
         "test": []
     }
@@ -139,9 +148,9 @@ def test_api_for_empty_response(mock_request):
     response = circuit_breaker1.request(baseurl, uri, user, password)
     assert response == '[]'
 
+
 @patch.object(requests, 'get')
 def test_api_for_error_status_code(mock_request):
-
     resp1 = {
         "test": ["Not empty"]
     }

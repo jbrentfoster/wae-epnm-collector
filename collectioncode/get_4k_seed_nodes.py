@@ -74,7 +74,7 @@ def get_random_nodes_for_states(state_or_states):
             random_node_choices.append(valid_seed_nodes[state])
         else:
             seed_nodes = open_file_load_data("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
-            random_node_choices.append(random.choice(seed_nodes[state]))
+            random_node_choices.append(seed_nodes[state])
         collect.thread_data.logger.info('The valid seed-node for {} is: {}'.format(state, random_node_choices[-1]))
     return random_node_choices
 

@@ -572,18 +572,25 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
     run_get_4k_seed_nodes()
     get_potential_seednode(state_or_states)
     seed_node_list = get_random_nodes_for_states(state_or_states)
+    # import pdb
+    # pdb.set_trace()
     for seed_node in seed_node_list:
-        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node.get('node')
-        jsonbody = json.dumps(jsonbody_js)
-        uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
-        jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
-        try:
-            thejson = json.loads(jsonresponse)
-        except Exception as err:
-            thread_data.logger.propagate = True
-            thread_data.logger.critical(
-                'EPNM server is not configured with "show mpls topology" CLI template.  Halting execution.')
-            sys.exit()
+        for seed_node_info_state in seed_node:
+            jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
+            thread_data.logger.info("json body for mpls API request is: " + str(jsonbody_js))
+            jsonbody = json.dumps(jsonbody_js)
+            uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+            jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
+            try:
+                thejson = json.loads(jsonresponse)
+                thread_data.logger.info("response for mpls API request is: " + str(thejson))
+                break
+            except Exception as err:
+                thread_data.logger.propagate = True
+                thread_data.logger.info("EPNM server failed to retrieve MPLS topoology from CLI template for node : " + seed_node_info_state.get('node'))
+                thread_data.logger.critical(
+                    'EPNM server failed to retrieve MPLS topoology from CLI template.  Continue checking next node.')
+                continue
 
         jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
@@ -630,7 +637,7 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 raise
 
         #Getting the state for this particular node
-        seed_node = seed_node.get('node')
+        seed_node = seed_node_info_state.get('node')
         seed_node_state = ""
         for state in state_or_states:
             with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
@@ -660,19 +667,22 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
     get_potential_seednode(state_or_states)
     seed_node_list = get_random_nodes_for_states(state_or_states)
     for seed_node in seed_node_list:
-        jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node.get('node')
-        jsonbody = json.dumps(jsonbody_js)
+        for seed_node_info_state in seed_node:
+            jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
+            jsonbody = json.dumps(jsonbody_js)
 
-        uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
-        jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
+            uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+            jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
 
-        try:
-            thejson = json.loads(jsonresponse)
-        except Exception as err:
-            thread_data.logger.propagate = True
-            thread_data.logger.critical(
-                'EPNM server is not configured with "show isis hostname" CLI template.  Halting execution.')
-            sys.exit()
+            try:
+                thejson = json.loads(jsonresponse)
+                break
+            except Exception as err:
+                thread_data.logger.propagate = True
+                thread_data.logger.info("EPNM server failed to retrieve ISIS hostname from CLI template for node : " + seed_node_info_state.get('node'))
+                thread_data.logger.critical(
+                    'EPNM server failed to retrieve ISIS hostname from CLI template.  Continue checking next node')
+                continue
 
         jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
@@ -683,7 +693,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         thread_data.logger.info('Checking job status...')
         results = ""
         #Getting the state for this particular node
-        seed_node = seed_node.get('node')
+        seed_node = seed_node_info_state.get('node')
         seed_node_state = ""
         for state in state_or_states:
             with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:

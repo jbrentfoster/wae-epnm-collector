@@ -1,5 +1,2 @@
 {
-    "New York": {"node": "NCS4K-Site1"},
-    "New Jersey": {"node": "NCS4K-Site3"},
-    "All Locations": {"node": "MD=CISCO_EPNM!ND=NCS4K-Site1", "state": "All Locations", "group": ["MD=CISCO_EPNM!GR=Cisco Network Convergence System 4000 Series", "MD=CISCO_EPNM!GR=Optical Networking", "MD=CISCO_EPNM!GR=VZ-Waltham", "MD=CISCO_EPNM!GR=All Locations", "MD=CISCO_EPNM!GR=New York"]}
 }
