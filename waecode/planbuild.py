@@ -1,4 +1,5 @@
 import com.cisco.wae.design
+import com.cisco.wae.design.model.traffic
 import json
 import logging
 import flexlsp_creator
@@ -405,8 +406,10 @@ def process_srlgs(plan, circ_srlgs):
                             circ_list.append(circ_dict2)
                             circ_keys_list.append(circ_dict2['Circuit Key'])
                             break
-                srlg_rec = SRLGRecord(circuitKeys=circ_keys_list, name=hex(int(srlg)), description="Foo")
-                srlg_mgr.newSRLG(srlg_rec)
+
+                if srlg.isnumeric():
+                    srlg_rec = SRLGRecord(circuitKeys=circ_keys_list, name=hex(int(srlg)), description="Foo")
+                    srlg_mgr.newSRLG(srlg_rec)
 
 
 def check_node_exists(plan, node_name):
