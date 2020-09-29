@@ -31,9 +31,11 @@ def test_api_get_successful_response():
 # The test retrieve mpls with iterating over potential nodes 
 def test_api_get_mpls_response():
     circuit_breaker1 = utils.Circuit_breaker(timeout_limit=15)
-    state_or_states = ["New York", "New Jersey"]
+    state_or_states = ["Deleware", "New York", "New Jersey"]
     collect.collect_mpls_topo_json(baseurl, user, password, state_or_states)
-    response = circuit_breaker1.request(baseurl, uri, user, password)
+    uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+    thejson = '{"ra.run-cli-configuration": {"ra.target-list": {"ra.target": {"ra.node-ref": "MD=CISCO_EPNM!ND=NCS4K-Site1"}}, "ra.template-name": "show mpls traffic-eng topology"}}'
+    response = utils.rest_post_json(baseurl, uri, thejson, user, password)
     assert len(response) > 0    
 
 
