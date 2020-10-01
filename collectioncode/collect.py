@@ -591,70 +591,75 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 thread_data.logger.critical(
                     'EPNM server failed to retrieve MPLS topoology from CLI template.  Continue checking next node.')
                 continue
+        if jsonresponse:
+            jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
-        jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
+            thread_data.logger.info('Successfully submitted the API call to retrieve the MPLS topology.')
+            thread_data.logger.info('jobname is: ' + jobname)
 
-        thread_data.logger.info('Successfully submitted the API call to retrieve the MPLS topology.')
-        thread_data.logger.info('jobname is: ' + jobname)
-
-        notDone = True
-        thread_data.logger.info('Checking job status...')
-        results = ""
-        while notDone:
-            time.sleep(5)
-            uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
-            # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-            # thejson = json.loads(jsonresponse)
-            circuit_breaker1 = collectioncode.utils.Circuit_breaker()
-            jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
-            thejson = json.loads(jsonresponse)
-            try:
-                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                thread_data.logger.info("Job status: " + str(status))
-                if status == "SUCCESS":
-                    thread_data.logger.info("Successfully collected MPLS topology...")
-                    results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
-                        'ra.deploy-result').get('ra.transcript')
-                    notDone = False
-                elif status == "FAILURE":
+            notDone = True
+            thread_data.logger.info('Checking job status...')
+            results = ""
+            while notDone:
+                time.sleep(5)
+                uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
+                # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+                # thejson = json.loads(jsonresponse)
+                circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+                jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+                thejson = json.loads(jsonresponse)
+                try:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
+                    thread_data.logger.info("Job status: " + str(status))
+                    if status == "SUCCESS":
+                        thread_data.logger.info("Successfully collected MPLS topology...")
+                        results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
+                            'ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except KeyError:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
+                    thread_data.logger.info("Run status: " + str(status))
+                    if status == "COMPLETED":
+                        thread_data.logger.info("Successfully collected MPLS topology...")
+                        results = thejson['ra.deploy-result']['ra.transcript']
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except AttributeError:
                     thread_data.logger.propagate = True
-                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
-                    sys.exit("Collection error.  Ending execution.")
-            except KeyError:
-                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
-                thread_data.logger.info("Run status: " + str(status))
-                if status == "COMPLETED":
-                    thread_data.logger.info("Successfully collected MPLS topology...")
-                    results = thejson['ra.deploy-result']['ra.transcript']
-                    notDone = False
-                elif status == "FAILURE":
-                    thread_data.logger.propagate = True
-                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
-                    sys.exit("Collection error.  Ending execution.")
-            except AttributeError:
-                thread_data.logger.propagate = True
-                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
-                raise
+                    thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                    raise
 
-        #Getting the state for this particular node
-        seed_node = seed_node_info_state.get('node')
-        seed_node_state = ""
-        for state in state_or_states:
-            with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
-                data = json.loads(f.read())
-                list_of_nodes = data[state]
-                for node in list_of_nodes:
-                    if node["node"] == seed_node:
-                        seed_node_state = node["state"]
-                        break
+            #Getting the state for this particular node
+            seed_node = seed_node_info_state.get('node')
+            seed_node_state = ""
+            for state in state_or_states:
+                with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                    data = json.loads(f.read())
+                    list_of_nodes = data[state]
+                    for node in list_of_nodes:
+                        if node["node"] == seed_node:
+                            seed_node_state = node["state"]
+                            break
 
-        thread_data.logger.info("Database received.")
-        with open("jsongets/{state}_mplstopo.txt".format(
-                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
-                state=seed_node_state.replace(' ', '_')), 'wb') as f:
-            f.write(results)
-            f.close()
+            thread_data.logger.info("Database received.")
+            with open("jsongets/{state}_mplstopo.txt".format(
+                    # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                    # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                    state=seed_node_state.replace(' ', '_')), 'wb') as f:
+                f.write(results)
+                f.close()
+        else:
+            thread_data.logger.info("Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state: " + seed_node[0]['state'])
+            thread_data.logger.critical(
+                "Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state : " + seed_node[0]['state'])
+            sys.exit()
 
 
 def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
@@ -683,70 +688,75 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
                 thread_data.logger.critical(
                     'EPNM server failed to retrieve ISIS hostname from CLI template.  Continue checking next node')
                 continue
+        if jsonresponse:
+            jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
 
-        jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
+            thread_data.logger.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
+            thread_data.logger.info('jobname is: ' + jobname)
 
-        thread_data.logger.info('Successfully submitted the API call to retrieve the ISIS hostnames.')
-        thread_data.logger.info('jobname is: ' + jobname)
+            notDone = True
+            thread_data.logger.info('Checking job status...')
+            results = ""
+            #Getting the state for this particular node
+            seed_node = seed_node_info_state.get('node')
+            seed_node_state = ""
+            for state in state_or_states:
+                with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                    data = json.loads(f.read())
+                    list_of_nodes = data[state]
+                    for node in list_of_nodes:
+                        if node["node"] == seed_node:
+                            seed_node_state = node["state"]
+                            break
 
-        notDone = True
-        thread_data.logger.info('Checking job status...')
-        results = ""
-        #Getting the state for this particular node
-        seed_node = seed_node_info_state.get('node')
-        seed_node_state = ""
-        for state in state_or_states:
-            with open("jsonfiles/{}_potential_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
-                data = json.loads(f.read())
-                list_of_nodes = data[state]
-                for node in list_of_nodes:
-                    if node["node"] == seed_node:
-                        seed_node_state = node["state"]
-                        break
-
-        while notDone:
-            time.sleep(5)
-            uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
-            # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-            # thejson = json.loads(jsonresponse)
-            circuit_breaker1 = collectioncode.utils.Circuit_breaker()
-            jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
-            thejson = json.loads(jsonresponse)
-            try:
-                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
-                thread_data.logger.info("Job status: " + str(status))
-                if status == "SUCCESS":
-                    thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
-                    results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
-                        'ra.deploy-result').get('ra.transcript')
-                    notDone = False
-                elif status == "FAILURE":
+            while notDone:
+                time.sleep(5)
+                uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
+                # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+                # thejson = json.loads(jsonresponse)
+                circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+                jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+                thejson = json.loads(jsonresponse)
+                try:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
+                    thread_data.logger.info("Job status: " + str(status))
+                    if status == "SUCCESS":
+                        thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                        results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
+                            'ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except KeyError:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
+                    thread_data.logger.info("Run status: " + status)
+                    if status == "COMPLETED":
+                        thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                        results = thejson.get('ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get ISIS hostnames!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except AttributeError:
                     thread_data.logger.propagate = True
-                    thread_data.logger.critical("Could not get MPLS topology!!!!!!")
-                    sys.exit("Collection error.  Ending execution.")
-            except KeyError:
-                status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
-                thread_data.logger.info("Run status: " + status)
-                if status == "COMPLETED":
-                    thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
-                    results = thejson.get('ra.deploy-result').get('ra.transcript')
-                    notDone = False
-                elif status == "FAILURE":
-                    thread_data.logger.propagate = True
-                    thread_data.logger.critical("Could not get ISIS hostnames!!!!!!")
-                    sys.exit("Collection error.  Ending execution.")
-            except AttributeError:
-                thread_data.logger.propagate = True
-                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
-                raise
+                    thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                    raise
 
-        thread_data.logger.info("Database received.")
-        with open("jsongets/{state}_hostnames.txt".format(
-                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                # state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
-                state=seed_node_state.replace(' ', '_')), 'wb') as f:
-            f.write(results)
-            f.close()
+            thread_data.logger.info("Database received.")
+            with open("jsongets/{state}_hostnames.txt".format(
+                    # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                    # state=seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                    state=seed_node_state.replace(' ', '_')), 'wb') as f:
+                f.write(results)
+                f.close()
+        else:
+            thread_data.logger.info("Exiting the system because EPNM server failed to retrieve ISIS hostname from CLI template for any potential nodes for state :" + seed_node[0]['state'])
+            thread_data.logger.critical(
+                "Exiting the system because EPNM server failed to retrieve ISIS hostname from CLI template for any potential nodes for state : " + seed_node[0]['state'])
+            sys.exit()
 
 
 def process_hostnames(state_or_states):

@@ -36,7 +36,17 @@ def test_api_get_mpls_response():
     uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
     thejson = '{"ra.run-cli-configuration": {"ra.target-list": {"ra.target": {"ra.node-ref": "MD=CISCO_EPNM!ND=NCS4K-Site1"}}, "ra.template-name": "show mpls traffic-eng topology"}}'
     response = utils.rest_post_json(baseurl, uri, thejson, user, password)
-    assert len(response) > 0    
+    assert len(response) > 0
+
+# The test retrieve hostname with iterating over potential nodes
+def test_api_get_hostname_response():
+    circuit_breaker1 = utils.Circuit_breaker(timeout_limit=15)
+    state_or_states = ["Deleware", "New York", "New Jersey"]
+    collect.collect_hostnames_json(baseurl, user, password, state_or_states)
+    uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+    thejson = '{"ra.run-cli-configuration": {"ra.target-list": {"ra.target": {"ra.node-ref": "MD=CISCO_EPNM!ND=NCS4K-Site1"}}, "ra.template-name": "show mpls traffic-eng topology"}}'
+    response = utils.rest_post_json(baseurl, uri, thejson, user, password)
+    assert len(response) > 0
 
 
 # Setting the timeout value low to force the exception
