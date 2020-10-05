@@ -341,8 +341,17 @@ def main():
         # sites = []
         # site_manager = plan.getNetwork().getSiteManager()
         # found = False
+        dictlength =  len(l1nodesdict)
+        logging.info("number of nodes "+str(dictlength))
+        counter = 0
         for k1, v1 in l1nodesdict.items():
-            tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+            if v1['Longitude'] is None and v1['Latitude'] is None:
+                logging.info("Assigning STATIC values of Longitude and Latitude")
+                tmpnode = {'Name': v1['Name'], 'X': 0.00, 'Y': 0.00}
+            else:
+                logging.info("Assigning ACTUAL values to Longitude and Latitude")
+                tmpnode = {'Name': v1['Name'], 'X': v1['Longitude']['fdtn.double-amount'], 'Y': v1['Latitude']['fdtn.double-amount']}
+
             # site_rec = SiteRecord(name=tmpnode['Name'], latitude=float(tmpnode['Y']), longitude=float(tmpnode['X']))
             try:
                 # tmpsite = site_manager.newSite(siteRec=site_rec)
