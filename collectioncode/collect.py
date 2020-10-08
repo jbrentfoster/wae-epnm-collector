@@ -572,8 +572,6 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
     run_get_4k_seed_nodes()
     get_potential_seednode(state_or_states)
     seed_node_list = get_random_nodes_for_states(state_or_states)
-    # import pdb
-    # pdb.set_trace()
     for seed_node in seed_node_list:
         for seed_node_info_state in seed_node:
             jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
@@ -1668,8 +1666,7 @@ def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
 
 
 def process_vcfdn(vcfdn_dict):
-    l1hops = collectmultilayerroute_json(vcfdn_dict['baseURL'], vcfdn_dict['epnmuser'], vcfdn_dict['epnmpassword'],
-                                         vcfdn_dict['vcfdn'])
+    l1hops = collectmultilayerroute_json(vcfdn_dict['baseURL'], vcfdn_dict['epnmuser'], vcfdn_dict['epnmpassword'],vcfdn_dict['vcfdn'])
     return l1hops
 
 
@@ -1679,9 +1676,10 @@ def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     mpls_logger.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     try:
-        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
-        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        mpls_logger.info("The API response for multi_layer route for vcFdn is: " +str(jsonresponse))
+        # circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        # jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     except Exception as err:
         mpls_logger.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
         mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")

@@ -15,9 +15,14 @@ class InputError(Error):
         message -- explanation of the error
     """
 
-    def __init__(self, expression, message):
+    def __init__(self, expression, statuscode, message):
         self.expression = expression
-        self.message = message
+        self.statuscode = statuscode
+        self.message = message 
+
+    # def __init__(self, expression, message):
+    #     self.expression = expression
+    #     self.message = message
 
         # class TransitionError(Error):
         #     """Raised when an operation attempts a state transition that's not
@@ -33,8 +38,4 @@ class InputError(Error):
         #         self.previous = previous
         #         self.next = next
         #         self.message = message
-
-    def __init__(self, expression, statuscode, message):
-        self.expression = expression
-        self.statuscode = statuscode
-        self.message = message    
+  
