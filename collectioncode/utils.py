@@ -27,9 +27,9 @@ def rest_get_json(baseURL, uri, user, password):
     restURI = baseURL + uri
     try:
         r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False)
+        collect.thread_data.logger.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
         if r.status_code == 200:
-            thejson = json.dumps(r.json(), indent=2)
-            return thejson
+            return json.dumps(r.json(), indent=2)
         else:
             thejson = json.loads(json.dumps(r.json(), indent=2))
             errormessage = thejson.get('rc.errors').get('error').get('error-message')
@@ -96,8 +96,8 @@ class Circuit_breaker:
                         errormessage = thejson.get('rc.errors').get('error').get('error-message')
                         collect.thread_data.logger.info('error message is: ' + errormessage)
                         raise errors.InputError(restURI, "HTTP status code: " + str(r.status_code), "Error message returned: " + errormessage)
-                except Exception as err:
-                    collect.thread_data.logger.error('Exception raised: ' + str(type(err)) + '\nURL: {}\n{}\n{}'.format(err.expression, err.statuscode,err.message))
+                except errors.InputError as err:
+                    collect.thread_data.logger.error('Exception raised: ' + str(type(err)) + '\nURL: {}\n{}\n{}'.format(err.expression, err.statuscode, err.message))
                     self.record_failure()
                     if self.failed_tries >= self.failure_threshold:
                         temp = []

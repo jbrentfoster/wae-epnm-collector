@@ -1671,13 +1671,14 @@ def process_vcfdn(vcfdn_dict):
 
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
+    global thread_data
+    thread_data.logger = logging.getLogger('mpls')
     l1hops = {}
     mpls_logger = logging.getLogger('mpls')
     mpls_logger.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     try:
         jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        mpls_logger.info("The API response for multi_layer route for vcFdn is: " +str(jsonresponse))
         # circuit_breaker1 = collectioncode.utils.Circuit_breaker()
         # jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     except Exception as err:
