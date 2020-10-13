@@ -474,7 +474,7 @@ def main():
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
-        plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
+        plan.serializeToFileSystem(planfiles_root + current_time.translate(None,'-') + '.pln')
         logging.info("Plan file created.")
 
     #The building 'combined' plan file section
