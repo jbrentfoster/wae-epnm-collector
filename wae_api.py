@@ -210,7 +210,7 @@ def main():
                         {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
-                        {'type': 'mpls_ondemand', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
+                        {'type': 'mpls_ondemand', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list}
                         # {'type': 'optical_phase_b', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         # {'type': 'optical_phase_c', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
                         ]
