@@ -125,6 +125,31 @@ def collection_router(collection_call):
         #     thread_data.logger.info("Getting multi-layer routes for OTN services...")
         #     collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                                         #    collection_call['epnmpassword'])
+        if collection_call['type'] == "mpls_ondemand":
+            logging.info("Starting to collect mpls data")
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info('Starting to collect mpls data')
+            thread_data.logger.info("Collecting MPLS topology...")
+            collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+            thread_data.logger.info("Collecting ISIS hostnames...")
+            collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+            process_hostnames(collection_call['state_or_states'])
+            thread_data.logger.info("Processing MPLS topology...")
+            processMPLS(collection_call['state_or_states'])
+
+            thread_data.logger.info("Adding MPLS TL data to L3 links...")
+            try:
+                add_mpls_tl_data(collection_call['state_or_states'])
+            except Exception as err:
+                thread_data.logger.propagate = True
+                thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
+                sys.exit("Collection error.  Halting execution.")
+
+            thread_data.logger.info("Adding vc-fdn to L3links...")
+            add_vcfdn_l3links(collection_call['state_or_states'])
+
+
     except Exception as err:
         thread_data.logger.propagate = True
         thread_data.logger.debug('Exception: Setting the build_plan_check variable to False')                                         
