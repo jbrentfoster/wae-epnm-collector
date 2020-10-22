@@ -399,8 +399,9 @@ def main():
                 (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
                 None)
             node = node_manager.getNode(NodeKey(l3_node['Name']))
-            node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-            node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+            if tmp_node:
+                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
 
         # Add OCH-Trails (wavelengths) to plan
         logging.info("Adding OCH Trails as L1 circuits to the plan...")
