@@ -69,7 +69,8 @@ def main():
                         help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
                         help="Add this flag to set the logging level.")
-    parser.add_argument('-t', '--timeout', metavar='N', type=str, nargs='?', help="Add this flag to set the timeout value manually.")               
+    parser.add_argument('-t', '--timeout', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Timeout_limit'],
+                        help="Add this flag to set the timeout value manually.")
     parser.add_argument('-b', '--build_plan', action='store_true',
                         help="Add this flag to build the plan file.")
     parser.add_argument('-d', '--delete_previous', action='store_true',
