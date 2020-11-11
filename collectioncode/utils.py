@@ -26,7 +26,7 @@ def rest_get_json(baseURL, uri, user, password):
     headers = {'content-type': appformat, 'accept': appformat}
     restURI = baseURL + uri
     try:
-        r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False)
+        r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False, timeout=timeout_limit)
         collect.thread_data.logger.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
         if r.status_code == 200:
             return json.dumps(r.json(), indent=2)
@@ -118,7 +118,7 @@ def rest_get_xml(baseURL, uri, user, password):
     headers = {'content-type': appformat, 'accept': appformat}
     restURI = baseURL + uri
     try:
-        r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False)
+        r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False, timeout=timeout_limit)
         # print "HTTP response code is: " + str(r.status_code)
         if r.status_code == 200:
             response_xml = xml.dom.minidom.parseString(r.content)
