@@ -1331,7 +1331,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         # jsonaddition = json.loads(jsonresponse)
         counter = True
         retrycount = 1
-        timoutlimit = 2
+        timoutlimit = 660
         while counter:
             try:
                 # circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
