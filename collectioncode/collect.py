@@ -8,6 +8,7 @@ import traceback
 import wae_api
 import configparser
 import threading
+from requests.exceptions import Timeout
 from multiprocessing.dummy import Pool as ThreadPool
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
 
@@ -1318,29 +1319,55 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
     incomplete = True
     startindex = 0
     jsonmerged = {}
+    jsonaddition = {}
     while incomplete:
         uri = "/data/v1/cisco-service-network:virtual-connection?type=optical&.startIndex=" + str(startindex)
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
-        circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
-        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
-        jsonaddition = json.loads(jsonresponse)
-        try:
-            firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
-            lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
-        except Exception:
-            thread_data.logger.propagate = True
-            thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
-            raise
+        
+        ##### commenting this for read timeout retry #####
+        # circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
+        # jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+        # jsonaddition = json.loads(jsonresponse)
+        counter = True
+        retrycount = 1
+        timoutlimit = 660
+        while counter:
+            try:
+                # circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
+                circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timoutlimit)
+                jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+                jsonaddition = json.loads(jsonresponse)
+                thread_data.logger.info("Received optical response : ")
+                counter = False
+            except Timeout as ex:
+                thread_data.logger.error("Timeout Exception Raised: "+ str(ex))
+                thread_data.logger.error("Timeout Exceeption in VC Optical API CALL *********************")
+                thread_data.logger.info("Retry: " + str(retrycount)) 
+                if retrycount == 5:
+                    thread_data.logger.info("Reached Retry count limit, Stop retrying and write data. ")
+                    counter = False
+                    break
+                retrycount += 1
+        if jsonaddition:
+            try:
+                firstindex = jsonaddition.get('com.response-message').get('com.header').get('com.firstIndex')
+                lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
+            except Exception:
+                thread_data.logger.propagate = True
+                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                raise
 
-        if (lastindex - firstindex) == 99 and lastindex != -1:
-            startindex += 100
-            merge(jsonmerged, jsonaddition)
-        elif lastindex == -1:
-            incomplete = False
+            if (lastindex - firstindex) == 99 and lastindex != -1:
+                startindex += 100
+                merge(jsonmerged, jsonaddition)
+            elif lastindex == -1:
+                incomplete = False
+            else:
+                incomplete = False
+                merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-            merge(jsonmerged, jsonaddition)
 
     with open("jsongets/vc-optical.json", 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
