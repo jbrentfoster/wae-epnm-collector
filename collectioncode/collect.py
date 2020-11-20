@@ -1331,7 +1331,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
         # jsonaddition = json.loads(jsonresponse)
         counter = True
         retrycount = 1
-        timoutlimit = 660
+        timoutlimit = 2
         while counter:
             try:
                 # circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timeout_limit)
@@ -1368,9 +1368,9 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
                 merge(jsonmerged, jsonaddition)
         else:
             incomplete = False
-
-    with open("jsongets/vc-optical.json", 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    if jsonmerged:
+        with open("jsongets/vc-optical.json", 'wb') as f:
+            f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def add_vcfdn_l3links(state_or_states):
