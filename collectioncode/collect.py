@@ -51,14 +51,15 @@ def merge(a, b):
     return a
 
 def get_ports(baseURL, cienauser, cienapassw, token):
-    incomplete = True
-    jsonmerged = {}
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     for node in nodesData:
         networkConstrId = node['id']
-    # uri = "/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs%2Cplanned&limit=500&sortBy=name"
-        uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
+        incomplete = True
+        jsonmerged = {}
+        uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
+
+        # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
         URL = baseURL + uri
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
@@ -92,8 +93,10 @@ def get_links(baseURL, cienauser, cienapassw, token):
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
         incomplete = True
         jsonmerged = {}
-        uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+
+        # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
+        # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
         URL = baseURL + uri
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
@@ -142,6 +145,29 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 
 def get_l3_circuits(baseURL, cienauser, cienapassw, token):
     l3_collect.get_l3_circuits(baseURL, cienauser, cienapassw, token)
+
+
+# def get_links(baseURL, cienauser, cienapassw, token):
+#     # uri = "/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs%2Cplanned&limit=200&offset=0&searchFields=data.attributes.mgmtName%2Cdata.attributes.userLabel%2Cdata.attributes.nativeName%2Cdata.attributes.serviceClass%2Cdata.attributes.displayData.operationState%2Cdata.attributes.layerRate%2Cdata.attributes.layerRateQualifier%2Cdata.attributes.note%2Cdata.attributes.tpeLocations%2Cdata.attributes.neNames%2Cdata.attributes.displayData.adminState%2Cdata.attributes.displayData.intentLifeCyclePhaseString%2Cdata.attributes.displayData.intentDeploymentStateString%2Cdata.attributes.resilienceLevel%2Cdata.attributes.domainTypes%2Cdata.attributes.customerName%2Cdata.attributes.displayData.displayPhotonicSpectrumData.frequency%2Cdata.attributes.displayData.displayPhotonicSpectrumData.channel%2Cdata.attributes.displayData.displayPhotonicSpectrumData.wavelength%2Cdata.attributes.lqsData.fiber.measuredLoss%2Cdata.attributes.lqsData.fiber.modeledLoss%2Cdata.attributes.lqsData.fiber.modeledMargin%2Cdata.attributes.lqsData.fiber.method%2Cdata.attributes.lqsData.fiber.reconciled%2Cdata.attributes.description%2Cdata.attributes.tags&searchText=&serviceClass=Fiber%2COTU%2COSRP%20Line%2COSRP%20Link%2CROADM%20Line&sortBy=name"
+#     uri = "/nsi/api/v2/search/fres?serviceClass=IP,Tunnel,OTU,LLDP,Photonic&layerRate=ETHERNET,MPLS,OTU4,ODU4"
+#     URL = baseURL + uri
+#     total_link_rec = utils.rest_get_json(URL, cienauser, cienapassw, token)
+#     # Inserting this line for testing since the response is too large to print it
+#     with open('jsongets/links_total.json', 'wb') as f:
+#         f.write(total_link_rec)
+#     totallinks = json.loads(total_link_rec)
+#     totalrec = totallinks['meta']['total']
+#     logging.debug(
+#         'This is the API response for the [tottal] field:\n{}'.format(totalrec))
+
+#     urilinkdata = "/nsi/api/v2/search/fres?serviceClass=IP,Tunnel,OTU,LLDP,Photonic&layerRate=ETHERNET,MPLS,OTU4,ODU4&offset=0&limit="+str(totalrec)
+#     URL_link = baseURL + urilinkdata
+#     logging.debug(
+#     'This is URL to retrieveeeeeeee link data:\n{}'.format(URL_link))
+#     link_data = utils.rest_get_json(URL_link, cienauser, cienapassw, token)
+#     # Inserting this line for testing since the response is too large to print it
+#     with open('jsongets/all_l1_l3_links.json', 'wb') as f:
+#         f.write(link_data)
 
 
 def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
