@@ -46,88 +46,200 @@ from com.cisco.wae.design.model.net import LSPRecord
 def generateL3nodes(plan, l3nodeslist):
     for l3node in l3nodeslist:
         name = l3node['attributes']['name']
-        logging.debug('This is the node:\n{}'.format(l3node))
+        # logging.debug('This is the node:\n{}'.format(l3node))
+        if check_node_exists(plan, name):
+            logging.warn("Node already exists in plan file, will not add duplicate: " + name)
+            continue
         longitude = float(l3node['longitude'])
         lat = float(l3node['latitude'])
-        site = l3node['wae_site_name']
+        # site = l3node['wae_site_name']
         vendor = 'Ciena'
-        model = 'Ciena6500'
-        nodeRec = NodeRecord(name=name, vendor=vendor, model=model, site=SiteKey(
-            site))
-        newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
+        # model = 'Ciena6500'
+        model = l3node['attributes']['resourceType']
+        os = l3node['attributes']['softwareVersion']
+        description = l3node['attributes']['deviceType']
+        ipManage = l3node['attributes']['ipAddress']
+        nodeRec = NodeRecord(name=name,
+                             model=model,
+                             vendor=vendor,
+                             os=os,
+                             description=description,
+                             ipManage=ipManage)
+        newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec) 
+        # nodeRec = NodeRecord(name=name, vendor=vendor, model=model, site=SiteKey(
+        #     site))
+        # newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
+
+def generateL3circuits(plan, l3linksdict):
+    i = 0
+    linkslist = []
+    duplicatelink = False
+    circ_srlgs = {}
+    circuit_name_list = []
+
+    for k1, v1 in l3linksdict.items():
+        # logging.info "**************Nodename is: " + k1
+        logging.debug('Node Name is : {}'.format(k1))
+        firstnode = k1
+        for k2, v2 in v1.items():
+            if isinstance(v2, dict):
+                for k3, v3 in v2.items():
+                    # logging.warn "***************Linkname is: " + k3
+                    lastnode = v3['Neighbor']
+                    logging.debug('lastnode Name is : {}'.format(lastnode))
+                    # discoveredname = v3['discoveredname']
+                    try:
+                        affinity = v3['Local Affinity']
+                    except Exception as err:
+                        affinity = ""
+                    firstnode_ip = [v3['Local IP']]
+                    firstnode_intf = v3['Local Intf']
+                    lastnode_ip = [v3['Neighbor IP']]
+                    lastnode_intf = v3['Neighbor Intf']
+                    # te_metric = int(v3['TE Metric'])
+                    te_metric = 0
+                    try:
+                        igp_metric = int(v3['Local IGP Metrics'])
+                    except Exception as err:
+                        igp_metric = 0
+                    phy_bw = float(v3['Local Phy BW'])
+                    rsvpbw = float(v3['Local RSVP BW'])
+                    intfbw = getintfbw(phy_bw)
+                    try:
+                        tp_description = v3['Description']
+                    except Exception as err:
+                        tp_description = ""
+                    discoveredname = tp_description
+                    srlgs = []
+                    if 'SRLGs' in v3:
+                        srlgs = v3['SRLGs']
+                    for linkdiscoveredname in linkslist:
+                        if discoveredname == linkdiscoveredname: duplicatelink = True
+                    if not duplicatelink:
+                        linkslist.append(discoveredname)
+                        name = ""
+                        if tp_description == "":
+                            for elem in circuit_name_list:
+                                node_check = elem['1'] == firstnode and elem['3'] == lastnode
+                                interface_check = elem['2'] == firstnode_intf and elem['4'] == lastnode_intf
+                                if node_check and interface_check:
+                                    name = elem['0']
+                                    break
+                                elif elem['1'] == firstnode and elem['2'].startswith('BDI'):
+                                    name = elem['0']
+                                    break
+                            if name == "":
+                                i += 1
+                                name = 'l3_circuit_{}/{}/{}'.format(int(i), firstnode, lastnode)
+                        else:
+                            if 'CktId: ' in tp_description:
+                                name = tp_description.split('CktId: ')[1]
+                            # Fix - GLH - 2-18-19 #
+                            elif 'CID:' in tp_description:
+                                name = tp_description.split('CID:')[1]
+                            # Fix End - GLH - 2-18-19 #
+                            else:
+                                name = tp_description
+                        l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
+                        logging.debug('Circuit Created : {}'.format(l3circuit))
 
 
-def generateL3links(plan, l1linksdict):
+def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,igp_metric, te_metric):
+    nodeAKey = NodeKey(l3nodeA)
+    nodeBKey = NodeKey(l3nodeB)
+
+    # nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
+    # nodeBintfname = "L3_intf_" + name + "_to_" + l3nodeA
+
+    scale = 16  ## equals to hexadecimal
+    num_of_bits = 32
+    # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
+    affinities = []
+    try:
+        affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
+        c = 0
+        for afbit in reversed(affinitylist):
+            if afbit == '1':
+                affinities.append(c)
+            c += 1
+    except Exception as err:
+        affinities = []
+
+    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeA_ip, igpMetric=igp_metric)
+    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric)
+    circRec = CircuitRecord(name=name)
+    network = plan.getNetwork()
+    try:
+        circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
+        return circuit
+    except Exception as err:
+        logging.warn('Could not create circuit for: ' + name)
+        logging.warn(err)
+
+def getintfbw(bw):
+    intfbw = 0
+    if bw > 0 and bw <= 1000000:
+        intfbw = 1000
+    elif bw > 1000000 and bw <= 10000000:
+        intfbw = 10000
+    elif bw > 10000000 and bw <= 40000000:
+        intfbw = 40000
+    elif bw > 40000000 and bw <= 100000000:
+        intfbw = 100000
+    else:
+        logging.warn("Error determining interface bandwidth!!!")
+    return intfbw
+
+# def generateL3nodes(plan, l3nodelist, data):
+
+#     for l3node in l3nodelist:
+#         name = l3node['attributes']['name']
+#         if check_node_exists(plan, name):
+#             logging.warn("Node already exists in plan file, will not add duplicate: " + name)
+#             continue
+#         vendor = 'Ciena'
+#         model = 'Ciena6500'
+#         os = ""
+#         description = ""
+#         ipManage = ""
+#         # import pdb
+#         # pdb.set_trace()
+#         for node in data['data']:        
+#             if node['attributes']['name'] == name:
+#                 model = node['attributes']['resourceType']
+#                 os = node['attributes']['softwareVersion']
+#                 description = node['attributes']['deviceVersion']
+#                 ipManage = node['attributes']['ipAddress']
+#                 break
+#         nodeRec = NodeRecord(name=name,
+#                              model=model,
+#                              vendor=vendor,
+#                              os=os,
+#                              description=description,
+#                              ipManage=ipManage)
+#         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)        
+
+def check_node_exists(plan, node_name):
+    node_manager = plan.getNetwork().getNodeManager()
+    all_node_keys = node_manager.getAllNodeKeys()
+    for node_key in all_node_keys:
+        if node_key.name == node_name:
+            # logging.info("4k node already exists in plan, skipping this one...")
+            return True
+    return False
+
+def generateL3links(plan, l3linksdict):
     l1LinkManager = plan.getNetwork().getNodeManager.getLgetManager()
 
     for l1link in l1linksdict:
         print(l1link['name'])
-        l1nodeAKey = L1NodeKey(l1link['l1nodeA'])
-        l1nodeBKey = L1NodeKey(l1link['l1nodeB'])
+        l1nodeAKey = L1NodeKey(l1link['l3nodeA'])
+        l1nodeBKey = L1NodeKey(l1link['l3nodeB'])
         description = l1link['description']
         l1linkRec = L1LinkRecord(
             name=l1link['name'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
         try:
             l1LinkManager.newL1Link(l1linkRec)
         except Exception as err:
-            logging.warn("Could not add L1 link to the plan!")
+            logging.warn("Could not add L3 link to the plan!")
             logging.warn(err)
-
-
-def generateL3circuits(plan, och_trails):
-    for och_trail in och_trails:
-        name = och_trail['CircuitID']
-        firstl1node = och_trail['StartL1Node']
-        lastl1node = och_trail['EndL1Node']
-        # wavelength = och_trail['Wavelength']
-        bw = int(och_trail['BW'])
-        portAname = och_trail['Channel']
-        portBname = och_trail['Channel']
-        l1hops = och_trail['Ordered_Hops']
-        status = och_trail['status']
-        generateL3circuit(plan, name, firstl1node, lastl1node,
-                          portAname, portBname, l1hops, bw, status)
-
-
-def generateL3circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1hops, bw, status):
-    l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
-    l1nodeAKey = L1NodeKey(l1nodeA)
-    l1nodeBKey = L1NodeKey(l1nodeB)
-    l1portRecA = L1PortRecord(name=l1portAname, l1Node=l1nodeAKey, capacity=bw)
-    l1portRecB = L1PortRecord(name=l1portBname, l1Node=l1nodeBKey, capacity=bw)
-
-    l1portManager.newL1Port(l1portRecA)
-    l1portManager.newL1Port(l1portRecB)
-
-    l1portAkey = L1PortKey(name=l1portAname, l1Node=l1nodeAKey)
-    l1portBkey = L1PortKey(name=l1portBname, l1Node=l1nodeBKey)
-
-    l1circuitrec = L1CircuitRecord(
-        name=name, l1PortAKey=l1portAkey, l1PortBKey=l1portBkey, bandwidth=bw, tags=[status])
-
-    l1circuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
-    l1circuit = l1circuitManager.newL1Circuit(l1circuitrec)
-
-    l1circKey = L1CircuitKey(l1PortAKey=l1portAkey, l1PortBKey=l1portBkey)
-    l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1)
-    l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
-    l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
-
-    # l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
-
-    hoptype = HopType('PathStrict', 1)
-    l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1nodeA), step=0,
-                                      type=hoptype)
-    l1circuitpath.addHop(l1hoprec)
-    c = 1
-    for l1hop in l1hops:
-        l1_nodeA_key = L1NodeKey(l1hop['NodeA'])
-        l1_nodeB_key = L1NodeKey(l1hop['NodeB'])
-        l1_link_name = l1hop['Name']
-        l1_link_key = L1LinkKey(l1_link_name, l1_nodeA_key, l1_nodeB_key)
-        l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(
-        ), hopNode=l1_nodeA_key, hopLink=l1_link_key, step=c, type=hoptype)
-        l1circuitpath.addHop(l1hoprec)
-        hops = l1circuitpath.getHops()
-        c += 1
-    return l1circuit

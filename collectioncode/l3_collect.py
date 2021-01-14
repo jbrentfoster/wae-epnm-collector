@@ -1,14 +1,3 @@
-# ===================================================
-# ===================================================
-
-
-# Stub in for the l3 code
-
-
-# ===================================================
-# ===================================================
-
-
 import time
 import re
 import json
@@ -99,79 +88,7 @@ def get_l3_nodes():
     with open('jsonfiles/l3sites.json', 'wb') as f:
         f.write(site_list)
 
-# def get_l3_links(baseURL, cienauser, cienapassw, token):
-#     nodes = {}
-#     l3nodesAll = utils.open_file_load_data('jsonfiles/l3nodes.json')
-#     for node in l3nodesAll:
-#         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
-#     l3links_list = []
-#     dupl_check = {}
-#     for l3nodes in l3nodesAll:
-#         networkId = l3nodes['id']
-#         nodeName = l3nodes['attributes']['name']
-#         loopbackAddress = l3nodes['attributes']['l2Data']['loopbackAddresses'][0]
-#         nodes[nodeName] = {'loopback address': loopbackAddress}
-#         fileName = 'fre_'+networkId
-#         logging.debug('Filename :\n{}'.format(fileName))
-#         # import pdb
-#         # pdb.set_trace()
-#         with open('jsongets/{}.json'.format(fileName), 'rb') as f:
-#             thejson = f.read()
-#             f.close()    
-#         link_data = json.loads(thejson)
-#         if link_data.get('included'):
-#             included = link_data['included']
-#         # logging.debug(
-#         #     'This is the API response for the [included] field:\n{}'.format(included))
 
-#         # all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
-#         # data = all_links_dict['data']
-#         # included = all_links_dict['included']
-
-#         # Making a dictionary w/ the l1node's id and wae_site_name as the key/value pairs for later use
-#         # # node_data = utils.open_file_load_data("jsonfiles/l3nodes.json")
-#         # # for node in node_data:
-#         # node_key_val['{}'.format(l3nodes['id'])] = l3nodes['attributes']['name']
-
-#         logging.debug(
-#             'This is the vaallue of len(included):\n{}'.format(len(included)))
-#         for i in range(len(included)):
-#             if included[i]['type'] == 'endPoints':
-#                 if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
-#                     id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-#                     linkId1 = included[i]['relationships']['tpes']['data'][0]['id']
-#                 if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
-#                     id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-#                     linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-#                 # logging.debug('This is the value of ID1:\n{}'.format(id1))
-#                 # logging.debug('This is the value of ID2:\n{}'.format(id2))
-#             else:
-#                 break
-#             if 'network1' in id1:
-#                 break
-#             new_obj = {}
-#             if id1 and id2:
-#                 new_obj['name'] = included[i]['id'][:-2]
-#                 if new_obj['name'] in dupl_check :
-#                     continue
-#                 # Duplicate but okay for readability
-#                 networkConstructA_id = id1
-#                 networkConstructB_id = id2
-#                 if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
-#                     new_obj['l3nodeA'] = node_key_val[networkConstructA_id]
-#                     new_obj['l3nodeB'] = node_key_val[networkConstructB_id]
-                    # get_link_data(id1,linkId1,id2,link,nodes[nodeName] )
-#                 else:
-#                     continue
-#                 new_obj['description'] = new_obj['l3nodeA'] + \
-#                     '-' + new_obj['l3nodeB'] + '-' + str(i)
-#                 dupl_check[new_obj['name']] = i
-#                 l3links_list.append(new_obj)
-#     l3links_list = json.dumps(
-#         l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
-#     logging.debug('These are the l3 links:\n{}'.format(l3links_list))
-#     with open('jsonfiles/l3links.json', 'wb') as f:
-#         f.write(l3links_list)
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
     nodes = {}
@@ -181,77 +98,81 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
     for node in dataAllNodes:
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
     l3links_list = []
-    dupl_check = {}
     for l3nodes in l3nodesAll:
+        dupl_check = {}
         networkId = l3nodes['id']
-        node = l3nodes['attributes']['name']
-        loopbackAddress = l3nodes['attributes']['l2Data'][0]['loopbackAddresses'][0]
-        nodes[node] = {'loopback address': loopbackAddress}
-        fileName = 'fre_'+networkId
-        # fileName = 'fre_0d5dfa44-202e-3b38-b78e-7ac8e463ae76'
-        logging.debug('Filename :\n{}'.format(fileName))
-        # nodes[node] = {'Loopback Address': '10.10.10.20'}
-        nodes[node]['Links'] = dict()
-        i = 0
-        with open('jsongets/{}.json'.format(fileName), 'rb') as f:
-            thejson = f.read()
-            f.close()    
-        link_data = json.loads(thejson)
-        if link_data.get('included'):
-            included = link_data['included']
-        logging.debug(
-            'This is the vaallue of len(included):\n{}'.format(len(included)))
-        for i in range(len(included)):
-            val = i+1
-            logging.debug('Length of i+1 :{}'.format(val))
-            if val < len(included):
-                if included[i]['type'] == 'endPoints':
-                    if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
-                        id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                        linkId1 = included[i]['relationships']['tpes']['data'][0]['id']
-                    if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
-                        id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-                        linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
-                    # logging.debug('This is the value of ID1:\n{}'.format(id1))
-                    # logging.debug('This is the value of ID2:\n{}'.format(id2))
-                else:
-                    break
-                if 'network1' in id1:
-                    break
-                i += 1
-                linkid = "Link" + str(i)
-                new_obj = {}
-                nodes[node]['Links'][linkid] = dict()
-                # new_obj = nodes[node]['Links'][linkid]
-                if id1 and id2:
-                    new_obj['name'] = included[i]['id'][:-2]
-                    # if new_obj['name'] in dupl_check :
-                    #     continue
-                    # Duplicate but okay for readability
-                    networkConstructA_id = id1
-                    networkConstructB_id = id2
-                    if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
-                        # new_obj['l3nodeA'] = node_key_val[networkConstructA_id]
-                        new_obj['Neighbor'] = node_key_val[networkConstructB_id]
-                        new_obj['description'] = node_key_val[networkConstructA_id] + \
-                        '-' + node_key_val[networkConstructB_id] + '-' + str(i)
+        if networkId != '4af8b77b-3c91-32eb-b5fd-abb16169b541':
+            counter = 0
+            node = l3nodes['attributes']['name']
+            loopbackAddress = l3nodes['attributes']['l2Data'][0]['loopbackAddresses'][0]
+            nodes[node] = {'loopback address': loopbackAddress}
+            fileName = 'fre_'+networkId
+            # fileName = 'fre_0d5dfa44-202e-3b38-b78e-7ac8e463ae76'
+            logging.debug('Filename :\n{}'.format(fileName))
+            nodes[node]['Links'] = dict()
+            with open('jsongets/{}.json'.format(fileName), 'rb') as f:
+                thejson = f.read()
+                f.close()    
+            link_data = json.loads(thejson)
+            if link_data.get('included'):
+                included = link_data['included']
+            logging.debug(
+                'This is the vaallue of len(included):\n{}'.format(len(included)))
+            for i in range(len(included)):
+                val = i+1
+                logging.debug('Length of i+1 :{}'.format(val))
+                if val < len(included):
+                    if included[i]['type'] == 'endPoints':
+                        if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
+                            id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                            linkId1 = included[i]['relationships']['tpes']['data'][0]['id']
+                        if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
+                            id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                            linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
+                        # logging.debug('This is the value of ID1:\n{}'.format(id1))
+                        # logging.debug('This is the value of ID2:\n{}'.format(id2))
+                    else:
+                        break
+                    if 'network1' in id1:
+                        break
+
+                    new_obj = {}
+                    # new_obj = nodes[node]['Links'][linkid]
+                    if id1 and id2:
                         # import pdb
                         # pdb.set_trace()
-                        get_link_data(id1,linkId1,id2,linkId2,new_obj)
-                        nodes[node]['Links'][linkid] = new_obj
-
-                        # nodes[nodeName]['Links'][linkid] = new_obj
-                    else:
-                        continue
-                    # dupl_check[new_obj['name']] = i
-                    l3links_list.append(nodes)
-    l3links_list = json.dumps(
-        l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
+                        networkConstructA_id = id1
+                        networkConstructB_id = id2
+                        if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val and networkConstructA_id != networkConstructB_id:
+                            # Duplicate but okay for readability
+                            if id1 in dupl_check :
+                                continue
+                            new_obj = get_link_data(id1,linkId1,id2,linkId2)
+                            if new_obj:
+                                counter += 1
+                                linkid = "Link" + str(counter)
+                                nodes[node]['Links'][linkid] = dict()
+                                # new_obj['l3nodeA'] = node_key_val[networkConstructA_id]
+                                new_obj['Neighbor'] = node_key_val[networkConstructB_id]
+                                new_obj['Description'] = node_key_val[networkConstructA_id] + \
+                                '-' + node_key_val[networkConstructB_id] + '-' + str(i)
+                                nodes[node]['Links'][linkid] = new_obj
+                                new_obj['Name'] = included[i]['id'][:-2]
+                                dupl_check[new_obj['Name']] = i
+                            else:
+                                continue
+                        else:
+                            continue
+                        # l3links_list.append(nodes)
+    # l3links_list = json.dumps(
+    #     l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
     # logging.debug('These are the l3 links:\n{}'.format(l3links_list))
     with open('jsonfiles/l3linksall.json', 'wb') as f:
-        f.write(l3links_list)
+        f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        # f.write(l3links_list)
 
-def get_link_data(link1,linkId1,link2,linkId2,new_obj):
+def get_link_data(link1,linkId1,link2,linkId2):
+    new_obj = {}
     filenameId1 = 'tpe_'+link1
     filenameId2 = 'tpe_'+link2
     tpeData1 = utils.open_file_load_data('jsongets/{}.json'.format(filenameId1))
@@ -266,32 +187,33 @@ def get_link_data(link1,linkId1,link2,linkId2,new_obj):
             logging.debug('link data id1 is : {}'.format(linkId1))
             if data.get('attributes').get('layerTerminations')[0]:
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                    new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                    new_obj['Local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
                     new_obj['Local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
                     new_obj['Local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                    new_obj['local Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
-                    new_obj['local RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
+                    new_obj['Local Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
+                    new_obj['Local RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
                     if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
-                        new_obj['local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
-    for data in lnkData2:
-        if linkId2 == data['id']:
-            logging.debug('link data id2 is : {}'.format(linkId2))
-            if data.get('attributes').get('layerTerminations')[0]:
-                if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                    new_obj['Neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
-                if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
-                    new_obj['Neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
-                if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
-                    new_obj['Neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
-                if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                    new_obj['Neighbor Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
-                    new_obj['Neighbor RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
-                    if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
-                        new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
-
+                        new_obj['Local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
+    if new_obj.get('Local IP'):
+        for data in lnkData2:
+            if linkId2 == data['id']:
+                logging.debug('link data id2 is : {}'.format(linkId2))
+                if data.get('attributes').get('layerTerminations')[0]:
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
+                        new_obj['Neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
+                        new_obj['Neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
+                        new_obj['Neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                    if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
+                        new_obj['Neighbor Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
+                        new_obj['Neighbor RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
+                        if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
+                            new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
+    return new_obj
 
 
 
@@ -395,8 +317,8 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
                     temp_obj['StartL3Node'] = starting_node_name
                     temp_obj['EndL3Node'] = ending_node_name
                     temp_obj['Type'] = obj['attributes']['serviceClass']
-                    import pdb
-                    pdb.set_trace()
+                    # import pdb
+                    # pdb.set_trace()
                     temp_obj['LayerRate'] = obj['attributes']['layerRate']
                     if obj.get('attributes').get('locations'):
                         temp_obj['InterfaceName'] = obj['attributes']['locations'][0]['interfaceName']
@@ -463,6 +385,3 @@ def get_l3_circuits(baseURL, cienauser, cienapassw, token):
     # else:
     #     logging.debug(
     #         'These are the l3_circuit_list values EMPTY:\n{}'.format(l3_circuit_list))
-
-
-

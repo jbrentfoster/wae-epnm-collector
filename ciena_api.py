@@ -141,6 +141,7 @@ def main():
     resttokenURI = baseURL + tokenPath
     token = None
 
+#Temporary Comment **************************************
     if token == None:
         try:
             r = requests.post(resttokenURI, proxies=proxies,
@@ -172,11 +173,8 @@ def main():
     # Get all the l1nodes
     # collect.get_l1_nodes()
 
-    # Get all the l1 linkss
+    # Get all the l1 links
     # collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
-
-    # Get all the l1 linkss
-    # collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
 
     # Code to get the l1 circuits
     # collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
@@ -188,7 +186,7 @@ def main():
     # collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
 
     # Code to get the l1 circuits
-    collect.get_l3_circuits(baseURL, cienauser, cienapassw, token_string)
+    # collect.get_l3_circuits(baseURL, cienauser, cienapassw, token_string)
 
     if build_plan:
         # Add l1sites to plan
@@ -222,10 +220,30 @@ def main():
         # planbuild.generateSites(plan, sitelist)
 
         # Add l3 nodes to plan
-        # logging.info("Adding L3 nodes to plan file")
-        # with open("jsonfiles/l3nodes.json", 'rb') as f:
-        #     l3nodeslist = json.load(f)
-        # l3_planbuild.generateL3nodes(plan, l3nodeslist)
+        logging.info("Adding L3 nodes to plan file")
+        with open("jsonfiles/l3nodes.json", 'rb') as f:
+            l3nodeslist = json.load(f)
+            f.close()
+        l3_planbuild.generateL3nodes(plan, l3nodeslist)
+        # Set node coordinates
+        logging.info("Setting node coordinates...")
+        node_manager = plan.getNetwork().getNodeManager()
+        # with open("jsonfiles/all-nodes.json", 'rb') as f:
+        #     nodesdict = json.load(f)
+        #     f.close()
+        for l3_node in l3nodeslist:
+            tmp_name = l3_node['attributes']['name']
+            tmp_node = next(
+                (item for item in l3nodeslist if item['attributes']['name'] == tmp_name),
+                None)
+            node = node_manager.getNode(NodeKey(l3_node['attributes']['name']))
+            if tmp_node:
+                node.setLatitude(float(tmp_node['latitude']))
+                node.setLongitude(float(tmp_node['longitude']))
+        # Add L3 links to plan and link with l1 links where applicable
+        logging.info("Adding L3 links...")
+        l3nodes, l3linksdict = getl3nodes()
+        l3_planbuild.generateL3circuits(plan, l3linksdict)
 
         # Add L3 links to plan
         # logging.info("Adding L1 links (ROADM degrees) ...")
@@ -249,9 +267,17 @@ def main():
     logging.info("Completed in {0:.2f} seconds".format(
         time.time() - start_time))
 
+def getl3nodes():
+    with open("jsonfiles/l3linksall.json", 'rb') as f:
+        l3linksdict = json.load(f)
+        
+    l3nodes = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {'Name': k1}
+        l3nodes.append(tmpnode)
+    return l3nodes, l3linksdict
+
 # Creating a new log object and the file to store the logs in the /archive/captures dir
-
-
 def create_log(log_name, logging_level, archive_root):
     log_name = log_name
     logging_level = logging_level
