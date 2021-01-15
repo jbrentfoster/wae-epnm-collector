@@ -102,6 +102,8 @@ def get_l1_nodes():
         f.write(site_list)
 
 def get_l1_links(baseURL, cienauser, cienapassw, token):
+
+    get_l1_links_data(baseURL, cienauser, cienapassw, token)
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
     for node in l1nodesAll:
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
@@ -109,7 +111,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
     dupl_check = {}
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
-        fileName = 'fre_'+networkId+'.json'
+        fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
         # import pdb
         # pdb.set_trace()
@@ -131,42 +133,82 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
         # # for node in node_data:
         # node_key_val['{}'.format(l1nodes['id'])] = l1nodes['attributes']['name']
 
-        logging.debug(
-            'This is the vaallue of len(included):\n{}'.format(len(included)))
+        # logging.debug(
+        #     'This is the vaallue of len(included):\n{}'.format(len(included)))
         for i in range(len(included)):
-            if included[i]['type'] == 'endPoints':
-                if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
-                    id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
-                    id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-                # logging.debug('This is the value of ID1:\n{}'.format(id1))
-                # logging.debug('This is the value of ID2:\n{}'.format(id2))
-            else:
-                break
-            if 'network1' in id1:
-                break
-            new_obj = {}
-            if id1 and id2:
-                new_obj['name'] = included[i]['id'][:-2]
-                if new_obj['name'] in dupl_check :
-                    continue
-                # Duplicate but okay for readability
-                networkConstructA_id = id1
-                networkConstructB_id = id2
-                if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
-                    new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
-                    new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
+            val = i+1
+            if val < len(included):
+                if included[i]['type'] == 'endPoints':
+                    if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
+                        id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                    if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
+                        id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                    # logging.debug('This is the value of ID1:\n{}'.format(id1))
+                    # logging.debug('This is the value of ID2:\n{}'.format(id2))
                 else:
-                    continue
-                new_obj['description'] = new_obj['l1nodeA'] + \
-                    '-' + new_obj['l1nodeB'] + '-' + str(i)
-                dupl_check[new_obj['name']] = i
-                l1links_list.append(new_obj)
+                    break
+                if 'network1' in id1:
+                    break
+                new_obj = {}
+                if id1 and id2:
+                    new_obj['name'] = included[i]['id'][:-2]
+                    if new_obj['name'] in dupl_check :
+                        continue
+                    # Duplicate but okay for readability
+                    networkConstructA_id = id1
+                    networkConstructB_id = id2
+                    if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
+                        new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
+                        new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
+                    else:
+                        continue
+                    new_obj['description'] = new_obj['l1nodeA'] + \
+                        '-' + new_obj['l1nodeB'] + '-' + str(i)
+                    dupl_check[new_obj['name']] = i
+                    l1links_list.append(new_obj)
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
     logging.debug('These are the l1 links:\n{}'.format(l1links_list))
     with open('jsonfiles/l1links.json', 'wb') as f:
         f.write(l1links_list)
+
+def get_l1_links_data(baseURL, cienauser, cienapassw, token):
+    allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
+    nodesData = allNodes['data']
+    for node in nodesData:
+        networkConstrId = node['id']
+        logging.debug('networkConstrId:\n{}'.format(networkConstrId))
+        incomplete = True
+        jsonmerged = {}
+        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+
+        # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+        URL = baseURL + uri
+        logging.debug('URL:\n{}'.format(URL))
+        while incomplete:
+            portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+            jsonaddition = json.loads(portData)
+            # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+            if jsonaddition:
+                try:
+                    next = ''
+                    if jsonaddition.get('links'):
+                        next = jsonaddition.get('links').get('next')
+                except Exception:
+                    logging.info("No data found")
+                if next:
+                    URL = next
+                    merge(jsonmerged,jsonaddition)
+                else:
+                    incomplete = False
+                    merge(jsonmerged,jsonaddition)
+
+        # Write data for each network construct id
+        filename = "l1_fre_"+networkConstrId
+        with open('jsongets/'+filename+'.json', 'wb') as f:
+            f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
+            f.close()
 
 def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     l1_circuit_list = []
@@ -176,7 +218,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     l1nodes_dict = {val: 1 for node in l1nodesAll for (key, val) in node.items() if key == 'id'}
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
-        filename = 'fre_'+networkId+'.json'
+        filename = 'l1_fre_'+networkId+'.json'
         logging.debug('filename to retrieve circuit:\n{}'.format(filename))
         # all_links_dict = utils.open_file_load_data('jsongets/fre_c9386224-d384-3b6d-b8fc-9f286626d272.json')
         all_links_dict = utils.open_file_load_data('jsongets/'+filename)
@@ -294,11 +336,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
         # logging.debug('These are the l1 circuits:\n{}'.format(l1_circuit_list))
         with open('jsonfiles/l1circuits.json', 'wb') as f:
             f.write(l1_circuit_list)
-    # else:
-    #     logging.debug(
-    #         'These are the l1_circuit_list values EMPTY:\n{}'.format(l1_circuit_list))
-
-
+    
 def merge(a, b):
     "merges b into a"
     for key in b:

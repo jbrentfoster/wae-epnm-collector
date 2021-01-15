@@ -1,13 +1,3 @@
-# ===================================================
-# ===================================================
-
-
-# Stub in for the l3 code
-
-
-# ===================================================
-# ===================================================
-
 import com.cisco.wae.design
 import logging
 
@@ -58,7 +48,11 @@ def generateL3nodes(plan, l3nodeslist):
         model = l3node['attributes']['resourceType']
         os = l3node['attributes']['softwareVersion']
         description = l3node['attributes']['deviceType']
-        ipManage = l3node['attributes']['ipAddress']
+        logging.debug(' L3 node name is : {}'.format(name))
+        if l3node.get('attributes').get('ipAddress'):
+            ipManage = l3node['attributes']['ipAddress']
+        else:
+            ipManage = ''
         nodeRec = NodeRecord(name=name,
                              model=model,
                              vendor=vendor,
@@ -76,16 +70,19 @@ def generateL3circuits(plan, l3linksdict):
     duplicatelink = False
     circ_srlgs = {}
     circuit_name_list = []
-
+    # name_reader = csv.DictReader(open('configs/may_19_circuit_names.csv'), fieldnames=('0', '1', '2', '3', '4', '5'))
+    # for row in name_reader:
+    #     circuit_name_list.append(row)
     for k1, v1 in l3linksdict.items():
         # logging.info "**************Nodename is: " + k1
         logging.debug('Node Name is : {}'.format(k1))
-        firstnode = k1
+        # firstnode = k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
                 for k3, v3 in v2.items():
                     # logging.warn "***************Linkname is: " + k3
-                    lastnode = v3['Neighbor']
+                    firstnode = v3['l3node']
+                    lastnode = v3['l3NeighborNode']
                     logging.debug('lastnode Name is : {}'.format(lastnode))
                     # discoveredname = v3['discoveredname']
                     try:
@@ -109,7 +106,7 @@ def generateL3circuits(plan, l3linksdict):
                         tp_description = v3['Description']
                     except Exception as err:
                         tp_description = ""
-                    discoveredname = tp_description
+                    discoveredname = v3['Description']
                     srlgs = []
                     if 'SRLGs' in v3:
                         srlgs = v3['SRLGs']
@@ -148,9 +145,6 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
 
-    # nodeAintfname = "L3_intf_" + name + "_to_" + l3nodeB
-    # nodeBintfname = "L3_intf_" + name + "_to_" + l3nodeA
-
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
     # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
@@ -164,11 +158,15 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
             c += 1
     except Exception as err:
         affinities = []
-
     intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeA_ip, igpMetric=igp_metric)
     intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
+    import pdb
+    pdb.set_trace()
+    logging.debug('This is circuit data : {} '.format(intfArec) )
+    logging.debug('This is circuit data : {} '.format(intfBrec))
+    logging.debug('This is circuit data : {} '.format(circRec))
     try:
         circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
         return circuit
@@ -243,3 +241,5 @@ def generateL3links(plan, l3linksdict):
         except Exception as err:
             logging.warn("Could not add L3 link to the plan!")
             logging.warn(err)
+
+
