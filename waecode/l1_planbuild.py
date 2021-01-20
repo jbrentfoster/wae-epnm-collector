@@ -43,7 +43,7 @@ def generateL1nodes(plan, l1nodelist):
         vendor = 'Ciena'
         model = 'Ciena6500'
         name = l1node['attributes']['name']
-        logging.debug('This is the node:\n{}'.format(l1node))
+        # logging.debug('This is the node:\n{}'.format(l1node))
         long = float(l1node['longitude'])
         lat = float(l1node['latitude'])
         site = l1node['wae_site_name']
@@ -52,9 +52,8 @@ def generateL1nodes(plan, l1nodelist):
 
 def generateL1links(plan, l1linksdict):
     l1LinkManager = plan.getNetwork().getL1Network().getL1LinkManager()
-
     for l1link in l1linksdict:
-        print(l1link['name'])
+        # print(l1link['name'])
         l1nodeAKey = L1NodeKey(l1link['l1nodeA'])
         l1nodeBKey = L1NodeKey(l1link['l1nodeB'])
         description = l1link['description']
@@ -65,20 +64,24 @@ def generateL1links(plan, l1linksdict):
             logging.warn("Could not add L1 link to the plan!")
             logging.warn(err)
 
-def generateL1circuits(plan, och_trails):
-        for och_trail in och_trails:
-            name = och_trail['CircuitID']
-            firstl1node = och_trail['StartL1Node']
-            lastl1node = och_trail['EndL1Node']
-            #wavelength = och_trail['Wavelength']
-            bw = int(och_trail['BW'])
-            portAname = och_trail['Channel']
-            portBname = och_trail['Channel']
-            l1hops = och_trail['Ordered_Hops']
-            status = och_trail['status']
+def generateL1circuits(plan, l1_data):
+        for l1data in l1_data:
+            name = l1data['circuitName']
+            firstl1node = l1data['startL1Node']
+            lastl1node = l1data['endL1Node']
+                if l1data['BW'] != '':
+                bw = int(l1data['BW'])
+            else:
+                bw = 0
+            portAname = l1data['portStartNode']
+            portBname = l1data['portEndNode']
+            l1hops = l1data['ordered_Hops']
+            status = l1data['status']
             generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1hops, bw, status)
 
 def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1hops, bw, status):
+    # import pdb
+    # pdb.set_trace()
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
@@ -104,8 +107,7 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
     #l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
     hoptype = HopType('PathStrict', 1)
-    l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1nodeA), step=0,
-                                    type=hoptype)
+    l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=L1NodeKey(l1nodeA), step=0,type=hoptype)
     l1circuitpath.addHop(l1hoprec)
     c = 1
     for l1hop in l1hops:

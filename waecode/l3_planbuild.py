@@ -89,24 +89,24 @@ def generateL3circuits(plan, l3linksdict):
                         affinity = v3['Local Affinity']
                     except Exception as err:
                         affinity = ""
-                    firstnode_ip = [v3['Local IP']]
-                    firstnode_intf = v3['Local Intf']
-                    lastnode_ip = [v3['Neighbor IP']]
-                    lastnode_intf = v3['Neighbor Intf']
+                    firstnode_ip = [v3['local IP']]
+                    firstnode_intf = v3['local Intf']
+                    lastnode_ip = [v3['neighbor IP']]
+                    lastnode_intf = v3['neighbor Intf']
                     # te_metric = int(v3['TE Metric'])
                     te_metric = 0
                     try:
-                        igp_metric = int(v3['Local IGP Metrics'])
+                        igp_metric = int(v3['local IGP Metrics'])
                     except Exception as err:
                         igp_metric = 0
-                    phy_bw = float(v3['Local Phy BW'])
-                    rsvpbw = float(v3['Local RSVP BW'])
+                    phy_bw = float(v3['local Phy BW'])
+                    rsvpbw = float(v3['local RSVP BW'])
                     intfbw = getintfbw(phy_bw)
                     try:
-                        tp_description = v3['Description']
+                        tp_description = v3['description']
                     except Exception as err:
                         tp_description = ""
-                    discoveredname = v3['Description']
+                    discoveredname = v3['description']
                     srlgs = []
                     if 'SRLGs' in v3:
                         srlgs = v3['SRLGs']
@@ -131,17 +131,20 @@ def generateL3circuits(plan, l3linksdict):
                         else:
                             if 'CktId: ' in tp_description:
                                 name = tp_description.split('CktId: ')[1]
-                            # Fix - GLH - 2-18-19 #
                             elif 'CID:' in tp_description:
                                 name = tp_description.split('CID:')[1]
-                            # Fix End - GLH - 2-18-19 #
                             else:
                                 name = tp_description
-                        l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric)
+                          rsvpbw = float(v3['local RSVP BW'])
+                        l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
 
+                    duplicatelink = False
 
-def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,igp_metric, te_metric):
+    # logging.info("Processing SRLG's...")
+    # process_srlgs(plan, circ_srlgs)
+
+def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,igp_metric, te_metric,rsvpbw):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
 
@@ -158,12 +161,10 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
             c += 1
     except Exception as err:
         affinities = []
-    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeA_ip, igpMetric=igp_metric)
-    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric)
+    intfArec = InterfaceRecord(sourceKey=nodeAKey, name=nodeAintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeA_ip, igpMetric=igp_metric,reservableBW=rsvpbw)
+    intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric,)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
-    import pdb
-    pdb.set_trace()
     logging.debug('This is circuit data : {} '.format(intfArec) )
     logging.debug('This is circuit data : {} '.format(intfBrec))
     logging.debug('This is circuit data : {} '.format(circRec))
@@ -187,35 +188,6 @@ def getintfbw(bw):
     else:
         logging.warn("Error determining interface bandwidth!!!")
     return intfbw
-
-# def generateL3nodes(plan, l3nodelist, data):
-
-#     for l3node in l3nodelist:
-#         name = l3node['attributes']['name']
-#         if check_node_exists(plan, name):
-#             logging.warn("Node already exists in plan file, will not add duplicate: " + name)
-#             continue
-#         vendor = 'Ciena'
-#         model = 'Ciena6500'
-#         os = ""
-#         description = ""
-#         ipManage = ""
-#         # import pdb
-#         # pdb.set_trace()
-#         for node in data['data']:        
-#             if node['attributes']['name'] == name:
-#                 model = node['attributes']['resourceType']
-#                 os = node['attributes']['softwareVersion']
-#                 description = node['attributes']['deviceVersion']
-#                 ipManage = node['attributes']['ipAddress']
-#                 break
-#         nodeRec = NodeRecord(name=name,
-#                              model=model,
-#                              vendor=vendor,
-#                              os=os,
-#                              description=description,
-#                              ipManage=ipManage)
-#         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)        
 
 def check_node_exists(plan, node_name):
     node_manager = plan.getNetwork().getNodeManager()
@@ -241,5 +213,3 @@ def generateL3links(plan, l3linksdict):
         except Exception as err:
             logging.warn("Could not add L3 link to the plan!")
             logging.warn(err)
-
-

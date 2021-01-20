@@ -25,8 +25,8 @@ def get_l3_nodes():
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
                 'SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
-            # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['accessIdentifier'] == 'SHELF-1' or match_object != None):
-            if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
+            if node['attributes']['typeGroup'] == "Ciena6500" and (match_object != None or node['attributes']['accessIdentifier'] == 'SHELF-1'):
+            # if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
                 node['longitude'] = 0
                 node['latitude'] = 0
                 if 'geoLocation' in node['attributes']:
@@ -101,6 +101,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
     for l3nodes in l3nodesAll:
         dupl_check = {}
         fre_node_key_val = {}
+        circuit_name_key_val = {}
         networkId = l3nodes['id']
         logging.debug(' Network iconstruct d is :{}'.format(networkId))
         ####### Need to remove this check.. Added as this node was not connected..#############
@@ -124,6 +125,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
             for frenode in freData:
                 if frenode.get('attributes').get('mgmtName'):
                     fre_node_key_val['{}'.format(frenode['id'])] = frenode['attributes']['mgmtName']
+                    # circuit_name_key_val['{}'.format(frenode['id'])] = frenode['attributes']['userLabel']
             
             if link_data.get('included'):
                 included = link_data['included']
@@ -149,10 +151,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                         break
 
                     new_obj = {}
-                    # new_obj = nodes[node]['Links'][linkid]
                     if id1 and id2:
-                        # import pdb
-                        # pdb.set_trace()
                         networkConstructA_id = id1
                         networkConstructB_id = id2
                         if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val and networkConstructA_id != networkConstructB_id:
@@ -166,25 +165,28 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                                 nodes[node]['Links'][linkid] = dict()
                                 new_obj['l3node'] = node_key_val[networkConstructA_id]
                                 new_obj['l3NeighborNode'] = node_key_val[networkConstructB_id]
-                                new_obj['Description'] = node_key_val[networkConstructA_id] + '-' + node_key_val[networkConstructB_id] + '-' + str(counter)
-                                new_obj['Name'] = included[i]['id'][:-2]
+                                new_obj['description'] = node_key_val[networkConstructA_id] + '-' + node_key_val[networkConstructB_id] + '-' + str(counter)
+                                new_obj['name'] = included[i]['id'][:-2]
+                                # if(circuit_name_key_val).get(included[i]['id'][:-2]):
+                                #     new_obj['circuitName'] = circuit_name_key_val[included[i]['id'][:-2]]
+                                # else:
+                                #     new_obj['circuitName'] = 'Dummy_'+included[i]['id'][:-2]
+
                                 if(fre_node_key_val).get(included[i]['id'][:-2]):
-                                    new_obj['Link Name'] = fre_node_key_val[included[i]['id'][:-2]]
+                                    new_obj['linkName'] = fre_node_key_val[included[i]['id'][:-2]]
                                 else:
-                                    new_obj['Link Name'] = 'Dummy_'+included[i]['id'][:-2]
+                                    new_obj['linkName'] = 'Dummy_'+included[i]['id'][:-2]
+
                                 nodes[node]['Links'][linkid] = new_obj
-                                dupl_check[new_obj['Name']] = i
+                                dupl_check[new_obj['name']] = i
                             else:
                                 continue
                         else:
                             continue
                         # l3links_list.append(nodes)
-    # l3links_list = json.dumps(
-    #     l3links_list, sort_keys=True, indent=4, separators=(',', ': '))
-    # logging.debug('These are the l3 links:\n{}'.format(l3links_list))
     with open('jsonfiles/l3linksall.json', 'wb') as f:
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        # f.write(l3links_list)
+
 
 def get_link_data(link1,linkId1,link2,linkId2):
     new_obj = {}
@@ -205,17 +207,17 @@ def get_link_data(link1,linkId1,link2,linkId2):
         logging.debug('link data id1 is : {}'.format(linkId1))
         if data.get('attributes').get('layerTerminations')[0]:
             if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                new_obj['Local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
             if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
-                new_obj['Local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
+                new_obj['local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
             if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
-                new_obj['Local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                new_obj['local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
             if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                new_obj['Local Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])
-                new_obj['Local RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])
+                new_obj['local Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
+                new_obj['local RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
-                    new_obj['Local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
-    if new_obj.get('Local IP'):
+                    new_obj['local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
+    if new_obj.get('local IP'):
         # for data in lnkData2:
         #     if linkId2 == data['id']:
         data = next((item for item in lnkData2 if item['id'] == linkId2),None)
@@ -223,182 +225,17 @@ def get_link_data(link1,linkId1,link2,linkId2):
             logging.debug('link data id2 is : {}'.format(linkId2))
             if data.get('attributes').get('layerTerminations')[0]:
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                    new_obj['Neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                    new_obj['neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
-                    new_obj['Neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
+                    new_obj['neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
-                    new_obj['Neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                    new_obj['neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                    new_obj['Neighbor Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])
-                    new_obj['Neighbor RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])
+                    new_obj['neighbor Phy BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
+                    new_obj['neighbor RSVP BW'] = int(data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
                     if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
                         new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
     return new_obj
 
 
 
-def get_l3_circuits(baseURL, cienauser, cienapassw, token):
-    l3_circuit_list = []
-    dupl_check = {}
-    # Setting up the links and l3 nodes data for use later on
-    l3nodesAll = utils.open_file_load_data('jsonfiles/l3nodes.json')
-    l3nodes_dict = {val: 1 for node in l3nodesAll for (key, val) in node.items() if key == 'id'}
-    for l3nodes in l3nodesAll:
-        networkId = l3nodes['id']
-        # filename = 'fre_'+networkId+'.json'
-        filename = 'fre_0d5dfa44-202e-3b38-b78e-7ac8e463ae76.json'
-        logging.debug('filename to retrieve circuit:\n{}'.format(filename))
-        # all_links_dict = utils.open_file_load_data('jsongets/fre_c9386224-d384-3b6d-b8fc-9f286626d272.json')
-        all_links_dict = utils.open_file_load_data('jsongets/'+filename)
-        if all_links_dict.get('data'):
-            data = all_links_dict['data']
-        else:
-            continue
-        if all_links_dict.get('included'):
-            included = all_links_dict['included']
-        for obj in data:
-            circuit_check = False
-            # if obj.get('attributes').get('layerRate'):
-            # circuit_check = True if obj['attributes']['layerRate'] != 'OMS' and obj['attributes']['layerRate'] != 'OTS' else False
-            # Implemented the starting and ending l1 node check. Go into included and grab the network construct id and check if it's in the l3nodes_dict
-            circuit_id = obj['id']
-            # This block of code is faulty. It'll keep going and won't stop, expensive operation.
-            for node in included:
-                if node['type'] == 'endPoints' and node['id'][-1] == '1':
-                    if node['id'][:-2] == circuit_id:
-                        starting_node = node['relationships']['tpes']['data'][0]['id'][:36]
-                if node['type'] == 'endPoints' and node['id'][-1] == '2':
-                    if node['id'][:-2] == circuit_id:
-                        ending_node = node['relationships']['tpes']['data'][0]['id'][:36]
-                        break
-            # l1_check = starting_node in l3nodes_dict and ending_node in l3nodes_dict
-
-            # Adding temp check if starting node is not equal to ending node . NEED TO CHECK BACK
-            l3_check = starting_node in l3nodes_dict and ending_node in l3nodes_dict and starting_node != ending_node
-
-            # nodeid = l3nodes_dict.get('id')
-            # if circuit_check and l3_check:
-            if l3_check:
-                # import pdb
-                # pdb.set_trace()
-                # and if so then make the call to get_l3_circuit() to get the supporting nodes
-                link_list = collect.get_supporting_nodes(
-                    circuit_id, baseURL, cienauser, cienapassw, token)
-                # Check based on the returned nodes to see if they're valid l3 nodes
-                supporting_link_check = False
-                # import pdb
-                # pdb.set_trace() 
-                if link_list:
-                    logging.debug(
-                        'These are the link_list response:\n{}'.format(link_list))
-                    for link_obj in link_list:
-                        if link_obj['NodeA'] in l3nodes_dict and link_obj['NodeB'] in l3nodes_dict:
-                            supporting_link_check = True
-                        else:
-                            supporting_link_check = False
-
-                if supporting_link_check:
-                    temp_obj = {
-                        "Name": "",
-                        "CircuitID": "",
-                        "CircuitName": "",
-                        "StartL3Node": "",
-                        "EndL3Node": "",
-                        "Channel": "",
-                        "BW": 0,
-                        "RsvpBW": 0,
-                        "Status": "",
-                        "Type": "",
-                        "LayerRate": "",
-                        "InterfaceName": "",
-                        "Frequency": 0,
-                        "Wavelength": 0,
-                        "Ordered_Hops": []
-                    }
-                    # Checking for the node_key_val to be populated, and if not setting the l3node's id and name as the key/value pairs for later use
-                    # Adding tto check id in all nodes as couple of id's are present in l3 nodes
-                    # if len(node_key_val) == 0:
-                    node_data = utils.open_file_load_data(
-                        "jsonfiles/all_nodes.json")
-                    allNodesData = node_data['data']
-                    for node in allNodesData:
-                        node_key_val['{}'.format(
-                            node['id'])] = node['attributes']['name']
-                    # if len(node_key_val) == 0:
-                    #     node_data = utils.open_file_load_data(
-                    #         "jsonfiles/l3nodes.json")
-                    #     for node in node_data:
-                    #         node_key_val['{}'.format(
-                    #             node['id'])] = node['attributes']['name']
-                    starting_node_name = node_key_val['{}'.format(starting_node)]
-                    ending_node_name = node_key_val['{}'.format(ending_node)]
-                    temp_obj['Name'] = obj['attributes']['userLabel']
-                    temp_obj['CircuitID'] = circuit_id
-                    temp_obj['StartL3Node'] = starting_node_name
-                    temp_obj['EndL3Node'] = ending_node_name
-                    temp_obj['Type'] = obj['attributes']['serviceClass']
-                    # import pdb
-                    # pdb.set_trace()
-                    temp_obj['LayerRate'] = obj['attributes']['layerRate']
-                    if obj.get('attributes').get('locations'):
-                        temp_obj['InterfaceName'] = obj['attributes']['locations'][0]['interfaceName']
-                    else:
-                        temp_obj['InterfaceName'] = ''
-                    if obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
-                        temp_obj['Frequency'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['frequency']
-                    else:
-                        temp_obj['Frequency'] = 0
-                    if obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
-                        temp_obj['Wavelength'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['wavelength']
-                    else:
-                        temp_obj['Wavelength'] = 0
-                    if obj.get('attributes').get('bandwidthTriggers') and obj.get('attributes').get('bandwidthTriggers').get('maxBW'):
-                        temp_obj['BW'] = obj['attributes']['bandwidthTriggers']['maxBW']
-                    else:
-                        temp_obj['BW'] = 0
-                    if obj.get('attributes').get('maxReservableBandwidth'):
-                        temp_obj['RsvpBW'] = obj['attributes']['maxReservableBandwidth'][0]['capacitySize']['size']
-                    else:
-                        temp_obj['RsvpBW'] = 0
-                    if obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
-                        temp_obj['Channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel']
-                    else:
-                        temp_obj['Channel'] = ''
-                    try:
-                        # temp_obj['Channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel']
-                        if obj.get('attributes').get('userLabel') == '':
-                            if obj.get('attributes').get('linkLabel') == '':
-                                temp_obj['CircuitName'] = 'Dummy_'+ circuit_id
-                            else:
-                                temp_obj['CircuitName'] = obj['attributes']['linkLabel']
-                        else:
-                            temp_obj['CircuitName'] = obj['attributes']['userLabel']
-                    except:
-                            temp_obj['CircuitName'] = 'Dummy_'+ circuit_id
-                    if temp_obj['CircuitName'] in dupl_check:
-                        continue
-                    # Still not able to retrieve the affinity. As discussed colorGroups should cconsider as Affinity but I dont find any tpe / fre returned the param colorGroup. Need to check.
-                    if obj.get('attributes').get('operationState'):
-                        temp_obj['Status'] = obj['attributes']['operationState']
-                    for link in link_list:
-                        link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
-                        link['NodeB'] = node_key_val['{}'.format(link['NodeB'])]
-                    link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(
-                        starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
-                    link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(
-                        link_list[1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
-                    temp_obj['Ordered_Hops'] = link_list
-                    #Temporary commenting to avoid duplicate error
-                    if temp_obj['Name'] != 'THISISANULHLINEPORT':
-                        l3_circuit_list.append(temp_obj)
-                    dupl_check[temp_obj['Channel']] = temp_obj['Channel']
-    # logging.debug(
-    #     'These are the l3_circuit_list values**********:\n{}'.format(l3_circuit_list))
-    if l3_circuit_list:
-        # logging.debug(
-        #     'These are the l3_circuit_list values:\n{}'.format(l3_circuit_list))
-        l3_circuit_list = json.dumps(
-            l3_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
-        # logging.debug('These are the l3 circuits:\n{}'.format(l3_circuit_list))
-        with open('jsonfiles/l3circuits.json', 'wb') as f:
-            f.write(l3_circuit_list)

@@ -158,35 +158,31 @@ def main():
 
     token = json.loads(token)
     token_string = token['token']
-    # import pdb
-    # pdb.set_trace()
+#####################################
 
     # Get all the nodes
-    # collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
+    collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
 
      # Code to get the ports
-    # collect.get_ports(baseURL, cienauser, cienapassw, token_string)
+    collect.get_ports(baseURL, cienauser, cienapassw, token_string)
 
     # Code to get the links and cicruits
-    # collect.get_links(baseURL, cienauser, cienapassw, token_string)
+    collect.get_links(baseURL, cienauser, cienapassw, token_string)
 
     # Get all the l1nodes
-    # collect.get_l1_nodes()
+    collect.get_l1_nodes()
 
     # Get all the l1 links
-    # collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
+    collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
 
     # Code to get the l1 circuits
-    # collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+    collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
 
     # Get all the l3nodes
-    # collect.get_l3_nodes()
+    collect.get_l3_nodes()
 
     # Get all the l3 links
-    # collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
-
-    # Code to get the l1 circuits
-    # collect.get_l3_circuits(baseURL, cienauser, cienapassw, token_string)
+    collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
 
     if build_plan:
         # Add l1sites to plan
@@ -211,7 +207,7 @@ def main():
         logging.info("Adding L1 circuits to the plan...")
         with open("jsonfiles/l1circuits.json", 'rb') as f:
             l1circuitlist = json.load(f)
-        l1_planbuild.generateL1circuits(plan, och_trails=l1circuitlist)
+        l1_planbuild.generateL1circuits(plan, l1_data=l1circuitlist)
 
         # Add l3sites to plan
         # logging.info("Adding sites")
@@ -244,18 +240,6 @@ def main():
         logging.info("Adding L3 links...")
         l3nodes, l3linksdict = getl3nodes()
         l3_planbuild.generateL3circuits(plan, l3linksdict)
-
-        # Add L3 links to plan
-        # logging.info("Adding L1 links (ROADM degrees) ...")
-        # with open("jsonfiles/l3links.json", 'rb') as f:
-        #     l3linkslist = json.load(f)
-        # l3_planbuild.generateL3links(plan, l3linkslist)
-
-        # Add L1 circuits to plan
-        # logging.info("Adding L3 circuits to the plan...")
-        # with open("jsonfiles/l3circuits.json", 'rb') as f:
-        #     l3circuitlist = json.load(f)
-        # l3_planbuild.generateL3circuits(plan, och_trails=l3circuitlist)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
