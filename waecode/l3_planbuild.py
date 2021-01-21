@@ -50,15 +50,15 @@ def generateL3nodes(plan, l3nodeslist):
         description = l3node['attributes']['deviceType']
         logging.debug(' L3 node name is : {}'.format(name))
         if l3node.get('attributes').get('ipAddress'):
-            ipManage = l3node['attributes']['ipAddress']
+            ipAddress = l3node['attributes']['ipAddress']
         else:
-            ipManage = ''
+            ipAddress = ''
         nodeRec = NodeRecord(name=name,
                              model=model,
                              vendor=vendor,
                              os=os,
                              description=description,
-                             ipManage=ipManage,
+                             ipAddress=ipAddress,
                              longitude=longitude,
                              latitude=latitude)
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec) 
