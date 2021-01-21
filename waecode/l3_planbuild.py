@@ -70,9 +70,7 @@ def generateL3circuits(plan, l3linksdict):
     duplicatelink = False
     circ_srlgs = {}
     circuit_name_list = []
-    # name_reader = csv.DictReader(open('configs/may_19_circuit_names.csv'), fieldnames=('0', '1', '2', '3', '4', '5'))
-    # for row in name_reader:
-    #     circuit_name_list.append(row)
+
     for k1, v1 in l3linksdict.items():
         # logging.info "**************Nodename is: " + k1
         logging.debug('Node Name is : {}'.format(k1))
@@ -103,10 +101,10 @@ def generateL3circuits(plan, l3linksdict):
                     rsvpbw = float(v3['local RSVP BW'])
                     intfbw = getintfbw(phy_bw)
                     try:
-                        tp_description = v3['description']
+                        tp_description = v3['circuitName']
                     except Exception as err:
                         tp_description = ""
-                    discoveredname = v3['description']
+                    discoveredname = v3['circuitName']
                     srlgs = []
                     if 'SRLGs' in v3:
                         srlgs = v3['SRLGs']
@@ -135,10 +133,30 @@ def generateL3circuits(plan, l3linksdict):
                                 name = tp_description.split('CID:')[1]
                             else:
                                 name = tp_description
-                          rsvpbw = float(v3['local RSVP BW'])
+  
+                        rsvpbw = float(v3['local RSVP BW'])
                         l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
-
+                        # if l3circuit:
+                        #     if 'vc-fdn' in v3:
+                        #         l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
+                        #         l1circuits = l1CircuitManager.getAllL1Circuits()
+                        #         for attr, val in l1circuits.items():
+                        #             l1circuit_name = val.getName()
+                        #             # logging.info("L1 circuit name is " + l1circuit_name)
+                        #             if v3['vc-fdn'] == val.getName():
+                        #                 # logging.info("Name matched!")
+                        #                 l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
+                        #                 l3circuit.setL1Circuit(l1circuit)
+                        #                 # TODO recode setting the L3 node site based on connected L1 node site
+                        #     l3circuit.setCapacity(intfbw)
+                        #     intfdict = l3circuit.getAllInterfacess()
+                        #     for k6, v6 in intfdict.items():
+                        #         v6.setResvBW(int(rsvpbw / 1000))
+                        #     circ_name = l3circuit.getName()
+                        #     circ_key = l3circuit.getKey()
+                        #     circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
+                        #     circ_srlgs[circ_name] = circ_dict
                     duplicatelink = False
 
     # logging.info("Processing SRLG's...")
@@ -198,18 +216,3 @@ def check_node_exists(plan, node_name):
             return True
     return False
 
-def generateL3links(plan, l3linksdict):
-    l1LinkManager = plan.getNetwork().getNodeManager.getLgetManager()
-
-    for l1link in l1linksdict:
-        print(l1link['name'])
-        l1nodeAKey = L1NodeKey(l1link['l3nodeA'])
-        l1nodeBKey = L1NodeKey(l1link['l3nodeB'])
-        description = l1link['description']
-        l1linkRec = L1LinkRecord(
-            name=l1link['name'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
-        try:
-            l1LinkManager.newL1Link(l1linkRec)
-        except Exception as err:
-            logging.warn("Could not add L3 link to the plan!")
-            logging.warn(err)
