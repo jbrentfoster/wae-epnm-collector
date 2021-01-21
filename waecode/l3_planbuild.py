@@ -41,7 +41,7 @@ def generateL3nodes(plan, l3nodeslist):
             logging.warn("Node already exists in plan file, will not add duplicate: " + name)
             continue
         longitude = float(l3node['longitude'])
-        lat = float(l3node['latitude'])
+        latitude = float(l3node['latitude'])
         # site = l3node['wae_site_name']
         vendor = 'Ciena'
         # model = 'Ciena6500'
@@ -58,7 +58,9 @@ def generateL3nodes(plan, l3nodeslist):
                              vendor=vendor,
                              os=os,
                              description=description,
-                             ipManage=ipManage)
+                             ipManage=ipManage,
+                             longitude=longitude,
+                             latitude=latitude)
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec) 
         # nodeRec = NodeRecord(name=name, vendor=vendor, model=model, site=SiteKey(
         #     site))
