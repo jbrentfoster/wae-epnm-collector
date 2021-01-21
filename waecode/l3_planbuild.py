@@ -81,7 +81,7 @@ def generateL3circuits(plan, l3linksdict):
                     # logging.warn "***************Linkname is: " + k3
                     firstnode = v3['l3node']
                     lastnode = v3['l3NeighborNode']
-                    logging.debug('lastnode Name is : {}'.format(lastnode))
+                    # logging.debug('lastnode Name is : {}'.format(lastnode))
                     # discoveredname = v3['discoveredname']
                     try:
                         affinity = v3['Local Affinity']
@@ -183,15 +183,15 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric,)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
-    logging.debug('This is circuit data : {} '.format(intfArec) )
-    logging.debug('This is circuit data : {} '.format(intfBrec))
-    logging.debug('This is circuit data : {} '.format(circRec))
+    # logging.debug('This is circuit data : {} '.format(intfArec) )
+    # logging.debug('This is circuit data : {} '.format(intfBrec))
+    # logging.debug('This is circuit data : {} '.format(circRec))
     try:
         circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
         return circuit
     except Exception as err:
         logging.warn('Could not create circuit for: ' + name)
-        logging.warn(err)
+        # logging.warn(err)
 
 def getintfbw(bw):
     intfbw = 0

@@ -69,7 +69,7 @@ def generateL1circuits(plan, l1_data):
             name = l1data['circuitName']
             firstl1node = l1data['startL1Node']
             lastl1node = l1data['endL1Node']
-                if l1data['BW'] != '':
+            if l1data['BW'] != '':
                 bw = int(l1data['BW'])
             else:
                 bw = 0

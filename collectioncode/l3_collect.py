@@ -18,6 +18,7 @@ node_key_val = {}
 
 
 def get_l3_nodes():
+    logging.info('Generate L3 nodes')
     data, node_list, site_list = '', [], []
     data = utils.open_file_load_data("jsonfiles/all_nodes.json")
     counter = 1
@@ -55,7 +56,6 @@ def get_l3_nodes():
 
     node_list = json.dumps(node_list, sort_keys=True,
                            indent=4, separators=(',', ': '))
-    logging.debug('These are the L3 nodes:\n{}'.format(node_list))
     with open('jsonfiles/l3nodes.json', 'wb') as f:
         f.write(node_list)
 
@@ -88,9 +88,11 @@ def get_l3_nodes():
     logging.debug('These are the l3 sites:\n{}'.format(site_list))
     with open('jsonfiles/l3sites.json', 'wb') as f:
         f.write(site_list)
+    logging.info('L3 nodes completed...')
 
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
+    logging.info('Generate L3 links...')
     nodes = {}
     l3nodesAll = utils.open_file_load_data('jsonfiles/l3nodes.json')
     allnodes = utils.open_file_load_data('jsonfiles/all_nodes.json')
@@ -101,9 +103,9 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
     for l3nodes in l3nodesAll:
         dupl_check = {}
         fre_node_key_val = {}
-        circuit_name_key_val = {}
         networkId = l3nodes['id']
         logging.debug(' Network iconstruct d is :{}'.format(networkId))
+        # if networkId != '4af8b77b-3c91-32eb-b5fd-abb16169b541':
         node = l3nodes['attributes']['name']
         if l3nodes.get('attributes').get('l2Data') and l3nodes.get('attributes').get('l2Data')[0].get('loopbackAddresses'):
             loopbackAddress = l3nodes['attributes']['l2Data'][0]['loopbackAddresses'][0]
@@ -129,7 +131,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         counter = 0
         for i in range(len(included)):
             val = i+1
-            logging.debug('Length of i+1 :{}'.format(val))
+            # logging.debug('Length of i+1 :{}'.format(val))
             if val < len(included):
                 if included[i]['type'] == 'endPoints':
                     if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
@@ -180,9 +182,11 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                         continue
     with open('jsonfiles/l3linksall.json', 'wb') as f:
         f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+    logging.info('L3 links generated..')
 
 
 def get_link_data(link1,linkId1,link2,linkId2):
+    logging.info('Retrieve L3 links info...')
     new_obj = {}
     filenameId1 = 'tpe_'+link1
     filenameId2 = 'tpe_'+link2
@@ -192,13 +196,9 @@ def get_link_data(link1,linkId1,link2,linkId2):
         lnkData1 = tpeData1['data']
     if tpeData2.get('data'):
         lnkData2 = tpeData2['data']
-    # temp_obj = {}
-
-    # for data in lnkData1:
-    #     if linkId1 == data['id']:
     data = next((item for item in lnkData1 if item['id'] == linkId1),None)
     if data:
-        logging.debug('link data id1 is : {}'.format(linkId1))
+        # logging.debug('link data id1 is : {}'.format(linkId1))
         if data.get('attributes').get('layerTerminations')[0]:
             if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
                 new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
@@ -212,11 +212,9 @@ def get_link_data(link1,linkId1,link2,linkId2):
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
                     new_obj['local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
     if new_obj.get('local IP'):
-        # for data in lnkData2:
-        #     if linkId2 == data['id']:
         data = next((item for item in lnkData2 if item['id'] == linkId2),None)
         if data:
-            logging.debug('link data id2 is : {}'.format(linkId2))
+            # logging.debug('link data id2 is : {}'.format(linkId2))
             if data.get('attributes').get('layerTerminations')[0]:
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
                     new_obj['neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']

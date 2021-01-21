@@ -16,17 +16,8 @@ name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
 
-
-# def get_all_nodes(baseURL, cienauser, cienapassw, token):
-#     uri = '/nsi/api/v6/networkConstructs?limit=300'
-#     URL = baseURL + uri
-#     data = utils.rest_get_json(URL, cienauser, cienapassw, token)
-#     # Saving the data for future use
-#     with open('jsonfiles/all_nodes.json', 'wb') as f:
-#         f.write(data)
-
-
 def get_l1_nodes():
+    logging.info('Retrieve L1 Nodes')
     data, node_list, site_list = '', [], []
     data = utils.open_file_load_data("jsonfiles/all_nodes.json")
     counter = 1
@@ -95,14 +86,15 @@ def get_l1_nodes():
 
     site_list = json.dumps(site_list, sort_keys=True,
                            indent=4, separators=(',', ': '))
-    logging.debug('These are the sites:\n{}'.format(site_list))
+    # logging.debug('These are the sites:\n{}'.format(site_list))
     with open('jsonfiles/l1sites.json', 'wb') as f:
         f.write(site_list)
+    logging.info('L1 Nodes retrieved..')
 
 def get_l1_links(baseURL, cienauser, cienapassw, token):
-    # Retrieve all links data for OTU's and OMS
+    # Retrieve l1 links data for all nodes
     get_l1_links_data(baseURL, cienauser, cienapassw, token)
-
+    logging.info('Generate L1 links...')
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
     for node in l1nodesAll:
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
@@ -113,8 +105,6 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
         linkname_key_val={}
         fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
-        # import pdb
-        # pdb.set_trace()
         with open('jsongets/'+fileName, 'rb') as f:
             thejson = f.read()
             f.close()    
@@ -125,20 +115,6 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
             linkData = link_data['data']
         for links in linkData:
             linkname_key_val['{}'.format(links['id'])] = links['attributes']['userLabel']
-        # logging.debug(
-        #     'This is the API response for the [included] field:\n{}'.format(included))
-
-        # all_links_dict = utils.open_file_load_data('jsongets/all_links.json')
-        # data = all_links_dict['data']
-        # included = all_links_dict['included']
-
-        # Making a dictionary w/ the l1node's id and wae_site_name as the key/value pairs for later use
-        # # node_data = utils.open_file_load_data("jsonfiles/l1nodes.json")
-        # # for node in node_data:
-        # node_key_val['{}'.format(l1nodes['id'])] = l1nodes['attributes']['name']
-
-        # logging.debug(
-        #     'This is the vaallue of len(included):\n{}'.format(len(included)))
         for i in range(len(included)):
             val = i+1
             if val < len(included):
@@ -173,12 +149,13 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
                     l1links_list.append(new_obj)
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
-    logging.debug('These are the l1 links:\n{}'.format(l1links_list))
     with open('jsonfiles/l1links.json', 'wb') as f:
         f.write(l1links_list)
+    logging.info('Complete L1 links...')
 
 
 def get_l1_links_data(baseURL, cienauser, cienapassw, token):
+    logging.info('Retrieving L1 links data..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     for node in nodesData:
@@ -215,8 +192,10 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token):
         with open('jsongets/'+filename+'.json', 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
+        logging.info('Retrieved L1 links data...')
 
 def get_l1_circuits(baseURL, cienauser, cienapassw, token):
+    logging.info('Generating L1 Circuits...')
     l1_circuit_list = []
     dupl_check = {}
     # Setting up the links and l1 nodes data for use later on
@@ -232,7 +211,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
         filename = 'l1_fre_'+networkId
-        logging.debug('filename to retrieve circuit:\n{}'.format(filename))
+        # logging.debug('filename to retrieve circuit:\n{}'.format(filename))
         with open('jsongets/{}.json'.format(filename), 'rb') as f:
             thejson = f.read()
             f.close()    
@@ -266,8 +245,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 # Check based on the returned nodes to see if they're valid l1 nodes
                 supporting_link_check = False
                 if link_list:
-                    logging.debug(
-                        'These are the link_list response:\n{}'.format(link_list))
                     for link_obj in link_list:
                         if link_obj['NodeA'] in l1nodes_dict and link_obj['NodeB'] in l1nodes_dict:
                             supporting_link_check = True
@@ -328,9 +305,11 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
         with open('jsonfiles/l1circuits.json', 'wb') as f:
             f.write(l1_circuit_list)
+    logging.info('L1 Circuits generated..')
 
 
 def getPortDetails(starting_node, startingNodeId,ending_node, endingNodeId):
+    logging.info('Retrieve port info for L1 circuits')
     fileNameA = 'tpe_'+starting_node
     fileNameB = 'tpe_'+ending_node
     with open('jsongets/{}.json'.format(fileNameA), 'rb') as f:
@@ -350,7 +329,7 @@ def getPortDetails(starting_node, startingNodeId,ending_node, endingNodeId):
         dataEndNode = portDataEndNode['data']
     dataNodeB = next(items for items in dataEndNode if items['id'] == endingNodeId)
     portEndNode = dataNodeB['attributes']['nativeName']
-
+    logging.info('L1 port info retrieved..')
     return portStartNode, portEndNode
 
 def merge(a, b):

@@ -81,8 +81,8 @@ def main():
     delete_previous = args.delete_previous
     logging_level = args.logging.upper()
 
-    # Setting up the main log file
-    logFormatter = logging.Formatter('%(levelname)s:  %(message)s')
+    #Setting up the main log file 
+    logFormatter = logging.Formatter('%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
 
@@ -141,14 +141,13 @@ def main():
     resttokenURI = baseURL + tokenPath
     token = None
 
-#Temporary Comment **************************************
     if token == None:
         try:
             r = requests.post(resttokenURI, proxies=proxies,
                               headers=headers, json=data, verify=False)
             if r.status_code == 201:
                 token = json.dumps(r.json(), indent=2)
-                print token
+                # print token
             else:
                 r.raise_for_status()
 
@@ -158,31 +157,53 @@ def main():
 
     token = json.loads(token)
     token_string = token['token']
-#####################################
 
     # Get all the nodes
+    logging.debug("Retrieve all nodes..")
     collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("All nodes retrieved")
 
      # Code to get the ports
+    logging.debug("Retrieve all ports data..")
     collect.get_ports(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("All ports retrieved..")
 
     # Code to get the links and cicruits
+    logging.debug("Retrieve all Links data..")
     collect.get_links(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("All links retrieved..")
 
     # Get all the l1nodes
+    logging.debug("Retrieve L1 nodes..")
     collect.get_l1_nodes()
+    logging.debug("L1 nodes generated..")
+
 
     # Get all the l1 links
+    logging.debug("Retrieve L1 links..")
     collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("L1 links retrieved..")
 
     # Code to get the l1 circuits
+    logging.debug("Retrieve L1 Circuits..")
     collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("L1 Circuits retrieved..")
 
     # Get all the l3nodes
+    logging.debug("Retrieve L3 nodes..")
     collect.get_l3_nodes()
+    logging.debug("L3 nodes generated..")
 
     # Get all the l3 links
+    logging.debug("Retrieve L3 links and Circuits..")
     collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("L3 links and circuit generated..")
+
+    #######################################
+    #
+    #  Build MPLS Plan Components
+    #
+    #######################################
 
     if build_plan:
         # Add l1sites to plan
@@ -198,7 +219,7 @@ def main():
         l1_planbuild.generateL1nodes(plan, l1nodeslist)
 
         # Add L1 links to plan
-        logging.info("Adding L1 links (ROADM degrees) ...")
+        logging.info("Adding L1 links ...")
         with open("jsonfiles/l1links.json", 'rb') as f:
             l1linkslist = json.load(f)
         l1_planbuild.generateL1links(plan, l1linkslist)
@@ -224,9 +245,6 @@ def main():
         # Set node coordinates
         logging.info("Setting node coordinates...")
         node_manager = plan.getNetwork().getNodeManager()
-        # with open("jsonfiles/all-nodes.json", 'rb') as f:
-        #     nodesdict = json.load(f)
-        #     f.close()
         for l3_node in l3nodeslist:
             tmp_name = l3_node['attributes']['name']
             tmp_node = next(
@@ -237,7 +255,7 @@ def main():
                 node.setLatitude(float(tmp_node['latitude']))
                 node.setLongitude(float(tmp_node['longitude']))
         # Add L3 links to plan and link with l1 links where applicable
-        logging.info("Adding L3 links...")
+        logging.info("Adding L3 links and circuits...")
         l3nodes, l3linksdict = getl3nodes()
         l3_planbuild.generateL3circuits(plan, l3linksdict)
 

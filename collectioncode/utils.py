@@ -23,7 +23,7 @@ def rest_get_json(URL, cienauser, cienapassw, token):
     try:
         #Use the request module to make the actual call
         r = requests.get(URL, headers=headers, proxies=proxies, json=data, verify=False)
-        logging.debug('The API response for URL {} is:\n{}'.format(URL, json.dumps(r.json(), separators=(",",":"), indent=4)))
+        # logging.debug('The API response for URL {} is:\n{}'.format(URL, json.dumps(r.json(), separators=(",",":"), indent=4)))
         if r.status_code == 200:
             return json.dumps(r.json(), indent=2)
         else:

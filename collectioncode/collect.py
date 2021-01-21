@@ -12,6 +12,7 @@ from collectioncode import utils
 
 
 def get_all_nodes(baseURL, cienauser, cienapassw, token):
+    logging.debug('Retrieve all network elements..')
     incomplete = True
     jsonmerged = {}
     # uri = '/nsi/api/v6/networkConstructs?limit=50'
@@ -51,6 +52,7 @@ def merge(a, b):
     return a
 
 def get_ports(baseURL, cienauser, cienapassw, token):
+    logging.debug('Retrieve TPE data for nodes..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     for node in nodesData:
@@ -84,10 +86,12 @@ def get_ports(baseURL, cienauser, cienapassw, token):
         with open('jsongets/'+filename+'.json', 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
+        logging.info('TPE data retrieved..')
 
 def get_links(baseURL, cienauser, cienapassw, token):
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
+    logging.debug('Retrieve FRE data for nodes:')
     for node in nodesData:
         networkConstrId = node['id']
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
@@ -122,6 +126,7 @@ def get_links(baseURL, cienauser, cienapassw, token):
         with open('jsongets/'+filename+'.json', 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
+        logging.info('FRE data retrieved..')
         
 def get_l1_nodes():
     l1_collect.get_l1_nodes()
@@ -146,6 +151,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 
 def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
+    logging.info('Retrieve Supporting nodes..')
     uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
         circuit_id)
     URL = baseURL + uri
