@@ -128,10 +128,12 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
             if link_data.get('included'):
                 included = link_data['included']
             logging.debug(
-                'This is the value of len(included):\n{}'.format(len(included)))
+                'Value of len(included):\n{}'.format(len(included)))
             counter = 0
             for i in range(len(included)):
                 val = i+1
+                id1 = ''
+                id2 = ''
                 # logging.debug('Length of i+1 :{}'.format(val))
                 if val < len(included):
                     if included[i]['type'] == 'endPoints':
@@ -143,11 +145,10 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                             linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
                         # logging.debug('This is the value of ID1:\n{}'.format(id1))
                         # logging.debug('This is the value of ID2:\n{}'.format(id2))
+                        if id1 and 'network1' in id1:
+                            continue
                     else:
-                        break
-                    if 'network1' in id1:
-                        break
-
+                        continue
                     new_obj = {}
                     if id1 and id2:
                         networkConstructA_id = id1
