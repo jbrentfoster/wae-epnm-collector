@@ -26,7 +26,7 @@ def get_l1_nodes():
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
                 'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
-            if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
+            if node['attributes']['typeGroup'] == "Ciena6500" and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
                 node['longitude'] = 0
                 node['latitude'] = 0
                 if 'geoLocation' in node['attributes']:
@@ -103,6 +103,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
         linkname_key_val={}
+        included = {}
+        linkData = {}
         fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
         with open('jsongets/'+fileName, 'rb') as f:

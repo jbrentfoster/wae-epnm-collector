@@ -102,6 +102,8 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
     for l3nodes in l3nodesAll:
         dupl_check = {}
         fre_node_key_val = {}
+        included = {}
+        freData = {}
         networkId = l3nodes['id']
         logging.debug(' Network iconstruct d is :{}'.format(networkId))
         if networkId != '4af8b77b-3c91-32eb-b5fd-abb16169b541':
