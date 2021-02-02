@@ -163,15 +163,20 @@ def main():
     collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
     logging.debug("All nodes retrieved")
 
-     # Code to get the ports
+     # Retrieve all  ports / TPE data
     logging.debug("Retrieve all ports data..")
     collect.get_ports(baseURL, cienauser, cienapassw, token_string)
     logging.debug("All ports retrieved..")
 
-    # Code to get the links and cicruits
+    # Retrieve all the links and cicruits
     logging.debug("Retrieve all Links data..")
     collect.get_links(baseURL, cienauser, cienapassw, token_string)
     logging.debug("All links retrieved..")
+
+    # Populate Site information
+    logging.debug("Populate Sites..")
+    collect.get_Sites(baseURL, cienauser, cienapassw, token_string)
+    logging.debug("Sites data populated..")
 
     # Get all the l1nodes
     logging.debug("Retrieve L1 nodes..")
@@ -208,7 +213,7 @@ def main():
     if build_plan:
         # Add l1sites to plan
         logging.info("Adding sites")
-        with open("jsonfiles/l1sites.json", 'rb') as f:
+        with open("jsonfiles/sites.json", 'rb') as f:
             sitelist = json.load(f)
         planbuild.generateSites(plan, sitelist)
 
@@ -230,12 +235,6 @@ def main():
             l1circuitlist = json.load(f)
         l1_planbuild.generateL1circuits(plan, l1_data=l1circuitlist)
 
-        # Add l3sites to plan
-        # logging.info("Adding sites")
-        # with open("jsonfiles/l3sites.json", 'rb') as f:
-        #     sitelist = json.load(f)
-        # planbuild.generateSites(plan, sitelist)
-
         # Add l3 nodes to plan
         logging.info("Adding L3 nodes to plan file")
         with open("jsonfiles/l3nodes.json", 'rb') as f:
@@ -254,10 +253,23 @@ def main():
             if tmp_node:
                 node.setLatitude(float(tmp_node['latitude']))
                 node.setLongitude(float(tmp_node['longitude']))
+        l3nodeloopbacks = []
         # Add L3 links to plan and link with l1 links where applicable
         logging.info("Adding L3 links and circuits...")
-        l3nodes, l3linksdict = getl3nodes()
+        l3nodes, l3linksdict = utils.getl3nodes()
         l3_planbuild.generateL3circuits(plan, l3linksdict)
+
+        for k1,v1 in l3linksdict.items():
+            tempnode = {k1: v1['loopback address']}
+            l3nodeloopbacks.append(tempnode)
+
+        # Adding LSPs to plan file
+        logging.info("Adding LSP's tto plan file...")
+        with open("jsonfiles/lsps.json", 'rb') as f:
+            lsps = json.load(f)
+            f.close()
+        l3_planbuild.generate_lsps(plan, lsps, l3nodeloopbacks)
+
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
@@ -269,15 +281,7 @@ def main():
     logging.info("Completed in {0:.2f} seconds".format(
         time.time() - start_time))
 
-def getl3nodes():
-    with open("jsonfiles/l3linksall.json", 'rb') as f:
-        l3linksdict = json.load(f)
-        
-    l3nodes = []
-    for k1, v1 in l3linksdict.items():
-        tmpnode = {'Name': k1}
-        l3nodes.append(tmpnode)
-    return l3nodes, l3linksdict
+
 
 # Creating a new log object and the file to store the logs in the /archive/captures dir
 def create_log(log_name, logging_level, archive_root):

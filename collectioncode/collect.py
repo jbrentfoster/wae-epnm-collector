@@ -10,6 +10,11 @@ import l1_collect
 import l3_collect
 from collectioncode import utils
 
+# Setting up the properties file
+config = configparser.ConfigParser(interpolation=None)
+config.read('resources/config.ini')
+name = config['DEFAULT']['Site_name'].upper()
+sitename_bucket = 'ExtraNodes'
 
 def get_all_nodes(baseURL, cienauser, cienapassw, token):
     logging.debug('Retrieve all network elements..')
@@ -37,9 +42,57 @@ def get_all_nodes(baseURL, cienauser, cienapassw, token):
     # Saving the data for future use
     with open('jsonfiles/all_nodes.json', 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
-        # f.write(data)
+        f.close()
+
+def get_Sites(baseURL, cienauser, cienapassw, token_string):
+    logging.debug('Retrieve Sites data for nodes..')
+    allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
+    nodesData = allNodes['data']
+    site_list, dupl_check, counter = [], {}, 1
+
+    for node in nodesData:
+        # Making sure no duplicates are in our sites file
+        if node['attributes']['name'] in dupl_check:
+            continue
+        obj = {
+            "name": "",
+            "latitude": 0,
+            "longitude": 0,
+            "id": ""
+        }
+        if 'geoLocation' in node['attributes']:
+            obj['longitude'] = node.get('attributes').get(
+        'geoLocation').get('longitude') or 0
+            obj['latitude'] = node.get('attributes').get(
+        'geoLocation').get('latitude') or 0
+        if 'siteId' in node['attributes']:
+            obj['id'] = node['attributes']['siteId']
+
+        if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
+            obj['name'] = utils.normalize_sites(
+                '{}'.format(node['attributes']['siteName']))
+        elif obj['longitude'] != 0 and obj['longitude'] != 0:
+            obj['name'] = utils.normalize_sites(
+                '{}[{}]'.format(name, counter))
+            counter += 1
+        else:
+            obj['name'] = utils.normalize_sites(
+                '{}'.format(sitename_bucket))
+
+        # Making the duplicate check valid
+        dupl_check[node['attributes']['name']] = 'Random_string'
+        site_list.append(obj)
+
+    site_list = json.dumps(site_list, sort_keys=True,
+                           indent=4, separators=(',', ': '))
+    with open('jsonfiles/sites.json', 'wb') as f:
+        f.write(site_list)
+        f.close()
+    logging.debug('Sites population completed..')
+
 
 def merge(a, b):
+    #function to merge Json's
     "merges b into a"
     for key in b:
         if key in a:  # if key is in both a and b
@@ -52,17 +105,17 @@ def merge(a, b):
     return a
 
 def get_ports(baseURL, cienauser, cienapassw, token):
-    logging.debug('Retrieve TPE data for nodes..')
+    logging.debug('Retrieve ports/TPE data for nodes..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     for node in nodesData:
         networkConstrId = node['id']
         incomplete = True
         jsonmerged = {}
-        uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
-
+        # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
+        uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
         # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
-        URL = baseURL + uri
+        URL = baseURL + uri + networkConstrId
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
             jsonaddition = json.loads(portData)
@@ -82,11 +135,12 @@ def get_ports(baseURL, cienauser, cienapassw, token):
                     merge(jsonmerged,jsonaddition)
 
         # Inserting this line for testing since the response is too large to print it
-        filename = "tpe_"+networkConstrId
-        with open('jsongets/'+filename+'.json', 'wb') as f:
+        filename = "tpe_"+networkConstrId+'.json'
+        with open('jsongets/'+filename, 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
         logging.info('TPE data retrieved..')
+
 
 def get_links(baseURL, cienauser, cienapassw, token):
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
@@ -99,7 +153,7 @@ def get_links(baseURL, cienauser, cienapassw, token):
         jsonmerged = {}
         ## ONlY ETHERNET and IP
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-        ## ETHERNET and MPLS
+        ## Retrive data for ETHERNET and MPLS
         uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(networkConstrId)
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
         # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)

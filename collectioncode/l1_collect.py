@@ -18,10 +18,8 @@ node_key_val = {}
 
 def get_l1_nodes():
     logging.info('Retrieve L1 Nodes')
-    data, node_list, site_list = '', [], []
+    data, node_list= '', []
     data = utils.open_file_load_data("jsonfiles/all_nodes.json")
-    counter = 1
-
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
@@ -34,62 +32,19 @@ def get_l1_nodes():
                         'geoLocation').get('longitude') or 0
                     node['latitude'] = node.get('attributes').get(
                         'geoLocation').get('latitude') or 0
-                # Setting the site name, starting w/ the clli code check
-                new_match_object = re.search(
-                    r"^\w{8}-", node['attributes']['name'])
-                s_name = bool(node['attributes']['siteName'])
-
-                if new_match_object != None:
-                    node['wae_site_name'] = str(node['attributes']['name'])[:8]
-                elif s_name and len(node['attributes']['siteName']) > 0:
-                    node['wae_site_name'] = utils.normalize_sites(
-                        '{}'.format(node['attributes']['siteName']))
-                elif node['longitude'] != 0 and node['latitude'] != 0:
-                    node['wae_site_name'] = utils.normalize_sites(
-                        '{}[{}]'.format(name, counter))
-                    counter += 1
+                if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
+                    node['siteName'] = utils.normalize_sites('{}'.format(node.get('attributes').get('siteName')))
                 else:
-                    node['wae_site_name'] = utils.normalize_sites(
-                        '{}'.format(sitename_bucket))
+                    node['siteName'] = utils.getSiteName(node['longitude'],node['latitude'])
                 node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True,
                            indent=4, separators=(',', ': '))
-    # logging.debug('These are the L1 nodes:\n{}'.format(node_list))
     with open('jsonfiles/l1nodes.json', 'wb') as f:
         f.write(node_list)
+    logging.debug('L1 nodes completed..')
 
-    # Creating the sites.json file
-    # for each node in node_list
-    node_list = json.loads(node_list)
-    dupl_check = {}
-    for node in node_list:
-        # Making sure no duplicates are in our sites file
-        if node['wae_site_name'] in dupl_check:
-            continue
-        obj = {
-            "name": "",
-            "latitude": 0,
-            "longitude": 0,
-            "id": "",
-            "description": ""
-        }
-        obj['name'] = node['wae_site_name']
-        obj['longitude'] = node['longitude']
-        obj['latitude'] = node['latitude']
-        if 'siteId' in node['attributes']:
-            obj['id'] = node['attributes']['siteId']
-        obj['description'] = node['relationships']['managementSession']['data']['id']
-        # Making the duplicate check valid
-        dupl_check[obj['name']] = 'Random_string'
-        site_list.append(obj)
 
-    site_list = json.dumps(site_list, sort_keys=True,
-                           indent=4, separators=(',', ': '))
-    # logging.debug('These are the sites:\n{}'.format(site_list))
-    with open('jsonfiles/l1sites.json', 'wb') as f:
-        f.write(site_list)
-    logging.info('L1 Nodes retrieved..')
 
 def get_l1_links(baseURL, cienauser, cienapassw, token):
     # Retrieve l1 links data for all nodes
@@ -98,23 +53,26 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
     for node in l1nodesAll:
         node_key_val['{}'.format(node['id'])] = node['attributes']['name']
-    l1links_list = []
-    dupl_check = {}
+    l1links_list, dupl_check = [], {}
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
-        linkname_key_val={}
-        included = {}
-        linkData = {}
+        linkname_key_val, included, linkData={}, {}, {}
+        #Retrieve link info for each l1 node
         fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
-        with open('jsongets/'+fileName, 'rb') as f:
+        with open('jsongets/{}'.format(fileName), 'rb') as f:
             thejson = f.read()
             f.close()    
         link_data = json.loads(thejson)
-        if link_data.get('included'):
-            included = link_data['included']
         if link_data.get('data'):
             linkData = link_data['data']
+        else:
+            logging.debug('There is no FRE data returned for network construct id:{}'.format(networkId))
+        if link_data.get('included'):
+            included = link_data['included']
+        else:
+            continue
+        #Retrieve link name for each link id
         for links in linkData:
             linkname_key_val['{}'.format(links['id'])] = links['attributes']['userLabel']
         for i in range(len(included)):
@@ -122,24 +80,26 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
             if val < len(included):
                 if included[i]['type'] == 'endPoints':
                     if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
-                        id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        networkConstructA_id = included[i]['relationships']['tpes']['data'][0]['id'][:36]
                     if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
-                        id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-                    # logging.debug('This is the value of ID1:\n{}'.format(id1))
-                    # logging.debug('This is the value of ID2:\n{}'.format(id2))
+                        networkConstructB_id = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                    # logging.info('This is the value of ID1:\n{}'.format(networkConstructA_id))
+                    # logging.info('This is the value of ID2:\n{}'.format(networkConstructB_id))
                 else:
                     break
-                if 'network1' in id1:
+                if 'network1' in networkConstructA_id:
                     break
                 new_obj = {}
-                if id1 and id2:
-                    new_obj['name'] = included[i]['id'][:-2]
-                    new_obj['circuitName'] = linkname_key_val[new_obj['name']]
-                    if new_obj['name'] in dupl_check :
+                if networkConstructA_id and networkConstructB_id:
+                    new_obj['linkid'] = included[i]['id'][:-2]
+                    circuitname = linkname_key_val[new_obj['linkid']]
+                    if circuitname == '':
+                        new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
+                    else:
+                        new_obj['circuitName'] = circuitname+'_'+new_obj['linkid']
+                    #Check for duplicate link id
+                    if new_obj['linkid'] in dupl_check :
                         continue
-                    # Duplicate but okay for readability
-                    networkConstructA_id = id1
-                    networkConstructB_id = id2
                     if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
                         new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
                         new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
@@ -147,12 +107,14 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
                         continue
                     new_obj['description'] = new_obj['l1nodeA'] + \
                         '-' + new_obj['l1nodeB'] + '-' + str(i) 
-                    dupl_check[new_obj['name']] = i
+                    dupl_check[new_obj['linkid']] = i
                     l1links_list.append(new_obj)
+    # Write data in json file
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
     with open('jsonfiles/l1links.json', 'wb') as f:
         f.write(l1links_list)
+        f.close()
     logging.info('Complete L1 links...')
 
 
@@ -163,18 +125,17 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token):
     for node in nodesData:
         networkConstrId = node['id']
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
-        incomplete = True
-        jsonmerged = {}
+        incomplete, jsonmerged = True, {}
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
 
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-        URL = baseURL + uri
+        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
+        URL = baseURL + uri +networkConstrId
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
             jsonaddition = json.loads(portData)
-            # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:
                     next = ''
@@ -190,43 +151,44 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token):
                     merge(jsonmerged,jsonaddition)
 
         # Write data for each network construct id
-        filename = "l1_fre_"+networkConstrId
-        with open('jsongets/'+filename+'.json', 'wb') as f:
+        filename = "l1_fre_"+networkConstrId+'.json'
+        with open('jsongets/{}'.format(filename), 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
             f.close()
         logging.info('Retrieved L1 links data...')
 
+
+
 def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     logging.info('Generating L1 Circuits...')
-    l1_circuit_list = []
-    dupl_check = {}
+    l1_circuit_list, dupl_check= [], {}
     # Setting up the links and l1 nodes data for use later on
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
-    # allNodes = utils.open_file_load_data('jsonfiles/all_nodes.json')
-    # if allNodes.get('data'):
-    #     addNodesData = allNodes['data']
-    #     nodesData = (items for items in addNodesData if items['attributes']['typeGroup'] == 'Ciena6500')
     l1nodes_dict = {val: 1 for node in l1nodesAll for (key, val) in node.items() if key == 'id'}
     for node in l1nodesAll:
         node_key_val['{}'.format(
             node['id'])] = node['attributes']['name']
     for l1nodes in l1nodesAll:
+        linkname_key_val = {}
         networkId = l1nodes['id']
-        filename = 'l1_fre_'+networkId
-        # logging.debug('filename to retrieve circuit:\n{}'.format(filename))
-        with open('jsongets/{}.json'.format(filename), 'rb') as f:
+        filename = 'l1_fre_'+networkId+'.json'
+        logging.debug('filename to retrieve circuit:\n{}'.format(filename))
+        with open('jsongets/{}'.format(filename), 'rb') as f:
             thejson = f.read()
             f.close()    
         all_links_dict = json.loads(thejson)
         if all_links_dict.get('data'):
             data = all_links_dict['data']
         else:
+            logging.debug('There is no FRE data for network construct id to build circuits:{}'.format(networkId))
             continue
         if all_links_dict.get('included'):
             included = all_links_dict['included']
         for obj in data:
             circuit_check = False
             circuit_id = obj['id']
+            if circuit_id in dupl_check:
+                continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':
                     if node['id'][:-2] == circuit_id:
@@ -239,7 +201,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         break
             # l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict
 
-            # Adding temp check if starting node is not equal to ending node . NEED TO CHECK BACK
+            # Adding temp check if starting node is not equal to ending node . NEED TO Double BACK
             l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict and starting_node != ending_node
             if l1_check:
                 link_list = collect.get_supporting_nodes(
@@ -276,19 +238,19 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     temp_obj['circuitID'] = circuit_id
                     temp_obj['startL1Node'] = starting_node_name
                     temp_obj['endL1Node'] = ending_node_name
-                    if obj.get('attributes').get('displayData') and obj.get('attributes').get('displayData').get('photonicSpectrumPackage'):
-                        temp_obj['BW'] = obj['attributes']['displayData']['displayPhotonicSpectrumData']['wavelength']
-                    else:
-                        temp_obj['BW'] = 0
+                    # if obj.get('attributes').get('displayData') and obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
+                    #     temp_obj['BW'] = obj['attributes']['displayData']['displayPhotonicSpectrumData']['wavelength']
+                    # else:
+                    #     temp_obj['BW'] = 0
                     try:
                         if obj.get('attributes').get('userLabel') == '':
                             temp_obj['circuitName'] = 'Dummy_'+ circuit_id
                         else:
-                            temp_obj['circuitName'] = obj['attributes']['userLabel']
+                            temp_obj['circuitName'] = obj['attributes']['userLabel']+'_'+ circuit_id
                     except Exception as err:
+                        logging.warn('Circuit name returning blank for circuit id :{}'.format(temp_obj['circuitID']))
                         temp_obj['circuitName'] = 'Dummy_'+ circuit_id
-                    if temp_obj['circuitID'] in dupl_check:
-                        continue
+
                     temp_obj['status'] = obj['attributes']['operationState']
                     for link in link_list:
                         link['NodeA'] = node_key_val['{}'.format(link['NodeA'])]
@@ -296,9 +258,8 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(
                         starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
                     link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(
-                        link_list[1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
+                        link_list[len(link_list)-1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
                     temp_obj['ordered_Hops'] = link_list
-                    #Temporary commenting to avoid duplicate error
                     if temp_obj['circuitName'] != 'THISISANULHLINEPORT':
                         l1_circuit_list.append(temp_obj)
                     dupl_check[temp_obj['circuitID']] = temp_obj['circuitID']
@@ -307,6 +268,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
         with open('jsonfiles/l1circuits.json', 'wb') as f:
             f.write(l1_circuit_list)
+            f.close()
     logging.info('L1 Circuits generated..')
 
 

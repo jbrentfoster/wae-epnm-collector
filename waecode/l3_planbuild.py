@@ -42,10 +42,9 @@ def generateL3nodes(plan, l3nodeslist):
             continue
         longitude = float(l3node['longitude'])
         latitude = float(l3node['latitude'])
-        # site = l3node['wae_site_name']
+        siteName = l3node['siteName']
         vendor = 'Ciena'
-        # model = 'Ciena6500'
-        model = l3node['attributes']['resourceType']
+        model = l3node['attributes']['typeGroup']
         os = l3node['attributes']['softwareVersion']
         description = l3node['attributes']['deviceType']
         logging.debug(' L3 node name is : {}'.format(name))
@@ -60,17 +59,16 @@ def generateL3nodes(plan, l3nodeslist):
                              description=description,
                              ipAddress=ipAddress,
                              longitude=longitude,
-                             latitude=latitude)
+                             latitude=latitude,
+                             site=SiteKey(siteName))
         newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec) 
-        # nodeRec = NodeRecord(name=name, vendor=vendor, model=model, site=SiteKey(
-        #     site))
-        # newl3node = plan.getNetwork().getNodeManager().newNode(nodeRec)
+
 
 def generateL3circuits(plan, l3linksdict):
     i = 0
     linkslist = []
     duplicatelink = False
-    circ_srlgs = {}
+    # circ_srlgs = {}
     circuit_name_list = []
 
     for k1, v1 in l3linksdict.items():
@@ -86,7 +84,7 @@ def generateL3circuits(plan, l3linksdict):
                     # logging.debug('lastnode Name is : {}'.format(lastnode))
                     # discoveredname = v3['discoveredname']
                     try:
-                        affinity = v3['Local Affinity']
+                        affinity = v3['local Affinity']
                     except Exception as err:
                         affinity = ""
                     firstnode_ip = [v3['local IP']]
@@ -139,38 +137,14 @@ def generateL3circuits(plan, l3linksdict):
                         rsvpbw = float(v3['local RSVP BW'])
                         l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
-                        # if l3circuit:
-                        #     if 'vc-fdn' in v3:
-                        #         l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
-                        #         l1circuits = l1CircuitManager.getAllL1Circuits()
-                        #         for attr, val in l1circuits.items():
-                        #             l1circuit_name = val.getName()
-                        #             # logging.info("L1 circuit name is " + l1circuit_name)
-                        #             if v3['vc-fdn'] == val.getName():
-                        #                 # logging.info("Name matched!")
-                        #                 l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
-                        #                 l3circuit.setL1Circuit(l1circuit)
-                        #                 # TODO recode setting the L3 node site based on connected L1 node site
-                        #     l3circuit.setCapacity(intfbw)
-                        #     intfdict = l3circuit.getAllInterfacess()
-                        #     for k6, v6 in intfdict.items():
-                        #         v6.setResvBW(int(rsvpbw / 1000))
-                        #     circ_name = l3circuit.getName()
-                        #     circ_key = l3circuit.getKey()
-                        #     circ_dict = {'SRLGs': srlgs, 'Circuit Key': circ_key, 'discoveredname': discoveredname}
-                        #     circ_srlgs[circ_name] = circ_dict
                     duplicatelink = False
 
-    # logging.info("Processing SRLG's...")
-    # process_srlgs(plan, circ_srlgs)
 
 def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,igp_metric, te_metric,rsvpbw):
     nodeAKey = NodeKey(l3nodeA)
     nodeBKey = NodeKey(l3nodeB)
-
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
-    # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
     affinities = []
     try:
         affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
@@ -185,9 +159,6 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric,)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
-    # logging.debug('This is circuit data : {} '.format(intfArec) )
-    # logging.debug('This is circuit data : {} '.format(intfBrec))
-    # logging.debug('This is circuit data : {} '.format(circRec))
     try:
         circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
         return circuit
@@ -214,7 +185,121 @@ def check_node_exists(plan, node_name):
     all_node_keys = node_manager.getAllNodeKeys()
     for node_key in all_node_keys:
         if node_key.name == node_name:
-            # logging.info("4k node already exists in plan, skipping this one...")
             return True
     return False
 
+def generate_lsps(plan, lsps, l3nodeloopbacks):
+    index = 0
+    for lsp in lsps:
+        if isinstance(lsp['signalledBW'], basestring):
+            lspBW = int(int(lsp['signalledBW'])/1000)
+        elif isinstance(lsp['signalledBW'],int):
+            lspBW = lsp['signalledBW']/1000
+        else:
+            lspBW = 0
+            logging.debug('LSP did not have valid BW')
+        direction = lsp['direction']
+        frr = False
+        frrval = 'false'
+        if lsp.get('FRR'):
+            frrval = lsp['FRR']
+        if frrval == 'true': frr = True
+        index +=1
+        if lsp['adminstate'] == 'up':
+            tunnelId = lsp['Tunnel Id']
+            lspName = lsp['Tunnel Name']+"_"+tunnelId
+            lspSetupPriority = lsp['setup-priority']
+            lspHoldPriority = lsp['hold-priority']
+            if lsp.get('affinitybits'):
+                affinity = lsp['affinitybits']
+            else:
+                affinity = "0x01"
+            tunnelType = lsp['Tunnel Type']
+            demandName = "Demand for "+lspName
+            # src = getNodeName(lsp['Tunnel Source'],l3nodeloopbacks)
+            # destination = getNodeName(lsp['Tunnel Destination'],l3nodeloopbacks)
+            src = lsp['Tunnel Headend']
+            destination = lsp['Tunnel Tailend']
+            if src == None or destination == None:
+                logging.debug('Could not get valid source or destination')
+            else:
+                try:
+                    new_lsp(plan, src, destination, lspName, lspBW, tunnelType, frr, lspSetupPriority, lspHoldPriority, affinity)
+                    new_demand_lsp(plan, src, destination, lspName, demandName, lspBW)
+                except Exception as err:
+                        logging.warn("Could not process Data LSP: " + lspName)
+                        logging.warn(err)
+
+
+def new_lsp(plan, src, destination, lspName, lspBW, tunnelType, frr, lspSetupPriority, lspHoldPriority, affinity):
+    lspRec = LSPRecord(
+        sourceKey = NodeKey(name=src),
+        name=lspName,
+        destinationKey=NodeKey(name=destination),
+        setupPriority=int(lspSetupPriority),
+        holdPriority=int(lspHoldPriority),
+        isActive=True,
+        isPrivate=True,
+        setupBW=lspBW,
+        FRREnabled=True,
+        type=LSPType.RSVP,
+        includeAffinities=getAffinities(affinity)
+    )
+
+    lspManager=plan.getNetwork().getLSPManager()
+    lspManager.newLSP(lspRec)
+
+def new_demand_lsp(plan, src, destination, lspName, demandName, lspBW):
+    serviceClass = 'Default'
+    serviceClassMgr = plan.getNetwork().getServiceClassManager()
+    serviceClassExists = serviceClassMgr.hasServiceClass(
+        ServiceClassKey(name=serviceClass))
+
+    if not serviceClassExists:
+        svcClassRec = ServiceClassRecord(name=serviceClass)
+        serviceClassMgr.newServiceClass(svcClassRec)
+
+    keyList = serviceClassMgr.getAllServiceClassKeys()
+    demandRec = DemandRecord(
+        name=demandName,
+        source=DemandEndpointKey(key=src),
+        destination=DemandEndpointKey(key=destination),
+        serviceClass=ServiceClassKey(name='Default'),
+        privateLSP=LSPKey(
+            name=lspName,
+            sourceKey=NodeKey(name=src)
+        )
+    )
+    demandManager = plan.getNetwork().getDemandManager()
+    demandManager.newDemand(demandRec)
+    demandTraffKey = DemandTrafficKey(
+        traffLvlKey=TrafficLevelKey(name='Default'),
+        dmdKey=DemandKey(
+            name=demandName,
+            source=DemandEndpointKey(key=src),
+            destination=DemandEndpointKey(key=destination),
+            serviceClass=ServiceClassKey(name='Default'),
+        )
+    )
+    demandTraffManager = plan.getTrafficManager().getDemandTrafficManager()
+    demandTraffManager.setTraffic(demandTraffKey,lspBW)
+
+
+def getNodeName(nodeAddress, nodelist):
+    for node in nodelist:
+        for k, v in node.items():
+            if v == nodeAddress:
+                return k
+
+def getAffinities(affinity):
+    scale = 16  ## equals to hexadecimal
+    num_of_bits = 32
+    affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
+
+    affinities = []
+    c = 0
+    for afbit in reversed(affinitylist):
+        if afbit == '1':
+            affinities.append(c)
+        c += 1
+    return affinities

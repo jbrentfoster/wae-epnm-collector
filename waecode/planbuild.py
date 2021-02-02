@@ -36,7 +36,6 @@ from com.cisco.wae.design.model.net import LSPRecord
 def generateSites(plan, sitelist):
     SiteManager = plan.getNetwork().getSiteManager()
     for site in sitelist:
-        logging.debug('This is the site:\n{}'.format(site))
         if check_site_exists(SiteManager, site['name']):
             # logging.warn(
             #     "site already exists in plan file, will not add duplicate: " + site['name'])
@@ -44,7 +43,7 @@ def generateSites(plan, sitelist):
         long = float(site['longitude'])
         lat = float(site['latitude'])
         siteRec = SiteRecord(name=site['name'], longitude=long, latitude=lat, tags=[
-                             site['id'], site['description']])
+                             site['id']])
         newsite = SiteManager.newSite(siteRec)
 
 

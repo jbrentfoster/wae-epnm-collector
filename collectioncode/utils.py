@@ -35,6 +35,7 @@ def rest_get_json(URL, cienauser, cienapassw, token):
 def open_file_load_data(file_name):
     with open(file_name, 'rb') as f:
         data = json.load(f)
+        f.close()
     return data
 
 def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
@@ -76,3 +77,24 @@ def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
 #Helper function to sanitize strings
 def normalize_sites(name):
     return name.strip().replace(' ', '')
+
+
+#Helper function to retrieve Site names
+def getSiteName(longi,lat):
+    with open('jsonfiles/sites.json','rb') as f:
+        thejson = json.load(f)
+    data = next((item for item in thejson if item['longitude'] == longi and item['latitude'] == lat),None)
+    siteName = normalize_sites(
+                '{}'.format(data['name']))
+    logging.debug('site name is '+siteName)
+    return siteName
+
+#Helper function to get all l3 nodes
+def getl3nodes():
+    with open("jsonfiles/l3linksall.json", 'rb') as f:
+        l3linksdict = json.load(f)
+    l3nodes = []
+    for k1, v1 in l3linksdict.items():
+        tmpnode = {'Name': k1}
+        l3nodes.append(tmpnode)
+    return l3nodes, l3linksdict
