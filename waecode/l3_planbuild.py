@@ -105,9 +105,6 @@ def generateL3circuits(plan, l3linksdict):
                     except Exception as err:
                         tp_description = ""
                     discoveredname = v3['circuitName']
-                    srlgs = []
-                    if 'SRLGs' in v3:
-                        srlgs = v3['SRLGs']
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if not duplicatelink:
@@ -137,7 +134,9 @@ def generateL3circuits(plan, l3linksdict):
                         rsvpbw = float(v3['local RSVP BW'])
                         l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
+ 
                     duplicatelink = False
+
 
 
 def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3nodeB_ip, nodeAintfname, nodeBintfname,igp_metric, te_metric,rsvpbw):
@@ -145,6 +144,7 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     nodeBKey = NodeKey(l3nodeB)
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
+    # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
     affinities = []
     try:
         affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
@@ -159,6 +159,9 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     intfBrec = InterfaceRecord(sourceKey=nodeBKey, name=nodeBintfname, isisLevel=2, affinityGroup=affinities,ipAddresses=l3nodeB_ip, igpMetric=igp_metric,)
     circRec = CircuitRecord(name=name)
     network = plan.getNetwork()
+    # logging.debug('This is circuit data : {} '.format(intfArec) )
+    # logging.debug('This is circuit data : {} '.format(intfBrec))
+    # logging.debug('This is circuit data : {} '.format(circRec))
     try:
         circuit = network.newConnection(ifaceARec=intfArec, ifaceBRec=intfBrec, circuitRec=circRec)
         return circuit
@@ -185,6 +188,7 @@ def check_node_exists(plan, node_name):
     all_node_keys = node_manager.getAllNodeKeys()
     for node_key in all_node_keys:
         if node_key.name == node_name:
+            # logging.info("4k node already exists in plan, skipping this one...")
             return True
     return False
 
@@ -294,6 +298,7 @@ def getNodeName(nodeAddress, nodelist):
 def getAffinities(affinity):
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
+    # print bin(int(affinity, scale))[2:].zfill(num_of_bits)
     affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
 
     affinities = []

@@ -42,6 +42,7 @@ def get_l1_nodes():
                            indent=4, separators=(',', ': '))
     with open('jsonfiles/l1nodes.json', 'wb') as f:
         f.write(node_list)
+        f.close()
     logging.debug('L1 nodes completed..')
 
 
@@ -56,7 +57,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
     l1links_list, dupl_check = [], {}
     for l1nodes in l1nodesAll:
         networkId = l1nodes['id']
-        linkname_key_val, included, linkData={}, {}, {}
+        linkname_key_val, included, linkData, layer_key_val={}, {}, {}, {}
         #Retrieve link info for each l1 node
         fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
@@ -72,13 +73,19 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
             included = link_data['included']
         else:
             continue
-        #Retrieve link name for each link id
+        #Retrieve link name and layer rate for each link id
         for links in linkData:
             linkname_key_val['{}'.format(links['id'])] = links['attributes']['userLabel']
+            layer_key_val['{}'.format(links['id'])] = links['attributes']['layerRate']
         for i in range(len(included)):
             val = i+1
             if val < len(included):
-                if included[i]['type'] == 'endPoints':
+                layerRate = layer_key_val[included[i]['id'][:-2]]
+                logging.debug('Network id is :{}'.format(networkId))
+                # Checking if type is endpoint and layer rate should be 'OMS' or 'OTS' for L1 links    
+                if included[i]['type'] == 'endPoints' and (layerRate == 'OMS' or layerRate == 'OTS'):
+                # if included[i]['type'] == 'endPoints':
+                    logging.debug('OMS / OTS include id is :{}'.format(included[i]['id']))
                     if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
                         networkConstructA_id = included[i]['relationships']['tpes']['data'][0]['id'][:36]
                     if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
@@ -86,12 +93,13 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
                     # logging.info('This is the value of ID1:\n{}'.format(networkConstructA_id))
                     # logging.info('This is the value of ID2:\n{}'.format(networkConstructB_id))
                 else:
-                    break
+                    continue
                 if 'network1' in networkConstructA_id:
-                    break
+                    continue
                 new_obj = {}
                 if networkConstructA_id and networkConstructB_id:
                     new_obj['linkid'] = included[i]['id'][:-2]
+                    # Check if userlable field populated then populate circuit name otherwise populate with Dummy followed by linkid
                     circuitname = linkname_key_val[new_obj['linkid']]
                     if circuitname == '':
                         new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
@@ -107,6 +115,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
                         continue
                     new_obj['description'] = new_obj['l1nodeA'] + \
                         '-' + new_obj['l1nodeB'] + '-' + str(i) 
+                    # Add link id for duplicate check
                     dupl_check[new_obj['linkid']] = i
                     l1links_list.append(new_obj)
     # Write data in json file
@@ -119,7 +128,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token):
 
 
 def get_l1_links_data(baseURL, cienauser, cienapassw, token):
-    logging.info('Retrieving L1 links data..')
+    logging.info('Retrieving L1 links data from MCP..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     for node in nodesData:
@@ -130,7 +139,9 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token):
 
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+        #####Priv retrieving data for OMS , OTS and OTU's
         uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
+        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTU2%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
         URL = baseURL + uri +networkConstrId
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
@@ -145,12 +156,12 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token):
                     logging.info("No data found")
                 if next:
                     URL = next
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
                 else:
                     incomplete = False
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
 
-        # Write data for each network construct id
+        # save data for each network construct id
         filename = "l1_fre_"+networkConstrId+'.json'
         with open('jsongets/{}'.format(filename), 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -172,7 +183,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
         linkname_key_val = {}
         networkId = l1nodes['id']
         filename = 'l1_fre_'+networkId+'.json'
-        logging.debug('filename to retrieve circuit:\n{}'.format(filename))
+        logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
         with open('jsongets/{}'.format(filename), 'rb') as f:
             thejson = f.read()
             f.close()    
@@ -189,6 +200,9 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             circuit_id = obj['id']
             if circuit_id in dupl_check:
                 continue
+            # if layer rate is not OTU4 then continue 
+            if obj['attributes']['layerRate'] != 'OTU4':
+                continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':
                     if node['id'][:-2] == circuit_id:
@@ -201,9 +215,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         break
             # l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict
 
-            # Adding temp check if starting node is not equal to ending node . NEED TO Double BACK
+            # check if starting node is not equal to ending node . 
             l1_check = starting_node in l1nodes_dict and ending_node in l1nodes_dict and starting_node != ending_node
             if l1_check:
+                logging.debug(' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
                 link_list = collect.get_supporting_nodes(
                     circuit_id, baseURL, cienauser, cienapassw, token)
                 # Check based on the returned nodes to see if they're valid l1 nodes
@@ -224,7 +239,9 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         "portStartNode": "",
                         "portEndNode": "",
                         "linkLabel": "",
-                        "BW": "0",
+                        "wavelength": 0.0,
+                        "channel":"",
+                        "frequency":0.0,
                         "status": "",
                         "ordered_Hops": []
                     }
@@ -234,14 +251,17 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
 
                     starting_node_name = node_key_val['{}'.format(starting_node)]
                     ending_node_name = node_key_val['{}'.format(ending_node)]
-                   
                     temp_obj['circuitID'] = circuit_id
                     temp_obj['startL1Node'] = starting_node_name
                     temp_obj['endL1Node'] = ending_node_name
-                    # if obj.get('attributes').get('displayData') and obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
-                    #     temp_obj['BW'] = obj['attributes']['displayData']['displayPhotonicSpectrumData']['wavelength']
-                    # else:
-                    #     temp_obj['BW'] = 0
+
+                    if obj.get('attributes').get('displayData') and obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
+                        if 'wavelength' in obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
+                            temp_obj['wavelength'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['wavelength']
+                        if 'frequency' in obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
+                            temp_obj['frequency'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['frequency']
+                        if 'channel' in obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
+                            temp_obj['channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel']
                     try:
                         if obj.get('attributes').get('userLabel') == '':
                             temp_obj['circuitName'] = 'Dummy_'+ circuit_id
@@ -296,14 +316,3 @@ def getPortDetails(starting_node, startingNodeId,ending_node, endingNodeId):
     logging.info('L1 port info retrieved..')
     return portStartNode, portEndNode
 
-def merge(a, b):
-    "merges b into a"
-    for key in b:
-        if key in a:  # if key is in both a and b
-            if isinstance(a[key], dict) and isinstance(b[key], dict):  # if the key is dict Object
-                merge(a[key], b[key])
-            elif isinstance(a[key], list) and isinstance(b[key], list):
-                a[key] = a[key] + b[key]
-        else:  # if the key is not in dict a , add it to dict a
-            a.update({key: b[key]})
-    return a

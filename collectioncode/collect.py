@@ -34,24 +34,24 @@ def get_all_nodes(baseURL, cienauser, cienapassw, token):
             logging.info("No data found")
         if next:
             URL = next
-            merge(jsonmerged,jsonaddition)
+            utils.merge(jsonmerged,jsonaddition)
         else:
             incomplete = False
-            merge(jsonmerged,jsonaddition)
+            utils.merge(jsonmerged,jsonaddition)
 
-    # Saving the data for future use
+    # Saving the all nodes data
     with open('jsonfiles/all_nodes.json', 'wb') as f:
         f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
         f.close()
 
 def get_Sites(baseURL, cienauser, cienapassw, token_string):
-    logging.debug('Retrieve Sites data for nodes..')
+    logging.debug('Retrieve Sites data for all nodes..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
     nodesData = allNodes['data']
     site_list, dupl_check, counter = [], {}, 1
 
     for node in nodesData:
-        # Making sure no duplicates are in our sites file
+        # Making sure no duplicates are in sites file
         if node['attributes']['name'] in dupl_check:
             continue
         obj = {
@@ -91,19 +91,6 @@ def get_Sites(baseURL, cienauser, cienapassw, token_string):
     logging.debug('Sites population completed..')
 
 
-def merge(a, b):
-    #function to merge Json's
-    "merges b into a"
-    for key in b:
-        if key in a:  # if key is in both a and b
-            if isinstance(a[key], dict) and isinstance(b[key], dict):  # if the key is dict Object
-                merge(a[key], b[key])
-            elif isinstance(a[key], list) and isinstance(b[key], list):
-                a[key] = a[key] + b[key]
-        else:  # if the key is not in dict a , add it to dict a
-            a.update({key: b[key]})
-    return a
-
 def get_ports(baseURL, cienauser, cienapassw, token):
     logging.debug('Retrieve ports/TPE data for nodes..')
     allNodes= utils.open_file_load_data("jsonfiles/all_nodes.json")
@@ -129,12 +116,12 @@ def get_ports(baseURL, cienauser, cienapassw, token):
                     logging.info("No data found")
                 if next:
                     URL = next
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
                 else:
                     incomplete = False
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
 
-        # Inserting this line for testing since the response is too large to print it
+        # Saving ports / tpe data to json file for all network id's
         filename = "tpe_"+networkConstrId+'.json'
         with open('jsongets/'+filename, 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -172,12 +159,12 @@ def get_links(baseURL, cienauser, cienapassw, token):
                     logging.info("No data found")
                 if next:
                     URL = next
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
                 else:
                     incomplete = False
-                    merge(jsonmerged,jsonaddition)
+                    utils.merge(jsonmerged,jsonaddition)
 
-        # Write data for each network construct id
+        # saving fre data for each network construct id for L3 
         filename = "fre_"+networkConstrId
         with open('jsongets/'+filename+'.json', 'wb') as f:
             f.write(json.dumps(jsonmerged, f, sort_keys=True, indent=4, separators=(',', ': ')))

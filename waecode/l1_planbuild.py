@@ -106,7 +106,6 @@ def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
 
 
 def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1hops, bw, status):
-
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
@@ -140,7 +139,9 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
         l1_nodeB_key = L1NodeKey(l1hop[0][1])
         l1_link_name = l1hop[1]
         l1_link_key = L1LinkKey(l1_link_name, l1_nodeA_key, l1_nodeB_key)
+        # logging.debug('l1_link_key is :{}'.format(l1_link_name))
         l1_link = l1linkManager.getL1Link(l1_link_key)
+        logging.debug('l1_link is :{}'.format(l1_link))
         l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=l1_nodeA_key, hopLink=l1_link.getKey(), step=c, type=hoptype)
         l1circuitpath.addHop(l1hoprec)
         hops = l1circuitpath.getHops()

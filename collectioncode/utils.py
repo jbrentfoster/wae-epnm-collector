@@ -32,11 +32,27 @@ def rest_get_json(URL, cienauser, cienapassw, token):
         logging.error('Exception raised: ' + str(type(err)) + '\nURL: {}\nMessage: {}'.format(str(err), err.message))
         return
 
+#Helper function to load json data
 def open_file_load_data(file_name):
     with open(file_name, 'rb') as f:
         data = json.load(f)
         f.close()
     return data
+
+
+#Helper function to merge API returned JSON data
+def merge(a, b):
+    #function to merge Json's
+    "merges b into a"
+    for key in b:
+        if key in a:  # if key is in both a and b
+            if isinstance(a[key], dict) and isinstance(b[key], dict):  # if the key is dict Object
+                merge(a[key], b[key])
+            elif isinstance(a[key], list) and isinstance(b[key], list):
+                a[key] = a[key] + b[key]
+        else:  # if the key is not in dict a , add it to dict a
+            a.update({key: b[key]})
+    return a
 
 def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
     data, id_list = '', []

@@ -64,96 +64,92 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         freData = {}
         networkId = l3nodes['id']
         logging.debug(' Network iconstruct d is :{}'.format(networkId))
-        if networkId != '4af8b77b-3c91-32eb-b5fd-abb16169b541':
-            node = l3nodes['attributes']['name']
-            if l3nodes.get('attributes').get('l2Data') and l3nodes.get('attributes').get('l2Data')[0].get('loopbackAddresses'):
-                loopbackAddress = l3nodes['attributes']['l2Data'][0]['loopbackAddresses'][0]
-            else:
-                loopbackAddress = ''
-            nodes[node] = {'loopback address': loopbackAddress}
-            fileName = 'fre_'+networkId
-            logging.debug('Filename :\n{}'.format(fileName))
-            nodes[node]['Links'] = dict()
-            with open('jsongets/{}.json'.format(fileName), 'rb') as f:
-                thejson = f.read()
-                f.close()    
-            link_data = json.loads(thejson)
-            if link_data.get('data'):
-                freData = link_data['data']
-            for frenode in freData:
-                if frenode.get('attributes').get('mgmtName'):
-                    fre_node_key_val['{}'.format(frenode['id'])] = frenode['attributes']['mgmtName']
-            if link_data.get('included'):
-                included = link_data['included']
-            logging.debug(
-                'Value of len(included):\n{}'.format(len(included)))
-            counter = 0
-            # import pdb
-            # pdb.set_trace()
-            for i in range(len(included)):
-                val = i+1
-                id1, tId1, id2, tId2 = '', '', '', ''
-                includeDatset = {}
-                # logging.debug('Length of i+1 :{}'.format(val))
-                if val < len(included):
-                    if included[i]['type'] == 'endPoints':
-                        if ((included[i]['id'][-3:] == 'EP0' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-3:] == 'EP1' and included[i+1].get('relationships').get('tpes'))):
-                            logging.debug('This is mpls tunnel')
-                            tId1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                            tunnelId1 = included[i]['relationships']['tpes']['data'][0]['id']
-                            tId2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-                            tunnelId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
-                            # includeDatset = included[i]
-                        elif ((included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'))):
-                            id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                            linkId1 = included[i]['relationships']['tpes']['data'][0]['id']
-                            id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
-                            linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
-                            # logging.debug('This is the value of ID1:\n{}'.format(id1))
-                            # logging.debug('This is the value of ID2:\n{}'.format(id2))
-                            if id1 and 'network1' in id1:
-                                continue
-                    else:
-                        continue
-                    new_obj = {}
-                    if tId1 and tId2:
-                        if tId1 in node_key_val and tId2 in node_key_val:
-                            if tId1 == tId2:
-                                logging.debug('Tunnel head end and tail end are same')
+        node = l3nodes['attributes']['name']
+        if l3nodes.get('attributes').get('l2Data') and l3nodes.get('attributes').get('l2Data')[0].get('loopbackAddresses'):
+            loopbackAddress = l3nodes['attributes']['l2Data'][0]['loopbackAddresses'][0]
+        else:
+            loopbackAddress = ''
+        nodes[node] = {'loopback address': loopbackAddress}
+        fileName = 'fre_'+networkId
+        logging.debug('Filename :\n{}'.format(fileName))
+        nodes[node]['Links'] = dict()
+        with open('jsongets/{}.json'.format(fileName), 'rb') as f:
+            thejson = f.read()
+            f.close()    
+        link_data = json.loads(thejson)
+        if link_data.get('data'):
+            freData = link_data['data']
+        for frenode in freData:
+            if frenode.get('attributes').get('mgmtName'):
+                fre_node_key_val['{}'.format(frenode['id'])] = frenode['attributes']['mgmtName']
+        if link_data.get('included'):
+            included = link_data['included']
+        logging.debug(
+            'Value of len(included):\n{}'.format(len(included)))
+        counter = 0
+        for i in range(len(included)):
+            val = i+1
+            id1, tId1, id2, tId2 = '', '', '', ''
+            includeDatset = {}
+            # logging.debug('Length of i+1 :{}'.format(val))
+            if val < len(included):
+                if included[i]['type'] == 'endPoints':
+                    if ((included[i]['id'][-3:] == 'EP0' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-3:] == 'EP1' and included[i+1].get('relationships').get('tpes'))):
+                        logging.debug('This is mpls tunnel')
+                        tId1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        tunnelId1 = included[i]['relationships']['tpes']['data'][0]['id']
+                        tId2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                        tunnelId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
+                    elif ((included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'))):
+                        id1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        linkId1 = included[i]['relationships']['tpes']['data'][0]['id']
+                        id2 = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                        linkId2 = included[i+1]['relationships']['tpes']['data'][0]['id']
+                        # logging.debug('This is the value of ID1:\n{}'.format(id1))
+                        # logging.debug('This is the value of ID2:\n{}'.format(id2))
+                        if id1 and 'network1' in id1:
+                            continue
+                else:
+                    continue
+                new_obj = {}
+                if tId1 and tId2:
+                    if tId1 in node_key_val and tId2 in node_key_val:
+                        if tId1 == tId2:
+                            logging.debug('Tunnel head end and tail end are same')
+                        else:
+                            populateLspData(tId1,tunnelId1,tId2,tunnelId2,node_key_val,lsplist)
+                if id1 and id2:
+                    networkConstructA_id = id1
+                    networkConstructB_id = id2
+                    if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val and networkConstructA_id != networkConstructB_id:
+                        # Duplicate then continue
+                        if included[i]['id'][:-2] in dupl_check :
+                            continue
+                        new_obj = get_link_data(id1,linkId1,id2,linkId2)
+                        if new_obj:
+                            counter += 1
+                            linkid = "Link" + str(counter)
+                            nodes[node]['Links'][linkid] = dict()
+                            new_obj['l3node'] = node_key_val[networkConstructA_id]
+                            new_obj['l3NeighborNode'] = node_key_val[networkConstructB_id]
+                            new_obj['description'] = node_key_val[networkConstructA_id] + '-' + node_key_val[networkConstructB_id] + '-' + str(counter)
+                            new_obj['name'] = included[i]['id'][:-2]
+                            if(fre_node_key_val).get(included[i]['id'][:-2]):
+                                new_obj['circuitName'] = fre_node_key_val[included[i]['id'][:-2]]+ '_' + included[i]['id'][:-2]
                             else:
-                                populateLspData(tId1,tunnelId1,tId2,tunnelId2,node_key_val,lsplist)
-                    if id1 and id2:
-                        networkConstructA_id = id1
-                        networkConstructB_id = id2
-                        if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val and networkConstructA_id != networkConstructB_id:
-                            # Duplicate then continue
-                            if included[i]['id'][:-2] in dupl_check :
-                                continue
-                            new_obj = get_link_data(id1,linkId1,id2,linkId2)
-                            if new_obj:
-                                counter += 1
-                                linkid = "Link" + str(counter)
-                                nodes[node]['Links'][linkid] = dict()
-                                new_obj['l3node'] = node_key_val[networkConstructA_id]
-                                new_obj['l3NeighborNode'] = node_key_val[networkConstructB_id]
-                                new_obj['description'] = node_key_val[networkConstructA_id] + '-' + node_key_val[networkConstructB_id] + '-' + str(counter)
-                                new_obj['name'] = included[i]['id'][:-2]
-                                if(fre_node_key_val).get(included[i]['id'][:-2]):
-                                    new_obj['circuitName'] = fre_node_key_val[included[i]['id'][:-2]]+ '_' + included[i]['id'][:-2]
-                                else:
-                                    new_obj['circuitName'] = 'Dummy_'+included[i]['id'][:-2]
+                                new_obj['circuitName'] = 'Dummy_'+included[i]['id'][:-2]
 
-                                if(fre_node_key_val).get(included[i]['id'][:-2]):
-                                    new_obj['linkName'] = fre_node_key_val[included[i]['id'][:-2]]
-                                else:
-                                    new_obj['linkName'] = 'Dummy_'+included[i]['id'][:-2]
-
-                                nodes[node]['Links'][linkid] = new_obj
-                                dupl_check[new_obj['name']] = i
+                            if(fre_node_key_val).get(included[i]['id'][:-2]):
+                                new_obj['linkName'] = fre_node_key_val[included[i]['id'][:-2]]
                             else:
-                                continue
+                                new_obj['linkName'] = 'Dummy_'+included[i]['id'][:-2]
+
+                            nodes[node]['Links'][linkid] = new_obj
+                            dupl_check[new_obj['name']] = i
                         else:
                             continue
+                    else:
+                        continue
     if nodes:
         with open('jsonfiles/l3linksall.json', 'wb') as f:
             f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -165,8 +161,6 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 
 def populateLspData(tId1,tunnelId1,tId2,tunnelId2,node_key_val,lsplist):
     lspdict = {}
-    # import pdb
-    # pdb.set_trace()
     logging.debug('mpls tunnel endpoint are : '+tunnelId1+ ' and '+tunnelId2)
     fileNameEnd1 = 'tpe_'+tId1
     logging.debug('Filename :\n{}'.format(fileNameEnd1))
