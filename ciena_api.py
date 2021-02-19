@@ -81,8 +81,9 @@ def main():
     delete_previous = args.delete_previous
     logging_level = args.logging.upper()
 
-    #Setting up the main log file 
-    logFormatter = logging.Formatter('%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    # Setting up the main log file
+    logFormatter = logging.Formatter(
+        '%(asctime)s %(levelname)s:  %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     rootLogger = logging.getLogger()
     rootLogger.level = eval('logging.{}'.format(logging_level))
 
@@ -116,12 +117,17 @@ def main():
         # Create path for archive root and loggger
         mkpath(archive_root)
         mkpath(planfiles_root)
-        mkpath('jsonfiles')
-        mkpath('jsongets')
+        isdirExists = os.path.isdir('jsongets')
+        #isfiledirExists = os.path.isdir('jsonfiles')
+        if not isdirExists:
+            logging.info(
+                "This is first time run. Creating jsongets and jsonfiles")
+            mkpath('jsonfiles')
+            mkpath('jsongets')
+        else:
+            logging.info(
+                "Keeping collection files from previous collection, building plan file only...")
         logger = create_log('collection', logging_level, archive_root)
-
-        logging.info(
-            "Keeping collection files from previous collection, building plan file only...")
 
     # Create a service to be used by this script
     conn = com.cisco.wae.design.ServiceConnectionManager.newService()
@@ -130,18 +136,18 @@ def main():
     fileName = os.path.join(cwd, 'planfiles/blank.pln')
     plan = conn.getPlanManager().newPlanFromFileSystem(fileName)
 
-    tokenPath = '/tron/api/v1/tokens'
-    proxies = {
-        "http": None,
-        "https": None,
-    }
-    appformat = 'application/json'
-    headers = {'Content-type': appformat, 'Accept': appformat}
-    data = {'username': cienauser, 'password': cienapassw}
-    resttokenURI = baseURL + tokenPath
     token = None
 
-    if token == None:
+    if delete_previous or not isdirExists:
+        tokenPath = '/tron/api/v1/tokens'
+        proxies = {
+            "http": None,
+            "https": None,
+        }
+        appformat = 'application/json'
+        headers = {'Content-type': appformat, 'Accept': appformat}
+        data = {'username': cienauser, 'password': cienapassw}
+        resttokenURI = baseURL + tokenPath
         try:
             r = requests.post(resttokenURI, proxies=proxies,
                               headers=headers, json=data, verify=False)
@@ -155,54 +161,53 @@ def main():
             print "Exception raised: " + str(err)
             return
 
-    token = json.loads(token)
-    token_string = token['token']
+        token = json.loads(token)
+        token_string = token['token']
 
-    # Get all the nodes
-    logging.debug("Retrieve all nodes..")
-    collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("All nodes retrieved")
+        # Get all the nodes
+        logging.debug("Retrieve all nodes..")
+        collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("All nodes retrieved")
 
-     # Retrieve all  ports / TPE data
-    logging.debug("Retrieve all ports data..")
-    collect.get_ports(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("All ports retrieved..")
+        # Retrieve all  ports / TPE data
+        logging.debug("Retrieve all ports data..")
+        collect.get_ports(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("All ports retrieved..")
 
-    # Retrieve all the links and cicruits
-    logging.debug("Retrieve all Links data..")
-    collect.get_links(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("All links retrieved..")
+        # Retrieve all the links and cicruits
+        logging.debug("Retrieve all Links data..")
+        collect.get_links(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("All links retrieved..")
 
-    # Populate Site information
-    logging.debug("Populate Sites..")
-    collect.get_Sites(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("Sites data populated..")
+        # Populate Site information
+        logging.debug("Populate Sites..")
+        collect.get_Sites(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("Sites data populated..")
 
-    # Get all the l1nodes
-    logging.debug("Retrieve L1 nodes..")
-    collect.get_l1_nodes()
-    logging.debug("L1 nodes generated..")
+        # Get all the l1nodes
+        logging.debug("Retrieve L1 nodes..")
+        collect.get_l1_nodes()
+        logging.debug("L1 nodes generated..")
 
+        # Get all the l1 links
+        logging.debug("Retrieve L1 links..")
+        collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("L1 links retrieved..")
 
-    # Get all the l1 links
-    logging.debug("Retrieve L1 links..")
-    collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("L1 links retrieved..")
+        # Code to get the l1 circuits
+        logging.debug("Retrieve L1 Circuits..")
+        collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("L1 Circuits retrieved..")
 
-    # Code to get the l1 circuits
-    logging.debug("Retrieve L1 Circuits..")
-    collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("L1 Circuits retrieved..")
+        # Get all the l3nodes
+        logging.debug("Retrieve L3 nodes..")
+        collect.get_l3_nodes()
+        logging.debug("L3 nodes generated..")
 
-    # Get all the l3nodes
-    logging.debug("Retrieve L3 nodes..")
-    collect.get_l3_nodes()
-    logging.debug("L3 nodes generated..")
-
-    # Get all the l3 links
-    logging.debug("Retrieve L3 links and Circuits..")
-    collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
-    logging.debug("L3 links and circuit generated..")
+        # Get all the l3 links
+        logging.debug("Retrieve L3 links and Circuits..")
+        collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
+        logging.debug("L3 links and circuit generated..")
 
     #######################################
     #
@@ -247,8 +252,8 @@ def main():
         for l3_node in l3nodeslist:
             tmp_name = l3_node['attributes']['name']
             tmp_node = next(
-                (item for item in l3nodeslist if item['attributes']['name'] == tmp_name),
-                None)
+                (item for item in l3nodeslist if item['attributes']
+                 ['name'] == tmp_name), None)
             node = node_manager.getNode(NodeKey(l3_node['attributes']['name']))
             if tmp_node:
                 node.setLatitude(float(tmp_node['latitude']))
@@ -259,7 +264,7 @@ def main():
         l3nodes, l3linksdict = utils.getl3nodes()
         l3_planbuild.generateL3circuits(plan, l3linksdict)
 
-        for k1,v1 in l3linksdict.items():
+        for k1, v1 in l3linksdict.items():
             tempnode = {k1: v1['loopback address']}
             l3nodeloopbacks.append(tempnode)
 
@@ -270,7 +275,6 @@ def main():
             f.close()
         l3_planbuild.generate_lsps(plan, lsps, l3nodeloopbacks)
 
-
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')
         plan.serializeToFileSystem(planfiles_root + current_time + '.pln')
@@ -280,7 +284,6 @@ def main():
     logging.info("Script finish time is: {}".format(end_time))
     logging.info("Completed in {0:.2f} seconds".format(
         time.time() - start_time))
-
 
 
 # Creating a new log object and the file to store the logs in the /archive/captures dir
