@@ -39,6 +39,8 @@ def main():
         description='A WAE collection tool for Ciena')
     parser.add_argument('-a', '--archive_root', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Archive_root'],
                         help='Please provide the local path to your archive directory')
+    parser.add_argument('-s', '--state_or_states', metavar='N', type=str, nargs='?', default=config['DEFAULT']['State_or_states'],
+                        help="Please provide a list of states for mplstopo discovery. 'NY, MD'")
     parser.add_argument('-i', '--ciena_ipaddr', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_ipaddr'],
                         help="Please provide the Ciena Server address for API calls")
     parser.add_argument('-u', '--ciena_user', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_user'],
@@ -79,6 +81,8 @@ def main():
     start_time = time.time()
     build_plan = args.build_plan
     delete_previous = args.delete_previous
+    state_or_states_list = args.state_or_states.split(',')
+    state_or_states_list = [x.strip(' ') for x in state_or_states_list]
     logging_level = args.logging.upper()
 
     # Setting up the main log file
@@ -99,6 +103,7 @@ def main():
     logging.debug("Archive root is: {}".format(args.archive_root))
     logging.debug("Ciena ip address is: {}".format(args.ciena_ipaddr))
     logging.debug("Ciena user is: {}".format(args.ciena_user))
+    logging.info("State list is: {} ".format(state_or_states_list))
     # logging.debug("Phases is: {}".format(args.phases))
     # Delete all output files
     if delete_previous:
@@ -169,29 +174,32 @@ def main():
         collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
         logging.debug("All nodes retrieved")
 
-        # Retrieve all  ports / TPE data
-        logging.debug("Retrieve all ports data..")
-        collect.get_ports(baseURL, cienauser, cienapassw, token_string)
-        logging.debug("All ports retrieved..")
-
-        # Retrieve all the links and cicruits
-        logging.debug("Retrieve all Links data..")
-        collect.get_links(baseURL, cienauser, cienapassw, token_string)
-        logging.debug("All links retrieved..")
-
         # Populate Site information
         logging.debug("Populate Sites..")
         collect.get_Sites(baseURL, cienauser, cienapassw, token_string)
         logging.debug("Sites data populated..")
 
+        # Retrieve all  ports / TPE data for states
+        logging.debug("Retrieve all ports data..")
+        collect.get_ports(baseURL, cienauser, cienapassw,
+                          token_string, state_or_states_list)
+        logging.debug("All ports retrieved..")
+
+        # Retrieve all the links and cicruits
+        logging.debug("Retrieve all Links data..")
+        collect.get_links(baseURL, cienauser, cienapassw,
+                          token_string, state_or_states_list)
+        logging.debug("All links retrieved..")
+
         # Get all the l1nodes
         logging.debug("Retrieve L1 nodes..")
-        collect.get_l1_nodes()
+        collect.get_l1_nodes(state_or_states_list)
         logging.debug("L1 nodes generated..")
 
         # Get all the l1 links
         logging.debug("Retrieve L1 links..")
-        collect.get_l1_links(baseURL, cienauser, cienapassw, token_string)
+        collect.get_l1_links(baseURL, cienauser, cienapassw,
+                             token_string, state_or_states_list)
         logging.debug("L1 links retrieved..")
 
         # Code to get the l1 circuits
@@ -201,13 +209,14 @@ def main():
 
         # Get all the l3nodes
         logging.debug("Retrieve L3 nodes..")
-        collect.get_l3_nodes()
+        collect.get_l3_nodes(state_or_states_list)
         logging.debug("L3 nodes generated..")
 
         # Get all the l3 links
         logging.debug("Retrieve L3 links and Circuits..")
         collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
         logging.debug("L3 links and circuit generated..")
+
 
     #######################################
     #
