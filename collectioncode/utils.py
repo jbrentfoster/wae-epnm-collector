@@ -37,14 +37,20 @@ def rest_get_json(URL, cienauser, cienapassw, token):
 
 # Helper function to load json data
 def open_file_load_data(file_name):
-    with open(file_name, 'rb') as f:
-        data = json.load(f)
-        f.close()
+    data = {}
+    try:
+        with open(file_name, 'rb') as f:
+            data = json.load(f)
+            f.close()
+    except Exception as err:
+        # logging.debug('File not found {}'.format(err))
+        if 'No such file or directory' in err:
+            logging.debug('Remote node info not found {}'.format(file_name))
     return data
 
 # Helper function to get State Nodes data
 def getStateNodes(state_or_states_list):
-    allNodes = open_file_load_data("jsonfiles/all_nodes.json")
+    allNodes = open_file_load_data('jsonfiles/all_nodes.json')
     allnodesData = allNodes['data']
     nodesData = {}
     for node in allnodesData:
@@ -57,7 +63,7 @@ def getStateNodes(state_or_states_list):
 
 # Helper function to get Nodes data
 def getNodes():
-    allNodes = open_file_load_data("jsonfiles/all_nodes.json")
+    allNodes = open_file_load_data('jsonfiles/all_nodes.json')
     allnodesData = allNodes['data']
     nodesData = {}
     for node in allnodesData:
@@ -84,7 +90,7 @@ def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
     data, id_list = '', []
     # with  open('jsongets/new_6500.json', 'rb') as f:
     #     data = json.loads(f.read())
-    data = open_file_load_data("jsongets/new_6500.json")
+    data = open_file_load_data('jsongets/new_6500.json')
 
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
@@ -126,8 +132,7 @@ def normalize_sites(name):
 
 # Helper function to retrieve Site names
 def getSiteName(longi, lat):
-    with open('jsonfiles/sites.json', 'rb') as f:
-        thejson = json.load(f)
+    thejson = open_file_load_data('jsonfiles/sites.json')
     data = next(
         (item for item in thejson if item['longitude'] == longi and item['latitude'] == lat), None)
     siteName = normalize_sites(
@@ -137,8 +142,7 @@ def getSiteName(longi, lat):
 
 # Helper function to get all l3 nodes
 def getl3nodes():
-    with open("jsonfiles/l3linksall.json", 'rb') as f:
-        l3linksdict = json.load(f)
+    l3linksdict = open_file_load_data('jsonfiles/l3linksall.json')
     l3nodes = []
     for k1, v1 in l3linksdict.items():
         tmpnode = {'Name': k1}

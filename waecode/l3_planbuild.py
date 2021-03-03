@@ -89,7 +89,10 @@ def generateL3circuits(plan, l3linksdict):
                         affinity = ""
                     firstnode_ip = [v3['local IP']]
                     firstnode_intf = v3['local Intf']
-                    lastnode_ip = [v3['neighbor IP']]
+                    if 'neighbor IP' in v3:
+                        lastnode_ip = [v3['neighbor IP']]
+                    else:
+                        continue
                     lastnode_intf = v3['neighbor Intf']
                     # te_metric = int(v3['TE Metric'])
                     te_metric = 0

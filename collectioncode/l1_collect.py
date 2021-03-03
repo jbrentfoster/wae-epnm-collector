@@ -20,7 +20,7 @@ node_key_val = {}
 def get_l1_nodes(state_or_states_list):
     logging.info('Retrieve L1 Nodes')
     data, node_list = '', []
-    data = utils.open_file_load_data("jsonfiles/all_nodes.json")
+    data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
@@ -65,10 +65,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         # Retrieve link info for each l1 node
         fileName = 'l1_fre_'+networkId+'.json'
         logging.debug('Filename :\n{}'.format(fileName))
-        with open('jsongets/{}'.format(fileName), 'rb') as f:
-            thejson = f.read()
-            f.close()
-        link_data = json.loads(thejson)
+        link_data = utils.open_file_load_data('jsongets/{}'.format(fileName))
         if link_data.get('data'):
             linkData = link_data['data']
         else:
@@ -197,10 +194,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
         networkId = l1nodes['id']
         filename = 'l1_fre_'+networkId+'.json'
         logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
-        with open('jsongets/{}'.format(filename), 'rb') as f:
-            thejson = f.read()
-            f.close()
-        all_links_dict = json.loads(thejson)
+        all_links_dict = utils.open_file_load_data('jsongets/{}'.format(filename))
         if all_links_dict.get('data'):
             data = all_links_dict['data']
         else:
@@ -317,20 +311,13 @@ def getPortDetails(starting_node, startingNodeId, ending_node, endingNodeId):
     logging.info('Retrieve port info for L1 circuits')
     fileNameA = 'tpe_'+starting_node
     fileNameB = 'tpe_'+ending_node
-    with open('jsongets/{}.json'.format(fileNameA), 'rb') as f:
-        thejson = f.read()
-        f.close()
-    portDataStartNode = json.loads(thejson)
+    portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameA))
     if portDataStartNode.get('data'):
         dataStartNode = portDataStartNode['data']
     dataNodeA = next(
         items for items in dataStartNode if items['id'] == startingNodeId)
     portStartNode = dataNodeA['attributes']['nativeName']
-
-    with open('jsongets/{}.json'.format(fileNameB), 'rb') as f:
-        thejson = f.read()
-        f.close()
-    portDataEndNode = json.loads(thejson)
+    portDataEndNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameB))
     if portDataEndNode.get('data'):
         dataEndNode = portDataEndNode['data']
     dataNodeB = next(

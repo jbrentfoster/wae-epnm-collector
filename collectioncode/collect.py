@@ -50,7 +50,7 @@ def get_all_nodes(baseURL, cienauser, cienapassw, token):
 
 def get_Sites(baseURL, cienauser, cienapassw, token_string):
     logging.debug('Retrieve Sites data for all nodes..')
-    allNodes = utils.open_file_load_data("jsonfiles/all_nodes.json")
+    allNodes = utils.open_file_load_data('jsonfiles/all_nodes.json')
     nodesData = allNodes['data']
     site_list, dupl_check, counter = [], {}, 1
 
@@ -97,8 +97,8 @@ def get_Sites(baseURL, cienauser, cienapassw, token_string):
 
 def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.debug('Retrieve ports/TPE data for nodes for states..')
-    # nodesData = utils.getStateNodes(state_or_states_list)
-    nodesData = utils.getNodes()
+    nodesData = utils.getStateNodes(state_or_states_list)
+    # nodesData = utils.getNodes()
     for k in nodesData.keys():
         networkConstrId = k
         incomplete = True
@@ -135,8 +135,8 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
 
 
 def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
-    # nodesData = utils.getStateNodes(state_or_states_list)
-    nodesData = utils.getNodes()
+    nodesData = utils.getStateNodes(state_or_states_list)
+    # nodesData = utils.getNodes()
     for k in nodesData.keys():
         networkConstrId = k
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))

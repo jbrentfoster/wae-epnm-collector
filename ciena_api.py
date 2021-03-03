@@ -227,33 +227,38 @@ def main():
     if build_plan:
         # Add l1sites to plan
         logging.info("Adding sites")
-        with open("jsonfiles/sites.json", 'rb') as f:
-            sitelist = json.load(f)
+        sitelist = utils.open_file_load_data('jsonfiles/sites.json')
+        # with open("jsonfiles/sites.json", 'rb') as f:
+        #     sitelist = json.load(f)
         planbuild.generateSites(plan, sitelist)
 
         # Add L1 nodes to plan
         logging.info("Adding L1 nodes")
-        with open("jsonfiles/l1nodes.json", 'rb') as f:
-            l1nodeslist = json.load(f)
+        l1nodeslist = utils.open_file_load_data('jsonfiles/l1nodes.json')
+        # with open("jsonfiles/l1nodes.json", 'rb') as f:
+        #     l1nodeslist = json.load(f)
         l1_planbuild.generateL1nodes(plan, l1nodeslist)
 
         # Add L1 links to plan
         logging.info("Adding L1 links ...")
-        with open("jsonfiles/l1links.json", 'rb') as f:
-            l1linkslist = json.load(f)
+        l1linkslist = utils.open_file_load_data('jsonfiles/l1links.json')
+        # with open("jsonfiles/l1links.json", 'rb') as f:
+        #     l1linkslist = json.load(f)
         l1_planbuild.generateL1links(plan, l1linkslist)
 
         # Add L1 circuits to plan (temp commenting out)
         logging.info("Adding L1 circuits to the plan...")
-        with open("jsonfiles/l1circuits.json", 'rb') as f:
-            l1circuitlist = json.load(f)
+        l1circuitlist = utils.open_file_load_data('jsonfiles/l1circuits.json')
+        # with open("jsonfiles/l1circuits.json", 'rb') as f:
+        #     l1circuitlist = json.load(f)
         l1_planbuild.generateL1circuits(plan, l1_data=l1circuitlist)
 
         # Add l3 nodes to plan
         logging.info("Adding L3 nodes to plan file")
-        with open("jsonfiles/l3nodes.json", 'rb') as f:
-            l3nodeslist = json.load(f)
-            f.close()
+        l3nodeslist = utils.open_file_load_data('jsonfiles/l3nodes.json')
+        # with open("jsonfiles/l3nodes.json", 'rb') as f:
+        #     l3nodeslist = json.load(f)
+        #     f.close()
         l3_planbuild.generateL3nodes(plan, l3nodeslist)
         # Set node coordinates
         logging.info("Setting node coordinates...")
@@ -278,11 +283,13 @@ def main():
             l3nodeloopbacks.append(tempnode)
 
         # Adding LSPs to plan file
-        logging.info("Adding LSP's tto plan file...")
-        with open("jsonfiles/lsps.json", 'rb') as f:
-            lsps = json.load(f)
-            f.close()
-        l3_planbuild.generate_lsps(plan, lsps, l3nodeloopbacks)
+        logging.info("Adding LSP's to plan file...")
+        lsps = utils.open_file_load_data('jsonfiles/lsps.json')
+        # with open("jsonfiles/lsps.json", 'rb') as f:
+        #     lsps = json.load(f)
+        #     f.close()
+        if lsps:
+            l3_planbuild.generate_lsps(plan, lsps, l3nodeloopbacks)
 
         # Save the plan file
         plan.serializeToFileSystem('planfiles/latest.pln')

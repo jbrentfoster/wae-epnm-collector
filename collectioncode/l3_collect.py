@@ -20,7 +20,7 @@ node_key_val = {}
 def get_l3_nodes(state_or_states_list):
     logging.info('Generate L3 nodes')
     data, node_list = '', []
-    data = utils.open_file_load_data("jsonfiles/all_nodes.json")
+    data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
@@ -78,10 +78,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         fileName = 'fre_'+networkId
         logging.debug('Filename :\n{}'.format(fileName))
         nodes[node]['Links'] = dict()
-        with open('jsongets/{}.json'.format(fileName), 'rb') as f:
-            thejson = f.read()
-            f.close()
-        link_data = json.loads(thejson)
+        link_data = utils.open_file_load_data('jsongets/{}.json'.format(fileName))
         if link_data.get('data'):
             freData = link_data['data']
         for frenode in freData:
@@ -187,35 +184,31 @@ def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
     logging.debug('Filename :\n{}'.format(fileNameEnd1))
     fileNameEnd2 = 'tpe_'+tId2
     logging.debug('Filename :\n{}'.format(fileNameEnd2))
-    with open('jsongets/{}.json'.format(fileNameEnd1), 'rb') as f:
-        thejson = f.read()
-        f.close()
-    tunnelEnd1 = json.loads(thejson)
-    if tunnelEnd1.get('data'):
-        tunnelEnd1Data = tunnelEnd1['data']
-        end1Data = next(
-            (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
-    if end1Data:
-        if end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-            logging.debug('Tunnel head end id is:'.format(tunnelId1))
-            lspdict['Tunnel Headend'] = node_key_val[tId1]
-            lspdict['Tunnel Tailend'] = node_key_val[tId2]
-            getTunnelData(end1Data, lspdict, lsplist)
-        else:
-            with open('jsongets/{}.json'.format(fileNameEnd2), 'rb') as f:
-                thejson = f.read()
-                f.close()
-            tunnelEnd2 = json.loads(thejson)
-            if tunnelEnd2.get('data'):
-                tunnelEnd2Data = tunnelEnd2['data']
-                end2Data = next(
-                    (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
-            if end2Data:
-                if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                    logging.debug('Tunnel head end id is:'.format(tunnelId2))
-                    lspdict['Tunnel Headend'] = node_key_val[tId2]
-                    lspdict['Tunnel Tailend'] = node_key_val[tId1]
-                    getTunnelData(end2Data, lspdict, lsplist)
+    tunnelEnd1 = utils.open_file_load_data('jsongets/{}.json'.format(fileNameEnd1))
+    if tunnelEnd1:
+        if tunnelEnd1.get('data'):
+            tunnelEnd1Data = tunnelEnd1['data']
+            end1Data = next(
+                (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
+        if end1Data:
+            if end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
+                logging.debug('Tunnel head end id is:'.format(tunnelId1))
+                lspdict['Tunnel Headend'] = node_key_val[tId1]
+                lspdict['Tunnel Tailend'] = node_key_val[tId2]
+                getTunnelData(end1Data, lspdict, lsplist)
+            else:
+                tunnelEnd2 = utils.open_file_load_data('jsongets/{}.json'.format(fileNameEnd2))
+                if tunnelEnd2:
+                    if tunnelEnd2.get('data'):
+                        tunnelEnd2Data = tunnelEnd2['data']
+                        end2Data = next(
+                            (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
+                    if end2Data:
+                        if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
+                            logging.debug('Tunnel head end id is:'.format(tunnelId2))
+                            lspdict['Tunnel Headend'] = node_key_val[tId2]
+                            lspdict['Tunnel Tailend'] = node_key_val[tId1]
+                            getTunnelData(end2Data, lspdict, lsplist)
 
 
 def getTunnelData(lspData, lspdict, lsplist):
@@ -269,43 +262,44 @@ def get_link_data(link1, linkId1, link2, linkId2):
         'jsongets/{}.json'.format(filenameId1))
     tpeData2 = utils.open_file_load_data(
         'jsongets/{}.json'.format(filenameId2))
-    if tpeData1.get('data'):
-        lnkData1 = tpeData1['data']
-    if tpeData2.get('data'):
-        lnkData2 = tpeData2['data']
-    data = next((item for item in lnkData1 if item['id'] == linkId1), None)
-    if data:
-        # logging.debug('link data id1 is : {}'.format(linkId1))
-        if data.get('attributes').get('layerTerminations')[0]:
-            if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
-            if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
-                new_obj['local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
-            if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
-                new_obj['local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
-            if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                new_obj['local Phy BW'] = int(
-                    data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
-                new_obj['local RSVP BW'] = int(
-                    data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
-                if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
-                    new_obj['local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
-    if new_obj.get('local IP'):
-        data = next((item for item in lnkData2 if item['id'] == linkId2), None)
+    if tpeData1 and tpeData2:    
+        if tpeData1.get('data'):
+            lnkData1 = tpeData1['data']
+        if tpeData2.get('data'):
+            lnkData2 = tpeData2['data']
+        data = next((item for item in lnkData1 if item['id'] == linkId1), None)
         if data:
-            # logging.debug('link data id2 is : {}'.format(linkId2))
+            # logging.debug('link data id1 is : {}'.format(linkId1))
             if data.get('attributes').get('layerTerminations')[0]:
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
-                    new_obj['neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                    new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
-                    new_obj['neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
+                    new_obj['local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
-                    new_obj['neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                    new_obj['local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
-                    new_obj['neighbor Phy BW'] = int(
+                    new_obj['local Phy BW'] = int(
                         data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
-                    new_obj['neighbor RSVP BW'] = int(
+                    new_obj['local RSVP BW'] = int(
                         data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
                     if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
-                        new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
+                        new_obj['local Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
+        if new_obj.get('local IP'):
+            data = next((item for item in lnkData2 if item['id'] == linkId2), None)
+            if data:
+                # logging.debug('link data id2 is : {}'.format(linkId2))
+                if data.get('attributes').get('layerTerminations')[0]:
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
+                        new_obj['neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceName'):
+                        new_obj['neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
+                    if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
+                        new_obj['neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                    if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
+                        new_obj['neighbor Phy BW'] = int(
+                            data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
+                        new_obj['neighbor RSVP BW'] = int(
+                            data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maxReservable'])/1000
+                        if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
+                            new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
     return new_obj
