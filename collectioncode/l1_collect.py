@@ -136,8 +136,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
 
 def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.info('Retrieving L1 links data from MCP..')
-    # nodesData = utils.getStateNodes(state_or_states_list)
-    nodesData = utils.getNodes()
+    nodesData = utils.getStateNodes(state_or_states_list)
+    # nodesData = utils.getNodes()
     logging.debug(
         'Retrieve L1 links data for nodes belongs to list of states:')
     for k in nodesData.keys():
