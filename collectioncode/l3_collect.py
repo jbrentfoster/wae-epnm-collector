@@ -27,8 +27,6 @@ def get_l3_nodes(state_or_states_list):
                 'SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
             # if node['attributes']['typeGroup'] == "Ciena6500" and (match_object != None or node['attributes']['accessIdentifier'] == 'SHELF-1'):
             # if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
-            # import pdb
-            # pdb.set_trace()
             if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ('l2Data' in node['attributes'] and node['attributes']['l2Data'][0]['l2NodeRoutingCapabilities']['isMPLSEnabled'] == True):
                 node['longitude'] = 0
                 node['latitude'] = 0
@@ -191,7 +189,7 @@ def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
             end1Data = next(
                 (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
         if end1Data:
-            if end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
+            if 'layerTerminations' in end1Data['attributes'] and end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
                 logging.debug('Tunnel head end id is:'.format(tunnelId1))
                 lspdict['Tunnel Headend'] = node_key_val[tId1]
                 lspdict['Tunnel Tailend'] = node_key_val[tId2]
