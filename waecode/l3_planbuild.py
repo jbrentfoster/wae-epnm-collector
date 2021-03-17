@@ -102,7 +102,8 @@ def generateL3circuits(plan, l3linksdict):
                         igp_metric = 0
                     phy_bw = float(v3['local Phy BW'])
                     rsvpbw = float(v3['local RSVP BW'])
-                    intfbw = getintfbw(phy_bw)
+                    # intfbw = getintfbw(phy_bw)
+                    intfbw = phy_bw
                     try:
                         tp_description = v3['circuitName']
                     except Exception as err:
