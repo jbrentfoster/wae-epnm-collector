@@ -25,8 +25,8 @@ def get_l1_nodes(state_or_states_list):
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
                 'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
-            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
-                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
+            # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
+            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
                 node['longitude'] = 0
                 node['latitude'] = 0
                 if 'geoLocation' in node['attributes']:
@@ -51,9 +51,6 @@ def get_l1_nodes(state_or_states_list):
 
 
 def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
-    # Retrieve l1 links data for all nodes
-    get_l1_links_data(baseURL, cienauser, cienapassw,
-                      token, state_or_states_list)
     logging.info('Generate L1 links...')
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
     for node in l1nodesAll:
@@ -85,6 +82,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
             val = i+1
             if val < len(included):
                 layerRate = layer_key_val[included[i]['id'][:-2]]
+                if layerRate != 'OMS':
+                    continue
                 logging.debug('Network id is :{}'.format(networkId))
                 # Checking if type is endpoint and layer rate should be 'OMS' or 'OTS' for L1 links
                 if included[i]['type'] == 'endPoints' and (layerRate == 'OMS' or layerRate == 'OTS'):
@@ -144,12 +143,14 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         networkConstrId = k
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
         incomplete, jsonmerged = True, {}
-        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+        # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
+        ########### Replaced query with no filter
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
 
+        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-        # Priv retrieving data for OMS , OTS and OTU's
-        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTU2%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
         URL = baseURL + uri + networkConstrId
         logging.debug('URL:\n{}'.format(URL))
@@ -208,8 +209,9 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             circuit_id = obj['id']
             if circuit_id in dupl_check:
                 continue
-            # if layer rate is not OTU4 then continue
-            if obj['attributes']['layerRate'] != 'OTU4':
+            logging.debug('Circuit id is :\n{}'.format(circuit_id))
+            # if layer rate is not OTS then continue
+            if obj['attributes']['layerRate'] != 'OTS':
                 continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':

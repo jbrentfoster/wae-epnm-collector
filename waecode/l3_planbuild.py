@@ -137,6 +137,13 @@ def generateL3circuits(plan, l3linksdict):
                         rsvpbw = float(v3['local RSVP BW'])
                         l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
+                        if l3circuit:
+                            l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
+                            l1circuits = l1CircuitManager.getAllL1Circuits()
+                            l3circuit.setCapacity(intfbw)
+                            intfdict = l3circuit.getAllInterfaces()
+                            for k6, v6 in intfdict.items():
+                                v6.setResvBW(int(rsvpbw))
  
                     duplicatelink = False
 

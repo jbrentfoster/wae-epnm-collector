@@ -78,7 +78,10 @@ def generateL1circuits(plan, l1_data):
             portAname = l1data['portStartNode']
             portBname = l1data['portEndNode']
             status = l1data['status']
-            generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1hops, 100000, status)
+            try:
+                generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1hops, 100000, status)
+            except Exception as err:
+                logging.debug('could not add new port :{}'.format(err))
 
 def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
     l1hops = []

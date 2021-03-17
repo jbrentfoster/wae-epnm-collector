@@ -144,13 +144,6 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                                 node_key_val[networkConstructB_id] + \
                                 '-' + str(counter)
                             new_obj['name'] = included[i]['id'][:-2]
-                            if(fre_node_key_val).get(included[i]['id'][:-2]):
-                                new_obj['circuitName'] = fre_node_key_val[included[i]
-                                                                          ['id'][:-2]] + '_' + included[i]['id'][: -2]
-                            else:
-                                new_obj['circuitName'] = 'Dummy_' + \
-                                    included[i]['id'][: -2]
-
                             if(fre_node_key_val).get(included[i]['id'][: -2]):
                                 new_obj['linkName'] = fre_node_key_val[included[i]['id'][:-2]]
                             else:
@@ -275,6 +268,11 @@ def get_link_data(link1, linkId1, link2, linkId2):
                     new_obj['local Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
                     new_obj['local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
+                if 'locations' in data.get('attributes'):
+                    port = data['attributes']['locations'][0]['port']
+                    shelf = data['attributes']['locations'][0]['shelf']
+                    slot = data['attributes']['locations'][0]['slot']
+                    new_obj['circuitName'] = getCircuitName(port, shelf, slot, linkId1, lnkData1)
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
                     new_obj['local Phy BW'] = int(
                         data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
@@ -301,3 +299,16 @@ def get_link_data(link1, linkId1, link2, linkId2):
                         if data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('colorGroup'):
                             new_obj['Neighbor Affinity'] = data['attributes']['layerTerminations'][0]['mplsPackage']['colorGroup']['bitmask']
     return new_obj
+
+def getCircuitName(port, shelf, slot, linkId1, lnkData1):
+    circuitName =''
+    logging.debug('Link id is : {}'.format(linkId1))
+    for item in lnkData1:
+        if 'locations' in item['attributes'] and 'port' in item['attributes']['locations'][0]:
+            if item['attributes']['locations'][0]['port'] == port and item['attributes']['locations'][0]['shelf'] == shelf and item['attributes']['locations'][0]['slot'] == slot:
+                if item['id'] != linkId1 and 'userLabel' in item['attributes']:
+                    circuitName = item['attributes']['userLabel']
+                    break
+            else:
+                continue
+    return circuitName

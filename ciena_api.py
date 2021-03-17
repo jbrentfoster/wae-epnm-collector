@@ -191,6 +191,11 @@ def main():
                           token_string, state_or_states_list)
         logging.debug("All links retrieved..")
 
+        # Retrieve l1 links data for all l1 nodes
+        collect.get_l1_links_data(baseURL, cienauser, cienapassw,
+                          token_string, state_or_states_list)
+        logging.debug("L1 links retrieved..")
+
         # Get all the l1nodes
         logging.debug("Retrieve L1 nodes..")
         collect.get_l1_nodes(state_or_states_list)
@@ -216,7 +221,6 @@ def main():
         logging.debug("Retrieve L3 links and Circuits..")
         collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
         logging.debug("L3 links and circuit generated..")
-
 
     #######################################
     #
