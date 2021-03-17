@@ -213,6 +213,11 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             if circuit_id in dupl_check:
                 continue
             logging.debug('Circuit id is :\n{}'.format(circuit_id))
+            layerRate = obj['attributes']['layerRate']
+            logging.debug('layerRate is :\n{}'.format(layerRate))
+            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4'):
+                logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
+
             # if layer rate is not OTS then continue
             if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4'):
                 continue
