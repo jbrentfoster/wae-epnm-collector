@@ -81,12 +81,15 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         for i in range(len(included)):
             val = i+1
             if val < len(included):
-                layerRate = layer_key_val[included[i]['id'][:-2]]
-                if layerRate != 'OMS':
+                if included[i]['id'][:-2] in layer_key_val.keys():
+                    layerRate = layer_key_val[included[i]['id'][:-2]]
+                else:
+                    layerRate = ''
+                if layerRate != 'OMS' or layerRate == '':
                     continue
                 logging.debug('Network id is :{}'.format(networkId))
-                # Checking if type is endpoint and layer rate should be 'OMS' or 'OTS' for L1 links
-                if included[i]['type'] == 'endPoints' and (layerRate == 'OMS' or layerRate == 'OTS'):
+                # Checking if type is endpoint and layer rate should be 'OMS' for L1 links
+                if included[i]['type'] == 'endPoints' and layerRate == 'OMS':
                     # if included[i]['type'] == 'endPoints':
                     logging.debug(
                         'OMS / OTS include id is :{}'.format(included[i]['id']))
@@ -144,7 +147,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
         incomplete, jsonmerged = True, {}
         # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
-        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
+        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
         ########### Replaced query with no filter
         uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
 
@@ -211,7 +214,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 continue
             logging.debug('Circuit id is :\n{}'.format(circuit_id))
             # if layer rate is not OTS then continue
-            if obj['attributes']['layerRate'] != 'OTS':
+            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4'):
                 continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':

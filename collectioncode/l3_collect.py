@@ -247,6 +247,7 @@ def get_link_data(link1, linkId1, link2, linkId2):
         'local RSVP BW': 0.0,
         'local Affinity': ''
     }
+    port, shelf, slot = '', '', ''
     filenameId1 = 'tpe_'+link1
     filenameId2 = 'tpe_'+link2
     tpeData1 = utils.open_file_load_data(
@@ -269,9 +270,12 @@ def get_link_data(link1, linkId1, link2, linkId2):
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
                     new_obj['local IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
                 if 'locations' in data.get('attributes'):
-                    port = data['attributes']['locations'][0]['port']
-                    shelf = data['attributes']['locations'][0]['shelf']
-                    slot = data['attributes']['locations'][0]['slot']
+                    if 'port' in data['attributes']['locations'][0]:
+                        port = data['attributes']['locations'][0]['port']
+                    if 'shelf' in data['attributes']['locations'][0]:
+                        shelf = data['attributes']['locations'][0]['shelf']
+                    if 'slot' in data['attributes']['locations'][0]:
+                        slot = data['attributes']['locations'][0]['slot']
                     new_obj['circuitName'] = getCircuitName(port, shelf, slot, linkId1, lnkData1)
                 if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
                     new_obj['local Phy BW'] = int(
@@ -311,4 +315,6 @@ def getCircuitName(port, shelf, slot, linkId1, lnkData1):
                     break
             else:
                 continue
+    if circuitName == '':
+        circuitName = 'Dummy_'+linkId1
     return circuitName
