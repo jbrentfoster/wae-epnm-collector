@@ -85,11 +85,15 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     layerRate = layer_key_val[included[i]['id'][:-2]]
                 else:
                     layerRate = ''
-                if layerRate != 'OMS' or layerRate == '':
+                logging.debug('Layer Rate is :{}'.format(layerRate))
+                # if layerRate != 'OMS' or layerRate == '':
+                #     continue
+                if 'OM' not in layerRate:
+                    logging.debug('This layer rate should not link :{}'.format(layerRate))
                     continue
                 logging.debug('Network id is :{}'.format(networkId))
                 # Checking if type is endpoint and layer rate should be 'OMS' for L1 links
-                if included[i]['type'] == 'endPoints' and layerRate == 'OMS':
+                if included[i]['type'] == 'endPoints':
                     # if included[i]['type'] == 'endPoints':
                     logging.debug(
                         'OMS / OTS include id is :{}'.format(included[i]['id']))
@@ -215,11 +219,17 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             logging.debug('Circuit id is :\n{}'.format(circuit_id))
             layerRate = obj['attributes']['layerRate']
             logging.debug('layerRate is :\n{}'.format(layerRate))
-            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4'):
-                logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
+            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
+            #     logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
             # if layer rate is not OTS then continue
-            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4'):
+            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
+            #     continue
+
+            if ('OTS' not in obj['attributes']['layerRate']) and ('OTU' not in obj['attributes']['layerRate']):
+                logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
+
+            if ('OTS' not in obj['attributes']['layerRate']) and ('OTU' not in obj['attributes']['layerRate']):
                 continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':
