@@ -8,6 +8,7 @@ import traceback
 import wae_api
 import configparser
 import threading
+import utils
 from requests.exceptions import Timeout
 from multiprocessing.dummy import Pool as ThreadPool
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
@@ -22,6 +23,7 @@ def collection_router(collection_call):
     config.read('configs/config.ini')
     timeout = config['DEFAULT']['Timeout_limit']
     timeout_limit = float(timeout) * 3 if timeout.isnumeric() else None
+
 
     try:
         if collection_call['type'] == "l1nodes":
@@ -77,10 +79,14 @@ def collection_router(collection_call):
             process_hostnames(collection_call['state_or_states'])
             thread_data.logger.info("Processing MPLS topology...")
             processMPLS(collection_call['state_or_states'])
-
+            ## UPDATED code to implement the missing Circuits ########
+            counter = processMissingNodes(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+            ###########################
             thread_data.logger.info("Adding MPLS TL data to L3 links...")
             try:
-                add_mpls_tl_data(collection_call['state_or_states'])
+                ####### Updated code to implement missing circuits 
+                # add_mpls_tl_data(collection_call['state_or_states'])
+                add_mpls_tl_data(collection_call['state_or_states'], counter)
             except Exception as err:
                 thread_data.logger.propagate = True
                 thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
@@ -140,6 +146,23 @@ def collection_router(collection_call):
         thread_data.logger.exception('**********\n\nCaught an exception on thread: {}\n\n'.format(collection_call['type']))   
         raise
 
+def processMissingNodes(baseURL, epnmuser, epnmpassword, state_or_states):
+    thread_data.logger.debug('Process starting to retrieve missing nodes')  
+    missingCircuitsFlag = True
+    counter = 1
+    while missingCircuitsFlag:
+        missingNodes = retrieveMissingNodes(state_or_states,counter)
+        if missingNodes:
+            thread_data.logger.debug('Missing nodes found for run : {}'.format(counter))  
+            getMissingLinksData(baseURL, epnmuser, epnmpassword, state_or_states, counter)
+            if counter == 3:
+                missingCircuitsFlag = False
+            counter += 1
+        else:
+            missingCircuitsFlag = False
+    thread_data.logger.debug('Process completed for missing nodes')  
+    return counter
+
 
 def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
     # 'allnodes':
@@ -168,7 +191,10 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
 
     logging.info("Adding MPLS TL data to L3 links...")
     try:
-        add_mpls_tl_data(state_or_states)
+        #### Comment to implement missing circuits 
+        # add_mpls_tl_data(state_or_states)
+        #### Updated to implement missing circuits 
+        add_mpls_tl_data(state_or_states,1)
     except Exception as err:
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
@@ -649,9 +675,9 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
 
             thread_data.logger.info("Database received.")
             with open("jsongets/{state}_mplstopo.txt".format(
-                    # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                    # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
-                    state=seed_node_state.replace(' ', '_')), 'wb') as f:
+                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                state=seed_node_state.replace(' ', '_')), 'wb') as f:
                 f.write(results)
                 f.close()
         else:
@@ -659,7 +685,6 @@ def collect_mpls_topo_json(baseURL, epnmuser, epnmpassword, state_or_states):
             thread_data.logger.critical(
                 "Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state : " + seed_node[0]['state'])
             sys.exit()
-
 
 def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
     with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
@@ -674,7 +699,7 @@ def collect_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
         for seed_node_info_state in seed_node:
             jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
             jsonbody = json.dumps(jsonbody_js)
-
+            thread_data.logger.info("JSON body to collect host names is : " + jsonbody)
             uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
             jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
 
@@ -881,6 +906,413 @@ def processMPLS(state_or_states):
                 f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
+###### Method to find out missisng mpls nodes ########
+def retrieveMissingNodes(state_or_states,counter):
+    node_key_val_4k = {}
+    missingNodeFlag = False
+    get4kNodes(node_key_val_4k)
+
+    for state in state_or_states:
+        if counter == 1:
+            fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
+        else: 
+            fileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
+        with open(fileName, 'rb') as f:
+            l3links = json.load(f)
+            node_key_val_state = {}
+            value = 1
+            for k1, v1 in l3links.items():
+                # thread_data.logger.info("Nodename is: " + k1)
+                # print("Nodename is: " + k1)
+                node_key_val_state['{}'.format(k1)] = value
+                value += 1
+        with open("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+            thejson = json.load(f)
+            potentialSeedNodes = thejson[state]
+            missingNodesData = []
+            missingNodes = {}
+            for nodes in potentialSeedNodes:
+                nodeName = nodes['node'].split('!')[1].split('=')[1]
+                if nodeName in node_key_val_state:
+                    # print("node Exists")
+                    continue
+                else:
+                    if nodeName in node_key_val_4k:
+                        thread_data.logger.info("Missing node name is  " + nodeName)
+                        missingNodesData.append(nodes)
+                    else:
+                        continue
+            if missingNodesData:
+                missingNodes[state] = missingNodesData
+                file_name = "jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_'))
+                with open(file_name, 'wb') as f:
+                    f.write(json.dumps(missingNodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+                missingNodeFlag = True
+    return missingNodeFlag
+################### Until Here#############################
+
+def get4kNodes(node_key_val_4k):
+    logging.info("Checking 4k-nodes_db.json for duplicate entries...")
+    with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+        four_k_nodes = json.load(f)
+        f.close()
+    count = 1
+    for k, v in four_k_nodes.items():
+        node_key_val_4k['{}'.format(v['Name'])] = count
+        count += 1
+
+# Function to retrieve missing circuits info
+def getMissingLinksData(baseURL, epnmuser, epnmpassword, state_or_states,counter):
+    for state in state_or_states:
+        state = state.strip()
+        data = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        if data:
+            collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states)
+            thread_data.logger.info("Collecting ISIS hostnames for missing nodes...")
+            collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states)
+            thread_data.logger.info("Process missing host names...")
+            process_missing_hostnames(state_or_states,counter)
+            thread_data.logger.info("Processing MPLS topology for missing nodes...")
+            processMPLSMissingNodes(state_or_states,counter)
+
+## Function to retrieve mpls topo for missing nodes
+def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states):
+    with open("collectioncode/post-cli-template-mpls.json", 'r') as f:
+        jsonbody = f.read()
+
+    jsonbody_js = json.loads(jsonbody)
+    ## Get Seed Nodes Based on State or States (New York, Flordia)
+    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states)
+    for seed_node in seed_node_list:
+        for seed_node_info_state in seed_node:
+            jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
+            thread_data.logger.info("json body for mpls API request is: " + str(jsonbody_js))
+            jsonbody = json.dumps(jsonbody_js)
+            uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+            jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
+            try:
+                thejson = json.loads(jsonresponse)
+                thread_data.logger.info("response for mpls API request is: " + str(thejson))
+                break
+            except Exception as err:
+                thread_data.logger.propagate = True
+                thread_data.logger.info("EPNM server failed to retrieve MPLS topoology from CLI template for node : " + seed_node_info_state.get('node'))
+                thread_data.logger.critical(
+                    'EPNM server failed to retrieve MPLS topoology from CLI template.  Continue checking next node.')
+                continue
+        if jsonresponse:
+            jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
+
+            thread_data.logger.info('Successfully submitted the API call to retrieve the MPLS topology.')
+            thread_data.logger.info('jobname is: ' + jobname)
+
+            notDone = True
+            thread_data.logger.info('Checking job status...')
+            results = ""
+            while notDone:
+                time.sleep(5)
+                uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
+                # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+                # thejson = json.loads(jsonresponse)
+                circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+                jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+                thejson = json.loads(jsonresponse)
+                try:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
+                    thread_data.logger.info("Job status: " + str(status))
+                    if status == "SUCCESS":
+                        thread_data.logger.info("Successfully collected MPLS topology...")
+                        results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
+                            'ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except KeyError:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
+                    thread_data.logger.info("Run status: " + str(status))
+                    if status == "COMPLETED":
+                        thread_data.logger.info("Successfully collected MPLS topology...")
+                        results = thejson['ra.deploy-result']['ra.transcript']
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except AttributeError:
+                    thread_data.logger.propagate = True
+                    thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                    raise
+
+            #Getting the state for this particular node
+            seed_node = seed_node_info_state.get('node')
+            seed_node_state = ""
+            for state in state_or_states:
+                with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                    data = json.loads(f.read())
+                    list_of_nodes = data[state]
+                    for node in list_of_nodes:
+                        if node["node"] == seed_node:
+                            seed_node_state = node["state"]
+                            break
+
+            thread_data.logger.info("Database received.")
+            with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(
+                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+                # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+                state=seed_node_state.replace(' ', '_')), 'wb') as f:
+                f.write(results)
+                f.close()
+        else:
+            thread_data.logger.info("Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state: " + seed_node[0]['state'])
+            thread_data.logger.critical(
+                "Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state : " + seed_node[0]['state'])
+            sys.exit()
+
+def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
+    with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
+        jsonbody = f.read()
+
+    jsonbody_js = json.loads(jsonbody)
+    ## Get Seed Nodes Based on State or States (New York, Flordia)
+    # run_get_4k_seed_nodes()
+    # get_potential_seednode(state_or_states)
+    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states)
+    for seed_node in seed_node_list:
+        for seed_node_info_state in seed_node:
+            jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
+            jsonbody = json.dumps(jsonbody_js)
+            thread_data.logger.info("JSON body to collect host names is : " + jsonbody)
+            uri = '/operations/v1/cisco-resource-activation:run-cli-configuration'
+            jsonresponse = collectioncode.utils.rest_post_json(baseURL, uri, jsonbody, epnmuser, epnmpassword)
+
+            try:
+                thejson = json.loads(jsonresponse)
+                break
+            except Exception as err:
+                thread_data.logger.propagate = True
+                thread_data.logger.info("EPNM server failed to retrieve ISIS hostname from CLI template for missing node : " + seed_node_info_state.get('node'))
+                thread_data.logger.critical(
+                    'EPNM server failed to retrieve ISIS hostname from CLI template.  Continue checking next missing node')
+                continue
+        if jsonresponse:
+            jobname = thejson.get('ra.config-response').get('ra.job-status').get('ra.job-name')
+
+            thread_data.logger.info('Successfully submitted the API call to retrieve the ISIS hostnames for missing nodes.')
+            thread_data.logger.info('jobname for missing node is: ' + jobname)
+
+            notDone = True
+            thread_data.logger.info('Checking job status for missing node...')
+            results = ""
+            #Getting the state for this particular node
+            seed_node = seed_node_info_state.get('node')
+            seed_node_state = ""
+            for state in state_or_states:
+                with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                    data = json.loads(f.read())
+                    list_of_nodes = data[state]
+                    for node in list_of_nodes:
+                        if node["node"] == seed_node:
+                            seed_node_state = node["state"]
+                            break
+
+            while notDone:
+                time.sleep(5)
+                uri = "/operations/v1/cisco-resource-activation:get-cli-configuration-run-status/" + jobname
+                # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+                # thejson = json.loads(jsonresponse)
+                circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+                jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+                thejson = json.loads(jsonresponse)
+                try:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.status')
+                    thread_data.logger.info("Job status: " + str(status))
+                    if status == "SUCCESS":
+                        thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                        results = thejson.get('ra.config-response').get('ra.deploy-result-list').get(
+                            'ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get MPLS topology!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except KeyError:
+                    status = thejson.get('ra.config-response').get('ra.job-status').get('ra.run-status')
+                    thread_data.logger.info("Run status: " + status)
+                    if status == "COMPLETED":
+                        thread_data.logger.info("Successfully collected ISIS hostnames for state: {state}".format(state=seed_node_state))
+                        results = thejson.get('ra.deploy-result').get('ra.transcript')
+                        notDone = False
+                    elif status == "FAILURE":
+                        thread_data.logger.propagate = True
+                        thread_data.logger.critical("Could not get ISIS hostnames!!!!!!")
+                        sys.exit("Collection error.  Ending execution.")
+                except AttributeError:
+                    thread_data.logger.propagate = True
+                    thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                    raise
+
+            thread_data.logger.info("Database received.")
+            with open("jsongets/{state}_missing_hostnames.txt".format(state=seed_node_state.replace(' ', '_')), 'wb') as f:
+                f.write(results)
+                f.close()
+        else:
+            thread_data.logger.info("Exiting the system because EPNM server failed to retrieve ISIS hostname from CLI template for any potential nodes for state :" + seed_node[0]['state'])
+            thread_data.logger.critical(
+                "Exiting the system because EPNM server failed to retrieve ISIS hostname from CLI template for any potential nodes for state : " + seed_node[0]['state'])
+            sys.exit()
+
+def process_missing_hostnames(state_or_states,counter):
+    for state in state_or_states:
+        nodes = []
+        with open("jsongets/{state}_missing_hostnames.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+            lines = f.read().splitlines()
+            ilines = lines
+            c = 0
+            start = False
+            for line in ilines:
+                if "Level  System ID      Dynamic Hostname" in line:
+                    start = True
+                    continue
+                elif start == True:
+                    line_list = line.split(" ")
+                    if len(line_list) > 3:
+                        isis_id = line_list[-2]
+                        hostname = line_list[-1]
+                        nodes.append({'isis_id': isis_id, 'hostname': hostname})
+                    else:
+                        break
+                c += 1
+        with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+            f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+
+def processMPLSMissingNodes(state_or_states,counter):
+    for state in state_or_states:
+        nodes = {}
+        with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+            lines = f.read().splitlines()
+            ilines = lines
+        c = 0
+        otn_flag = False
+        for line in ilines:
+            if "IGP Id: " in line:
+                if "OSPF OTN" in line:
+                    otn_flag = True
+                    continue
+                else:
+                    otn_flag = False
+                isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.', 1)[0]
+                node = hostname_lookup_missed(isis_id, state)
+                # thread_data.logger.info("processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c))
+
+                loopback = line.split(',')[1].split(':')[1].split(' ')[1]
+                nodes[node] = {'Loopback Address': loopback}
+                nodes[node]['Links'] = dict()
+                i = 0
+                foundfirstlink = False
+            elif "Link[" in line and "Nbr IGP Id" in line and not otn_flag:
+                try:
+                    neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.', 1)[0]
+                    neighbor_node_id = line.split(',')[2].split(':')[1]
+                    neighbor = hostname_lookup_missed(neighbor_isis_id, state)
+                    if neighbor_node_id == "-1":
+                        continue
+                    if neighbor == None:
+                        thread_data.logger.propagate = True
+                        # thread_data.logger.warn("There was a problem parsing the neighbor!")
+                        # thread_data.logger.critical("Critical error!")
+                        sys.exit("MPLS topology is not complete for node " + node + "!!! Halting execution!")
+                    i += 1
+                    linkid = "Link" + str(i)
+                    nodes[node]['Links'][linkid] = dict([('Neighbor', neighbor)])
+                except Exception as err:
+                    sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
+                foundfirstlink = True
+            elif "TE Metric:" in line and foundfirstlink and not otn_flag:
+                try:
+                    te_metric = line.split(',')[0].split(':')[1]
+                    nodes[node]['Links'][linkid]['TE Metric'] = te_metric
+                    igp_metric = line.split(',')[1].split(':')[1]
+                    nodes[node]['Links'][linkid]['IGP Metric'] = igp_metric
+                except Exception as err:
+                    sys.exit("ISIS database is not complete for node " + node + "!!! Halting execution!")
+            elif "Attribute Flags:" in line and foundfirstlink and not otn_flag:
+                affinity = line.split(':')[1].strip()
+                nodes[node]['Links'][linkid]['Affinity'] = affinity
+            elif "Intf Address:" in line and not 'Nbr' in line and foundfirstlink and not otn_flag:
+                localIP = line.split(',')[1].split(':')[1]
+                nodes[node]['Links'][linkid]['Local IP'] = localIP
+            elif "Nbr Intf Address:" in line and foundfirstlink == True and not otn_flag:
+                neighIP = line.split(',')[0].split(':')[1]
+                nodes[node]['Links'][linkid]['Neighbor IP'] = neighIP
+            elif "Max Reservable BW Global:" in line and foundfirstlink and not otn_flag:
+                rsvpBW = line.split(',')[1].split(':')[1].split(' ')[0]
+                phyBW = line.split(',')[0].split(':')[1].split(' ')[0]
+                nodes[node]['Links'][linkid]['RSVP BW'] = rsvpBW
+                nodes[node]['Links'][linkid]['Phy BW'] = phyBW
+            elif "SRLGs:" in line and foundfirstlink and not otn_flag:
+                nodes[node]['Links'][linkid]['SRLGs'] = dict()
+                d = 0
+                srlgs = []
+                while True:
+                    tline = ilines[c + d]
+                    if not ("Switching Capability:" in tline):
+                        if ':' in tline:
+                            srlgs = srlgs + tline.strip().split(':')[1].split(',')
+                        else:
+                            srlgs = srlgs + tline.strip().split(',')
+                        d += 1
+                    else:
+                        break
+                cleaned_srlgs = []
+                for srlg in srlgs:
+                    cleaned_srlgs.append(''.join(srlg.split()))
+                nodes[node]['Links'][linkid]['SRLGs'] = cleaned_srlgs
+            c += 1
+        with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+            f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
+        if counter == 1:
+            fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
+        else:
+            fileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
+
+        with open(fileName, "rb") as f:
+            jsonl3linksdata = json.load(f)
+        with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "rb") as f:
+            jsonl3linksmissingdata = json.load(f)
+        merge(jsonl3linksdata, jsonl3linksmissingdata)
+        with open("jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+            f.write(json.dumps(jsonl3linksdata, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
+def get_random_nodes_from_missing_nodes(state_or_states):
+    random_node_choices = []
+    for state in state_or_states:
+        state = state.strip()
+        seed_nodes = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        if seed_nodes.get(state):
+            random_node_choices.append(seed_nodes[state])
+            thread_data.logger.info('The valid seed-node from missing nodes for {} is: {}'.format(state, random_node_choices[-1]))
+    return random_node_choices
+
+def hostname_lookup_missed(isis_id, state):
+    with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        jsonresponse = f.read()
+
+    hostnames = json.loads(jsonresponse)
+    # print (hostnames)
+    for host in hostnames:
+        if host.get('isis_id') == isis_id:
+            return host.get('hostname')
+    return None
+
+def write_results(file_name, data):
+    if os.path.exists(file_name):
+        os.remove(file_name)
+    with open(file_name, 'wb') as f:
+        f.write(json.dumps(data, f, sort_keys=True, indent=4, separators=(',', ': ')))
+
 def hostname_lookup(isis_id, state):
     with open("jsonfiles/{state}_hostnames.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
         jsonresponse = f.read()
@@ -891,7 +1323,6 @@ def hostname_lookup(isis_id, state):
         if host.get('isis_id') == isis_id:
             return host.get('hostname')
     return None
-
 
 def collectMPLSnodes():
     with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
@@ -913,14 +1344,22 @@ def collectMPLSnodes():
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def add_mpls_tl_data(state_or_states):
+def add_mpls_tl_data(state_or_states, counter):
     for state in state_or_states:
         with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
             jsonresponse = f.read()
 
         thejson = json.loads(jsonresponse)
+        ##########Comment code to implement missing circuits 
+        # with open("jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        #     l3links = json.load(f)
+        #########Added code to implement missing circuits 
+        if counter == 1:
+            fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
+        else: 
+            fileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
 
-        with open("jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        with open(fileName, 'rb') as f:
             l3links = json.load(f)
 
         names = []
@@ -2527,3 +2966,13 @@ def merge(a, b):
         else:  # if the key is not in dict a , add it to dict a
             a.update({key: b[key]})
     return a
+
+
+if __name__ == "__main__":
+    ### System Arguments ###
+    state_or_states = ['New York', 'New Jersey']
+    ########################################
+    # retrieveMissingNodes(state_or_states)
+    processMPLSMissingNodes(state_or_states)
+    # pprint (get_random_nodes_for_states(state_or_states))
+

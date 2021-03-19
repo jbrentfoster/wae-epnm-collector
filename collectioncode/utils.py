@@ -132,6 +132,10 @@ def rest_get_xml(baseURL, uri, user, password):
         collect.thread_data.logger.error('Exception raised: ' + str(type(err)) + '\nURL: {}\n{}\n{}'.format(err.expression, err.statuscode,err.message))
         return
 
+def open_file_load_data(file_name):
+    with open(file_name, 'rb') as f:
+        data = json.loads(f.read())
+    return data
 
 def rest_post_xml(baseURL, uri, thexml, user, password):
     proxies = {
