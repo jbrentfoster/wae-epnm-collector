@@ -153,7 +153,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
         ########### Replaced query with no filter
-        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
+        uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
 
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
@@ -226,10 +226,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
             #     continue
 
-            if ('OTS' not in obj['attributes']['layerRate']) and ('OTU' not in obj['attributes']['layerRate']):
+            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
                 logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
-            if ('OTS' not in obj['attributes']['layerRate']) and ('OTU' not in obj['attributes']['layerRate']):
+            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
                 continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':
