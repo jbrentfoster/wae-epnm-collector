@@ -159,6 +159,7 @@ def processMissingNodes(baseURL, epnmuser, epnmpassword, state_or_states):
                 missingCircuitsFlag = False
             counter += 1
         else:
+            thread_data.logger.debug('missing nodes not found') 
             missingCircuitsFlag = False
     thread_data.logger.debug('Process completed for missing nodes')  
     return counter
