@@ -227,7 +227,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             #     continue
 
             if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
-                logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
+                logging.debug('This layerRate should not process for L1 Circuits:\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
             if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
                 continue

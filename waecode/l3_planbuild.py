@@ -141,7 +141,7 @@ def generateL3circuits(plan, l3linksdict):
                         if l3circuit:
                             l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
                             l1circuits = l1CircuitManager.getAllL1Circuits()
-                            l3circuit.setCapacity(intfbw)
+                            l3circuit.setCapacity(phy_bw)
                             intfdict = l3circuit.getAllInterfaces()
                             for k6, v6 in intfdict.items():
                                 v6.setResvBW(int(rsvpbw))
