@@ -226,10 +226,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
             #     continue
 
-            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
+            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
                 logging.debug('This layerRate should not process for L1 Circuits:\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
-            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
+            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
                 continue
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':

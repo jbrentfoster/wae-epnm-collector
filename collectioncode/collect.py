@@ -229,6 +229,7 @@ def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
                     temp['NodeB'] = included[i +
                                              1]['relationships']['tpes']['data'][0]['id'][:36]
                     ret.append(temp)
+            logging.info('Supporting Nodes data retrieved ..')
     # save data for each circuit id for debugging
     filename = "l1_circuit_"+circuit_id+'.json'
     with open('jsongets/{}'.format(filename), 'wb') as f:
