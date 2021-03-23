@@ -206,14 +206,16 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
     logging.info('Retrieve Supporting nodes..')
+    data = {}
     # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
     #     circuit_id)
     # Update query to get data from non vversioned API
     uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-        circuit_id)
+        circuit_id.strip())
     URL = baseURL + uri
-    data = utils.rest_get_json(URL, cienauser, cienapassw, token)
-    data = json.loads(data)
+    jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
+    if jsondata:
+        data = json.loads(jsondata)
     ret = []
 
     if "included" in data:
