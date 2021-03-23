@@ -329,19 +329,27 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
 
 def getPortDetails(starting_node, startingNodeId, ending_node, endingNodeId):
     logging.info('Retrieve port info for L1 circuits')
+    dataStartNode, dataEndNode, portStartNode, portEndNode  = {}, {}, {}, {}
     fileNameA = 'tpe_'+starting_node
     fileNameB = 'tpe_'+ending_node
     portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameA))
-    if portDataStartNode.get('data'):
-        dataStartNode = portDataStartNode['data']
-    dataNodeA = next(
-        items for items in dataStartNode if items['id'] == startingNodeId)
-    portStartNode = dataNodeA['attributes']['nativeName']
+    if portDataStartNode:
+        if portDataStartNode.get('data'):
+            dataStartNode = portDataStartNode['data']
+        dataNodeA = next(
+            items for items in dataStartNode if items['id'] == startingNodeId)
+        portStartNode = dataNodeA['attributes']['nativeName']
+    else:
+         logging.info('tpe data not found for starting node id :{}'.format(starting_node))
+    
     portDataEndNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameB))
-    if portDataEndNode.get('data'):
-        dataEndNode = portDataEndNode['data']
-    dataNodeB = next(
-        items for items in dataEndNode if items['id'] == endingNodeId)
-    portEndNode = dataNodeB['attributes']['nativeName']
+    if portDataEndNode:
+        if portDataEndNode.get('data'):
+            dataEndNode = portDataEndNode['data']
+        dataNodeB = next(
+            items for items in dataEndNode if items['id'] == endingNodeId)
+        portEndNode = dataNodeB['attributes']['nativeName']
+    else:
+        logging.info('tpe data not found for ending node id :{}'.format(ending_node))
     logging.info('L1 port info retrieved..')
     return portStartNode, portEndNode
