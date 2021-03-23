@@ -25,8 +25,8 @@ def get_l1_nodes(state_or_states_list):
         if 'typeGroup' in node['attributes']:
             match_object = re.search(
                 'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
-            # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
-            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
+            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
+            # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
                 node['longitude'] = 0
                 node['latitude'] = 0
                 if 'geoLocation' in node['attributes']:
