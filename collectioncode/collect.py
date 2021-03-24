@@ -217,24 +217,32 @@ def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
     if jsondata:
         data = json.loads(jsondata)
     ret = []
+    included = {}
 
-    if "included" in data:
-        included = data['included']
-        for i in range(len(included)):
-            if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
-                if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
-                    temp = {}
-                    temp['Name'] = included[i]['id'][:-2]
-                    temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                    temp['NodeB'] = included[i +
-                                             1]['relationships']['tpes']['data'][0]['id'][:36]
-                    ret.append(temp)
-            logging.info('Supporting Nodes data retrieved ..')
-    # save data for each circuit id for debugging
-    filename = "l1_circuit_"+circuit_id+'.json'
-    with open('jsongets/{}'.format(filename), 'wb') as f:
-        f.write(json.dumps(data, f, sort_keys=True,indent=4, separators=(',', ': ')))
-        f.close()
+    if data:
+        if "included" in data:
+            included = data['included']
+        # save data for each circuit id for debugging
+        filename = "l1_circuit_"+circuit_id+'.json'
+        with open('jsongets/{}'.format(filename), 'wb') as f:
+            f.write(json.dumps(data, f, sort_keys=True,indent=4, separators=(',', ': ')))
+            f.close()
+
+        if included:
+            for i in range(len(included)):
+                if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
+                    if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
+                        temp = {}
+                        temp['Name'] = included[i]['id'][:-2]
+                        temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        temp['NodeB'] = included[i +
+                                                1]['relationships']['tpes']['data'][0]['id'][:36]
+                        ret.append(temp)
+                logging.info('Supporting Nodes data retrieved ..')
+        else:
+            logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+    else:
+        logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
 
     # Return the network construct id's for the next hop nodes
     return ret
