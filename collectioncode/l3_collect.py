@@ -277,7 +277,7 @@ def get_link_data(link1, linkId1, link2, linkId2):
                     if 'slot' in data['attributes']['locations'][0]:
                         slot = data['attributes']['locations'][0]['slot']
                     new_obj['circuitName'] = getCircuitName(port, shelf, slot, linkId1, lnkData1)
-                if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
+                if data.get('attributes').get('layerTerminations')[0].get('mplsPackage') and data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('bw'):
                     new_obj['local Phy BW'] = int(
                         data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
                     new_obj['local RSVP BW'] = int(
@@ -295,7 +295,7 @@ def get_link_data(link1, linkId1, link2, linkId2):
                         new_obj['neighbor Intf'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceName']
                     if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('linkCost'):
                         new_obj['neighbor IGP Metrics'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['linkCost']
-                    if data.get('attributes').get('layerTerminations')[0].get('mplsPackage'):
+                    if data.get('attributes').get('layerTerminations')[0].get('mplsPackage') and data.get('attributes').get('layerTerminations')[0].get('mplsPackage').get('bw'):
                         new_obj['neighbor Phy BW'] = int(
                             data['attributes']['layerTerminations'][0]['mplsPackage']['bw']['maximum'])/1000
                         new_obj['neighbor RSVP BW'] = int(
