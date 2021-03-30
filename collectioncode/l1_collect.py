@@ -16,31 +16,38 @@ name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
 
-
+###### New method for l1 nodes based on l1 circuits ####################
 def get_l1_nodes(state_or_states_list):
     logging.info('Retrieve L1 Nodes')
-    data, node_list = '', []
+    data, node_list, l1data = '', [], {}
     data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
-        if 'typeGroup' in node['attributes']:
-            match_object = re.search(
-                'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
-            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
-            # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
-                node['longitude'] = 0
-                node['latitude'] = 0
-                if 'geoLocation' in node['attributes']:
-                    node['longitude'] = node.get('attributes').get(
-                        'geoLocation').get('longitude') or 0
-                    node['latitude'] = node.get('attributes').get(
-                        'geoLocation').get('latitude') or 0
-                if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
-                    node['siteName'] = utils.normalize_sites(
-                        '{}'.format(node.get('attributes').get('siteName')))
-                else:
-                    node['siteName'] = utils.getSiteName(
-                        node['longitude'], node['latitude'])
-                node_list.append(node)
+        fileName = 'l1_fre_'+node['id']+'.json'
+        logging.debug('l1 filename is {}'.format(fileName))
+        l1fredata = utils.open_file_load_data('jsongets/{}'.format(fileName))
+        if 'data' in l1fredata:
+            l1data = l1fredata['data']
+        if l1data:
+            if 'typeGroup' in node['attributes']:
+                # match_object = re.search(
+                #     'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
+                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
+                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
+                if node['attributes']['typeGroup'] == "Ciena6500":
+                    node['longitude'] = 0
+                    node['latitude'] = 0
+                    if 'geoLocation' in node['attributes']:
+                        node['longitude'] = node.get('attributes').get(
+                            'geoLocation').get('longitude') or 0
+                        node['latitude'] = node.get('attributes').get(
+                            'geoLocation').get('latitude') or 0
+                    if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
+                        node['siteName'] = utils.normalize_sites(
+                            '{}'.format(node.get('attributes').get('siteName')))
+                    else:
+                        node['siteName'] = utils.getSiteName(
+                            node['longitude'], node['latitude'])
+                    node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True,
                            indent=4, separators=(',', ': '))
@@ -88,9 +95,9 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                 logging.debug('Layer Rate is :{}'.format(layerRate))
                 # if layerRate != 'OMS' or layerRate == '':
                 #     continue
-                if 'OM' not in layerRate:
-                    logging.debug('This layer rate should not link :{}'.format(layerRate))
-                    continue
+                # if 'OM' not in layerRate:
+                #     logging.debug('This layer rate should not link :{}'.format(layerRate))
+                #     continue
                 logging.debug('Network id is :{}'.format(networkId))
                 # Checking if type is endpoint and layer rate should be 'OMS' for L1 links
                 if included[i]['type'] == 'endPoints':
@@ -152,7 +159,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         incomplete, jsonmerged = True, {}
         # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
-        ########### Replaced query with no filter
+        ########### Query to retrieve l1 links data
         uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
 
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
@@ -214,8 +221,8 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
         for obj in data:
             # circuit_check = False
             circuit_id = obj['id']
-            if circuit_id in dupl_check:
-                continue
+            # if circuit_id in dupl_check:
+            #     continue
             logging.debug('Circuit id is :\n{}'.format(circuit_id))
             layerRate = obj['attributes']['layerRate']
             logging.debug('layerRate is :\n{}'.format(layerRate))
@@ -229,8 +236,11 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
                 logging.debug('This layerRate should not process for L1 Circuits:\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
-            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
+            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
+            #     continue
+            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
                 continue
+
             for node in included:
                 if node['type'] == 'endPoints' and node['id'][-1] == '1':
                     if node['id'][:-2] == circuit_id:
@@ -249,15 +259,16 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 logging.debug(
                     ' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
                 link_list = collect.get_supporting_nodes(
-                    circuit_id, baseURL, cienauser, cienapassw, token)
+                    circuit_id, filename, baseURL, cienauser, cienapassw, token)
                 # Check based on the returned nodes to see if they're valid l1 nodes
-                supporting_link_check = False
-                if link_list:
-                    for link_obj in link_list:
-                        if link_obj['NodeA'] in l1nodes_dict and link_obj['NodeB'] in l1nodes_dict:
-                            supporting_link_check = True
-                        else:
-                            supporting_link_check = False
+                supporting_link_check = True
+                # supporting_link_check = False
+                # if link_list:
+                #     for link_obj in link_list:
+                #         if link_obj['NodeA'] in l1nodes_dict and link_obj['NodeB'] in l1nodes_dict:
+                #             supporting_link_check = True
+                #         else:
+                #             supporting_link_check = False
 
                 if supporting_link_check:
                     temp_obj = {
@@ -274,14 +285,24 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         "status": "",
                         "ordered_Hops": []
                     }
-                    portStartNode, portEndNode = getPortDetails(
-                        starting_node, startingNodeId, ending_node, endingNodeId)
-                    temp_obj['portStartNode'] = portStartNode
-                    temp_obj['portEndNode'] = portEndNode
-
                     starting_node_name = node_key_val['{}'.format(
                         starting_node)]
                     ending_node_name = node_key_val['{}'.format(ending_node)]
+                    portStartNode, portEndNode, circuitName = getPortDetails(
+                        starting_node, startingNodeId, starting_node_name, ending_node, endingNodeId, ending_node_name)
+                    if circuitName in dupl_check:
+                        continue
+                    if circuitName:
+                        temp_obj['circuitName'] = circuitName
+                    else:
+                        circuitName = 'Dummy_' + circuit_id
+                        temp_obj['circuitName'] = circuitName
+
+                    temp_obj['portStartNode'] = circuitName
+                    temp_obj['portEndNode'] = circuitName
+                    # temp_obj['portStartNode'] = portStartNode
+                    # temp_obj['portEndNode'] = portEndNode
+
                     temp_obj['circuitID'] = circuit_id
                     temp_obj['startL1Node'] = starting_node_name
                     temp_obj['endL1Node'] = ending_node_name
@@ -293,31 +314,23 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                             temp_obj['frequency'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['frequency']
                         if 'channel' in obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
                             temp_obj['channel'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['channel']
-                    try:
-                        if obj.get('attributes').get('userLabel') == '':
-                            temp_obj['circuitName'] = 'Dummy_' + circuit_id
-                        else:
-                            temp_obj['circuitName'] = obj['attributes']['userLabel'] + \
-                                '_' + circuit_id
-                    except Exception as err:
-                        logging.warn('Circuit name returning blank for circuit id :{}'.format(
-                            temp_obj['circuitID']))
-                        temp_obj['circuitName'] = 'Dummy_' + circuit_id
 
                     temp_obj['status'] = obj['attributes']['operationState']
-                    for link in link_list:
-                        link['NodeA'] = node_key_val['{}'.format(
-                            link['NodeA'])]
-                        link['NodeB'] = node_key_val['{}'.format(
-                            link['NodeB'])]
-                    link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(
-                        starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
-                    link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(
-                        link_list[len(link_list)-1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
-                    temp_obj['ordered_Hops'] = link_list
+                    if link_list:
+                        for link in link_list:
+                            link['NodeA'] = node_key_val['{}'.format(
+                                link['NodeA'])]
+                            link['NodeB'] = node_key_val['{}'.format(
+                                link['NodeB'])]
+                        link_list.insert(0, {'Name': 'Starting Link', 'NodeA': '{}'.format(
+                            starting_node_name), 'NodeB': '{}'.format(link_list[0]['NodeA'])})
+                        link_list.append({'Name': 'Ending Link', 'NodeA': '{}'.format(
+                            link_list[len(link_list)-1]['NodeB']), 'NodeB': '{}'.format(ending_node_name)})
+                        temp_obj['ordered_Hops'] = link_list
                     if temp_obj['circuitName'] != 'THISISANULHLINEPORT':
                         l1_circuit_list.append(temp_obj)
-                    dupl_check[temp_obj['circuitID']] = temp_obj['circuitID']
+                    # dupl_check[temp_obj['circuitID']] = temp_obj['circuitID']
+                    dupl_check[temp_obj['circuitName']] = temp_obj['circuitName']
     # if l1_circuit_list:
     l1_circuit_list = json.dumps(
         l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
@@ -327,29 +340,78 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     logging.info('L1 Circuits generated..')
 
 
-def getPortDetails(starting_node, startingNodeId, ending_node, endingNodeId):
+def getPortDetails(starting_node, startingNodeId, startNodeName, ending_node, endingNodeId, endNodeName):
     logging.info('Retrieve port info for L1 circuits')
-    dataStartNode, dataEndNode, portStartNode, portEndNode  = {}, {}, {}, {}
+    circuitName, portStartNode, portEndNode = '', '', ''
+    dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
     fileNameA = 'tpe_'+starting_node
     fileNameB = 'tpe_'+ending_node
     portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameA))
     if portDataStartNode:
+        if portDataStartNode.get('included'):
+            includedDataA = portDataStartNode['included']
         if portDataStartNode.get('data'):
             dataStartNode = portDataStartNode['data']
         dataNodeA = next(
             items for items in dataStartNode if items['id'] == startingNodeId)
         portStartNode = dataNodeA['attributes']['nativeName']
+        if 'locations' in dataNodeA.get('attributes'):
+            if 'port' in dataNodeA['attributes']['locations'][0]:
+                portA = dataNodeA['attributes']['locations'][0]['port']
+            if 'shelf' in dataNodeA['attributes']['locations'][0]:
+                shelfA = dataNodeA['attributes']['locations'][0]['shelf']
+            if 'slot' in dataNodeA['attributes']['locations'][0]:
+                slotA = dataNodeA['attributes']['locations'][0]['slot']
     else:
          logging.info('tpe data not found for starting node id :{}'.format(starting_node))
     
     portDataEndNode = utils.open_file_load_data('jsongets/{}.json'.format(fileNameB))
     if portDataEndNode:
+        if portDataEndNode.get('included'):
+            includedDataB = portDataEndNode['included']
         if portDataEndNode.get('data'):
             dataEndNode = portDataEndNode['data']
         dataNodeB = next(
             items for items in dataEndNode if items['id'] == endingNodeId)
         portEndNode = dataNodeB['attributes']['nativeName']
+        if 'locations' in dataNodeB.get('attributes'):
+            if 'port' in dataNodeB['attributes']['locations'][0]:
+                portB = dataNodeB['attributes']['locations'][0]['port']
+            if 'shelf' in dataNodeB['attributes']['locations'][0]:
+                shelfB = dataNodeB['attributes']['locations'][0]['shelf']
+            if 'slot' in dataNodeB['attributes']['locations'][0]:
+                slotB = dataNodeB['attributes']['locations'][0]['slot']
     else:
         logging.info('tpe data not found for ending node id :{}'.format(ending_node))
+    if includedDataA:
+        circuitName = getCircuitName(includedDataA, portA, shelfA, slotA, startNodeName, endNodeName)
+        logging.debug("Circuit name retrieved with Start node port data: {}".format(circuitName))
+    if not circuitName and includedDataB:
+        circuitName = getCircuitName(includedDataB,portB, shelfB, slotB, startNodeName, endNodeName)
+        logging.debug("Circuit name retrieved with End node port data: {}".format(circuitName))
+
     logging.info('L1 port info retrieved..')
-    return portStartNode, portEndNode
+    return portStartNode, portEndNode, circuitName
+
+def getCircuitName(nodeData, port, shelf, slot, startNodeName, endNodeName):
+    startNode = startNodeName.split("-")[0]
+    endNode = endNodeName.split("-")[0]
+    circuitName =''
+    for item in nodeData:
+        cirName = ''
+        if circuitName:
+            break
+        if 'locations' in item['attributes'] and 'port' in item['attributes']['locations'][0] and 'shelf' in item['attributes']['locations'][0] and 'slot' in item['attributes']['locations'][0]:
+            if item['attributes']['locations'][0]['port'] == port and item['attributes']['locations'][0]['shelf'] == shelf and item['attributes']['locations'][0]['slot'] == slot:
+                if 'layerTerminations' in item['attributes']:
+                    layerData = item['attributes']['layerTerminations']
+                    for layers in layerData:
+                        if layers.get('additionalAttributes'):
+                            if 'userLabel' in layers['additionalAttributes']:
+                                cirName = layers['additionalAttributes']['userLabel']
+                                if (startNode in cirName) and (endNode in cirName) and ('OTU4' in cirName):
+                                    circuitName = cirName
+                                break
+            else:
+                continue
+    return circuitName

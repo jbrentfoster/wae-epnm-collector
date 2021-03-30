@@ -145,8 +145,12 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
         # logging.debug('l1_link_key is :{}'.format(l1_link_name))
         l1_link = l1linkManager.getL1Link(l1_link_key)
         logging.debug('l1_link is :{}'.format(l1_link))
-        l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=l1_nodeA_key, hopLink=l1_link.getKey(), step=c, type=hoptype)
-        l1circuitpath.addHop(l1hoprec)
-        hops = l1circuitpath.getHops()
+        try:
+            l1hoprec = L1CircuitPathHopRecord(l1CircPathKey=l1circuitpath.getKey(), hopNode=l1_nodeA_key, hopLink=l1_link.getKey(), step=c, type=hoptype)
+            l1circuitpath.addHop(l1hoprec)
+            hops = l1circuitpath.getHops()
+        except:
+            logging.debug('could not add hop :{}'.format(err))
+
         c += 1
     return l1circuit

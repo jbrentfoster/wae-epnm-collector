@@ -8,6 +8,7 @@ import traceback
 import configparser
 import l1_collect
 import l3_collect
+import requests
 from collectioncode import utils
 
 # Setting up the properties file
@@ -145,7 +146,7 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         # ONlY ETHERNET and IP
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
         # Retrive data for ETHERNET and MPLS
-        uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
+        uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
             networkConstrId)
         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
         # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
@@ -178,6 +179,93 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         logging.info('FRE data retrieved..')
 
 
+def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
+    # Make the api call to get the supporting node info
+    # logging.info('Retrieve Supporting nodes..')
+    data, incomplete, jsonmerged = {}, True, {}
+    # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
+    #     circuit_id)
+    #Update query to get data from non versioned API
+    uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=500&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
+        circuit_id.strip())
+    URL = baseURL + uri
+    while incomplete:
+        jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
+        jsonaddition = json.loads(jsondata)
+        # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+        if jsonaddition:
+            try:
+                next = ''
+                if jsonaddition.get('links'):
+                    next = jsonaddition.get('links').get('next')
+            except Exception:
+                logging.info("No data found")
+            if next:
+                URL = next
+                utils.merge(jsonmerged, jsonaddition)
+            else:
+                incomplete = False
+                utils.merge(jsonmerged, jsonaddition)
+
+    fileName = 'jsongets/l1_circuit_'+circuit_id+'.json'
+    logging.debug('File name is ..'+fileName)
+    # save data for each circuit id 
+    with open(fileName, 'wb') as f:
+        f.write(json.dumps(jsonmerged, f, sort_keys=True,
+                            indent=4, separators=(',', ': ')))
+        f.close()
+    logging.info('L1 Circuits hops data retrieved and saved..')
+
+    data = utils.open_file_load_data(fileName)
+    hopdata = []
+    included = {}
+    if data:
+        if 'included' in data:
+            included = data['included']
+        if included:
+            for i in range(len(included)):
+                if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
+                    if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
+                        temp = {}
+                        temp['Name'] = included[i]['id'][:-2]
+                        temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        temp['NodeB'] = included[i +
+                                                1]['relationships']['tpes']['data'][0]['id'][:36]
+                        hopdata.append(temp)
+                logging.info('Supporting Nodes data retrieved ..')
+        else:
+            logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+    else:
+        logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+    # Return the hop nodes for each L1 circuits
+    return hopdata
+
+def getToken(baseURL, cienauser, cienapassw):
+    tokenPath = '/tron/api/v1/tokens'
+    proxies = {
+        "http": None,
+        "https": None,
+    }
+    appformat = 'application/json'
+    headers = {'Content-type': appformat, 'Accept': appformat}
+    data = {'username': cienauser, 'password': cienapassw}
+    resttokenURI = baseURL + tokenPath
+    try:
+        r = requests.post(resttokenURI, proxies=proxies,
+                            headers=headers, json=data, verify=False)
+        if r.status_code == 201:
+            token = json.dumps(r.json(), indent=2)
+            # print token
+        else:
+            r.raise_for_status()
+
+    except requests.exceptions.RequestException as err:
+        print "Exception raised: " + str(err)
+        return
+    token = json.loads(token)
+    token_string = token['token']
+    return token_string
+
 def get_l1_nodes(state_or_states_list):
     l1_collect.get_l1_nodes(state_or_states_list)
 
@@ -185,7 +273,7 @@ def get_l1_nodes(state_or_states_list):
 def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list):
     l1_collect.get_l1_links_data(baseURL, cienauser, cienapassw,
                             token, state_or_states_list)
-                            
+
 def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
     l1_collect.get_l1_links(baseURL, cienauser, cienapassw,
                             token, state_or_states_list)
@@ -201,48 +289,3 @@ def get_l3_nodes(state_or_states_list):
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
     l3_collect.get_l3_links(baseURL, cienauser, cienapassw, token)
-
-
-def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
-    # Make the api call to get the supporting node info
-    logging.info('Retrieve Supporting nodes..')
-    data = {}
-    # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-    #     circuit_id)
-    # Update query to get data from non vversioned API
-    uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-        circuit_id.strip())
-    URL = baseURL + uri
-    jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
-    if jsondata:
-        data = json.loads(jsondata)
-    ret = []
-    included = {}
-
-    if data:
-        if "included" in data:
-            included = data['included']
-        # save data for each circuit id for debugging
-        filename = "l1_circuit_"+circuit_id+'.json'
-        with open('jsongets/{}'.format(filename), 'wb') as f:
-            f.write(json.dumps(data, f, sort_keys=True,indent=4, separators=(',', ': ')))
-            f.close()
-
-        if included:
-            for i in range(len(included)):
-                if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
-                    if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
-                        temp = {}
-                        temp['Name'] = included[i]['id'][:-2]
-                        temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                        temp['NodeB'] = included[i +
-                                                1]['relationships']['tpes']['data'][0]['id'][:36]
-                        ret.append(temp)
-                logging.info('Supporting Nodes data retrieved ..')
-        else:
-            logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
-    else:
-        logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
-
-    # Return the network construct id's for the next hop nodes
-    return ret

@@ -16,32 +16,38 @@ name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
 
-
 def get_l3_nodes(state_or_states_list):
     logging.info('Generate L3 nodes')
-    data, node_list = '', []
+    data, node_list, l3data = '', [], {}
     data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
-        if 'typeGroup' in node['attributes']:
-            match_object = re.search(
-                'SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
-            # if node['attributes']['typeGroup'] == "Ciena6500" and (match_object != None or node['attributes']['accessIdentifier'] == 'SHELF-1'):
-            # if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
-            if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ('l2Data' in node['attributes'] and node['attributes']['l2Data'][0]['l2NodeRoutingCapabilities']['isMPLSEnabled'] == True):
-                node['longitude'] = 0
-                node['latitude'] = 0
-                if 'geoLocation' in node['attributes']:
-                    node['longitude'] = node.get('attributes').get(
-                        'geoLocation').get('longitude') or 0
-                    node['latitude'] = node.get('attributes').get(
-                        'geoLocation').get('latitude') or 0
-                if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
-                    node['siteName'] = utils.normalize_sites(
-                        '{}'.format(node.get('attributes').get('siteName')))
-                else:
-                    node['siteName'] = utils.getSiteName(
-                        node['longitude'], node['latitude'])
-                node_list.append(node)
+        fileName = 'fre_'+node['id']+'.json'
+        logging.debug('l3 filename is {}'.format(fileName))
+        fredata = utils.open_file_load_data('jsongets/{}'.format(fileName))
+        if 'data' in fredata:
+            l3data = fredata['data']
+        if l3data:
+            if 'typeGroup' in node['attributes']:
+                # match_object = re.search(
+                #     'SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
+                # if node['attributes']['typeGroup'] == "Ciena6500" and (match_object != None or node['attributes']['accessIdentifier'] == 'SHELF-1'):
+                # if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
+                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ('l2Data' in node['attributes'] and node['attributes']['l2Data'][0]['l2NodeRoutingCapabilities']['isMPLSEnabled'] == True):
+                if node['attributes']['typeGroup'] == "Ciena6500":
+                    node['longitude'] = 0
+                    node['latitude'] = 0
+                    if 'geoLocation' in node['attributes']:
+                        node['longitude'] = node.get('attributes').get(
+                            'geoLocation').get('longitude') or 0
+                        node['latitude'] = node.get('attributes').get(
+                            'geoLocation').get('latitude') or 0
+                    if 'siteName' in node['attributes'] and node['attributes']['siteName'] != '':
+                        node['siteName'] = utils.normalize_sites(
+                            '{}'.format(node.get('attributes').get('siteName')))
+                    else:
+                        node['siteName'] = utils.getSiteName(
+                            node['longitude'], node['latitude'])
+                    node_list.append(node)
 
     node_list = json.dumps(node_list, sort_keys=True,
                            indent=4, separators=(',', ': '))

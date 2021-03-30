@@ -45,7 +45,7 @@ def open_file_load_data(file_name):
     except Exception as err:
         # logging.debug('File not found {}'.format(err))
         if 'No such file or directory' in err:
-            logging.debug('Remote node info not found {}'.format(file_name))
+            logging.debug('File not found {}'.format(file_name))
     return data
 
 # Helper function to get State Nodes data

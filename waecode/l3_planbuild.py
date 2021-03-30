@@ -47,7 +47,7 @@ def generateL3nodes(plan, l3nodeslist):
         model = l3node['attributes']['typeGroup']
         os = l3node['attributes']['softwareVersion']
         description = l3node['attributes']['deviceType']
-        logging.debug(' L3 node name is : {}'.format(name))
+        # logging.debug(' L3 node name is : {}'.format(name))
         if l3node.get('attributes').get('ipAddress'):
             ipAddress = l3node['attributes']['ipAddress']
         else:
@@ -73,7 +73,7 @@ def generateL3circuits(plan, l3linksdict):
 
     for k1, v1 in l3linksdict.items():
         # logging.info "**************Nodename is: " + k1
-        logging.debug('Node Name is : {}'.format(k1))
+        # logging.debug('Node Name is : {}'.format(k1))
         # firstnode = k1
         for k2, v2 in v1.items():
             if isinstance(v2, dict):
@@ -145,7 +145,18 @@ def generateL3circuits(plan, l3linksdict):
                             intfdict = l3circuit.getAllInterfaces()
                             for k6, v6 in intfdict.items():
                                 v6.setResvBW(int(rsvpbw))
- 
+                            for attr, val in l1circuits.items():
+                                l1circuit_name = val.getName()
+                                if l1circuit_name:
+                                    # logging.info("L1 circuit name is " + l1circuit_name)
+                                    l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
+                                    l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
+                                    l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]
+                                    l3NodeA = firstnode.split("-")[0]
+                                    l3NodeB = lastnode.split("-")[0]
+                                    if l1NodeA == l3NodeA and l1NodeB == l3NodeB:
+                                        l3circuit.setL1Circuit(l1circuit)
+                                        logging.info("L1 - L3 circuit mapping added ")
                     duplicatelink = False
 
 
