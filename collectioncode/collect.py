@@ -155,11 +155,11 @@ def processMissingNodes(baseURL, epnmuser, epnmpassword, state_or_states):
         if missingNodes:
             thread_data.logger.debug('Missing nodes found for run : {}'.format(counter))  
             getMissingLinksData(baseURL, epnmuser, epnmpassword, state_or_states, counter)
-            if counter == 3:
+            if counter == 21:
                 missingCircuitsFlag = False
             counter += 1
         else:
-            thread_data.logger.debug('missing nodes not found') 
+            thread_data.logger.debug('missing nodes not found')
             missingCircuitsFlag = False
     thread_data.logger.debug('Process completed for missing nodes')  
     return counter
@@ -940,12 +940,14 @@ def retrieveMissingNodes(state_or_states,counter):
                 else:
                     if nodeName in node_key_val_4k:
                         thread_data.logger.info("Missing node name is  " + nodeName)
+                        # print("Missing node name is  " + nodeName)
                         missingNodesData.append(nodes)
                     else:
                         continue
             if missingNodesData:
                 missingNodes[state] = missingNodesData
-                file_name = "jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_'))
+                missingNodesFilename = 'jsonfiles/{state}_potential_missing_seed_nodes_'+str(counter)+'.json'
+                file_name = missingNodesFilename.format(state=state.strip().replace(' ', '_'))
                 with open(file_name, 'wb') as f:
                     f.write(json.dumps(missingNodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
                 missingNodeFlag = True
@@ -966,24 +968,26 @@ def get4kNodes(node_key_val_4k):
 def getMissingLinksData(baseURL, epnmuser, epnmpassword, state_or_states,counter):
     for state in state_or_states:
         state = state.strip()
-        data = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        missingNodesFilename = 'jsonfiles/{state}_potential_missing_seed_nodes_'+str(counter)+'.json'
+        # data = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        data = utils.open_file_load_data(missingNodesFilename.format(state=state.strip().replace(' ', '_')))
         if data:
-            collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states)
+            collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states, counter)
             thread_data.logger.info("Collecting ISIS hostnames for missing nodes...")
-            collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states)
+            collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states, counter)
             thread_data.logger.info("Process missing host names...")
             process_missing_hostnames(state_or_states,counter)
             thread_data.logger.info("Processing MPLS topology for missing nodes...")
             processMPLSMissingNodes(state_or_states,counter)
 
 ## Function to retrieve mpls topo for missing nodes
-def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states):
+def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_or_states, counter):
     with open("collectioncode/post-cli-template-mpls.json", 'r') as f:
         jsonbody = f.read()
 
     jsonbody_js = json.loads(jsonbody)
     ## Get Seed Nodes Based on State or States (New York, Flordia)
-    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states)
+    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states, counter)
     for seed_node in seed_node_list:
         for seed_node_info_state in seed_node:
             jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
@@ -1050,7 +1054,9 @@ def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_
             seed_node = seed_node_info_state.get('node')
             seed_node_state = ""
             for state in state_or_states:
-                with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                missingNodesFilename = 'jsonfiles/{state}_potential_missing_seed_nodes_'+str(counter)+'.json'
+                # with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                with open(missingNodesFilename.format(state=state.strip().replace(' ', '_')), 'rb') as f:
                     data = json.loads(f.read())
                     list_of_nodes = data[state]
                     for node in list_of_nodes:
@@ -1059,10 +1065,12 @@ def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_
                             break
 
             thread_data.logger.info("Database received.")
-            with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(
-                # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
-                # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
-                state=seed_node_state.replace(' ', '_')), 'wb') as f:
+            filename = 'jsongets/{state}_mplstopo_missing_nodes_'+str(counter)+'.txt'
+            # with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(
+            #     # state=seed_node.get('group')[-1].split('=')[-1].strip().replace(' ', '_')), 'wb') as f:
+            #     # state = seed_node.get('state').replace(' ', '_')), 'wb') as f:
+            #     state=seed_node_state.replace(' ', '_')), 'wb') as f:
+            with open(filename.format(state=seed_node_state.replace(' ', '_')), 'wb') as f:
                 f.write(results)
                 f.close()
         else:
@@ -1071,7 +1079,7 @@ def collect_mpls_topo_json_missing_nodes(baseURL, epnmuser, epnmpassword, state_
                 "Exiting the system because EPNM server failed to retrieve MPLS topoology from CLI template for any potential nodes for state : " + seed_node[0]['state'])
             sys.exit()
 
-def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states):
+def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_states, counter):
     with open("collectioncode/post-cli-template-hostname.json", 'r') as f:
         jsonbody = f.read()
 
@@ -1079,7 +1087,7 @@ def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_sta
     ## Get Seed Nodes Based on State or States (New York, Flordia)
     # run_get_4k_seed_nodes()
     # get_potential_seednode(state_or_states)
-    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states)
+    seed_node_list = get_random_nodes_from_missing_nodes(state_or_states, counter)
     for seed_node in seed_node_list:
         for seed_node_info_state in seed_node:
             jsonbody_js['ra.run-cli-configuration']['ra.target-list']['ra.target']['ra.node-ref'] = seed_node_info_state.get('node')
@@ -1110,7 +1118,9 @@ def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_sta
             seed_node = seed_node_info_state.get('node')
             seed_node_state = ""
             for state in state_or_states:
-                with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                missingNodesFilename = 'jsonfiles/{state}_potential_missing_seed_nodes_'+str(counter)+'.json'
+                # with open("jsonfiles/{}_potential_missing_seed_nodes.json".format(state).replace(' ', '_'), 'rb') as f:
+                with open(missingNodesFilename.format(state=state.strip().replace(' ', '_')), 'rb') as f:
                     data = json.loads(f.read())
                     list_of_nodes = data[state]
                     for node in list_of_nodes:
@@ -1155,7 +1165,9 @@ def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_sta
                     raise
 
             thread_data.logger.info("Database received.")
-            with open("jsongets/{state}_missing_hostnames.txt".format(state=seed_node_state.replace(' ', '_')), 'wb') as f:
+            filename = 'jsongets/{state}_missing_hostnames_'+str(counter)+'.txt'
+            # with open("jsongets/{state}_missing_hostnames.txt".format(state=seed_node_state.replace(' ', '_')), 'wb') as f:
+            with open(filename.format(state=seed_node_state.replace(' ', '_')), 'wb') as f:
                 f.write(results)
                 f.close()
         else:
@@ -1167,7 +1179,9 @@ def collect_missing_hostnames_json(baseURL, epnmuser, epnmpassword, state_or_sta
 def process_missing_hostnames(state_or_states,counter):
     for state in state_or_states:
         nodes = []
-        with open("jsongets/{state}_missing_hostnames.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        filename = 'jsongets/{state}_missing_hostnames_'+str(counter)+'.txt'
+        # with open("jsongets/{state}_missing_hostnames.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        with open(filename.format(state=state.strip().replace(' ', '_')), 'rb') as f:
             lines = f.read().splitlines()
             ilines = lines
             c = 0
@@ -1185,14 +1199,18 @@ def process_missing_hostnames(state_or_states,counter):
                     else:
                         break
                 c += 1
-        with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+        filename = 'jsonfiles/{state}_missing_hostnames_'+str(counter)+'.json'
+        # with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+        with open(filename.format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def processMPLSMissingNodes(state_or_states,counter):
     for state in state_or_states:
         nodes = {}
-        with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        filename = 'jsongets/{state}_mplstopo_missing_nodes_'+str(counter)+'.txt'
+        # with open("jsongets/{state}_mplstopo_missing_nodes.txt".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+        with open(filename.format(state=state.strip().replace(' ', '_')), 'rb') as f:
             lines = f.read().splitlines()
             ilines = lines
         c = 0
@@ -1205,7 +1223,7 @@ def processMPLSMissingNodes(state_or_states,counter):
                 else:
                     otn_flag = False
                 isis_id = line.split(',')[0].split(':')[1].split(' ')[1].rsplit('.', 1)[0]
-                node = hostname_lookup_missed(isis_id, state)
+                node = hostname_lookup_missed(isis_id, state, counter)
                 # thread_data.logger.info("processing node: " + node + " ISIS ID: " + isis_id + " line: " + str(c))
 
                 loopback = line.split(',')[1].split(':')[1].split(' ')[1]
@@ -1217,7 +1235,7 @@ def processMPLSMissingNodes(state_or_states,counter):
                 try:
                     neighbor_isis_id = line.split(',')[1].split(':')[1].rsplit('.', 1)[0]
                     neighbor_node_id = line.split(',')[2].split(':')[1]
-                    neighbor = hostname_lookup_missed(neighbor_isis_id, state)
+                    neighbor = hostname_lookup_missed(neighbor_isis_id, state, counter)
                     if neighbor_node_id == "-1":
                         continue
                     if neighbor == None:
@@ -1272,7 +1290,9 @@ def processMPLSMissingNodes(state_or_states,counter):
                     cleaned_srlgs.append(''.join(srlg.split()))
                 nodes[node]['Links'][linkid]['SRLGs'] = cleaned_srlgs
             c += 1
-        with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+        l3LinksMissingFile = 'jsonfiles/{state}_l3Links_missing_'+str(counter)+'.json'
+        # with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
+        with open(l3LinksMissingFile.format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
         if counter == 1:
             fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
@@ -1281,24 +1301,29 @@ def processMPLSMissingNodes(state_or_states,counter):
 
         with open(fileName, "rb") as f:
             jsonl3linksdata = json.load(f)
-        with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "rb") as f:
+        # with open("jsonfiles/{state}_l3Links_missing.json".format(state=state.strip().replace(' ', '_')), "rb") as f:
+        with open(l3LinksMissingFile.format(state=state.strip().replace(' ', '_')), "rb") as f:
             jsonl3linksmissingdata = json.load(f)
         merge(jsonl3linksdata, jsonl3linksmissingdata)
         with open("jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(jsonl3linksdata, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
-def get_random_nodes_from_missing_nodes(state_or_states):
+def get_random_nodes_from_missing_nodes(state_or_states, counter):
     random_node_choices = []
     for state in state_or_states:
         state = state.strip()
-        seed_nodes = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        missingNodesFilename = 'jsonfiles/{state}_potential_missing_seed_nodes_'+str(counter)+'.json'
+        # seed_nodes = utils.open_file_load_data("jsonfiles/{state}_potential_missing_seed_nodes.json".format(state=state.strip().replace(' ', '_')))
+        seed_nodes = utils.open_file_load_data(missingNodesFilename.format(state=state.strip().replace(' ', '_')))
         if seed_nodes.get(state):
             random_node_choices.append(seed_nodes[state])
             thread_data.logger.info('The valid seed-node from missing nodes for {} is: {}'.format(state, random_node_choices[-1]))
     return random_node_choices
 
-def hostname_lookup_missed(isis_id, state):
-    with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+def hostname_lookup_missed(isis_id, state, counter):
+    filename = 'jsonfiles/{state}_missing_hostnames_'+str(counter)+'.json'
+    # with open("jsonfiles/{state}_missing_hostnames.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
+    with open(filename.format(state=state.strip().replace(' ', '_')), 'rb') as f:
         jsonresponse = f.read()
 
     hostnames = json.loads(jsonresponse)
@@ -2973,7 +2998,7 @@ if __name__ == "__main__":
     ### System Arguments ###
     state_or_states = ['New York', 'New Jersey']
     ########################################
-    # retrieveMissingNodes(state_or_states)
-    processMPLSMissingNodes(state_or_states)
+    retrieveMissingNodes(state_or_states, 1)
+    # processMPLSMissingNodes(state_or_states, 1)
     # pprint (get_random_nodes_for_states(state_or_states))
 
