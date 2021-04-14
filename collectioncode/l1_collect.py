@@ -118,16 +118,16 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                 new_obj = {}
                 if networkConstructA_id and networkConstructB_id:
                     new_obj['linkid'] = included[i]['id'][:-2]
+                    # Check for duplicate link id
+                    if new_obj['linkid'] in dupl_check:
+                        continue
                     # Check if userlable field populated then populate circuit name otherwise populate with Dummy followed by linkid
                     circuitname = linkname_key_val[new_obj['linkid']]
                     if circuitname == '':
                         new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
                     else:
-                        new_obj['circuitName'] = circuitname + \
-                            '_'+new_obj['linkid']
-                    # Check for duplicate link id
-                    if new_obj['linkid'] in dupl_check:
-                        continue
+                        new_obj['circuitName'] = circuitname +'_'+new_obj['linkid']
+
                     if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
                         new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
                         new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
@@ -135,6 +135,13 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         continue
                     new_obj['description'] = new_obj['l1nodeA'] + \
                         '-' + new_obj['l1nodeB'] + '-' + str(i)
+
+                    linkName = getLinkName(networkConstructA_id, new_obj['l1nodeA'], new_obj['l1nodeB'])
+                    if linkName == '':
+                        new_obj['linkname'] = 'Dummy_'+'_'+new_obj['linkid']
+                    else:
+                        new_obj['linkname'] = linkName
+
                     # Add link id for duplicate check
                     dupl_check[new_obj['linkid']] = i
                     l1links_list.append(new_obj)
@@ -196,7 +203,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
 
 def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     logging.info('Generating L1 Circuits...')
-    l1_circuit_list, dupl_check = [], {}
+    l1_circuit_list, dupl_check, links_key_val= [], {}, {}
     # Setting up the links and l1 nodes data for use later on
     l1nodesAll = utils.open_file_load_data('jsonfiles/l1nodes.json')
     l1nodes_dict = {val: 1 for node in l1nodesAll for (
@@ -204,6 +211,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     for node in l1nodesAll:
         node_key_val['{}'.format(
             node['id'])] = node['attributes']['name']
+    # Retrieve link names for link id
+    l1linksAll = utils.open_file_load_data('jsonfiles/l1links.json')
+    for links in l1linksAll:
+        links_key_val['{}'.format(links['linkid'])] = links['linkname']
     for l1nodes in l1nodesAll:
         # linkname_key_val = {}
         networkId = l1nodes['id']
@@ -238,7 +249,9 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
 
             # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
             #     continue
-            if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
+            # if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
+            #     continue
+            if ('OTU' not in obj['attributes']['layerRate']):
                 continue
 
             for node in included:
@@ -259,7 +272,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 logging.debug(
                     ' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
                 link_list = collect.get_supporting_nodes(
-                    circuit_id, filename, baseURL, cienauser, cienapassw, token)
+                    circuit_id, filename, links_key_val, baseURL, cienauser, cienapassw, token)
                 # Check based on the returned nodes to see if they're valid l1 nodes
                 supporting_link_check = True
                 # supporting_link_check = False
@@ -298,10 +311,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         circuitName = 'Dummy_' + circuit_id
                         temp_obj['circuitName'] = circuitName
 
-                    temp_obj['portStartNode'] = circuitName
-                    temp_obj['portEndNode'] = circuitName
-                    # temp_obj['portStartNode'] = portStartNode
-                    # temp_obj['portEndNode'] = portEndNode
+                    # temp_obj['portStartNode'] = circuitName
+                    # temp_obj['portEndNode'] = circuitName
+                    temp_obj['portStartNode'] = portStartNode
+                    temp_obj['portEndNode'] = portEndNode
 
                     temp_obj['circuitID'] = circuit_id
                     temp_obj['startL1Node'] = starting_node_name
@@ -415,3 +428,34 @@ def getCircuitName(nodeData, port, shelf, slot, startNodeName, endNodeName):
             else:
                 continue
     return circuitName
+
+
+def getLinkName(starting_node,startNodeName, endNodeName):
+    nodeData = {}
+    startNode = startNodeName.split("-")[0]
+    endNode = endNodeName.split("-")[0]
+    fileName = 'tpe_'+starting_node
+    portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileName))
+    if portDataStartNode:
+        if portDataStartNode.get('included'):
+            nodeData = portDataStartNode['included']
+    linkName =''
+    for item in nodeData:
+        linkNm = ''
+        if linkName:
+            break
+        if 'userLabel' in item['attributes']:
+            linkNm = item['attributes']['userLabel']
+            if (startNode in linkNm) and (endNode in linkNm):
+                # import pdb
+                # pdb.set_trace()
+                if 'OTU4' in linkNm:
+                    linkName = linkNm.replace('OTU4','OM96')
+                if 'GE100' in linkNm:
+                    linkName = linkNm.replace('GE100','OM96')
+                break
+            else:
+                continue
+    if not linkName:
+        linkName = 'I1001/OM96/'+startNode+'/'+endNode
+    return linkName

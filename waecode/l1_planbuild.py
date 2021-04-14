@@ -57,7 +57,8 @@ def generateL1links(plan, l1linksdict):
         l1nodeAKey = L1NodeKey(l1link['l1nodeA'])
         l1nodeBKey = L1NodeKey(l1link['l1nodeB'])
         description = l1link['description']
-        l1linkRec = L1LinkRecord(name=l1link['linkid'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
+        # l1linkRec = L1LinkRecord(name=l1link['linkid'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
+        l1linkRec = L1LinkRecord(name=l1link['linkname'], l1NodeAKey=l1nodeAKey, l1NodeBKey=l1nodeBKey, description=description)
         try:
             l1LinkManager.newL1Link(l1linkRec)
         except Exception as err:

@@ -179,42 +179,43 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         logging.info('FRE data retrieved..')
 
 
-def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
+def get_supporting_nodes(circuit_id, filename, links_key_val, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
     # logging.info('Retrieve Supporting nodes..')
     data, incomplete, jsonmerged = {}, True, {}
-    # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-    #     circuit_id)
-    #Update query to get data from non versioned API
-    uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=500&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-        circuit_id.strip())
-    URL = baseURL + uri
-    while incomplete:
-        jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
-        jsonaddition = json.loads(jsondata)
-        # logging.debug('The API response for URL {} is:\n{}'.format(URL))
-        if jsonaddition:
-            try:
-                next = ''
-                if jsonaddition.get('links'):
-                    next = jsonaddition.get('links').get('next')
-            except Exception:
-                logging.info("No data found")
-            if next:
-                URL = next
-                utils.merge(jsonmerged, jsonaddition)
-            else:
-                incomplete = False
-                utils.merge(jsonmerged, jsonaddition)
-
     fileName = 'jsongets/l1_circuit_'+circuit_id+'.json'
     logging.debug('File name is ..'+fileName)
-    # save data for each circuit id 
-    with open(fileName, 'wb') as f:
-        f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                            indent=4, separators=(',', ': ')))
-        f.close()
-    logging.info('L1 Circuits hops data retrieved and saved..')
+    # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
+    #     circuit_id)
+    if token:
+        #Update query to get data from non versioned API
+        uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=500&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
+            circuit_id.strip())
+        URL = baseURL + uri
+        while incomplete:
+            jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
+            jsonaddition = json.loads(jsondata)
+            # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+            if jsonaddition:
+                try:
+                    next = ''
+                    if jsonaddition.get('links'):
+                        next = jsonaddition.get('links').get('next')
+                except Exception:
+                    logging.info("No data found")
+                if next:
+                    URL = next
+                    utils.merge(jsonmerged, jsonaddition)
+                else:
+                    incomplete = False
+                    utils.merge(jsonmerged, jsonaddition)
+
+        # save data for each circuit id 
+        with open(fileName, 'wb') as f:
+            f.write(json.dumps(jsonmerged, f, sort_keys=True,
+                                indent=4, separators=(',', ': ')))
+            f.close()
+        logging.info('L1 Circuits hops data retrieved and saved..')
 
     data = utils.open_file_load_data(fileName)
     hopdata = []
@@ -227,7 +228,11 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
                 if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
                     if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
                         temp = {}
-                        temp['Name'] = included[i]['id'][:-2]
+                        linkName = links_key_val['{}'.format(included[i]['id'][:-2])]
+                        if linkName:
+                            temp['Name'] = linkName
+                        else:
+                            temp['Name'] = included[i]['id'][:-2]
                         temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
                         temp['NodeB'] = included[i +
                                                 1]['relationships']['tpes']['data'][0]['id'][:36]
@@ -241,6 +246,7 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
     return hopdata
 
 def getToken(baseURL, cienauser, cienapassw):
+    token = None
     tokenPath = '/tron/api/v1/tokens'
     proxies = {
         "http": None,
