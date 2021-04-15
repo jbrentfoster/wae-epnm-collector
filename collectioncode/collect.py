@@ -100,10 +100,13 @@ def collection_router(collection_call):
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
             thread_data.logger.info("Adding vc-fdn to L3links...")
             add_vcfdn_l3links(collection_call['state_or_states'])
-        # if collection_call['type'] == "optical":
-        #     thread_data.logger.info("Collecting optical virtual connections...")
-        #     collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                        #    collection_call['epnmpassword'])
+        if collection_call['type'] == "optical":
+            logging.info("Starting to collect optical and OTN data")
+            global thread_data
+            thread_data.logger = logging.getLogger(collection_call['type'])
+            thread_data.logger.info("Collecting optical virtual connections...")
+            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                           collection_call['epnmpassword'])
             thread_data.logger.info("Parsing OCH-trails...")
             parse_vc_optical_och_trails()
             thread_data.logger.info("Getting OCH-trails wavelengths...")
@@ -113,25 +116,25 @@ def collection_router(collection_call):
             thread_data.logger.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
         # if collection_call['type'] == "optical_phase_b":
-        #     thread_data.logger.info("Collection OTU links...")
-        #     collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                            collection_call['epnmpassword'])
-        #     thread_data.logger.info("Collection OCH links...")
-        #     collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-        #                            collection_call['epnmpassword'])
-        #     # thread_data.logger.info("Collecting OTU termination points...")
-        #     # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-        #     #                                         collection_call['epnmpassword'])
-        #     thread_data.logger.info("Adding OCH trails to OTU links...")
-        #     add_och_trails_to_otu_links()
-        #     thread_data.logger.info("Parsing OTN links from OTU link data...")
-        #     parse_otn_links()
+            thread_data.logger.info("Collection OTU links...")
+            collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                   collection_call['epnmpassword'])
+            thread_data.logger.info("Collection OCH links...")
+            collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                   collection_call['epnmpassword'])
+            # thread_data.logger.info("Collecting OTU termination points...")
+            # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+            #                                         collection_call['epnmpassword'])
+            thread_data.logger.info("Adding OCH trails to OTU links...")
+            add_och_trails_to_otu_links()
+            thread_data.logger.info("Parsing OTN links from OTU link data...")
+            parse_otn_links()
         # # if collection_call['type'] == "optical_phase_c":
-        #     thread_data.logger.info("Parsing ODU services from vc-optical data...")
-        #     parse_odu_services()
-        #     thread_data.logger.info("Getting multi-layer routes for OTN services...")
-        #     collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                        #    collection_call['epnmpassword'])
+            thread_data.logger.info("Parsing ODU services from vc-optical data...")
+            parse_odu_services()
+            thread_data.logger.info("Getting multi-layer routes for OTN services...")
+            collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                                           collection_call['epnmpassword'])
     except Exception as err:
         thread_data.logger.propagate = True
         thread_data.logger.debug('Exception: Setting the build_plan_check variable to False')                                         
@@ -2428,6 +2431,8 @@ def process_vcfdn_odu_service(vcfdn_dict):
 
 
 def collectmultilayerroute_odu_service_json(baseURL, epnmuser, epnmpassword, vcfdn):
+    global thread_data
+    thread_data.logger = logging.getLogger('optical')
     thread_data.logger.info("Making API call to collect multi_layer route for ODU service vc fdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)

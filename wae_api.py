@@ -210,8 +210,8 @@ def main():
                         {'type': 'allnodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': '4knodes', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         {'type': 'lsps', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
-                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list}
-                        # {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
+                        {'type': 'mpls', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'state_or_states': state_or_states_list},
+                        {'type': 'optical', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
                         # {'type': 'optical_phase_b', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword},
                         # {'type': 'optical_phase_c', 'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword}
                         ]
@@ -383,26 +383,29 @@ def main():
             exists = waecode.planbuild.check_node_exists(plan,v['Name'])
             if not exists:
                 tmpnode = {'Name': v['Name']}
+                if "cisco.com" in tmpnode['Name']:
+                    new_name = tmpnode['Name'].split('.cisco.com')[0]
+                    tmpnode['Name'] = new_name
                 added_nodes.append(tmpnode)
                 l3nodes.append({'Name': v['Name']})
 
         waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
 
-        # Set node coordinates
-        logging.info("Setting node coordinates...")
-        node_manager = plan.getNetwork().getNodeManager()
-        with open("jsonfiles/all-nodes.json", 'rb') as f:
-            nodesdict = json.load(f)
-            f.close()
-        for l3_node in l3nodes:
-            tmp_name = l3_node['Name']
-            tmp_node = next(
-                (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
-                None)
-            node = node_manager.getNode(NodeKey(l3_node['Name']))
-            if tmp_node:
-                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+        # # Set node coordinates
+        # logging.info("Setting node coordinates...")
+        # node_manager = plan.getNetwork().getNodeManager()
+        # with open("jsonfiles/all-nodes.json", 'rb') as f:
+        #     nodesdict = json.load(f)
+        #     f.close()
+        # for l3_node in l3nodes:
+        #     tmp_name = l3_node['Name']
+        #     tmp_node = next(
+        #         (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+        #         None)
+        #     node = node_manager.getNode(NodeKey(l3_node['Name']))
+        #     if tmp_node:
+        #         node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+        #         node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
 
         # Add OCH-Trails (wavelengths) to plan
         logging.info("Adding OCH Trails as L1 circuits to the plan...")
@@ -411,12 +414,12 @@ def main():
             f.close()
         waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
 
-        # # Add OTN services to the plan
-        # logging.info("Adding ODU services to the plan...")
-        # with open("jsonfiles/odu_services.json", 'rb') as f:
-        #     odu_services = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
+        # Add OTN services to the plan
+        logging.info("Adding ODU services to the plan...")
+        with open("jsonfiles/odu_services.json", 'rb') as f:
+            odu_services = json.load(f)
+            f.close()
+        waecode.planbuild.generate_otn_lsps(plan, odu_services, conn)
 
         #######################################
         #
@@ -426,48 +429,48 @@ def main():
 
         l3nodeloopbacks = []
         # Add L3 nodes to plan
-        for state in state_or_states_list:
-            logging.info("Adding L3 nodes...")
-            l3nodes, l3linksdict = get_l3_nodes(state)
-            waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
-
-            # Add L3 links to plan and stitch to L1 links where applicable
-            logging.info("Adding L3 links...")
-            waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails
-
-            # read FlexLSP add-on options
-            with open("waecode/options.json", 'rb') as f:
-                options = json.load(f)
-
-            # Make/update list of nodenames and loopbacks
-            for k1, v1 in l3linksdict.items():
-                tmpnode = {k1: v1['Loopback Address']}
-                l3nodeloopbacks.append(tmpnode)
-
-            # Set node coordinates
-            logging.info("Setting node coordinates...")
-            node_manager = plan.getNetwork().getNodeManager()
-            with open("jsonfiles/all-nodes.json", 'rb') as f:
-                nodesdict = json.load(f)
-            for l3_node in l3nodes:
-                tmp_name = l3_node['Name']
-                try:
-                    tmp_node = next(
-                        (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
-                        None)
-                    node = node_manager.getNode(NodeKey(l3_node['Name']))
-                    node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-                    node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
-                except Exception as err:
-                    logging.warn("Unable to set node coordinates, node not in EPNM inventory: " + tmp_name)
-
-
-        # Add LSPs to plan
-        logging.info("Adding LSP's...")
-        with open("jsonfiles/lsps.json", 'rb') as f:
-            lsps = json.load(f)
-            f.close()
-        waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
+        # for state in state_or_states_list:
+            # logging.info("Adding L3 nodes...")
+            # l3nodes, l3linksdict = get_l3_nodes(state)
+            # waecode.planbuild.generateL3nodes(plan, l3nodelist=l3nodes)
+            #
+            # # Add L3 links to plan and stitch to L1 links where applicable
+            # logging.info("Adding L3 links...")
+            # waecode.planbuild.generateL3circuits(plan, l3linksdict)  # <--- Moved above OCH Trails
+            #
+            # # read FlexLSP add-on options
+            # with open("waecode/options.json", 'rb') as f:
+            #     options = json.load(f)
+            #
+            # # Make/update list of nodenames and loopbacks
+            # for k1, v1 in l3linksdict.items():
+            #     tmpnode = {k1: v1['Loopback Address']}
+            #     l3nodeloopbacks.append(tmpnode)
+            #
+            # # Set node coordinates
+            # logging.info("Setting node coordinates...")
+            # node_manager = plan.getNetwork().getNodeManager()
+            # with open("jsonfiles/all-nodes.json", 'rb') as f:
+            #     nodesdict = json.load(f)
+            # for l3_node in l3nodes:
+            #     tmp_name = l3_node['Name']
+            #     try:
+            #         tmp_node = next(
+            #             (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+            #             None)
+            #         node = node_manager.getNode(NodeKey(l3_node['Name']))
+            #         node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+            #         node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+            #     except Exception as err:
+            #         logging.warn("Unable to set node coordinates, node not in EPNM inventory: " + tmp_name)
+            #
+        #
+        # # Add LSPs to plan
+        # logging.info("Adding LSP's...")
+        # with open("jsonfiles/lsps.json", 'rb') as f:
+        #     lsps = json.load(f)
+        #     f.close()
+        # waecode.planbuild.generate_lsps(plan, lsps, l3nodeloopbacks, options, conn)
 
         # Create and assign nodes to Sites
         logging.info("Assigning nodes to sites...")
