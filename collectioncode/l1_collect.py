@@ -106,9 +106,10 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         'OMS / OTS include id is :{}'.format(included[i]['id']))
                     if included[i]['id'][-1] == '1' and included[i].get('relationships').get('tpes'):
                         networkConstructA_id = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        nodeAid = included[i]['relationships']['tpes']['data'][0]['id']
                     if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
-                        networkConstructB_id = included[i +
-                                                        1]['relationships']['tpes']['data'][0]['id'][:36]
+                        networkConstructB_id = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
+                        nodeBid = included[i+1]['relationships']['tpes']['data'][0]['id']
                     # logging.info('This is the value of ID1:\n{}'.format(networkConstructA_id))
                     # logging.info('This is the value of ID2:\n{}'.format(networkConstructB_id))
                 else:
@@ -121,22 +122,28 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     # Check for duplicate link id
                     if new_obj['linkid'] in dupl_check:
                         continue
+                    if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
+                        nodeA = node_key_val[networkConstructA_id]
+                        nodeB = node_key_val[networkConstructB_id]
+                        new_obj['l1nodeA'] = nodeA
+                        new_obj['l1nodeB'] = nodeB
+                    else:
+                        continue
+                    # Retrive port details for each node
+                    portNodeA, portNodeB, circuitName = getPortDetails(
+                        networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
+                    # Retrieve link name data
+                    linkName = getLinkName(networkConstructA_id, new_obj['l1nodeA'], new_obj['l1nodeB'])
                     # Check if userlable field populated then populate circuit name otherwise populate with Dummy followed by linkid
                     circuitname = linkname_key_val[new_obj['linkid']]
                     if circuitname == '':
                         new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
                     else:
                         new_obj['circuitName'] = circuitname +'_'+new_obj['linkid']
-
-                    if networkConstructA_id in node_key_val and networkConstructB_id in node_key_val:
-                        new_obj['l1nodeA'] = node_key_val[networkConstructA_id]
-                        new_obj['l1nodeB'] = node_key_val[networkConstructB_id]
-                    else:
-                        continue
                     new_obj['description'] = new_obj['l1nodeA'] + \
                         '-' + new_obj['l1nodeB'] + '-' + str(i)
-
-                    linkName = getLinkName(networkConstructA_id, new_obj['l1nodeA'], new_obj['l1nodeB'])
+                    new_obj['portA'] = portNodeA.split('-',1)[1]
+                    new_obj['portB'] = portNodeB.split('-',1)[1]
                     if linkName == '':
                         new_obj['linkname'] = 'Dummy_'+'_'+new_obj['linkid']
                     else:
@@ -237,20 +244,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
             logging.debug('Circuit id is :\n{}'.format(circuit_id))
             layerRate = obj['attributes']['layerRate']
             logging.debug('layerRate is :\n{}'.format(layerRate))
-            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
-            #     logging.debug('This layerRate should not process :\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
-            # if layer rate is not OTS then continue
-            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] !='OTU4') and (obj['attributes']['layerRate'] !='OTSi'):
-            #     continue
-
-            if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
+            if ('OTU' not in obj['attributes']['layerRate']):
                 logging.debug('This layerRate should not process for L1 Circuits:\n{}'.format(layerRate)+' for circuit id :{}'.format(circuit_id))
 
-            # if (obj['attributes']['layerRate'] != 'OTS') and (obj['attributes']['layerRate'] != 'OMS') and ('OTU' not in obj['attributes']['layerRate']):
-            #     continue
-            # if (obj['attributes']['layerRate'] != 'OTS') and ('OTU' not in obj['attributes']['layerRate']):
-            #     continue
             if ('OTU' not in obj['attributes']['layerRate']):
                 continue
 
