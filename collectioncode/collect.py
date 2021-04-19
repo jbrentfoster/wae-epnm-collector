@@ -9,6 +9,8 @@ import wae_api
 import configparser
 import threading
 import utils
+import os
+from os import path
 from requests.exceptions import Timeout
 from multiprocessing.dummy import Pool as ThreadPool
 from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
@@ -85,8 +87,7 @@ def collection_router(collection_call):
             thread_data.logger.info("Adding MPLS TL data to L3 links...")
             try:
                 ####### Updated code to implement missing circuits 
-                # add_mpls_tl_data(collection_call['state_or_states'])
-                add_mpls_tl_data(collection_call['state_or_states'], counter)
+                add_mpls_tl_data(collection_call['state_or_states'])
             except Exception as err:
                 thread_data.logger.propagate = True
                 thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
@@ -147,15 +148,29 @@ def collection_router(collection_call):
         raise
 
 def processMissingNodes(baseURL, epnmuser, epnmpassword, state_or_states):
-    thread_data.logger.debug('Process starting to retrieve missing nodes')  
+    thread_data.logger.debug('Process starting to retrieve missing nodes')
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('configs/config.ini')
+    noOfIteration = config['DEFAULT']['Iteration']
+    thread_data.logger.debug(" No of Iterations to process missing nodes " +noOfIteration)
     missingCircuitsFlag = True
     counter = 1
+    regionsToProcess = state_or_states
     while missingCircuitsFlag:
-        missingNodes = retrieveMissingNodes(state_or_states,counter)
-        if missingNodes:
+        missingNodes = False
+        thread_data.logger.debug('Retrieve missing for counter: {}'.format(counter))
+        thread_data.logger.debug('Retrieve missing nodes data for states: {}'.format(len(regionsToProcess)))
+        missingNodesObj = retrieveMissingNodes(regionsToProcess,counter)
+        regionsToProcess = []
+        for k, v in missingNodesObj.items():
+            if v['missingNodeFlag'] == True:
+                regionsToProcess.append(k)
+                missingNodes = True
+        thread_data.logger.debug('Retrieve missing Links data for states: {}'.format(len(regionsToProcess)))
+        if missingNodes and len(regionsToProcess) > 0:
             thread_data.logger.debug('Missing nodes found for run : {}'.format(counter))  
-            getMissingLinksData(baseURL, epnmuser, epnmpassword, state_or_states, counter)
-            if counter == 21:
+            getMissingLinksData(baseURL, epnmuser, epnmpassword, regionsToProcess, counter)
+            if counter == int(noOfIteration):
                 missingCircuitsFlag = False
             counter += 1
         else:
@@ -192,10 +207,7 @@ def runcollector(baseURL, epnmuser, epnmpassword, state_or_states):
 
     logging.info("Adding MPLS TL data to L3 links...")
     try:
-        #### Comment to implement missing circuits 
-        # add_mpls_tl_data(state_or_states)
-        #### Updated to implement missing circuits 
-        add_mpls_tl_data(state_or_states,1)
+        add_mpls_tl_data(state_or_states)
     except Exception as err:
         logging.critical("MPLS topological links are not valid.  Halting execution.")
         sys.exit("Collection error.  Halting execution.")
@@ -912,35 +924,36 @@ def retrieveMissingNodes(state_or_states,counter):
     node_key_val_4k = {}
     missingNodeFlag = False
     get4kNodes(node_key_val_4k)
-
+    missingNodesObj = {}
     for state in state_or_states:
-        if counter == 1:
+        linksFileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
+        if path.exists(linksFileName):
+            fileName = linksFileName
+        else:
             fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
-        else: 
-            fileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
         with open(fileName, 'rb') as f:
             l3links = json.load(f)
             node_key_val_state = {}
             value = 1
             for k1, v1 in l3links.items():
                 # thread_data.logger.info("Nodename is: " + k1)
-                # print("Nodename is: " + k1)
                 node_key_val_state['{}'.format(k1)] = value
                 value += 1
         with open("jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
             thejson = json.load(f)
             potentialSeedNodes = thejson[state]
-            missingNodesData = []
-            missingNodes = {}
+            missingNodesData, missingNodes, missingObj= [], {}, {}
             for nodes in potentialSeedNodes:
                 nodeName = nodes['node'].split('!')[1].split('=')[1]
+                if 'cisco.com' in nodeName:
+                    nodeName = nodeName.split('.',1)[0]
+                    print("node Name is" + nodeName)
                 if nodeName in node_key_val_state:
-                    # print("node Exists")
+                    # thread_data.logger.info("Node Exists  " + nodeName)
                     continue
                 else:
                     if nodeName in node_key_val_4k:
                         thread_data.logger.info("Missing node name is  " + nodeName)
-                        # print("Missing node name is  " + nodeName)
                         missingNodesData.append(nodes)
                     else:
                         continue
@@ -950,8 +963,11 @@ def retrieveMissingNodes(state_or_states,counter):
                 file_name = missingNodesFilename.format(state=state.strip().replace(' ', '_'))
                 with open(file_name, 'wb') as f:
                     f.write(json.dumps(missingNodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
-                missingNodeFlag = True
-    return missingNodeFlag
+                missingObj['missingNodeFlag'] = True
+            else:
+                missingObj['missingNodeFlag'] = False
+        missingNodesObj[state] = missingObj
+    return missingNodesObj
 ################### Until Here#############################
 
 def get4kNodes(node_key_val_4k):
@@ -1370,7 +1386,7 @@ def collectMPLSnodes():
         f.write(json.dumps(mpls_nodes, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def add_mpls_tl_data(state_or_states, counter):
+def add_mpls_tl_data(state_or_states):
     for state in state_or_states:
         with open("jsongets/tl-mpls-link-layer.json", 'rb') as f:
             jsonresponse = f.read()
@@ -1380,10 +1396,11 @@ def add_mpls_tl_data(state_or_states, counter):
         # with open("jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_')), 'rb') as f:
         #     l3links = json.load(f)
         #########Added code to implement missing circuits 
-        if counter == 1:
+        linksFileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
+        if path.exists(linksFileName):
+            fileName = linksFileName
+        else:
             fileName = "jsonfiles/{state}_l3Links.json".format(state=state.strip().replace(' ', '_'))
-        else: 
-            fileName = "jsonfiles/{state}_l3Links_merged.json".format(state=state.strip().replace(' ', '_'))
 
         with open(fileName, 'rb') as f:
             l3links = json.load(f)
@@ -2998,7 +3015,8 @@ if __name__ == "__main__":
     ### System Arguments ###
     state_or_states = ['New York', 'New Jersey']
     ########################################
-    retrieveMissingNodes(state_or_states, 1)
+    # retrieveMissingNodes(state_or_states, 1)
+    processMissingNodes('abc', 'abc', 'abc', state_or_states)
     # processMPLSMissingNodes(state_or_states, 1)
     # pprint (get_random_nodes_for_states(state_or_states))
 
