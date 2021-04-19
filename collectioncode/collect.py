@@ -11,7 +11,7 @@ import threading
 import utils
 from requests.exceptions import Timeout
 from multiprocessing.dummy import Pool as ThreadPool
-from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states
+from get_4k_seed_nodes import run_get_4k_seed_nodes, get_potential_seednode, get_random_nodes_for_states, run_get_all_4k_nodes, is_node_in_state
 
 
 thread_data = threading.local()
@@ -104,6 +104,9 @@ def collection_router(collection_call):
             logging.info("Starting to collect optical and OTN data")
             global thread_data
             thread_data.logger = logging.getLogger(collection_call['type'])
+            collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                collection_call['epnmpassword'])
+            run_get_all_4k_nodes()
             thread_data.logger.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                            collection_call['epnmpassword'])
@@ -112,29 +115,30 @@ def collection_router(collection_call):
             thread_data.logger.info("Getting OCH-trails wavelengths...")
             add_wavelength_vc_optical_och_trails()
             thread_data.logger.info("Collecting L1 paths for OCH-trails...")
-            addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+            addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+                                          collection_call['epnmpassword'], collection_call['state_or_states'])
             thread_data.logger.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
-        # if collection_call['type'] == "optical_phase_b":
             thread_data.logger.info("Collection OTU links...")
             collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
                                    collection_call['epnmpassword'])
-            thread_data.logger.info("Collection OCH links...")
-            collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                   collection_call['epnmpassword'])
+            ##### Not needed ################
+            # thread_data.logger.info("Collection OCH links...")
+            # collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+            #                        collection_call['epnmpassword'])
             # thread_data.logger.info("Collecting OTU termination points...")
             # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
             #                                         collection_call['epnmpassword'])
+            #################################
             thread_data.logger.info("Adding OCH trails to OTU links...")
             add_och_trails_to_otu_links()
             thread_data.logger.info("Parsing OTN links from OTU link data...")
             parse_otn_links()
-        # # if collection_call['type'] == "optical_phase_c":
             thread_data.logger.info("Parsing ODU services from vc-optical data...")
             parse_odu_services()
             thread_data.logger.info("Getting multi-layer routes for OTN services...")
             collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                           collection_call['epnmpassword'])
+                                                           collection_call['epnmpassword'], collection_call['state_or_states'])
     except Exception as err:
         thread_data.logger.propagate = True
         thread_data.logger.debug('Exception: Setting the build_plan_check variable to False')                                         
@@ -1554,6 +1558,10 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                 tmptp = {}
                 tmptp.setdefault('node', ep.get('topo.endpoint-ref').split('!')[1].split('=')[1])
                 tmptp.setdefault('port', ep.get('topo.endpoint-ref').split('!')[2].split('=')[2].split(';')[0])
+                try:
+                    tmptp.setdefault('layer-rate', ep.get('topo.endpoint-ref').split('=')[5])
+                except Exception as err:
+                    pass
                 tmptp.setdefault('tp-fdn', ep.get('topo.endpoint-ref') + "&containedCTP=true")
                 try:
                     tmptp['port-num'] = tmptp.get('port').split('OTUC2')[1]
@@ -1578,8 +1586,12 @@ def collect_otu_links_json(baseURL, epnmuser, epnmpassword):
                     channels = []
                     tmpchannel = {}
                     tmpchannel['channel'] = tp['port']
-                    tmpchannel['layer-rate'] = "oc:lr-och-transport-unit-c2"
-                    tmpchannel['termination-mode'] = "OTN"
+                    # tmpchannel['layer-rate'] = "oc:lr-och-transport-unit-c2"
+                    tmpchannel['layer-rate'] = "oc:" + tp['layer-rate']
+                    if tp['layer-rate'] == "lr-och-transport-unit-c2":
+                        tmpchannel['termination-mode'] = "ETHERNET_PACKET"
+                    elif tp['layer-rate'] == "lr-och-transport-unit-4":
+                        tmpchannel['termination-mode'] = "OTN"
                     channels.append(tmpchannel)
                     tp.setdefault('channels', channels)
 
@@ -1914,14 +1926,15 @@ def parse_otn_links():
             if len(otn_channel) == 0: continue
             for otn_channel_compare in otn_channels:
                 if len(otn_channel_compare) == 0: continue
-                try:
-                    ch = otn_channel.get('channel').split('/')[4]
-                    ch_compare = otn_channel_compare.get('channel').split('/')[4]
-                except:
-                    thread_data.logger.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
-                    ch = 1
-                    ch_compare = 1
-                if otn_channel.get('node') != otn_channel_compare.get('node') and ch == ch_compare:
+                # try:
+                #     ch = otn_channel.get('channel').split('/')[4]
+                #     ch_compare = otn_channel_compare.get('channel').split('/')[4]
+                # except:
+                #     thread_data.logger.warn("Channel derived from 100G non-channelized wavelength, setting channel to 1.")
+                #     ch = 1
+                #     ch_compare = 1
+                # if otn_channel.get('node') != otn_channel_compare.get('node') and ch == ch_compare:
+                if otn_channel.get('node') != otn_channel_compare.get('node'):
                     otn_link = {}
                     otn_link_ep = {}
                     otn_link.setdefault('name',
@@ -1930,6 +1943,9 @@ def parse_otn_links():
                     # otn_link.setdefault('name', otu_link.get('fdn').split("=")[2] + " ODU4 channel " + str(ch))
                     try:
                         otn_link.setdefault('och-trail-fdn', otu_link.get('och-trail-fdn'))
+                    except Exception as err:
+                        thread_data.logger.warn("Could not get OCH-Trail from OTU link for " + otu_link.get('fdn'))
+                    try:
                         otn_link.setdefault('otu-link-fdn', otu_link.get('fdn'))
                         otn_link_endpoints = []
                         otn_link_endpoints.append(
@@ -2054,15 +2070,20 @@ def parse_odu_services():
         f.write(json.dumps(odu_services, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword):
+def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpassword, state_or_states):
     with open("jsonfiles/odu_services.json", 'rb') as f:
         odu_services = json.load(f)
-
     vcfdns = []
     for odu_service in odu_services:
-        vcfdn = odu_service.get('fdn')
-        vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'vcfdn': vcfdn}
-        vcfdns.append(vcfdn_dict)
+        candidate_svc = False
+        for state in state_or_states:
+            if is_node_in_state(odu_service.get('node-A'), state) or is_node_in_state(odu_service.get('node-B'), state):
+                candidate_svc = True
+        if candidate_svc:
+            vcfdn = odu_service.get('fdn')
+            vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword, 'vcfdn': vcfdn}
+            vcfdns.append(vcfdn_dict)
+
     thread_data.logger.info("Spawning threads to collect multi-layer routes for OCH-trails...")
     pool = ThreadPool(wae_api.thread_count)
     otu_links = pool.map(process_vcfdn_odu_service, vcfdns)
@@ -2080,6 +2101,8 @@ def collect_multilayer_route_odu_services_threaded(baseURL, epnmuser, epnmpasswo
                         if result.get('vcfdn') == tmp_vcfdn:
                             thread_data.logger.info("Multi-layer route collection successful for vcFdn " + tmp_vcfdn)
                             odu_service.setdefault('otu-links', result.get('otu-links'))
+                        else:
+                            thread_data.logger.warning("Multi-layer route collection failed for vcFdn " + tmp_vcfdn)
 
     thread_data.logger.info("Completed collecting OTU links for ODU services...")
     with open("jsonfiles/odu_services.json", "wb") as f:
@@ -2123,13 +2146,17 @@ def add_och_trails_to_otu_links():
         f.write(json.dumps(otu_links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword):
+def addL1hopstoOCHtrails_threaded(baseURL, epnmuser, epnmpassword, state_or_states):
     with open("jsonfiles/och_trails.json", 'rb') as f:
         och_trails = json.load(f)
-
     vcfdns = []
     for och_trail in och_trails:
-        if 'fdn' in och_trail:
+        candidate_trail = False
+        for state in state_or_states:
+            for tp in och_trail['termination-points']:
+                if is_node_in_state(tp['node'], state):
+                    candidate_trail = True
+        if 'fdn' in och_trail and candidate_trail:
             vcfdn = och_trail['fdn']
             vcfdn_dict = {'baseURL': baseURL, 'epnmuser': epnmuser, 'epnmpassword': epnmpassword,
                           'vcfdn': vcfdn}

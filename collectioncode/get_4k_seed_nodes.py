@@ -35,6 +35,10 @@ def run_get_4k_seed_nodes():
     write_results("jsonfiles/all_potential_seed_nodes.json", final_mpls_seed_node_list)
 
 
+def run_get_all_4k_nodes():
+    all_4k_nodes = get_seed_nodes()
+    write_results("jsonfiles/all_4k_nodes.json", all_4k_nodes)
+
 def get_potential_seednode(state_or_states):
     final_seed_node_dict = open_file_load_data('jsonfiles/all_potential_seed_nodes.json')
     if isinstance(state_or_states, list):
@@ -47,6 +51,14 @@ def get_potential_seednode(state_or_states):
             file_name = "jsonfiles/{state}_potential_seed_nodes.json".format(state=state.strip().replace(' ', '_'))
             write_results(file_name, tmp)
 
+
+def is_node_in_state(node_name, state):
+    all_4k_nodes = open_file_load_data('jsonfiles/all_4k_nodes.json')
+    nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('group') if state in item.split('=')[-1]]
+    for node in nodes_in_state_list:
+        if node_name in node['node']:
+            return True
+    return False
 
 def write_results(file_name, data):
     if os.path.exists(file_name):
