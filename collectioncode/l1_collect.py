@@ -3,6 +3,7 @@ import re
 import json
 import logging
 import sys
+import csv
 from multiprocessing.dummy import Pool as ThreadPool
 import traceback
 import utils
@@ -133,7 +134,10 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     portNodeA, portNodeB, circuitName = getPortDetails(
                         networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
                     # Retrieve link name data
-                    linkName = getLinkName(networkConstructA_id, new_obj['l1nodeA'], new_obj['l1nodeB'])
+                    linkName = getLinkName(portNodeA.split('-',1)[1], portNodeB.split('-',1)[1], nodeA.split('-',1)[0], nodeB.split('-',1)[0])
+                    # if not linkName:
+                    #     linkName = 'Dummy-'+new_obj['linkid']
+
                     # Check if userlable field populated then populate circuit name otherwise populate with Dummy followed by linkid
                     circuitname = linkname_key_val[new_obj['linkid']]
                     if circuitname == '':
@@ -308,10 +312,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         circuitName = 'Dummy_' + circuit_id
                         temp_obj['circuitName'] = circuitName
 
-                    # temp_obj['portStartNode'] = circuitName
-                    # temp_obj['portEndNode'] = circuitName
-                    temp_obj['portStartNode'] = portStartNode
-                    temp_obj['portEndNode'] = portEndNode
+                    temp_obj['portStartNode'] = circuitName
+                    temp_obj['portEndNode'] = circuitName
+                    # temp_obj['portStartNode'] = portStartNode
+                    # temp_obj['portEndNode'] = portEndNode
 
                     temp_obj['circuitID'] = circuit_id
                     temp_obj['startL1Node'] = starting_node_name
@@ -426,33 +430,49 @@ def getCircuitName(nodeData, port, shelf, slot, startNodeName, endNodeName):
                 continue
     return circuitName
 
-
-def getLinkName(starting_node,startNodeName, endNodeName):
-    nodeData = {}
-    startNode = startNodeName.split("-")[0]
-    endNode = endNodeName.split("-")[0]
-    fileName = 'tpe_'+starting_node
-    portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileName))
-    if portDataStartNode:
-        if portDataStartNode.get('included'):
-            nodeData = portDataStartNode['included']
-    linkName =''
-    for item in nodeData:
-        linkNm = ''
-        if linkName:
+def getLinkName(portNameA, portNameB, startNode, endNode):
+    linkName = ''
+    linkNamesData = csv.DictReader(open('resources/l1linknames.csv'))
+    for row in linkNamesData:
+        if ((portNameA in row['A_PORT_AID']) and (startNode in row['TRAIL_NAME']) and (endNode in row['TRAIL_NAME'])):
+            linkName = row['TRAIL_NAME']
             break
-        if 'userLabel' in item['attributes']:
-            linkNm = item['attributes']['userLabel']
-            if (startNode in linkNm) and (endNode in linkNm):
-                # import pdb
-                # pdb.set_trace()
-                if 'OTU4' in linkNm:
-                    linkName = linkNm.replace('OTU4','OM96')
-                if 'GE100' in linkNm:
-                    linkName = linkNm.replace('GE100','OM96')
+        else:
+            if ((portNameB in row['A_PORT_AID']) and (startNode in row['TRAIL_NAME']) and (endNode in row['TRAIL_NAME'])):
+                linkName = row['TRAIL_NAME']
                 break
-            else:
-                continue
+
     if not linkName:
-        linkName = 'I1001/OM96/'+startNode+'/'+endNode
+        linkName = 'Dummy/I0000/'+startNode+'/'+endNode
     return linkName
+
+
+# def getLinkName(starting_node,startNodeName, endNodeName):
+#     nodeData = {}
+#     startNode = startNodeName.split("-")[0]
+#     endNode = endNodeName.split("-")[0]
+#     fileName = 'tpe_'+starting_node
+#     portDataStartNode = utils.open_file_load_data('jsongets/{}.json'.format(fileName))
+#     if portDataStartNode:
+#         if portDataStartNode.get('included'):
+#             nodeData = portDataStartNode['included']
+#     linkName =''
+#     for item in nodeData:
+#         linkNm = ''
+#         if linkName:
+#             break
+#         if 'userLabel' in item['attributes']:
+#             linkNm = item['attributes']['userLabel']
+#             if (startNode in linkNm) and (endNode in linkNm):
+#                 # import pdb
+#                 # pdb.set_trace()
+#                 if 'OTU4' in linkNm:
+#                     linkName = linkNm.replace('OTU4','OM96')
+#                 if 'GE100' in linkNm:
+#                     linkName = linkNm.replace('GE100','OM96')
+#                 break
+#             else:
+#                 continue
+#     if not linkName:
+#         linkName = 'I1001/OM96/'+startNode+'/'+endNode
+#     return linkName
