@@ -151,7 +151,7 @@ def processMissingNodes(baseURL, epnmuser, epnmpassword, state_or_states):
     thread_data.logger.debug('Process starting to retrieve missing nodes')
     config = configparser.ConfigParser(interpolation=None)
     config.read('configs/config.ini')
-    noOfIteration = config['DEFAULT']['Iteration']
+    noOfIteration = config['DEFAULT']['Iterations']
     thread_data.logger.debug(" No of Iterations to process missing nodes " +noOfIteration)
     missingCircuitsFlag = True
     counter = 1
