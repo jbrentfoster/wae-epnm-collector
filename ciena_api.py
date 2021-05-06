@@ -221,7 +221,7 @@ def main():
         logging.debug("Retrieve L3 links and Circuits..")
         collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
         logging.debug("L3 links and circuit generated..")
-
+ 
     #######################################
     #
     #  Build MPLS Plan Components
@@ -246,7 +246,7 @@ def main():
 
         # Add L1 circuits to plan (temp commenting out)
         logging.info("Adding L1 circuits to the plan...")
-        l1circuitlist = utils.open_file_load_data('jsonfiles/l1circuits.json')
+        l1circuitlist = utils.open_file_load_data('jsonfiles/l1circuitsfinal.json')
         l1_planbuild.generateL1circuits(plan, l1_data=l1circuitlist)
 
         # Add l3 nodes to plan
