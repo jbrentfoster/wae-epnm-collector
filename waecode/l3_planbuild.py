@@ -105,38 +105,42 @@ def generateL3circuits(plan, l3linksdict):
                     # intfbw = getintfbw(phy_bw)
                     intfbw = phy_bw
                     try:
-                        tp_description = v3['circuitName']
+                        circuitName = v3['circuitName']
                     except Exception as err:
-                        tp_description = ""
+                        circuitName = ""
                     discoveredname = v3['circuitName']
+                    # Fix start and End nodes based on returned circuit naame. API is returning the incorrect start and end node for several nodes.
+                    if '/' in circuitName:
+                        if circuitName.split('/')[2] == firstnode.split('-')[0]:
+                            nodea = firstnode
+                            nodeb = lastnode
+                            nodea_ip = firstnode_ip
+                            nodeb_ip = lastnode_ip
+                            nodea_intf = firstnode_intf
+                            nodeb_intf = lastnode_intf
+                        elif circuitName.split('/')[2] == lastnode.split('-')[0]:
+                            nodea = lastnode
+                            nodeb = firstnode
+                            nodea_ip = lastnode_ip
+                            nodeb_ip = firstnode_ip
+                            nodea_intf = lastnode_intf
+                            nodeb_intf = firstnode_intf
+                    else:
+                            nodea = firstnode
+                            nodeb = lastnode
+                            nodea_ip = firstnode_ip
+                            nodeb_ip = lastnode_ip
+                            nodea_intf = firstnode_intf
+                            nodeb_intf = lastnode_intf
+
                     for linkdiscoveredname in linkslist:
                         if discoveredname == linkdiscoveredname: duplicatelink = True
                     if not duplicatelink:
                         linkslist.append(discoveredname)
-                        name = ""
-                        if tp_description == "":
-                            for elem in circuit_name_list:
-                                node_check = elem['1'] == firstnode and elem['3'] == lastnode
-                                interface_check = elem['2'] == firstnode_intf and elem['4'] == lastnode_intf
-                                if node_check and interface_check:
-                                    name = elem['0']
-                                    break
-                                elif elem['1'] == firstnode and elem['2'].startswith('BDI'):
-                                    name = elem['0']
-                                    break
-                            if name == "":
-                                i += 1
-                                name = 'l3_circuit_{}/{}/{}'.format(int(i), firstnode, lastnode)
-                        else:
-                            if 'CktId: ' in tp_description:
-                                name = tp_description.split('CktId: ')[1]
-                            elif 'CID:' in tp_description:
-                                name = tp_description.split('CID:')[1]
-                            else:
-                                name = tp_description
-  
+
                         rsvpbw = float(v3['local RSVP BW'])
-                        l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
+                        # l3circuit = generateL3circuit(plan, tp_description, firstnode, lastnode, affinity, firstnode_ip,lastnode_ip, firstnode_intf, lastnode_intf, igp_metric, te_metric,rsvpbw)
+                        l3circuit = generateL3circuit(plan, circuitName, nodea, nodeb, affinity, nodea_ip, nodeb_ip, nodea_intf, nodeb_intf, igp_metric, te_metric,rsvpbw)
                         logging.debug('Circuit Created : {}'.format(l3circuit))
                         if l3circuit:
                             l1CircuitManager = plan.getNetwork().getL1Network().getL1CircuitManager()
@@ -152,8 +156,8 @@ def generateL3circuits(plan, l3linksdict):
                                     l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
                                     l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
                                     l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]
-                                    l3NodeA = firstnode.split("-")[0]
-                                    l3NodeB = lastnode.split("-")[0]
+                                    l3NodeA = nodea.split("-")[0]
+                                    l3NodeB = nodeb.split("-")[0]
                                     if l1NodeA == l3NodeA and l1NodeB == l3NodeB:
                                         l3circuit.setL1Circuit(l1circuit)
                                         logging.info("L1 - L3 circuit mapping added ")
@@ -166,7 +170,6 @@ def generateL3circuit(plan, name, l3nodeA, l3nodeB, affinity, l3nodeA_ip, l3node
     nodeBKey = NodeKey(l3nodeB)
     scale = 16  ## equals to hexadecimal
     num_of_bits = 32
-    # logging.warn bin(int(affinity, scale))[2:].zfill(num_of_bits)
     affinities = []
     try:
         affinitylist = list(bin(int(affinity, scale))[2:].zfill(num_of_bits))
@@ -210,7 +213,7 @@ def check_node_exists(plan, node_name):
     all_node_keys = node_manager.getAllNodeKeys()
     for node_key in all_node_keys:
         if node_key.name == node_name:
-            # logging.info("4k node already exists in plan, skipping this one...")
+            # logging.info(" node already exists in plan, skipping this one...")
             return True
     return False
 

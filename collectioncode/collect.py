@@ -179,7 +179,7 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         logging.info('FRE data retrieved..')
 
 
-def get_supporting_nodes(circuit_id, filename, links_key_val, baseURL, cienauser, cienapassw, token):
+def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
     # logging.info('Retrieve Supporting nodes..')
     data, incomplete, jsonmerged = {}, True, {}
@@ -228,13 +228,8 @@ def get_supporting_nodes(circuit_id, filename, links_key_val, baseURL, cienauser
                 if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
                     if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
                         temp = {}
-                        linkName = links_key_val['{}'.format(included[i]['id'][:-2])]
-                        if linkName:
-                            temp['Name'] = linkName
-                        else:
-                            temp['Name'] = included[i]['id'][:-2]
-                        temp['NodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                        temp['NodeB'] = included[i +
+                        temp['nodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        temp['nodeB'] = included[i +
                                                 1]['relationships']['tpes']['data'][0]['id'][:36]
                         hopdata.append(temp)
                 logging.info('Supporting Nodes data retrieved ..')

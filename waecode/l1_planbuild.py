@@ -68,46 +68,48 @@ def generateL1links(plan, l1linksdict):
 def generateL1circuits(plan, l1_data):
         for l1data in l1_data:
             name = l1data['circuitName']
-            firstl1node = l1data['startL1Node']
-            lastl1node = l1data['endL1Node']
-            l1hops, firstnode, lastnode = getfirstlastl1node(l1data['ordered_Hops'], firstl1node,
-                                                                     lastl1node)
-            # if l1data['BW'] != '':
-            #     bw = int(l1data['BW'])
-            # else:
-            #     bw = 0
-            portAname = l1data['portStartNode']
-            portBname = l1data['portEndNode']
-            status = l1data['status']
-            try:
-                generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1hops, 100000, status)
-            except Exception as err:
-                logging.debug('could not add new port :{}'.format(err))
+            if len(l1data.get('termination-points')) > 0:
+                firstnode = l1data['termination-points'][0]['node']
+                lastnode = l1data['termination-points'][1]['node']
+                # l1hops, firstnode, lastnode = getfirstlastl1node(l1data['ordered_Hops'], firstl1node,
+                #                                                          lastl1node)
+                if 'Ordered L1 Hops' in  l1data:
+                    firstl1node, lastl1node = getfirstlastl1node(l1data['Ordered L1 Hops'], firstnode,
+                                                                            lastnode)
+                    # if l1data['BW'] != '':
+                    #     bw = int(l1data['BW'])
+                    # else:
+                    #     bw = 0
+                    l1hops = l1data['Ordered L1 Hops']
+                    portAname = l1data['portStartNode']
+                    portBname = l1data['portEndNode']
+                    status = l1data['status']
+                    try:
+                        generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1hops, 100000, status)
+                        # generateL1circuit(plan, name, firstl1node, lastl1node, portAname, portBname, l1data['ordered_L1_Hops'], 100000, status)
+                    except Exception as err:
+                        logging.debug('could not add new port :{}'.format(err))
 
 def getfirstlastl1node(orderedl1hops, firstnode, lastnode):
     l1hops = []
     firstl1node = ""
     lastl1node = ""
-    for l1hop in orderedl1hops:
-        nodelist = []
-        linkname = l1hop['Name']
-        firstlasthop = False
-        for k5, v5 in l1hop.items():
-            if v5 == firstnode or v5 == lastnode: firstlasthop = True
-            if k5 != 'Name': nodelist.append(v5)   
-       
-        if not firstlasthop:
-            l1hops.append((nodelist, linkname))
-        elif nodelist[0] == firstnode:
-            firstl1node = nodelist[1]
-        elif nodelist[1] == firstnode:
-            firstl1node = nodelist[0]
-        elif nodelist[0] == lastnode:
-            lastl1node = nodelist[1]
-        elif nodelist[1] == lastnode:
-            lastl1node = nodelist[0]
-    return l1hops, firstl1node, lastl1node
 
+    for l1hop in orderedl1hops:
+        firstlasthop = False
+        if l1hop['nodeA'].split('-')[0] == firstnode.split('-')[0]: 
+            firstlasthop = True
+            firstl1node = l1hop['nodeA']
+        elif l1hop['nodeB'].split('-')[0] == firstnode.split('-')[0]:
+            firstlasthop = True
+            firstl1node = l1hop['nodeB']
+        elif l1hop['nodeA'].split('-')[0] == lastnode.split('-')[0]: 
+            firstlasthop = True
+            lastl1node = l1hop['nodeA']
+        elif l1hop['nodeB'].split('-')[0] == lastnode.split('-')[0]:
+            firstlasthop = True
+            lastl1node = l1hop['nodeB']
+    return firstl1node, lastl1node
 
 def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1hops, bw, status):
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
@@ -139,9 +141,9 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1portAname, l1portBname, l1
     l1circuitpath.addHop(l1hoprec)
     c = 1
     for l1hop in l1hops:
-        l1_nodeA_key = L1NodeKey(l1hop[0][0])
-        l1_nodeB_key = L1NodeKey(l1hop[0][1])
-        l1_link_name = l1hop[1]
+        l1_nodeA_key = L1NodeKey(l1hop['nodeA'])
+        l1_nodeB_key = L1NodeKey(l1hop['nodeB'])
+        l1_link_name = l1hop['linkname']
         l1_link_key = L1LinkKey(l1_link_name, l1_nodeA_key, l1_nodeB_key)
         # logging.debug('l1_link_key is :{}'.format(l1_link_name))
         l1_link = l1linkManager.getL1Link(l1_link_key)
