@@ -110,7 +110,9 @@ def generateL3circuits(plan, l3linksdict):
                         circuitName = ""
                     discoveredname = v3['circuitName']
                     # Fix start and End nodes based on returned circuit naame. API is returning the incorrect start and end node for several nodes.
-                    if '/' in circuitName:
+                    logging.debug(" L3 Circuit name is: "+circuitName)
+                    logging.debug(" L3 Circuit length is: "+str(len(circuitName.split('/'))))
+                    if '/' in circuitName and (len(circuitName.split('/')) > 2):
                         if circuitName.split('/')[2] == firstnode.split('-')[0]:
                             nodea = firstnode
                             nodeb = lastnode
