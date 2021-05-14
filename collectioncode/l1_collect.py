@@ -94,6 +94,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                 layer_key_val['{}'.format(links['id'])] = links['attributes']['layerRate']
             for i in range(len(included)):
                 val = i+1
+                linkName = ''
                 if val < len(included):
                     if included[i]['id'][:-2] in layer_key_val.keys():
                         layerRate = layer_key_val[included[i]['id'][:-2]]
@@ -132,7 +133,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         portNodeA, portNodeB, circuitName = getPortDetails(
                             networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
                         # Retrieve link name data
-                        linkName = getLinkName(portNodeA.split('-',1)[1], portNodeB.split('-',1)[1], nodeA.split('-',1)[0], nodeB.split('-',1)[0])
+                        if portNodeA and portNodeB and nodeA and nodeB:
+                            linkName = getLinkName(portNodeA.split('-',1)[1], portNodeB.split('-',1)[1], nodeA.split('-',1)[0], nodeB.split('-',1)[0])
                         logging.info("Link Name is########: {}".format(linkName))
                         if linkName and len(linkName.split('/')) > 2:
                             if linkName.split('/')[2] == nodeA.split('-')[0]:

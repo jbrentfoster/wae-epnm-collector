@@ -10,6 +10,8 @@ import l1_collect
 import l3_collect
 import requests
 from collectioncode import utils
+import os
+from os import path
 
 # Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
@@ -226,27 +228,27 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
                                 indent=4, separators=(',', ': ')))
             f.close()
         logging.info('L1 Circuits hops data retrieved and saved..')
-
-    data = utils.open_file_load_data(fileName)
     hopdata = []
-    included = {}
-    if data:
-        if 'included' in data:
-            included = data['included']
-        if included:
-            for i in range(len(included)):
-                if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
-                    if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
-                        temp = {}
-                        temp['nodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                        temp['nodeB'] = included[i +
-                                                1]['relationships']['tpes']['data'][0]['id'][:36]
-                        hopdata.append(temp)
-                logging.info('Supporting Nodes data retrieved ..')
+    included = {}    
+    if path.exists(fileName):
+        data = utils.open_file_load_data(fileName)
+        if data:
+            if 'included' in data:
+                included = data['included']
+            if included:
+                for i in range(len(included)):
+                    if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
+                        if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
+                            temp = {}
+                            temp['nodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                            temp['nodeB'] = included[i +
+                                                    1]['relationships']['tpes']['data'][0]['id'][:36]
+                            hopdata.append(temp)
+                    logging.info('Supporting Nodes data retrieved ..')
+            else:
+                logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
         else:
-            logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
-    else:
-        logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+            logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
     # Return the hop nodes for each L1 circuits
     return hopdata
 
