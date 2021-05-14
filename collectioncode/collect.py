@@ -103,14 +103,18 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
     for k in nodesData.keys():
         networkConstrId = k
         incomplete = True
-        jsonmerged = {}
+        jsonmerged, jsonaddition = {}, {}
         # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
         uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
         # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
         URL = baseURL + uri + networkConstrId
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            jsonaddition = json.loads(portData)
+            if portData:
+                jsonaddition = json.loads(portData)
+            else:
+                logging.debug("API does not returned tpe data for network construct id : {}".format(networkConstrId))
+                incomplete = False
             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:
@@ -127,12 +131,13 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     utils.merge(jsonmerged, jsonaddition)
 
         # Saving ports / tpe data to json file for all network id's
-        filename = "tpe_"+networkConstrId+'.json'
-        with open('jsongets/'+filename, 'wb') as f:
-            f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                               indent=4, separators=(',', ': ')))
-            f.close()
-        logging.info('TPE data retrieved..')
+        if jsonmerged:
+            filename = "tpe_"+networkConstrId+'.json'
+            with open('jsongets/'+filename, 'wb') as f:
+                f.write(json.dumps(jsonmerged, f, sort_keys=True,
+                                indent=4, separators=(',', ': ')))
+                f.close()
+            logging.info('TPE data retrieved..')
 
 
 def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
@@ -142,7 +147,7 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         networkConstrId = k
         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
         incomplete = True
-        jsonmerged = {}
+        jsonmerged, jsonaddition = {}, {}
         # ONlY ETHERNET and IP
         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
         # Retrive data for ETHERNET and MPLS
@@ -154,7 +159,11 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            jsonaddition = json.loads(portData)
+            if portData:
+                jsonaddition = json.loads(portData)
+            else:
+                logging.debug("API does not returned fre data for network construct id : {}".format(networkConstrId))
+                incomplete = False
             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:
@@ -171,12 +180,13 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     utils.merge(jsonmerged, jsonaddition)
 
         # saving fre data for each network construct id for L3
-        filename = "fre_"+networkConstrId
-        with open('jsongets/'+filename+'.json', 'wb') as f:
-            f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                               indent=4, separators=(',', ': ')))
-            f.close()
-        logging.info('FRE data retrieved..')
+        if jsonmerged:
+            filename = "fre_"+networkConstrId
+            with open('jsongets/'+filename+'.json', 'wb') as f:
+                f.write(json.dumps(jsonmerged, f, sort_keys=True,
+                                indent=4, separators=(',', ': ')))
+                f.close()
+            logging.info('FRE data retrieved..')
 
 
 def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):

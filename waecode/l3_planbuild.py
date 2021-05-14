@@ -163,7 +163,7 @@ def generateL3circuits(plan, l3linksdict):
                                     l3circ = circuitName.split("/")[0]
                                     l3NodeA = nodea.split("-")[0]
                                     l3NodeB = nodeb.split("-")[0]
-                                    if l1NodeA == l3NodeA and l1NodeB == l3NodeB and l1circ == l3circ:
+                                    if l1NodeA == l3NodeA and l1NodeB == l3NodeB:
                                         l3circuit.setL1Circuit(l1circuit)
                                         logging.info("L1 - L3 circuit mapping added ")
                     duplicatelink = False
