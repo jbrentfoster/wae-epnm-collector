@@ -55,21 +55,21 @@ def run_phases(arg):
                 process_3 = subprocess.Popen(["python", "wae_api.py", "-ph", "3"])
                 sleep(2)
             elif counter == 4:
-                process_4 = subprocess.Popen(["python", "wae_api.py", "-ph", "4"])
+                # process_4 = subprocess.Popen(["python", "wae_api.py", "-ph", "4"])
                 sleep(2)
             elif counter == 5:
-                process_5 = subprocess.Popen(["python", "wae_api.py", "-ph", "5"])
+                # process_5 = subprocess.Popen(["python", "wae_api.py", "-ph", "5"])
                 sleep(2)
             elif counter == 6:
-                process_6 = subprocess.Popen(["python", "wae_api.py", "-ph", "6"])
+                # process_6 = subprocess.Popen(["python", "wae_api.py", "-ph", "6"])
                 sleep(2)
-            if counter == 6: break
-            # elif counter == 7:
-                # # process_7 = subprocess.Popen(["python", "wae_api.py", "-ph", "7"])
-            # if counter == 7: break
+            # if counter == 6: break
+            elif counter == 7:
+                process_7 = subprocess.Popen(["python", "wae_api.py", "-ph", "7"])
+            if counter == 7: break
             counter += 1  
         
-        process_2.communicate() and process_3.communicate() and process_4.communicate() and process_5.communicate() and process_6.communicate()
+        process_2.communicate() and process_3.communicate() and process_7.communicate()
 
     print("The EPNM script phases were run asynchronously.")
 
