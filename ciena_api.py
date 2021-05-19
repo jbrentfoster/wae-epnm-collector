@@ -47,6 +47,8 @@ def main():
                         help="Please provide the user name for the Ciena Server")
     parser.add_argument('-p', '--ciena_pass', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_pass'],
                         help="Please provide the password for the Ciena Server")
+    parser.add_argument('-ph', '--phases', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Phases'],
+                        help="List of the collection phases to run(1-6), example '1356'")
     # parser.add_argument('-ph', '--phases', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Phases'],
     #                     help="List of the collection phases to run(1-6), example '1356'")
     parser.add_argument('-l', '--logging', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Logging'],
@@ -83,6 +85,7 @@ def main():
     delete_previous = args.delete_previous
     state_or_states_list = args.state_or_states.split(',')
     state_or_states_list = [x.strip(' ') for x in state_or_states_list]
+    phases = args.phases
     logging_level = args.logging.upper()
 
     # Setting up the main log file
@@ -104,7 +107,33 @@ def main():
     logging.debug("Ciena ip address is: {}".format(args.ciena_ipaddr))
     logging.debug("Ciena user is: {}".format(args.ciena_user))
     logging.info("State list is: {} ".format(state_or_states_list))
-    # logging.debug("Phases is: {}".format(args.phases))
+    logging.debug("Phases is: {}".format(phases))
+
+    phase_list = []
+    for phase in phases:
+        phase_list.append(int(phase))
+
+    logging.debug("Phases are: {}".format(phase_list))
+    
+    # Run the collector...
+    collection_calls = [{'type': 'allnodes', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw},
+                        {'type': 'l1nodes', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw},
+                        {'type': 'l1links', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw},
+                        {'type': 'l1circuits', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw},
+                        {'type': 'l3nodes', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw},
+                        {'type': 'mpls', 'baseURL': baseURL, 'cienauser': cienauser, 'cienapassw': cienapassw, 'state_or_states': state_or_states_list}
+                        ]
+
+    phases_to_run = []
+    c = 1
+    for call in collection_calls:
+        for phase_num in phase_list:
+            if phase_num == c:
+                phases_to_run.append(call)
+                break
+        c +=1
+
+
     # Delete all output files
     if delete_previous:
         logging.info("Cleaning files from last collection...")
@@ -144,31 +173,7 @@ def main():
     token = None
 
     if delete_previous or not isdirExists:
-        tokenPath = '/tron/api/v1/tokens'
-        proxies = {
-            "http": None,
-            "https": None,
-        }
-        appformat = 'application/json'
-        headers = {'Content-type': appformat, 'Accept': appformat}
-        data = {'username': cienauser, 'password': cienapassw}
-        resttokenURI = baseURL + tokenPath
-        try:
-            r = requests.post(resttokenURI, proxies=proxies,
-                              headers=headers, json=data, verify=False)
-            if r.status_code == 201:
-                token = json.dumps(r.json(), indent=2)
-                # print token
-            else:
-                r.raise_for_status()
-
-        except requests.exceptions.RequestException as err:
-            print "Exception raised: " + str(err)
-            return
-
-        token = json.loads(token)
-        token_string = token['token']
-
+        token_string = collect.getToken(baseURL, cienauser, cienapassw)
         # Get all the nodes
         logging.debug("Retrieve all nodes..")
         collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
@@ -221,7 +226,57 @@ def main():
         logging.debug("Retrieve L3 links and Circuits..")
         collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
         logging.debug("L3 links and circuit generated..")
- 
+    else:
+        token_string = collect.getToken(baseURL, cienauser, cienapassw)
+        # for collection_call in collection_calls:
+        for phases in phases_to_run:
+            if phases['type'] == 'allnodes':
+                # Get all the nodes
+                logging.debug("Retrieve all nodes..")
+                collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
+                logging.debug("All nodes retrieved")
+
+            if phases['type'] == "l1nodes":
+                # Get all the l1nodes
+                logging.debug("Retrieve L1 nodes..")
+                if not token_string:
+                    token_string = collect.getToken(baseURL, cienauser, cienapassw)
+                collect.get_l1_nodes(state_or_states_list)
+                logging.debug("L1 nodes generated..")
+        
+            if phases['type'] == "l1links":
+                # Get all the l1 links
+                logging.debug("Retrieve L1 links..")
+                if not token_string:
+                    token_string = collect.getToken(baseURL, cienauser, cienapassw)
+                collect.get_l1_links(baseURL, cienauser, cienapassw,
+                                    token_string, state_or_states_list)
+                logging.debug("L1 links retrieved..")
+
+            if phases['type'] == "l1circuits":
+                # Code to get the l1 circuits
+                logging.debug("Retrieve L1 Circuits..")
+                if not token_string:
+                    token_string = collect.getToken(baseURL, cienauser, cienapassw)
+                collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+                logging.debug("L1 Circuits retrieved..")
+
+            if phases['type'] == "l3nodes":
+                # Get all the l3nodes
+                logging.debug("Retrieve L3 nodes..")
+                if not token_string:
+                    token_string = collect.getToken(baseURL, cienauser, cienapassw)
+                collect.get_l3_nodes(state_or_states_list)
+                logging.debug("L3 nodes generated..")
+
+            if phases['type'] == "mpls":
+                # Get all the l3 links
+                logging.debug("Retrieve L3 links and Circuits..")
+                if not token_string:
+                    token_string = collect.getToken(baseURL, cienauser, cienapassw)
+                collect.get_l3_links(baseURL, cienauser, cienapassw, token_string)
+                logging.debug("L3 links and circuit generated..")
+
     #######################################
     #
     #  Build MPLS Plan Components
