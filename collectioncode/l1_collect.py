@@ -311,27 +311,31 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                         else:
                             circuitName = 'Dummy_' + circuit_id
                             temp_obj['circuitName'] = circuitName
-
-                        temp_obj['portStartNode'] = circuitName
-                        temp_obj['portEndNode'] = circuitName
-                        # temp_obj['portStartNode'] = portStartNode
-                        # temp_obj['portEndNode'] = portEndNode
-
                         temp_obj['circuitID'] = circuit_id
                         if '/' in circuitName:
                             if circuitName.split('/')[2] == start_node_name.split('-')[0]:
                                 nodea = start_node_name
+                                porta = portStartNode
                                 nodeb = end_node_name
+                                portb = portEndNode
                             elif circuitName.split('/')[2] == end_node_name.split('-')[0]:
                                 nodea = end_node_name
+                                porta = portEndNode
                                 nodeb = start_node_name
+                                portb = portStartNode
                         else:
                             nodea = start_node_name
+                            porta = portStartNode
                             nodeb = end_node_name
+                            portb = portEndNode
+                        # temp_obj['portStartNode'] = circuitName
+                        # temp_obj['portEndNode'] = circuitName
+                        temp_obj['portStartNode'] = porta
+                        temp_obj['portEndNode'] = portb
                         terminationNodeA['node'] = nodea
-                        terminationNodeA['port'] = portStartNode
+                        terminationNodeA['port'] = porta
                         terminationNodeB['node'] = nodeb
-                        terminationNodeB['port'] = portEndNode
+                        terminationNodeB['port'] = portb
                         if obj.get('attributes').get('displayData') and obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
                             if 'wavelength' in obj.get('attributes').get('displayData').get('displayPhotonicSpectrumData'):
                                 temp_obj['wavelength'] = obj['attributes']['displayData']['displayPhotonicSpectrumData'][0]['wavelength']

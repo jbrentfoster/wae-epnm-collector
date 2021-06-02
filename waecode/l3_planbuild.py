@@ -156,6 +156,28 @@ def generateL3circuits(plan, l3linksdict):
                                 if l1circuit_name:
                                     # logging.info("L1 circuit name is " + l1circuit_name)
                                     l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
+                                    # if circuitName == 'I1001/GE100/ARTNVAFC/GTBGMDGB':
+                                    #     import pdb
+                                    #     pdb.set_trace()
+                                    # l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
+                                    # l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]
+                                    # l1circname = l1circuit.getRecord().name
+                                    # l1circ = l1circname.split("/")[0]
+                                    # l3circ = circuitName.split("/")[0]
+                                    # l3NodeA = nodea.split("-")[0]
+                                    # l3NodeB = nodeb.split("-")[0]
+                                    # if l1NodeA == l3NodeA and l1NodeB == l3NodeB:
+                                    #     l3circuit.setL1Circuit(l1circuit)
+                                    #     logging.info("L1 - L3 circuit mapping added ")
+
+                                    ################### Updated L1 - L3 maoping logic
+
+                                    l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
+                                    l1PortA= l1circuit.getRecord().l1PortAKey.name.split("-",2)[2]
+                                    l1PortB= l1circuit.getRecord().l1PortBKey.name.split("-",2)[2]
+                                    l3PortA = l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")[0]
+                                    l3PortB = l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")[0]
+
                                     l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
                                     l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]
                                     l1circname = l1circuit.getRecord().name
@@ -163,7 +185,7 @@ def generateL3circuits(plan, l3linksdict):
                                     l3circ = circuitName.split("/")[0]
                                     l3NodeA = nodea.split("-")[0]
                                     l3NodeB = nodeb.split("-")[0]
-                                    if l1NodeA == l3NodeA and l1NodeB == l3NodeB:
+                                    if l1NodeA == l3NodeA and l1NodeB == l3NodeB and l1PortA == l3PortA and l1PortB == l3PortB:
                                         l3circuit.setL1Circuit(l1circuit)
                                         logging.info("L1 - L3 circuit mapping added ")
                     duplicatelink = False
