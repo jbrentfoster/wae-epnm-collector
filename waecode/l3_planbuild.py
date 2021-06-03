@@ -110,8 +110,6 @@ def generateL3circuits(plan, l3linksdict):
                         circuitName = ""
                     discoveredname = v3['circuitName']
                     # Fix start and End nodes based on returned circuit naame. API is returning the incorrect start and end node for several nodes.
-                    logging.debug(" L3 Circuit name is: "+circuitName)
-                    logging.debug(" L3 Circuit length is: "+str(len(circuitName.split('/'))))
                     if '/' in circuitName and (len(circuitName.split('/')) > 2):
                         if circuitName.split('/')[2] == firstnode.split('-')[0]:
                             nodea = firstnode
@@ -173,10 +171,15 @@ def generateL3circuits(plan, l3linksdict):
                                     ################### Updated L1 - L3 maoping logic
 
                                     l1circuit = l1CircuitManager.getL1Circuit(val.getKey())
-                                    l1PortA= l1circuit.getRecord().l1PortAKey.name.split("-",2)[2]
-                                    l1PortB= l1circuit.getRecord().l1PortBKey.name.split("-",2)[2]
-                                    l3PortA = l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")[0]
-                                    l3PortB = l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")[0]
+                                    l1PortA, l1PortB, l3PortA, l3PortB = '', '', '', ''
+                                    if len(l1circuit.getRecord().l1PortAKey.name.split("-",2)) > 2:
+                                        l1PortA= l1circuit.getRecord().l1PortAKey.name.split("-",2)[2]
+                                    if len(l1circuit.getRecord().l1PortBKey.name.split("-",2)) > 2:
+                                        l1PortB= l1circuit.getRecord().l1PortBKey.name.split("-",2)[2]
+                                    if len(l3circuit.getRecord().interfaceAKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")) > 0:
+                                        l3PortA = l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")[0]
+                                    if len(l3circuit.getRecord().interfaceBKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")) > 0:
+                                        l3PortB = l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")[0]
 
                                     l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
                                     l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]
