@@ -174,6 +174,7 @@ def main():
 
     if delete_previous or not isdirExists:
         token_string = collect.getToken(baseURL, cienauser, cienapassw)
+        logging.debug('Generated Token is ..'+token_string)
         # Get all the nodes
         logging.debug("Retrieve all nodes..")
         collect.get_all_nodes(baseURL, cienauser, cienapassw, token_string)
@@ -214,6 +215,7 @@ def main():
 
         # Code to get the l1 circuits
         logging.debug("Retrieve L1 Circuits..")
+        logging.debug('Token sending to L1 Circuits..'+token_string)
         collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
         logging.debug("L1 Circuits retrieved..")
 

@@ -277,6 +277,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 if l1_check:
                     logging.debug(
                         ' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
+                    logging.debug('Token sending to Get Supporting Nodes ..'+token)
                     link_list = collect.get_supporting_nodes(
                         circuit_id, filename, baseURL, cienauser, cienapassw, token)
                     # Check based on the returned nodes to see if they're valid l1 nodes
