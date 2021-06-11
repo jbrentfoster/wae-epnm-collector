@@ -191,11 +191,25 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            if portData:
+            try:
                 jsonaddition = json.loads(portData)
-            else:
-                logging.debug("API does not returned data for L1 FRE : {}".format(networkConstrId))
-                incomplete = False
+            except ValueError:
+                if 'HTTP status code: 401' in portData:
+                    logging.debug("get L1 link API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+                    tokenString = getToken(baseURL, cienauser, cienapassw)
+                    portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+                    try:
+                        jsonaddition = json.loads(portData)
+                    except ValueError:
+                        logging.debug("get L1 link API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+                elif 'HTTP status code: 500' in portData:
+                    logging.debug("get L1 link API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+                else:
+                    logging.debug("get L1 link API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+
+
             if jsonaddition:
                 try:
                     next = ''
@@ -370,7 +384,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                                         link['nodeA'] = nodea
                                         link['nodeB'] = nodeb
                                 else:
-                                    logging.debug("This is dummy link name : {}".format(linkname))
+                                    # logging.debug("This is dummy link name : {}".format(linkname))
                                     link['nodeA'] = nodea
                                     link['nodeB'] = nodeb
                                 i += 1

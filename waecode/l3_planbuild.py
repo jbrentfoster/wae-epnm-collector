@@ -176,10 +176,12 @@ def generateL3circuits(plan, l3linksdict):
                                         l1PortA= l1circuit.getRecord().l1PortAKey.name.split("-",2)[2]
                                     if len(l1circuit.getRecord().l1PortBKey.name.split("-",2)) > 2:
                                         l1PortB= l1circuit.getRecord().l1PortBKey.name.split("-",2)[2]
-                                    if len(l3circuit.getRecord().interfaceAKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")) > 0:
-                                        l3PortA = l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")[0]
-                                    if len(l3circuit.getRecord().interfaceBKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")) > 0:
-                                        l3PortB = l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")[0]
+                                    if "-" in l3circuit.getRecord().interfaceAKey.name:
+                                        if len(l3circuit.getRecord().interfaceAKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")) > 0:
+                                            l3PortA = l3circuit.getRecord().interfaceAKey.name.split("-",1)[1].split("_")[0]
+                                    if "-" in l3circuit.getRecord().interfaceBKey.name:
+                                        if len(l3circuit.getRecord().interfaceBKey.name.split("-",1)) > 0 and len(l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")) > 0:
+                                            l3PortB = l3circuit.getRecord().interfaceBKey.name.split("-",1)[1].split("_")[0]
 
                                     l1NodeA= l1circuit.getRecord().l1PortAKey.l1Node.name.split("-")[0]
                                     l1NodeB= l1circuit.getRecord().l1PortBKey.l1Node.name.split("-")[0]

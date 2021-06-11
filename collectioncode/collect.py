@@ -30,7 +30,24 @@ def get_all_nodes(baseURL, cienauser, cienapassw, token):
     URL = baseURL + uri
     while incomplete:
         jsonresponse = utils.rest_get_json(URL, cienauser, cienapassw, token)
-        jsonaddition = json.loads(jsonresponse)
+        try:
+            jsonaddition = json.loads(jsonresponse)
+        except ValueError:
+            if 'HTTP status code: 401' in jsonresponse:
+                logging.debug("get all nodes API returned Unauthozied error: Retrying with new token")
+                tokenString = getToken(baseURL, cienauser, cienapassw)
+                jsonresponse = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+                try:
+                    jsonaddition = json.loads(jsonresponse)
+                except ValueError:
+                    logging.debug("get all nodes API returned Unauthozied error with new token")
+            elif 'HTTP status code: 500' in jsonresponse:
+                logging.debug("get all nodes  API returned 500 Internal server server error")
+                incomplete = False
+            else:
+                logging.debug("get all nodes API didn't return the valid JSON response")
+                incomplete = False
+
         try:
             next = ''
             if jsonaddition.get('links'):
@@ -112,11 +129,24 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
         URL = baseURL + uri + networkConstrId
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            if portData:
+            try:
                 jsonaddition = json.loads(portData)
-            else:
-                logging.debug("API does not returned tpe data for network construct id : {}".format(networkConstrId))
-                incomplete = False
+            except ValueError:
+                if 'HTTP status code: 401' in portData:
+                    logging.debug("get TPE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+                    tokenString = getToken(baseURL, cienauser, cienapassw)
+                    portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+                    try:
+                        jsonaddition = json.loads(portData)
+                    except ValueError:
+                        logging.debug("get TPE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+                elif 'HTTP status code: 500' in portData:
+                    logging.debug("get TPE's API returned 500 Internal Server Error for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+                else:
+                    logging.debug("get TPE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+
             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:
@@ -161,11 +191,24 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         logging.debug('URL:\n{}'.format(URL))
         while incomplete:
             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            if portData:
+            try:
                 jsonaddition = json.loads(portData)
-            else:
-                logging.debug("API does not returned fre data for network construct id : {}".format(networkConstrId))
-                incomplete = False
+            except ValueError:
+                if 'HTTP status code: 401' in portData:
+                    logging.debug("get FRE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+                    tokenString = getToken(baseURL, cienauser, cienapassw)
+                    portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+                    try:
+                        jsonaddition = json.loads(portData)
+                    except ValueError:
+                        logging.debug("get FRE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+                elif 'HTTP status code: 500' in portData:
+                    logging.debug("get FRE's API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+                else:
+                    logging.debug("get FRE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+
             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:
@@ -194,7 +237,7 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
 def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
     # logging.info('Retrieve Supporting nodes..')
-    data, incomplete, jsonmerged = {}, True, {}
+    data, incomplete, jsonmerged, jsonaddition= {}, True, {}, {}
     fileName = 'jsongets/l1_circuit_'+circuit_id+'.json'
     logging.debug('File name is ..'+fileName)
     # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
@@ -205,10 +248,29 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
         uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=500&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
             circuit_id.strip())
         URL = baseURL + uri
-        logging.debug('Token sending to supporting nodes API..'+token)
+        logging.debug('Token sending to supporting nodes..'+token)
         while incomplete:
+            ###### Original code
             jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            jsonaddition = json.loads(jsondata)
+            # jsonaddition = json.loads(jsondata)
+            try:
+                jsonaddition = json.loads(jsondata)
+            except ValueError:
+                if 'HTTP status code: 401' in jsondata:
+                    logging.debug("Supporting nodes API returned Unauthozied error: Retrying with new token for circuit id {}".format(circuit_id))
+                    tokenString = getToken(baseURL, cienauser, cienapassw)
+                    jsondata = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+                    try:
+                        jsonaddition = json.loads(jsondata)
+                    except ValueError:
+                        logging.debug("Supporting nodes API returned error for circuit id {} http error {}".format(circuit_id,jsondata))
+                elif 'HTTP status code: 500' in jsondata:
+                    logging.debug("Supporting nodes API returned 500 Internal server server error for circuit id {}".format(circuit_id))
+                    incomplete = False
+                else:
+                    logging.debug("Supporting nodes API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                    incomplete = False
+  
             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
             if jsonaddition:
                 try:

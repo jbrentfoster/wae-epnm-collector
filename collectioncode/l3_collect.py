@@ -108,7 +108,6 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                 if val < len(included):
                     if included[i]['type'] == 'endPoints':
                         if ((included[i]['id'][-3:] == 'EP0' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-3:] == 'EP1' and included[i+1].get('relationships').get('tpes'))):
-                            logging.debug('This is mpls tunnel')
                             tId1 = included[i]['relationships']['tpes']['data'][0]['id'][:36]
                             tunnelId1 = included[i]['relationships']['tpes']['data'][0]['id']
                             tId2 = included[i +
@@ -199,7 +198,7 @@ def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
                     (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
             if end1Data:
                 if 'layerTerminations' in end1Data['attributes'] and end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                    logging.debug('Tunnel head end id is:'.format(tunnelId1))
+                    # logging.debug('Tunnel head end id is:'.format(tunnelId1))
                     lspdict['Tunnel Headend'] = node_key_val[tId1]
                     lspdict['Tunnel Tailend'] = node_key_val[tId2]
                     getTunnelData(end1Data, lspdict, lsplist)
@@ -213,7 +212,7 @@ def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
                                     (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
                             if end2Data:
                                 if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                                    logging.debug('Tunnel head end id is:'.format(tunnelId2))
+                                    # logging.debug('Tunnel head end id is:'.format(tunnelId2))
                                     lspdict['Tunnel Headend'] = node_key_val[tId2]
                                     lspdict['Tunnel Tailend'] = node_key_val[tId1]
                                     getTunnelData(end2Data, lspdict, lsplist)

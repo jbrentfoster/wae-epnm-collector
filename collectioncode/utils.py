@@ -10,6 +10,7 @@ urllib3.disable_warnings(InsecureRequestWarning)
 
 
 def rest_get_json(URL, cienauser, cienapassw, token):
+    # token = "123456"
     # Get the endpoint for the calls
     proxies = {
         "http": None,
@@ -33,7 +34,7 @@ def rest_get_json(URL, cienauser, cienapassw, token):
     except errors.InputError as err:
         logging.error('Exception raised: ' + str(type(err)) +
                       '\nURL: {}\nMessage: {}'.format(str(err), err.message))
-        return
+        return err.message
 
 # Helper function to load json data
 def open_file_load_data(file_name):
