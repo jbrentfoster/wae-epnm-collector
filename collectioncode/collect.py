@@ -114,6 +114,62 @@ def get_Sites(baseURL, cienauser, cienapassw, token_string):
         f.close()
     logging.debug('Sites population completed..')
 
+############ Original Code #################
+# def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
+#     logging.debug('Retrieve ports/TPE data for nodes for states..')
+#     nodesData = utils.getStateNodes(state_or_states_list)
+#     # nodesData = utils.getNodes()
+#     for k in nodesData.keys():
+#         networkConstrId = k
+#         incomplete = True
+#         jsonmerged, jsonaddition = {}, {}
+#         # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
+#         uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
+#         # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
+#         URL = baseURL + uri + networkConstrId
+#         while incomplete:
+#             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+#             try:
+#                 jsonaddition = json.loads(portData)
+#             except ValueError:
+#                 if 'HTTP status code: 401' in portData:
+#                     logging.debug("get TPE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+#                     tokenString = getToken(baseURL, cienauser, cienapassw)
+#                     portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+#                     try:
+#                         jsonaddition = json.loads(portData)
+#                     except ValueError:
+#                         logging.debug("get TPE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+#                 elif 'HTTP status code: 500' in portData:
+#                     logging.debug("get TPE's API returned 500 Internal Server Error for network construct id : {}".format(networkConstrId))
+#                     incomplete = False
+#                 else:
+#                     logging.debug("get TPE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+#                     incomplete = False
+
+#             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+#             if jsonaddition:
+#                 try:
+#                     next = ''
+#                     if jsonaddition.get('links'):
+#                         next = jsonaddition.get('links').get('next')
+#                 except Exception:
+#                     logging.info("No data found")
+#                 if next:
+#                     URL = next
+#                     utils.merge(jsonmerged, jsonaddition)
+#                 else:
+#                     incomplete = False
+#                     utils.merge(jsonmerged, jsonaddition)
+
+#         # Saving ports / tpe data to json file for all network id's
+#         if jsonmerged:
+#             filename = "tpe_"+networkConstrId+'.json'
+#             with open('jsongets/'+filename, 'wb') as f:
+#                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
+#                                 indent=4, separators=(',', ': ')))
+#                 f.close()
+#             logging.info('TPE data retrieved..')
 
 def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.debug('Retrieve ports/TPE data for nodes for states..')
@@ -162,14 +218,15 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     incomplete = False
                     utils.merge(jsonmerged, jsonaddition)
 
-        # Saving ports / tpe data to json file for all network id's
-        if jsonmerged:
-            filename = "tpe_"+networkConstrId+'.json'
-            with open('jsongets/'+filename, 'wb') as f:
-                f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                                indent=4, separators=(',', ': ')))
-                f.close()
-            logging.info('TPE data retrieved..')
+        # # Saving ports / tpe data to json file for all network id's
+        # if jsonmerged:
+        #     filename = "tpe_"+networkConstrId+'.json'
+        #     with open('jsongets/'+filename, 'wb') as f:
+        #         f.write(json.dumps(jsonmerged, f, sort_keys=True,
+        #                         indent=4, separators=(',', ': ')))
+        #         f.close()
+        #     logging.info('TPE data retrieved..')
+        return jsonmerged
 
 ################### Original Code ############################
 # def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
@@ -407,8 +464,8 @@ def getToken(baseURL, cienauser, cienapassw):
     token_string = token['token']
     return token_string
 
-def get_l1_nodes(state_or_states_list):
-    l1_collect.get_l1_nodes(state_or_states_list)
+def get_l1_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
+    l1_collect.get_l1_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list)
 
 
 def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list):
