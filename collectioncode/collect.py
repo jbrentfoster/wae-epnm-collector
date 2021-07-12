@@ -171,6 +171,67 @@ def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
                 f.close()
             logging.info('TPE data retrieved..')
 
+################### Original Code ############################
+# def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
+#     nodesData = utils.getStateNodes(state_or_states_list)
+#     # nodesData = utils.getNodes()
+#     for k in nodesData.keys():
+#         networkConstrId = k
+#         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
+#         incomplete = True
+#         jsonmerged, jsonaddition = {}, {}
+#         # ONlY ETHERNET and IP
+#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
+#         # Retrive data for ETHERNET and MPLS
+#         uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
+#             networkConstrId)
+#         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
+#         # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
+#         URL = baseURL + uri
+#         logging.debug('URL:\n{}'.format(URL))
+#         while incomplete:
+#             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+#             try:
+#                 jsonaddition = json.loads(portData)
+#             except ValueError:
+#                 if 'HTTP status code: 401' in portData:
+#                     logging.debug("get FRE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+#                     tokenString = getToken(baseURL, cienauser, cienapassw)
+#                     portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
+#                     try:
+#                         jsonaddition = json.loads(portData)
+#                     except ValueError:
+#                         logging.debug("get FRE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+#                 elif 'HTTP status code: 500' in portData:
+#                     logging.debug("get FRE's API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
+#                     incomplete = False
+#                 else:
+#                     logging.debug("get FRE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+#                     incomplete = False
+
+#             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+#             if jsonaddition:
+#                 try:
+#                     next = ''
+#                     if jsonaddition.get('links'):
+#                         next = jsonaddition.get('links').get('next')
+#                 except Exception:
+#                     logging.info("No data found")
+#                 if next:
+#                     URL = next
+#                     utils.merge(jsonmerged, jsonaddition)
+#                 else:
+#                     incomplete = False
+#                     utils.merge(jsonmerged, jsonaddition)
+
+#         # saving fre data for each network construct id for L3
+#         if jsonmerged:
+#             filename = "fre_"+networkConstrId
+#             with open('jsongets/'+filename+'.json', 'wb') as f:
+#                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
+#                                 indent=4, separators=(',', ': ')))
+#                 f.close()
+#             logging.info('FRE data retrieved..')
 
 def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
     nodesData = utils.getStateNodes(state_or_states_list)
@@ -224,14 +285,17 @@ def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     incomplete = False
                     utils.merge(jsonmerged, jsonaddition)
 
-        # saving fre data for each network construct id for L3
-        if jsonmerged:
-            filename = "fre_"+networkConstrId
-            with open('jsongets/'+filename+'.json', 'wb') as f:
-                f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                                indent=4, separators=(',', ': ')))
-                f.close()
-            logging.info('FRE data retrieved..')
+        # # saving fre data for each network construct id for L3
+        # if jsonmerged:
+        #     filename = "fre_"+networkConstrId
+        #     with open('jsongets/'+filename+'.json', 'wb') as f:
+        #         f.write(json.dumps(jsonmerged, f, sort_keys=True,
+        #                         indent=4, separators=(',', ': ')))
+        #         f.close()
+        #     logging.info('FRE data retrieved..')
+
+        #### return response
+        return jsonmerged
 
 
 def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
