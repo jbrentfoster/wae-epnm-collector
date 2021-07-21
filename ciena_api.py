@@ -185,26 +185,9 @@ def main():
         collect.get_Sites(baseURL, cienauser, cienapassw, token_string)
         logging.debug("Sites data populated..")
 
-        # Retrieve all  ports / TPE data for states
-        logging.debug("Retrieve all ports data..")
-        collect.get_ports(baseURL, cienauser, cienapassw,
-                          token_string, state_or_states_list)
-        logging.debug("All ports retrieved..")
-
-        # Retrieve all the links and cicruits
-        logging.debug("Retrieve all Links data..")
-        collect.get_links(baseURL, cienauser, cienapassw,
-                          token_string, state_or_states_list)
-        logging.debug("All links retrieved..")
-
-        # Retrieve l1 links data for all l1 nodes
-        collect.get_l1_links_data(baseURL, cienauser, cienapassw,
-                          token_string, state_or_states_list)
-        logging.debug("L1 links retrieved..")
-
         # Get all the l1nodes
         logging.debug("Retrieve L1 nodes..")
-        collect.get_l1_nodes(state_or_states_list)
+        collect.get_l1_nodes(baseURL, cienauser, cienapassw, token_string, state_or_states_list)
         logging.debug("L1 nodes generated..")
 
         # Get all the l1 links
@@ -216,12 +199,12 @@ def main():
         # Code to get the l1 circuits
         logging.debug("Retrieve L1 Circuits..")
         logging.debug('Token sending to L1 Circuits..'+token_string)
-        collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+        collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string, state_or_states_list)
         logging.debug("L1 Circuits retrieved..")
 
         # Get all the l3nodes
         logging.debug("Retrieve L3 nodes..")
-        collect.get_l3_nodes(state_or_states_list)
+        collect.get_l3_nodes(baseURL, cienauser, cienapassw, token_string, state_or_states_list)
         logging.debug("L3 nodes generated..")
 
         # Get all the l3 links

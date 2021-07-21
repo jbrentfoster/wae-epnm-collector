@@ -18,24 +18,17 @@ name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
 
-def get_l3_nodes(state_or_states_list):
+def get_l3_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.info('Generate L3 nodes')
     data, node_list, l3data = '', [], {}
     data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
-        fileName = 'jsongets/{}'.format('fre_'+node['id']+'.json')
-        logging.debug('l3 filename is {}'.format(fileName))
-        if path.exists(fileName):
-            fredata = utils.open_file_load_data(fileName)
+        fredata = collect.get_links(baseURL, cienauser, cienapassw, token, node['id'])
+        if fredata:
             if 'data' in fredata:
                 l3data = fredata['data']
             if l3data:
                 if 'typeGroup' in node['attributes']:
-                    # match_object = re.search(
-                    #     'SHELF-([0-9]{3,}|2[1-9]|[3-9][0-9])$', node['attributes']['accessIdentifier'])
-                    # if node['attributes']['typeGroup'] == "Ciena6500" and (match_object != None or node['attributes']['accessIdentifier'] == 'SHELF-1'):
-                    # if node['attributes']['typeGroup'] == "Ciena6500" and match_object != None:
-                    # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ('l2Data' in node['attributes'] and node['attributes']['l2Data'][0]['l2NodeRoutingCapabilities']['isMPLSEnabled'] == True):
                     if node['attributes']['typeGroup'] == "Ciena6500":
                         node['longitude'] = 0
                         node['latitude'] = 0
@@ -52,7 +45,7 @@ def get_l3_nodes(state_or_states_list):
                                 node['longitude'], node['latitude'])
                         node_list.append(node)
         else:
-            logging.debug(" FRE file does not exist to retrieve the L3 node : {}".format(fileName))
+            logging.debug(" FRE data not found to retrieve the L3 node for network id: {}".format(node['id']))
 
     node_list = json.dumps(node_list, sort_keys=True,
                            indent=4, separators=(',', ': '))
@@ -84,11 +77,9 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         else:
             loopbackAddress = ''
         nodes[node] = {'loopback address': loopbackAddress}
-        fileName = 'jsongets/{}.json'.format('fre_'+networkId)
-        logging.debug('Filename :\n{}'.format(fileName))
-        if path.exists(fileName):
+        link_data = collect.get_links(baseURL, cienauser, cienapassw, token, networkId)
+        if link_data:
             nodes[node]['Links'] = dict()
-            link_data = utils.open_file_load_data(fileName)
             if link_data.get('data'):
                 freData = link_data['data']
             for frenode in freData:
@@ -104,7 +95,6 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                 val = i+1
                 id1, tId1, id2, tId2 = '', '', '', ''
                 includeDatset = {}
-                # logging.debug('Length of i+1 :{}'.format(val))
                 if val < len(included):
                     if included[i]['type'] == 'endPoints':
                         if ((included[i]['id'][-3:] == 'EP0' and included[i].get('relationships').get('tpes')) and (included[i+1]['id'][-3:] == 'EP1' and included[i+1].get('relationships').get('tpes'))):
@@ -121,8 +111,6 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                                         1]['relationships']['tpes']['data'][0]['id'][:36]
                             linkId2 = included[i +
                                             1]['relationships']['tpes']['data'][0]['id']
-                            # logging.debug('This is the value of ID1:\n{}'.format(id1))
-                            # logging.debug('This is the value of ID2:\n{}'.format(id2))
                             if id1 and 'network1' in id1:
                                 continue
                     else:
@@ -134,8 +122,8 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                                 logging.debug(
                                     'Tunnel head end and tail end are same')
                             else:
-                                populateLspData(tId1, tunnelId1, tId2,
-                                                tunnelId2, node_key_val, lsplist)
+                                populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2,
+                                                    tunnelId2, node_key_val, lsplist)
                     if id1 and id2:
                         networkConstructA_id = id1
                         networkConstructB_id = id2
@@ -143,7 +131,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                             # Duplicate then continue
                             if included[i]['id'][:-2] in dupl_check:
                                 continue
-                            new_obj = get_link_data(id1, linkId1, id2, linkId2)
+                            new_obj = get_link_data(baseURL, cienauser, cienapassw, token, id1, linkId1, id2, linkId2)
                             if new_obj:
                                 counter += 1
                                 linkid = "Link" + str(counter)
@@ -168,7 +156,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
                         else:
                             continue
         else:
-            logging.debug("FRE file does not exist to retrieve links data for : {}".format(fileName))
+            logging.debug(" FRE data not found to retrieve the links data for network id: {}".format(networkId))
             continue
     if nodes:
         with open('jsonfiles/l3linksall.json', 'wb') as f:
@@ -182,40 +170,34 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         logging.info('Lsp data generated..')
 
 
-def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
+def populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
     lspdict = {}
     logging.debug('mpls tunnel endpoint are : '+tunnelId1 + ' and '+tunnelId2)
-    fileNameEnd1 = 'jsongets/{}.json'.format('tpe_'+tId1)
-    logging.debug('Filename :\n{}'.format(fileNameEnd1))
-    fileNameEnd2 = 'jsongets/{}.json'.format('tpe_'+tId2)
-    logging.debug('Filename :\n{}'.format(fileNameEnd2))
-    if path.exists(fileNameEnd1):
-        tunnelEnd1 = utils.open_file_load_data(fileNameEnd1)
-        if tunnelEnd1:
-            if tunnelEnd1.get('data'):
-                tunnelEnd1Data = tunnelEnd1['data']
-                end1Data = next(
-                    (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
-            if end1Data:
-                if 'layerTerminations' in end1Data['attributes'] and end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                    # logging.debug('Tunnel head end id is:'.format(tunnelId1))
-                    lspdict['Tunnel Headend'] = node_key_val[tId1]
-                    lspdict['Tunnel Tailend'] = node_key_val[tId2]
-                    getTunnelData(end1Data, lspdict, lsplist)
-                else:
-                    if path.exists(fileNameEnd2):
-                        tunnelEnd2 = utils.open_file_load_data(fileNameEnd2)
-                        if tunnelEnd2:
-                            if tunnelEnd2.get('data'):
-                                tunnelEnd2Data = tunnelEnd2['data']
-                                end2Data = next(
-                                    (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
-                            if end2Data:
-                                if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                                    # logging.debug('Tunnel head end id is:'.format(tunnelId2))
-                                    lspdict['Tunnel Headend'] = node_key_val[tId2]
-                                    lspdict['Tunnel Tailend'] = node_key_val[tId1]
-                                    getTunnelData(end2Data, lspdict, lsplist)
+    tunnelEnd1 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId1,tunnelId1)
+    if tunnelEnd1:
+        if tunnelEnd1.get('data'):
+            tunnelEnd1Data = tunnelEnd1['data']
+            end1Data = next(
+                (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
+        if end1Data:
+            if 'layerTerminations' in end1Data['attributes'] and end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
+                # logging.debug('Tunnel head end id is:'.format(tunnelId1))
+                lspdict['Tunnel Headend'] = node_key_val[tId1]
+                lspdict['Tunnel Tailend'] = node_key_val[tId2]
+                getTunnelData(end1Data, lspdict, lsplist)
+            else:
+                tunnelEnd2 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId2, tunnelId2)
+                if tunnelEnd2:
+                    if tunnelEnd2.get('data'):
+                        tunnelEnd2Data = tunnelEnd2['data']
+                        end2Data = next(
+                            (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
+                    if end2Data:
+                        if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
+                            # logging.debug('Tunnel head end id is:'.format(tunnelId2))
+                            lspdict['Tunnel Headend'] = node_key_val[tId2]
+                            lspdict['Tunnel Tailend'] = node_key_val[tId1]
+                            getTunnelData(end2Data, lspdict, lsplist)
 
 
 def getTunnelData(lspData, lspdict, lsplist):
@@ -253,7 +235,7 @@ def getTunnelData(lspData, lspdict, lsplist):
         logging.debug('Tunnel admin state is not up: {}'.format(adminstate))
 
 
-def get_link_data(link1, linkId1, link2, linkId2):
+def get_link_data(baseURL, cienauser, cienapassw, token, link1, linkId1, link2, linkId2):
     logging.debug('Retrieve L3 links info...{}'.format(linkId2))
     new_obj = {
         'local IP': '',
@@ -265,12 +247,8 @@ def get_link_data(link1, linkId1, link2, linkId2):
     }
     port, shelf, slot = '', '', ''
     tpeData1, tpeData2 = {}, {}
-    filenameId1 = 'jsongets/{}.json'.format('tpe_'+link1)
-    filenameId2 = 'jsongets/{}.json'.format('tpe_'+link2)
-    if path.exists(filenameId1):
-        tpeData1 = utils.open_file_load_data(filenameId1)
-    if path.exists(filenameId2):
-        tpeData2 = utils.open_file_load_data(filenameId2)
+    tpeData1 = collect.get_ports(baseURL, cienauser, cienapassw, token, link1, linkId1)
+    tpeData2 = collect.get_ports(baseURL, cienauser, cienapassw, token, link2, linkId2)
     if tpeData1 and tpeData2:    
         if tpeData1.get('data'):
             lnkData1 = tpeData1['data']

@@ -134,8 +134,7 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     else:
                         continue
                     # Retrive port details for each node
-                    portNodeA, portNodeB, circuitName = getPortDetails(
-                        networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
+                    portNodeA, portNodeB, circuitName = getPortDetails(baseURL, cienauser, cienapassw, token, networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
                     # Retrieve link name data
                     if portNodeA and portNodeB and nodeA and nodeB:
                         linkName = getLinkName(portNodeA.split('-',1)[1], portNodeB.split('-',1)[1], nodeA.split('-',1)[0], nodeB.split('-',1)[0])
@@ -161,8 +160,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         # Add link id for duplicate check
                         dupl_check[new_obj['linkid']] = i
                         l1links_list.append(new_obj)
-        else:
-            logging.debug("L1 FRE does not exist to retrieve L1 Links for :{}".format(fileName))
+        # else:
+        #     logging.debug("L1 FRE does not exist to retrieve L1 Links for :{}".format(fileName))
     # Write data in json file
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
@@ -266,7 +265,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         except ValueError:
             if 'HTTP status code: 401' in portData:
                 logging.debug("get L1 link API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-                tokenString = getToken(baseURL, cienauser, cienapassw)
+                tokenString = collect.getToken(baseURL, cienauser, cienapassw)
                 portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
                 try:
                     jsonaddition = json.loads(portData)
@@ -306,7 +305,7 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
     return jsonmerged
 
 
-def get_l1_circuits(baseURL, cienauser, cienapassw, token):
+def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.info('Generating L1 Circuits...')
     l1_circuit_list, dupl_check, links_key_val= [], {}, {}
     # Setting up the links and l1 nodes data for use later on
@@ -326,7 +325,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
         all_links_dict = get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list, networkId)
 
         # filename = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
-        logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
+        # logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
         # if path.exists(filename):
         #     all_links_dict = utils.open_file_load_data(filename)
         if all_links_dict.get('data'):
@@ -366,8 +365,10 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                 logging.debug(
                     ' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
                 logging.debug('Token sending to Get Supporting Nodes ..'+token)
+                # link_list = collect.get_supporting_nodes(
+                #     circuit_id, filename, baseURL, cienauser, cienapassw, token)
                 link_list = collect.get_supporting_nodes(
-                    circuit_id, filename, baseURL, cienauser, cienapassw, token)
+                    circuit_id, baseURL, cienauser, cienapassw, token)
                 # Check based on the returned nodes to see if they're valid l1 nodes
                 supporting_link_check = True
 
@@ -391,8 +392,7 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
                     start_node_name = node_key_val['{}'.format(
                         start_node)]
                     end_node_name = node_key_val['{}'.format(end_node)]
-                    portStartNode, portEndNode, circuitName = getPortDetails(
-                        start_node, startNodeId, start_node_name, end_node, endNodeId, end_node_name)
+                    portStartNode, portEndNode, circuitName = getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeId, start_node_name, end_node, endNodeId, end_node_name)
                     if circuitName in dupl_check:
                         continue
                     if circuitName:
@@ -575,50 +575,107 @@ def retrieveLinkName(nodea, nodeb):
         linkname = linkdata['linkname']
     return linkname
 
-def getPortDetails(start_node, startNodeId, startNodeName, end_node, endNodeId, endNodeName):
+# def getPortDetails(start_node, startNodeId, startNodeName, end_node, endNodeId, endNodeName):
+#     logging.info('Retrieve port info for L1 circuits')
+#     circuitName, portStartNode, portEndNode = '', '', ''
+#     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
+#     fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
+#     fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
+#     if path.exists(fileNameA):
+#         portDataStartNode = utils.open_file_load_data(fileNameA)
+#         if portDataStartNode:
+#             if portDataStartNode.get('included'):
+#                 includedDataA = portDataStartNode['included']
+#             if portDataStartNode.get('data'):
+#                 dataStartNode = portDataStartNode['data']
+#             dataNodeA = next(
+#                 items for items in dataStartNode if items['id'] == startNodeId)
+#             portStartNode = dataNodeA['attributes']['nativeName']
+#             if 'locations' in dataNodeA.get('attributes'):
+#                 if 'port' in dataNodeA['attributes']['locations'][0]:
+#                     portA = dataNodeA['attributes']['locations'][0]['port']
+#                 if 'shelf' in dataNodeA['attributes']['locations'][0]:
+#                     shelfA = dataNodeA['attributes']['locations'][0]['shelf']
+#                 if 'slot' in dataNodeA['attributes']['locations'][0]:
+#                     slotA = dataNodeA['attributes']['locations'][0]['slot']
+#         else:
+#             logging.info('tpe data not found for starting node id :{}'.format(start_node))
+#     if path.exists(fileNameB):
+#         portDataEndNode = utils.open_file_load_data(fileNameB)
+#         if portDataEndNode:
+#             if portDataEndNode.get('included'):
+#                 includedDataB = portDataEndNode['included']
+#             if portDataEndNode.get('data'):
+#                 dataEndNode = portDataEndNode['data']
+#             dataNodeB = next(
+#                 items for items in dataEndNode if items['id'] == endNodeId)
+#             portEndNode = dataNodeB['attributes']['nativeName']
+#             if 'locations' in dataNodeB.get('attributes'):
+#                 if 'port' in dataNodeB['attributes']['locations'][0]:
+#                     portB = dataNodeB['attributes']['locations'][0]['port']
+#                 if 'shelf' in dataNodeB['attributes']['locations'][0]:
+#                     shelfB = dataNodeB['attributes']['locations'][0]['shelf']
+#                 if 'slot' in dataNodeB['attributes']['locations'][0]:
+#                     slotB = dataNodeB['attributes']['locations'][0]['slot']
+#         else:
+#             logging.info('tpe data not found for ending node id :{}'.format(end_node))
+#     if includedDataA:
+#         circuitName = getCircuitName(includedDataA, portA, shelfA, slotA, startNodeName, endNodeName)
+#         logging.debug("Circuit name retrieved with Start node port data: {}".format(circuitName))
+#     if not circuitName and includedDataB:
+#         circuitName = getCircuitName(includedDataB,portB, shelfB, slotB, startNodeName, endNodeName)
+#         logging.debug("Circuit name retrieved with End node port data: {}".format(circuitName))
+
+#     logging.info('L1 port info retrieved..')
+#     return portStartNode, portEndNode, circuitName
+
+def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeId, startNodeName, end_node, endNodeId, endNodeName):
     logging.info('Retrieve port info for L1 circuits')
     circuitName, portStartNode, portEndNode = '', '', ''
     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
-    fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
-    fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
-    if path.exists(fileNameA):
-        portDataStartNode = utils.open_file_load_data(fileNameA)
-        if portDataStartNode:
-            if portDataStartNode.get('included'):
-                includedDataA = portDataStartNode['included']
-            if portDataStartNode.get('data'):
-                dataStartNode = portDataStartNode['data']
-            dataNodeA = next(
-                items for items in dataStartNode if items['id'] == startNodeId)
-            portStartNode = dataNodeA['attributes']['nativeName']
-            if 'locations' in dataNodeA.get('attributes'):
-                if 'port' in dataNodeA['attributes']['locations'][0]:
-                    portA = dataNodeA['attributes']['locations'][0]['port']
-                if 'shelf' in dataNodeA['attributes']['locations'][0]:
-                    shelfA = dataNodeA['attributes']['locations'][0]['shelf']
-                if 'slot' in dataNodeA['attributes']['locations'][0]:
-                    slotA = dataNodeA['attributes']['locations'][0]['slot']
-        else:
-            logging.info('tpe data not found for starting node id :{}'.format(start_node))
-    if path.exists(fileNameB):
-        portDataEndNode = utils.open_file_load_data(fileNameB)
-        if portDataEndNode:
-            if portDataEndNode.get('included'):
-                includedDataB = portDataEndNode['included']
-            if portDataEndNode.get('data'):
-                dataEndNode = portDataEndNode['data']
-            dataNodeB = next(
-                items for items in dataEndNode if items['id'] == endNodeId)
-            portEndNode = dataNodeB['attributes']['nativeName']
-            if 'locations' in dataNodeB.get('attributes'):
-                if 'port' in dataNodeB['attributes']['locations'][0]:
-                    portB = dataNodeB['attributes']['locations'][0]['port']
-                if 'shelf' in dataNodeB['attributes']['locations'][0]:
-                    shelfB = dataNodeB['attributes']['locations'][0]['shelf']
-                if 'slot' in dataNodeB['attributes']['locations'][0]:
-                    slotB = dataNodeB['attributes']['locations'][0]['slot']
-        else:
-            logging.info('tpe data not found for ending node id :{}'.format(end_node))
+    portDataNodeA = collect.get_ports(baseURL, cienauser, cienapassw, token, start_node,startNodeId)
+    # fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
+    # fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
+    # if path.exists(fileNameA):
+    # portDataStartNode = utils.open_file_load_data(fileNameA)
+    if portDataNodeA:
+        if portDataNodeA.get('included'):
+            includedDataA = portDataNodeA['included']
+        if portDataNodeA.get('data'):
+            dataStartNode = portDataNodeA['data']
+        dataNodeA = next(
+            items for items in dataStartNode if items['id'] == startNodeId)
+        portStartNode = dataNodeA['attributes']['nativeName']
+        if 'locations' in dataNodeA.get('attributes'):
+            if 'port' in dataNodeA['attributes']['locations'][0]:
+                portA = dataNodeA['attributes']['locations'][0]['port']
+            if 'shelf' in dataNodeA['attributes']['locations'][0]:
+                shelfA = dataNodeA['attributes']['locations'][0]['shelf']
+            if 'slot' in dataNodeA['attributes']['locations'][0]:
+                slotA = dataNodeA['attributes']['locations'][0]['slot']
+    else:
+        logging.info('tpe data not found for starting node id :{}'.format(start_node))
+    # Retrieve port data for end node
+    portDataNodeB = collect.get_ports(baseURL, cienauser, cienapassw, token, end_node,endNodeId)
+    # if path.exists(fileNameB):
+    #     portDataEndNode = utils.open_file_load_data(fileNameB)
+    if portDataNodeB:
+        if portDataNodeB.get('included'):
+            includedDataB = portDataNodeB['included']
+        if portDataNodeB.get('data'):
+            dataEndNode = portDataNodeB['data']
+        dataNodeB = next(
+            items for items in dataEndNode if items['id'] == endNodeId)
+        portEndNode = dataNodeB['attributes']['nativeName']
+        if 'locations' in dataNodeB.get('attributes'):
+            if 'port' in dataNodeB['attributes']['locations'][0]:
+                portB = dataNodeB['attributes']['locations'][0]['port']
+            if 'shelf' in dataNodeB['attributes']['locations'][0]:
+                shelfB = dataNodeB['attributes']['locations'][0]['shelf']
+            if 'slot' in dataNodeB['attributes']['locations'][0]:
+                slotB = dataNodeB['attributes']['locations'][0]['slot']
+    else:
+        logging.info('tpe data not fou for ending node id :{}'.format(end_node))
     if includedDataA:
         circuitName = getCircuitName(includedDataA, portA, shelfA, slotA, startNodeName, endNodeName)
         logging.debug("Circuit name retrieved with Start node port data: {}".format(circuitName))
@@ -628,6 +685,8 @@ def getPortDetails(start_node, startNodeId, startNodeName, end_node, endNodeId, 
 
     logging.info('L1 port info retrieved..')
     return portStartNode, portEndNode, circuitName
+
+
 
 def getCircuitName(nodeData, port, shelf, slot, startNodeName, endNodeName):
     startNode = startNodeName.split("-")[0]

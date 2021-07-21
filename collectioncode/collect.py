@@ -114,255 +114,101 @@ def get_Sites(baseURL, cienauser, cienapassw, token_string):
         f.close()
     logging.debug('Sites population completed..')
 
-############ Original Code #################
-# def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
-#     logging.debug('Retrieve ports/TPE data for nodes for states..')
-#     nodesData = utils.getStateNodes(state_or_states_list)
-#     # nodesData = utils.getNodes()
-#     for k in nodesData.keys():
-#         networkConstrId = k
-#         incomplete = True
-#         jsonmerged, jsonaddition = {}, {}
-#         # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
-#         uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
-#         # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
-#         URL = baseURL + uri + networkConstrId
-#         while incomplete:
-#             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-#             try:
-#                 jsonaddition = json.loads(portData)
-#             except ValueError:
-#                 if 'HTTP status code: 401' in portData:
-#                     logging.debug("get TPE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-#                     tokenString = getToken(baseURL, cienauser, cienapassw)
-#                     portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
-#                     try:
-#                         jsonaddition = json.loads(portData)
-#                     except ValueError:
-#                         logging.debug("get TPE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
-#                 elif 'HTTP status code: 500' in portData:
-#                     logging.debug("get TPE's API returned 500 Internal Server Error for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-#                 else:
-#                     logging.debug("get TPE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-
-#             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
-#             if jsonaddition:
-#                 try:
-#                     next = ''
-#                     if jsonaddition.get('links'):
-#                         next = jsonaddition.get('links').get('next')
-#                 except Exception:
-#                     logging.info("No data found")
-#                 if next:
-#                     URL = next
-#                     utils.merge(jsonmerged, jsonaddition)
-#                 else:
-#                     incomplete = False
-#                     utils.merge(jsonmerged, jsonaddition)
-
-#         # Saving ports / tpe data to json file for all network id's
-#         if jsonmerged:
-#             filename = "tpe_"+networkConstrId+'.json'
-#             with open('jsongets/'+filename, 'wb') as f:
-#                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
-#                                 indent=4, separators=(',', ': ')))
-#                 f.close()
-#             logging.info('TPE data retrieved..')
-
-def get_ports(baseURL, cienauser, cienapassw, token, state_or_states_list):
-    logging.debug('Retrieve ports/TPE data for nodes for states..')
-    nodesData = utils.getStateNodes(state_or_states_list)
-    # nodesData = utils.getNodes()
-    for k in nodesData.keys():
-        networkConstrId = k
-        incomplete = True
-        jsonmerged, jsonaddition = {}, {}
-        # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}'.format(networkConstrId)
-        uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
-        # uri = '/nsi/api/search/tpes?fields=data.attributes&offset=0&limit=100&content=detail&resourceState=planned,discovered,plannedAndDiscovered&networkConstruct.id={}'.format(networkConstrId)
-        URL = baseURL + uri + networkConstrId
-        while incomplete:
-            portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            try:
-                jsonaddition = json.loads(portData)
-            except ValueError:
-                if 'HTTP status code: 401' in portData:
-                    logging.debug("get TPE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-                    tokenString = getToken(baseURL, cienauser, cienapassw)
-                    portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
-                    try:
-                        jsonaddition = json.loads(portData)
-                    except ValueError:
-                        logging.debug("get TPE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
-                elif 'HTTP status code: 500' in portData:
-                    logging.debug("get TPE's API returned 500 Internal Server Error for network construct id : {}".format(networkConstrId))
-                    incomplete = False
-                else:
-                    logging.debug("get TPE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
-                    incomplete = False
-
-            # logging.debug('The API response for URL {} is:\n{}'.format(URL))
-            if jsonaddition:
+def get_ports(baseURL, cienauser, cienapassw, token, networkConstrId, id):
+    logging.debug('Retrieve ports/TPE data for neetwork conttruct id {}'.format(networkConstrId))
+    incomplete = True
+    jsonmerged, jsonaddition = {}, {}
+    uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}&id={}'.format(networkConstrId,id)
+    URL = baseURL + uri
+    logging.debug("TPE retrieve URL is {}".format(URL))
+    while incomplete:
+        portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+        try:
+            jsonaddition = json.loads(portData)
+        except ValueError:
+            if 'HTTP status code: 401' in portData:
+                logging.debug("get TPE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+                tokenString = getToken(baseURL, cienauser, cienapassw)
+                portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
                 try:
-                    next = ''
-                    if jsonaddition.get('links'):
-                        next = jsonaddition.get('links').get('next')
-                except Exception:
-                    logging.info("No data found")
-                if next:
-                    URL = next
-                    utils.merge(jsonmerged, jsonaddition)
-                else:
-                    incomplete = False
-                    utils.merge(jsonmerged, jsonaddition)
+                    jsonaddition = json.loads(portData)
+                except ValueError:
+                    logging.debug("get TPE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+            elif 'HTTP status code: 500' in portData:
+                logging.debug("get TPE's API returned 500 Internal Server Error for network construct id : {}".format(networkConstrId))
+                incomplete = False
+            else:
+                logging.debug("get TPE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                incomplete = False
 
-        # # Saving ports / tpe data to json file for all network id's
-        # if jsonmerged:
-        #     filename = "tpe_"+networkConstrId+'.json'
-        #     with open('jsongets/'+filename, 'wb') as f:
-        #         f.write(json.dumps(jsonmerged, f, sort_keys=True,
-        #                         indent=4, separators=(',', ': ')))
-        #         f.close()
-        #     logging.info('TPE data retrieved..')
-        return jsonmerged
-
-################### Original Code ############################
-# def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
-#     nodesData = utils.getStateNodes(state_or_states_list)
-#     # nodesData = utils.getNodes()
-#     for k in nodesData.keys():
-#         networkConstrId = k
-#         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
-#         incomplete = True
-#         jsonmerged, jsonaddition = {}, {}
-#         # ONlY ETHERNET and IP
-#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-#         # Retrive data for ETHERNET and MPLS
-#         uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
-#             networkConstrId)
-#         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-#         # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
-#         URL = baseURL + uri
-#         logging.debug('URL:\n{}'.format(URL))
-#         while incomplete:
-#             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-#             try:
-#                 jsonaddition = json.loads(portData)
-#             except ValueError:
-#                 if 'HTTP status code: 401' in portData:
-#                     logging.debug("get FRE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-#                     tokenString = getToken(baseURL, cienauser, cienapassw)
-#                     portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
-#                     try:
-#                         jsonaddition = json.loads(portData)
-#                     except ValueError:
-#                         logging.debug("get FRE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
-#                 elif 'HTTP status code: 500' in portData:
-#                     logging.debug("get FRE's API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-#                 else:
-#                     logging.debug("get FRE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-
-#             # logging.debug('The API response for URL {} is:\n{}'.format(URL))
-#             if jsonaddition:
-#                 try:
-#                     next = ''
-#                     if jsonaddition.get('links'):
-#                         next = jsonaddition.get('links').get('next')
-#                 except Exception:
-#                     logging.info("No data found")
-#                 if next:
-#                     URL = next
-#                     utils.merge(jsonmerged, jsonaddition)
-#                 else:
-#                     incomplete = False
-#                     utils.merge(jsonmerged, jsonaddition)
-
-#         # saving fre data for each network construct id for L3
-#         if jsonmerged:
-#             filename = "fre_"+networkConstrId
-#             with open('jsongets/'+filename+'.json', 'wb') as f:
-#                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
-#                                 indent=4, separators=(',', ': ')))
-#                 f.close()
-#             logging.info('FRE data retrieved..')
-
-def get_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
-    nodesData = utils.getStateNodes(state_or_states_list)
-    # nodesData = utils.getNodes()
-    for k in nodesData.keys():
-        networkConstrId = k
-        logging.debug('networkConstrId:\n{}'.format(networkConstrId))
-        incomplete = True
-        jsonmerged, jsonaddition = {}, {}
-        # ONlY ETHERNET and IP
-        # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-        # Retrive data for ETHERNET and MPLS
-        uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
-            networkConstrId)
-        # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-        # ########uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&limit=200&networkConstruct.id={}'.format(networkConstrId)
-        URL = baseURL + uri
-        logging.debug('URL:\n{}'.format(URL))
-        while incomplete:
-            portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+        # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+        if jsonaddition:
             try:
-                jsonaddition = json.loads(portData)
-            except ValueError:
-                if 'HTTP status code: 401' in portData:
-                    logging.debug("get FRE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-                    tokenString = getToken(baseURL, cienauser, cienapassw)
-                    portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
-                    try:
-                        jsonaddition = json.loads(portData)
-                    except ValueError:
-                        logging.debug("get FRE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
-                elif 'HTTP status code: 500' in portData:
-                    logging.debug("get FRE's API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
-                    incomplete = False
-                else:
-                    logging.debug("get FRE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
-                    incomplete = False
+                next = ''
+                if jsonaddition.get('links'):
+                    next = jsonaddition.get('links').get('next')
+            except Exception:
+                logging.info("No data found")
+            if next:
+                URL = next
+                utils.merge(jsonmerged, jsonaddition)
+            else:
+                incomplete = False
+                utils.merge(jsonmerged, jsonaddition)
 
-            # logging.debug('The API response for URL {} is:\n{}'.format(URL))
-            if jsonaddition:
+    return jsonmerged
+
+def get_links(baseURL, cienauser, cienapassw, token,networkConstrId):
+    logging.debug('networkConstrId:\n{} to retrieve links'.format(networkConstrId))
+    incomplete = True
+    jsonmerged, jsonaddition = {}, {}
+    # Retrive data for ETHERNET and MPLS
+    uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&layerRate=MPLS%2CETHERNET&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=IP%2CTunnel&sortBy=name&limit=1000&networkConstruct.id={}'.format(
+        networkConstrId)
+    URL = baseURL + uri
+    logging.debug('URL:\n{}'.format(URL))
+    while incomplete:
+        portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
+        try:
+            jsonaddition = json.loads(portData)
+        except ValueError:
+            if 'HTTP status code: 401' in portData:
+                logging.debug("get FRE's API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
+                tokenString = getToken(baseURL, cienauser, cienapassw)
+                portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
                 try:
-                    next = ''
-                    if jsonaddition.get('links'):
-                        next = jsonaddition.get('links').get('next')
-                except Exception:
-                    logging.info("No data found")
-                if next:
-                    URL = next
-                    utils.merge(jsonmerged, jsonaddition)
-                else:
-                    incomplete = False
-                    utils.merge(jsonmerged, jsonaddition)
+                    jsonaddition = json.loads(portData)
+                except ValueError:
+                    logging.debug("get FRE's API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
+            elif 'HTTP status code: 500' in portData:
+                logging.debug("get FRE's API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
+                incomplete = False
+            else:
+                logging.debug("get FRE's API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
+                incomplete = False
 
-        # # saving fre data for each network construct id for L3
-        # if jsonmerged:
-        #     filename = "fre_"+networkConstrId
-        #     with open('jsongets/'+filename+'.json', 'wb') as f:
-        #         f.write(json.dumps(jsonmerged, f, sort_keys=True,
-        #                         indent=4, separators=(',', ': ')))
-        #         f.close()
-        #     logging.info('FRE data retrieved..')
+        # logging.debug('The API response for URL {} is:\n{}'.format(URL))
+        if jsonaddition:
+            try:
+                next = ''
+                if jsonaddition.get('links'):
+                    next = jsonaddition.get('links').get('next')
+            except Exception:
+                logging.info("No data found")
+            if next:
+                URL = next
+                utils.merge(jsonmerged, jsonaddition)
+            else:
+                incomplete = False
+                utils.merge(jsonmerged, jsonaddition)
 
-        #### return response
-        return jsonmerged
+    #### return response
+    return jsonmerged
 
-
-def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, token):
+def get_supporting_nodes(circuit_id, baseURL, cienauser, cienapassw, token):
     # Make the api call to get the supporting node info
     # logging.info('Retrieve Supporting nodes..')
     data, incomplete, jsonmerged, jsonaddition= {}, True, {}, {}
-    fileName = 'jsongets/l1_circuit_'+circuit_id+'.json'
-    logging.debug('File name is ..'+fileName)
-    # uri = '/nsi/api/v2/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&networkConstruct.id=&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing&supportingFreId={}'.format(
-    #     circuit_id)
     logging.debug('Token received at Supporting nodes API ..'+token)
     if token:
         #Update query to get data from non versioned API
@@ -371,9 +217,7 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
         URL = baseURL + uri
         logging.debug('Token sending to supporting nodes..'+token)
         while incomplete:
-            ###### Original code
             jsondata = utils.rest_get_json(URL, cienauser, cienapassw, token)
-            # jsonaddition = json.loads(jsondata)
             try:
                 jsonaddition = json.loads(jsondata)
             except ValueError:
@@ -407,35 +251,28 @@ def get_supporting_nodes(circuit_id, filename, baseURL, cienauser, cienapassw, t
                     incomplete = False
                     utils.merge(jsonmerged, jsonaddition)
 
-        # save data for each circuit id 
-        with open(fileName, 'wb') as f:
-            f.write(json.dumps(jsonmerged, f, sort_keys=True,
-                                indent=4, separators=(',', ': ')))
-            f.close()
-        logging.info('L1 Circuits hops data retrieved and saved..')
     hopdata = []
     included = {}    
-    if path.exists(fileName):
-        data = utils.open_file_load_data(fileName)
-        if data:
-            if 'included' in data:
-                included = data['included']
-            if included:
-                for i in range(len(included)):
-                    if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
-                        if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
-                            temp = {}
-                            temp['nodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
-                            temp['nodeB'] = included[i +
-                                                    1]['relationships']['tpes']['data'][0]['id'][:36]
-                            hopdata.append(temp)
-                    logging.info('Supporting Nodes data retrieved ..')
-            else:
-                logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+    if jsonmerged:
+        if 'included' in jsonmerged:
+            included = jsonmerged['included']
+        if included:
+            for i in range(len(included)):
+                if included[i]['type'] == 'endPoints' and included[i]['id'][-1] != '2':
+                    if included[i].get('relationships') and included[i+1].get('relationships') and included[i].get('relationships').get('tpes') and included[i+1].get('relationships').get('tpes'):
+                        temp = {}
+                        temp['nodeA'] = included[i]['relationships']['tpes']['data'][0]['id'][:36]
+                        temp['nodeB'] = included[i +
+                                                1]['relationships']['tpes']['data'][0]['id'][:36]
+                        hopdata.append(temp)
+                logging.info('Supporting Nodes data retrieved ..')
         else:
-            logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+            logging.debug(" No INCLUDED Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
+    else:
+        logging.debug(" No Data returned for L1 supporting nodes for circuit id:{} ".format(circuit_id))
     # Return the hop nodes for each L1 circuits
     return hopdata
+
 
 def getToken(baseURL, cienauser, cienapassw):
     token = None
@@ -477,12 +314,12 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                             token, state_or_states_list)
 
 
-def get_l1_circuits(baseURL, cienauser, cienapassw, token):
-    l1_collect.get_l1_circuits(baseURL, cienauser, cienapassw, token)
+def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list):
+    l1_collect.get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list)
 
 
-def get_l3_nodes(state_or_states_list):
-    l3_collect.get_l3_nodes(state_or_states_list)
+def get_l3_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
+    l3_collect.get_l3_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list)
 
 
 def get_l3_links(baseURL, cienauser, cienapassw, token):
