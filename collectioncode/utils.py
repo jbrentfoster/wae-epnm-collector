@@ -62,7 +62,21 @@ def getStateNodes(state_or_states_list):
             nodesData['{}'.format(node['id'])] = node['attributes']['name']
     return nodesData
 
-# Helper function to get Nodes data
+# Helper function to get State Nodes data
+def getAllNodesForStates(state_or_states_list):
+    allNodes = open_file_load_data('jsonfiles/all_nodes.json')
+    allnodesData = allNodes['data']
+    statesData = []
+    for node in allnodesData:
+        nodesData = {}
+        if len(state_or_states_list) > 0:
+            if node['attributes']['name'][4:6] in state_or_states_list:
+                statesData.append(node)
+        else:
+            statesData.append(node)
+    return statesData
+
+# Helper function to get Nodes data 
 def getNodes():
     allNodes = open_file_load_data('jsonfiles/all_nodes.json')
     allnodesData = allNodes['data']

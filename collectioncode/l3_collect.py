@@ -21,9 +21,11 @@ node_key_val = {}
 def get_l3_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.info('Generate L3 nodes')
     data, node_list, l3data = '', [], {}
-    data = utils.open_file_load_data('jsonfiles/all_nodes.json')
-    for node in data['data']:
+    nodesData = utils.getAllNodesForStates(state_or_states_list)
+    for node in nodesData:
+        # networkConstrId = k
         fredata = collect.get_links(baseURL, cienauser, cienapassw, token, node['id'])
+ 
         if fredata:
             if 'data' in fredata:
                 l3data = fredata['data']
@@ -181,7 +183,6 @@ def populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2
                 (item for item in tunnelEnd1Data if item['id'] == tunnelId1), None)
         if end1Data:
             if 'layerTerminations' in end1Data['attributes'] and end1Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                # logging.debug('Tunnel head end id is:'.format(tunnelId1))
                 lspdict['Tunnel Headend'] = node_key_val[tId1]
                 lspdict['Tunnel Tailend'] = node_key_val[tId2]
                 getTunnelData(end1Data, lspdict, lsplist)
@@ -194,7 +195,6 @@ def populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2
                             (item for item in tunnelEnd2Data if item['id'] == tunnelId2), None)
                     if end2Data:
                         if end2Data['attributes']['layerTerminations'][0]['mplsPackage']['tunnelRole'] == 'headEnd':
-                            # logging.debug('Tunnel head end id is:'.format(tunnelId2))
                             lspdict['Tunnel Headend'] = node_key_val[tId2]
                             lspdict['Tunnel Tailend'] = node_key_val[tId1]
                             getTunnelData(end2Data, lspdict, lsplist)
@@ -256,7 +256,6 @@ def get_link_data(baseURL, cienauser, cienapassw, token, link1, linkId1, link2, 
             lnkData2 = tpeData2['data']
         data = next((item for item in lnkData1 if item['id'] == linkId1), None)
         if data:
-            # logging.debug('link data id1 is : {}'.format(linkId1))
             if data.get('attributes').get('layerTerminations')[0]:
                 if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
                     new_obj['local IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']
@@ -282,7 +281,6 @@ def get_link_data(baseURL, cienauser, cienapassw, token, link1, linkId1, link2, 
         if new_obj.get('local IP'):
             data = next((item for item in lnkData2 if item['id'] == linkId2), None)
             if data:
-                # logging.debug('link data id2 is : {}'.format(linkId2))
                 if data.get('attributes').get('layerTerminations')[0]:
                     if data.get('attributes').get('layerTerminations')[0].get('additionalAttributes').get('interfaceIp'):
                         new_obj['neighbor IP'] = data['attributes']['layerTerminations'][0]['additionalAttributes']['interfaceIp']

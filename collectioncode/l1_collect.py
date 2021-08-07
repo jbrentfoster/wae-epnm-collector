@@ -23,21 +23,13 @@ node_key_val = {}
 def get_l1_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
     logging.info('Retrieve L1 Nodes')
     data, node_list, l1data = '', [], {}
-    data = utils.open_file_load_data('jsonfiles/all_nodes.json')
-    for node in data['data']:
+    nodesData = utils.getAllNodesForStates(state_or_states_list)
+    for node in nodesData:
         l1fredata = get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list, node['id'])
-        # fileName = 'jsongets/{}'.format('l1_fre_'+node['id']+'.json')
-        # logging.debug('l1 filename is {}'.format(fileName))
-        # if path.exists(fileName):
-        #     l1fredata = utils.open_file_load_data(fileName)
         if 'data' in l1fredata:
             l1data = l1fredata['data']
         if l1data:
             if 'typeGroup' in node['attributes']:
-                # match_object = re.search(
-                #     'SHELF-([0-9]|1[0-9]|20)$', node['attributes']['accessIdentifier'])
-                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and ((node['attributes']['accessIdentifier'] == 'SHELF-21' and (node['attributes']['deviceVersion'] == "6500-T24 PACKET-OPTICAL") or (node['attributes']['deviceVersion'] == "6500-T12 PACKET-OPTICAL")) or match_object != None):
-                # if node['attributes']['typeGroup'] == "Ciena6500" and (node['attributes']['name'][4:6] in state_or_states_list) and 'l2Data' not in node['attributes']:
                 if node['attributes']['typeGroup'] == "Ciena6500":
                     node['longitude'] = 0
                     node['latitude'] = 0
@@ -53,8 +45,6 @@ def get_l1_nodes(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         node['siteName'] = utils.getSiteName(
                             node['longitude'], node['latitude'])
                     node_list.append(node)
-        # else:
-        #     logging.debug("No L1 Fre data returned to retrieve L1 node : {}".format(fileName))
 
 
     node_list = json.dumps(node_list, sort_keys=True,
@@ -75,12 +65,6 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         networkId = l1nodes['id']
         linkname_key_val, included, linkData, layer_key_val = {}, {}, {}, {}
         link_data = get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list, networkId)
-        # Retrieve link info for each l1 node
-
-        # fileName = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
-        # logging.debug('Filename :\n{}'.format(fileName))
-        # if path.exists(fileName):
-        #     link_data = utils.open_file_load_data(fileName)
 
         if link_data.get('data'):
             linkData = link_data['data']
@@ -116,8 +100,6 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                     if included[i+1]['id'][-1] == '2' and included[i+1].get('relationships').get('tpes'):
                         networkConstructB_id = included[i+1]['relationships']['tpes']['data'][0]['id'][:36]
                         nodeBid = included[i+1]['relationships']['tpes']['data'][0]['id']
-                    # logging.info('This is the value of ID1:\n{}'.format(networkConstructA_id))
-                    # logging.info('This is the value of ID2:\n{}'.format(networkConstructB_id))
                 else:
                     continue
                 if 'network1' in networkConstructA_id:
@@ -160,8 +142,6 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         # Add link id for duplicate check
                         dupl_check[new_obj['linkid']] = i
                         l1links_list.append(new_obj)
-        # else:
-        #     logging.debug("L1 FRE does not exist to retrieve L1 Links for :{}".format(fileName))
     # Write data in json file
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
@@ -170,81 +150,10 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         f.close()
     logging.info('Complete L1 links...')
 
-################# Original Code #######################
-# def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list):
-#     logging.info('Retrieving L1 links data from MCP..')
-#     nodesData = utils.getStateNodes(state_or_states_list)
-#     # nodesData = utils.getNodes()
-#     logging.debug(
-#         'Retrieve L1 links data for nodes belongs to list of states:')
-#     for k in nodesData.keys():
-#         networkConstrId = k
-#         logging.debug('networkConstrId:\n{}'.format(networkConstrId))
-#         incomplete, jsonmerged, jsonaddition = True, {}, {}
-#         # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
-#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
-#         ########### Query to retrieve l1 links data
-#         uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
-
-#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-#         # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-#         # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTU2%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
-#         URL = baseURL + uri + networkConstrId
-#         logging.debug('URL:\n{}'.format(URL))
-#         while incomplete:
-#             portData = utils.rest_get_json(URL, cienauser, cienapassw, token)
-#             try:
-#                 jsonaddition = json.loads(portData)
-#             except ValueError:
-#                 if 'HTTP status code: 401' in portData:
-#                     logging.debug("get L1 link API returned Unauthozied error: Retrying with new token for network construct id : {}".format(networkConstrId))
-#                     tokenString = getToken(baseURL, cienauser, cienapassw)
-#                     portData = utils.rest_get_json(URL, cienauser, cienapassw, tokenString)
-#                     try:
-#                         jsonaddition = json.loads(portData)
-#                     except ValueError:
-#                         logging.debug("get L1 link API returned Unauthozied error with new token for network construct id : {}".format(networkConstrId))
-#                 elif 'HTTP status code: 500' in portData:
-#                     logging.debug("get L1 link API returned 500 Intrenal Server error for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-#                 else:
-#                     logging.debug("get L1 link API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
-#                     incomplete = False
-
-
-#             if jsonaddition:
-#                 try:
-#                     next = ''
-#                     if jsonaddition.get('links'):
-#                         next = jsonaddition.get('links').get('next')
-#                 except Exception:
-#                     logging.info("No data found")
-#                 if next:
-#                     URL = next
-#                     utils.merge(jsonmerged, jsonaddition)
-#                 else:
-#                     incomplete = False
-#                     utils.merge(jsonmerged, jsonaddition)
-
-#         # save data for each network construct id
-#         if jsonmerged:
-#             filename = "l1_fre_"+networkConstrId+'.json'
-#             with open('jsongets/{}'.format(filename), 'wb') as f:
-#                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
-#                                 indent=4, separators=(',', ': ')))
-#                 f.close()
-#             logging.info('Retrieved L1 links data...')
-
-
 def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list, networkConstrId):
     logging.info('Retrieving L1 links data from MCP..')
-    # nodesData = utils.getStateNodes(state_or_states_list)
-    # # nodesData = utils.getNodes()
     logging.debug(
         'Retrieve L1 links data for nodes belongs to list of states:')
-    # for k in nodesData.keys():
-    # networkConstrId = k
     logging.debug('networkConstrId:\n{}'.format(networkConstrId))
     incomplete, jsonmerged, jsonaddition = True, {}, {}
     # Priv retrieving data for OMS , OTS and OTU's  (ORIGINAL QUERY: COMMENT TEMPRARY)
@@ -252,10 +161,6 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
     ########### Query to retrieve l1 links data
     uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=SNC%2CROADM%20Line%2CPhotonic%2CFiber%2COTU&limit=1000&networkConstruct.id='
 
-    # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=ETHERNET&serviceClass=IP&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-    # uri = '/nsi/api/search/fres?include=expectations%2Ctpes%2CnetworkConstructs&limit=200&metaDataFields=serviceClass%2ClayerRate%2ClayerRateQualifier%2CdisplayDeploymentState%2CdisplayOperationState%2CdisplayAdminState%2Cdirectionality%2CdomainTypes%2CresilienceLevel%2CdisplayRecoveryCharacteristicsOnHome&offset=0&serviceClass=EVC%2CEAccess%2CETransit%2CEmbedded%20Ethernet%20Link%2CFiber%2CICL%2CIP%2CLAG%2CLLDP%2CTunnel%2COTU%2COSRP%20Line%2COSRP%20Link%2CPhotonic%2CROADM%20Line%2CSNC%2CSNCP%2CTDM%2CTransport%20Client%2CVLAN%2CRing%2CL3VPN&sortBy=name&networkConstruct.id={}'.format(networkConstrId)
-    # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTS%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id={}'.format(networkConstrId)
-    # uri = '/nsi/api/search/fres?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&layerRate=OMS%2COTU2%2COTU4%2COTUCn&serviceClass=ROADM%20Line%2C%20Fiber%2COTU&limit=1000&networkConstruct.id='
     URL = baseURL + uri + networkConstrId
     logging.debug('URL:\n{}'.format(URL))
     while incomplete:
@@ -277,8 +182,6 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
             else:
                 logging.debug("get L1 link API didn't return the valid JSON response for network construct id : {}".format(networkConstrId))
                 incomplete = False
-
-
         if jsonaddition:
             try:
                 next = ''
@@ -292,15 +195,6 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
             else:
                 incomplete = False
                 utils.merge(jsonmerged, jsonaddition)
-
-    # # save data for each network construct id
-    # if jsonmerged:
-    #     filename = "l1_fre_"+networkConstrId+'.json'
-    #     with open('jsongets/{}'.format(filename), 'wb') as f:
-    #         f.write(json.dumps(jsonmerged, f, sort_keys=True,
-    #                         indent=4, separators=(',', ': ')))
-    #         f.close()
-    #     logging.info('Retrieved L1 links data...')
 
     return jsonmerged
 
@@ -323,11 +217,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list)
         # linkname_key_val = {}
         networkId = l1nodes['id']
         all_links_dict = get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_list, networkId)
-
-        # filename = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
-        # logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
-        # if path.exists(filename):
-        #     all_links_dict = utils.open_file_load_data(filename)
         if all_links_dict.get('data'):
             data = all_links_dict['data']
         else:
@@ -365,8 +254,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list)
                 logging.debug(
                     ' Retrieve supporting nodes for  circuit id: {}'.format(circuit_id))
                 logging.debug('Token sending to Get Supporting Nodes ..'+token)
-                # link_list = collect.get_supporting_nodes(
-                #     circuit_id, filename, baseURL, cienauser, cienapassw, token)
                 link_list = collect.get_supporting_nodes(
                     circuit_id, baseURL, cienauser, cienapassw, token)
                 # Check based on the returned nodes to see if they're valid l1 nodes
@@ -417,8 +304,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list)
                         porta = portStartNode
                         nodeb = end_node_name
                         portb = portEndNode
-                    # temp_obj['portStartNode'] = circuitName
-                    # temp_obj['portEndNode'] = circuitName
                     temp_obj['portStartNode'] = porta
                     temp_obj['portEndNode'] = portb
                     terminationNodeA['node'] = nodea
@@ -477,8 +362,6 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token, state_or_states_list)
                     if temp_obj['circuitName'] != 'THISISANULHLINEPORT':
                         l1_circuit_list.append(temp_obj)
                     dupl_check[temp_obj['circuitName']] = temp_obj['circuitName']
-        # else:
-        #     logging.debug("L1 FRE file does not exist to retrieve L1 Circuits for : {}".format(filename))
     # if l1_circuit_list:
     l1_circuit_list = json.dumps(
         l1_circuit_list, sort_keys=True, indent=4, separators=(',', ': '))
@@ -575,69 +458,11 @@ def retrieveLinkName(nodea, nodeb):
         linkname = linkdata['linkname']
     return linkname
 
-# def getPortDetails(start_node, startNodeId, startNodeName, end_node, endNodeId, endNodeName):
-#     logging.info('Retrieve port info for L1 circuits')
-#     circuitName, portStartNode, portEndNode = '', '', ''
-#     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
-#     fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
-#     fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
-#     if path.exists(fileNameA):
-#         portDataStartNode = utils.open_file_load_data(fileNameA)
-#         if portDataStartNode:
-#             if portDataStartNode.get('included'):
-#                 includedDataA = portDataStartNode['included']
-#             if portDataStartNode.get('data'):
-#                 dataStartNode = portDataStartNode['data']
-#             dataNodeA = next(
-#                 items for items in dataStartNode if items['id'] == startNodeId)
-#             portStartNode = dataNodeA['attributes']['nativeName']
-#             if 'locations' in dataNodeA.get('attributes'):
-#                 if 'port' in dataNodeA['attributes']['locations'][0]:
-#                     portA = dataNodeA['attributes']['locations'][0]['port']
-#                 if 'shelf' in dataNodeA['attributes']['locations'][0]:
-#                     shelfA = dataNodeA['attributes']['locations'][0]['shelf']
-#                 if 'slot' in dataNodeA['attributes']['locations'][0]:
-#                     slotA = dataNodeA['attributes']['locations'][0]['slot']
-#         else:
-#             logging.info('tpe data not found for starting node id :{}'.format(start_node))
-#     if path.exists(fileNameB):
-#         portDataEndNode = utils.open_file_load_data(fileNameB)
-#         if portDataEndNode:
-#             if portDataEndNode.get('included'):
-#                 includedDataB = portDataEndNode['included']
-#             if portDataEndNode.get('data'):
-#                 dataEndNode = portDataEndNode['data']
-#             dataNodeB = next(
-#                 items for items in dataEndNode if items['id'] == endNodeId)
-#             portEndNode = dataNodeB['attributes']['nativeName']
-#             if 'locations' in dataNodeB.get('attributes'):
-#                 if 'port' in dataNodeB['attributes']['locations'][0]:
-#                     portB = dataNodeB['attributes']['locations'][0]['port']
-#                 if 'shelf' in dataNodeB['attributes']['locations'][0]:
-#                     shelfB = dataNodeB['attributes']['locations'][0]['shelf']
-#                 if 'slot' in dataNodeB['attributes']['locations'][0]:
-#                     slotB = dataNodeB['attributes']['locations'][0]['slot']
-#         else:
-#             logging.info('tpe data not found for ending node id :{}'.format(end_node))
-#     if includedDataA:
-#         circuitName = getCircuitName(includedDataA, portA, shelfA, slotA, startNodeName, endNodeName)
-#         logging.debug("Circuit name retrieved with Start node port data: {}".format(circuitName))
-#     if not circuitName and includedDataB:
-#         circuitName = getCircuitName(includedDataB,portB, shelfB, slotB, startNodeName, endNodeName)
-#         logging.debug("Circuit name retrieved with End node port data: {}".format(circuitName))
-
-#     logging.info('L1 port info retrieved..')
-#     return portStartNode, portEndNode, circuitName
-
 def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeId, startNodeName, end_node, endNodeId, endNodeName):
     logging.info('Retrieve port info for L1 circuits')
     circuitName, portStartNode, portEndNode = '', '', ''
     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
     portDataNodeA = collect.get_ports(baseURL, cienauser, cienapassw, token, start_node,startNodeId)
-    # fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
-    # fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
-    # if path.exists(fileNameA):
-    # portDataStartNode = utils.open_file_load_data(fileNameA)
     if portDataNodeA:
         if portDataNodeA.get('included'):
             includedDataA = portDataNodeA['included']
@@ -657,8 +482,6 @@ def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeI
         logging.info('tpe data not found for starting node id :{}'.format(start_node))
     # Retrieve port data for end node
     portDataNodeB = collect.get_ports(baseURL, cienauser, cienapassw, token, end_node,endNodeId)
-    # if path.exists(fileNameB):
-    #     portDataEndNode = utils.open_file_load_data(fileNameB)
     if portDataNodeB:
         if portDataNodeB.get('included'):
             includedDataB = portDataNodeB['included']
@@ -722,9 +545,6 @@ def getLinkName(portNameA, portNameB, startNode, endNode):
             if ((portNameB in row['A_PORT_AID']) and (startNode in row['TRAIL_NAME']) and (endNode in row['TRAIL_NAME'])):
                 linkName = row['TRAIL_NAME']
                 break
-
-    # if not linkName:
-    #     linkName = 'Dummy/I0000/'+startNode+'/'+endNode
     return linkName
     
 if __name__ == "__main__":

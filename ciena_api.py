@@ -192,8 +192,7 @@ def main():
 
         # Get all the l1 links
         logging.debug("Retrieve L1 links..")
-        collect.get_l1_links(baseURL, cienauser, cienapassw,
-                             token_string, state_or_states_list)
+        collect.get_l1_links(baseURL, cienauser, cienapassw, token_string, state_or_states_list)
         logging.debug("L1 links retrieved..")
 
         # Code to get the l1 circuits
