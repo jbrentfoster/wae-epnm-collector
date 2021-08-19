@@ -242,7 +242,7 @@ def main():
                 logging.debug("Retrieve L1 Circuits..")
                 if not token_string:
                     token_string = collect.getToken(baseURL, cienauser, cienapassw)
-                collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string)
+                collect.get_l1_circuits(baseURL, cienauser, cienapassw, token_string,state_or_states_list)
                 logging.debug("L1 Circuits retrieved..")
 
             if phases['type'] == "l3nodes":

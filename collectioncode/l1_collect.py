@@ -77,9 +77,11 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
             continue
         # Retrieve link name and layer rate for each link id
         for links in linkData:
+            logging.debug('Link data found. Retrieve links info for layer rate and user label')
             linkname_key_val['{}'.format(
                 links['id'])] = links['attributes']['userLabel']
             layer_key_val['{}'.format(links['id'])] = links['attributes']['layerRate']
+        logging.debug('Link data found. Length of included is :{} for network id :{}'.format(networkId,len(included)))
         for i in range(len(included)):
             val = i+1
             linkName = ''
@@ -117,11 +119,15 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         continue
                     # Retrive port details for each node
                     portNodeA, portNodeB, circuitName = getPortDetails(baseURL, cienauser, cienapassw, token, networkConstructA_id, nodeAid, nodeA, networkConstructB_id, nodeBid, nodeB)
+                    logging.info("portNodeA  is########: {}".format(portNodeA))
+                    logging.info("portNodeB  is########: {}".format(portNodeB))
+                    logging.info("circuitName Name is########: {}".format(linkName))
                     # Retrieve link name data
                     if portNodeA and portNodeB and nodeA and nodeB:
                         linkName = getLinkName(portNodeA.split('-',1)[1], portNodeB.split('-',1)[1], nodeA.split('-',1)[0], nodeB.split('-',1)[0])
                     logging.info("Link Name is########: {}".format(linkName))
                     if linkName and len(linkName.split('/')) > 2:
+                        new_obj['linkname'] = linkName
                         if linkName.split('/')[2] == nodeA.split('-')[0]:
                             new_obj['l1nodeA'] = nodeA
                             new_obj['l1nodeB'] = nodeB
@@ -131,17 +137,22 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
                         else:
                             new_obj['l1nodeA'] = nodeA
                             new_obj['l1nodeB'] = nodeB
+                    else:
+                        logging.info("###########Link Name not found###########")
+                        new_obj['linkname'] = new_obj['linkid']
+                        new_obj['l1nodeA'] = nodeA
+                        new_obj['l1nodeB'] = nodeB
                         # Check if userlable field populated then populate circuit name otherwise populate with Dummy followed by linkid
-                        circuitname = linkname_key_val[new_obj['linkid']]
-                        if not circuitName:
-                            new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
-                        new_obj['description'] = new_obj['l1nodeA'] + '-' + new_obj['l1nodeB'] + '-' + str(i)
-                        new_obj['portA'] = portNodeA.split('-',1)[1]
-                        new_obj['portB'] = portNodeB.split('-',1)[1]
-                        new_obj['linkname'] = linkName
-                        # Add link id for duplicate check
-                        dupl_check[new_obj['linkid']] = i
-                        l1links_list.append(new_obj)
+                    circuitname = linkname_key_val[new_obj['linkid']]
+                    if not circuitName:
+                        new_obj['circuitName'] = 'Dummy_'+'_'+new_obj['linkid']
+                    new_obj['description'] = new_obj['l1nodeA'] + '-' + new_obj['l1nodeB'] + '-' + str(i)
+                    new_obj['portA'] = portNodeA.split('-',1)[1]
+                    new_obj['portB'] = portNodeB.split('-',1)[1]
+                    # new_obj['linkname'] = linkName
+                    # Add link id for duplicate check
+                    dupl_check[new_obj['linkid']] = i
+                    l1links_list.append(new_obj)
     # Write data in json file
     l1links_list = json.dumps(
         l1links_list, sort_keys=True, indent=4, separators=(',', ': '))
@@ -498,7 +509,7 @@ def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeI
             if 'slot' in dataNodeB['attributes']['locations'][0]:
                 slotB = dataNodeB['attributes']['locations'][0]['slot']
     else:
-        logging.info('tpe data not fou for ending node id :{}'.format(end_node))
+        logging.info('tpe data not found for ending node id :{}'.format(end_node))
     if includedDataA:
         circuitName = getCircuitName(includedDataA, portA, shelfA, slotA, startNodeName, endNodeName)
         logging.debug("Circuit name retrieved with Start node port data: {}".format(circuitName))
@@ -536,6 +547,10 @@ def getCircuitName(nodeData, port, shelf, slot, startNodeName, endNodeName):
 
 def getLinkName(portNameA, portNameB, startNode, endNode):
     linkName = ''
+    logging.debug('portNameA in getLinkName:{}'.format(portNameA))
+    logging.debug('portNameB in getLinkName:{}'.format(portNameB))
+    logging.debug('startNode in getLinkName:{}'.format(startNode))
+    logging.debug('endNode in getLinkName:{}'.format(endNode))
     linkNamesData = csv.DictReader(open('resources/l1linknames.csv'))
     for row in linkNamesData:
         if ((portNameA in row['A_PORT_AID']) and (startNode in row['TRAIL_NAME']) and (endNode in row['TRAIL_NAME'])):
