@@ -114,12 +114,14 @@ def get_Sites(baseURL, cienauser, cienapassw, token_string):
         f.close()
     logging.debug('Sites population completed..')
 
-def get_ports(baseURL, cienauser, cienapassw, token, networkConstrId, id):
+def get_ports(baseURL, cienauser, cienapassw, token, networkConstrId):
     logging.debug('Retrieve ports/TPE data for neetwork conttruct id {}'.format(networkConstrId))
     incomplete = True
     jsonmerged, jsonaddition = {}, {}
-    uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}&id={}'.format(networkConstrId,id)
-    URL = baseURL + uri
+    # uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id={}&id={}'.format(networkConstrId,id)
+    # URL = baseURL + uri
+    uri = '/nsi/api/search/tpes?resourceState=planned%2Cdiscovered%2CplannedAndDiscovered&content=detail&limit=2000&include=tpePlanned%2C%20tpeDiscovered%2C%20concrete%2C%20networkConstructs%2C%20srlgs&networkConstruct.id='
+    URL = baseURL + uri + networkConstrId
     logging.debug("TPE retrieve URL is {}".format(URL))
     while incomplete:
         portData = utils.rest_get_json(URL, cienauser, cienapassw, token)

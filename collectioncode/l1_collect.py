@@ -473,7 +473,7 @@ def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeI
     logging.info('Retrieve port info for L1 circuits')
     circuitName, portStartNode, portEndNode = '', '', ''
     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
-    portDataNodeA = collect.get_ports(baseURL, cienauser, cienapassw, token, start_node,startNodeId)
+    portDataNodeA = collect.get_ports(baseURL, cienauser, cienapassw, token, start_node)
     if portDataNodeA:
         if portDataNodeA.get('included'):
             includedDataA = portDataNodeA['included']
@@ -492,7 +492,7 @@ def getPortDetails(baseURL, cienauser, cienapassw, token, start_node, startNodeI
     else:
         logging.info('tpe data not found for starting node id :{}'.format(start_node))
     # Retrieve port data for end node
-    portDataNodeB = collect.get_ports(baseURL, cienauser, cienapassw, token, end_node,endNodeId)
+    portDataNodeB = collect.get_ports(baseURL, cienauser, cienapassw, token, end_node)
     if portDataNodeB:
         if portDataNodeB.get('included'):
             includedDataB = portDataNodeB['included']

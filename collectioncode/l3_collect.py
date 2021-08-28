@@ -175,7 +175,7 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 def populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
     lspdict = {}
     logging.debug('mpls tunnel endpoint are : '+tunnelId1 + ' and '+tunnelId2)
-    tunnelEnd1 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId1,tunnelId1)
+    tunnelEnd1 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId1)
     if tunnelEnd1:
         if tunnelEnd1.get('data'):
             tunnelEnd1Data = tunnelEnd1['data']
@@ -187,7 +187,7 @@ def populateLspData(baseURL, cienauser, cienapassw, token, tId1, tunnelId1, tId2
                 lspdict['Tunnel Tailend'] = node_key_val[tId2]
                 getTunnelData(end1Data, lspdict, lsplist)
             else:
-                tunnelEnd2 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId2, tunnelId2)
+                tunnelEnd2 = collect.get_ports(baseURL, cienauser, cienapassw, token, tId2)
                 if tunnelEnd2:
                     if tunnelEnd2.get('data'):
                         tunnelEnd2Data = tunnelEnd2['data']
@@ -247,8 +247,8 @@ def get_link_data(baseURL, cienauser, cienapassw, token, link1, linkId1, link2, 
     }
     port, shelf, slot = '', '', ''
     tpeData1, tpeData2 = {}, {}
-    tpeData1 = collect.get_ports(baseURL, cienauser, cienapassw, token, link1, linkId1)
-    tpeData2 = collect.get_ports(baseURL, cienauser, cienapassw, token, link2, linkId2)
+    tpeData1 = collect.get_ports(baseURL, cienauser, cienapassw, token, link1)
+    tpeData2 = collect.get_ports(baseURL, cienauser, cienapassw, token, link2)
     if tpeData1 and tpeData2:    
         if tpeData1.get('data'):
             lnkData1 = tpeData1['data']
