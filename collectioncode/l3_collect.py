@@ -14,6 +14,7 @@ from os import path
 # Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
 config.read('resources/config.ini')
+jsongets_folder = config['DEFAULT']['jsongets_folder']
 name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
@@ -23,7 +24,8 @@ def get_l3_nodes(state_or_states_list):
     data, node_list, l3data = '', [], {}
     data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
-        fileName = 'jsongets/{}'.format('fre_'+node['id']+'.json')
+        #fileName = 'jsongets/{}'.format('fre_' + node['id'] + '.json')
+        fileName = jsongets_folder + '/{}'.format('fre_'+node['id']+'.json')
         logging.debug('l3 filename is {}'.format(fileName))
         if path.exists(fileName):
             fredata = utils.open_file_load_data(fileName)
@@ -84,7 +86,8 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
         else:
             loopbackAddress = ''
         nodes[node] = {'loopback address': loopbackAddress}
-        fileName = 'jsongets/{}.json'.format('fre_'+networkId)
+        #fileName = 'jsongets/{}.json'.format('fre_' + networkId)
+        fileName = jsongets_folder + '/{}.json'.format('fre_'+networkId)
         logging.debug('Filename :\n{}'.format(fileName))
         if path.exists(fileName):
             nodes[node]['Links'] = dict()
@@ -185,9 +188,11 @@ def get_l3_links(baseURL, cienauser, cienapassw, token):
 def populateLspData(tId1, tunnelId1, tId2, tunnelId2, node_key_val, lsplist):
     lspdict = {}
     logging.debug('mpls tunnel endpoint are : '+tunnelId1 + ' and '+tunnelId2)
-    fileNameEnd1 = 'jsongets/{}.json'.format('tpe_'+tId1)
+    #fileNameEnd1 = 'jsongets/{}.json'.format('tpe_' + tId1)
+    fileNameEnd1 = jsongets_folder + '/{}.json'.format('tpe_'+tId1)
     logging.debug('Filename :\n{}'.format(fileNameEnd1))
-    fileNameEnd2 = 'jsongets/{}.json'.format('tpe_'+tId2)
+    #fileNameEnd2 = 'jsongets/{}.json'.format('tpe_' + tId2)
+    fileNameEnd2 = jsongets_folder + '/{}.json'.format('tpe_'+tId2)
     logging.debug('Filename :\n{}'.format(fileNameEnd2))
     if path.exists(fileNameEnd1):
         tunnelEnd1 = utils.open_file_load_data(fileNameEnd1)
@@ -265,8 +270,10 @@ def get_link_data(link1, linkId1, link2, linkId2):
     }
     port, shelf, slot = '', '', ''
     tpeData1, tpeData2 = {}, {}
-    filenameId1 = 'jsongets/{}.json'.format('tpe_'+link1)
-    filenameId2 = 'jsongets/{}.json'.format('tpe_'+link2)
+    #filenameId1 = 'jsongets/{}.json'.format('tpe_'+link1)
+    #filenameId2 = 'jsongets/{}.json'.format('tpe_'+link2)
+    filenameId1 = jsongets_folder + '/{}.json'.format('tpe_'+link1)
+    filenameId2 = jsongets_folder + '/{}.json'.format('tpe_'+link2)
     if path.exists(filenameId1):
         tpeData1 = utils.open_file_load_data(filenameId1)
     if path.exists(filenameId2):

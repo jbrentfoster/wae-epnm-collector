@@ -91,7 +91,8 @@ def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
     data, id_list = '', []
     # with  open('jsongets/new_6500.json', 'rb') as f:
     #     data = json.loads(f.read())
-    data = open_file_load_data('jsongets/new_6500.json')
+    #data = open_file_load_data('jsongets/new_6500.json')
+    data = open_file_load_data(jsongets_folder + '/new_6500.json')
 
     for node in data['data']:
         if 'typeGroup' in node['attributes']:
@@ -118,11 +119,13 @@ def rest_get_tpe_fre_json(baseURL, cienauser, cienapassw, token):
                              proxies=proxies, json=data, verify=False)
 
         if r_tpe.status_code == 200:
-            with open('jsongets/{}.json'.format(id + '_tpe'), 'wb') as f:
+            #with open('jsongets/{}.json'.format(id + '_tpe'), 'wb') as f:
+            with open(jsongets_folder + '/{}.json'.format(id + '_tpe'), 'wb') as f:
                 data = json.dumps(r_tpe.json(), indent=2)
                 f.write(data)
         if r_fre.status_code == 200:
-            with open('jsongets/{}.json'.format(id + '_fre'), 'wb') as f:
+            #with open('jsongets/{}.json'.format(id + '_fre'), 'wb') as f:
+            with open(jsongets_folder + '/{}.json'.format(id + '_fre'), 'wb') as f:
                 data = json.dumps(r_fre.json(), indent=2)
                 f.write(data)
 

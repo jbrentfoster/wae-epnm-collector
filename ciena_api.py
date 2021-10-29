@@ -39,6 +39,8 @@ def main():
         description='A WAE collection tool for Ciena')
     parser.add_argument('-a', '--archive_root', metavar='N', type=str, nargs='?', default=config['DEFAULT']['Archive_root'],
                         help='Please provide the local path to your archive directory')
+    parser.add_argument('-j', '--jsongets_folder', metavar='N', type=str, nargs='?', default=config['DEFAULT']['jsongets_folder'],
+                        help='Please provide the local path to your location for the jsongets folder')
     parser.add_argument('-s', '--state_or_states', metavar='N', type=str, nargs='?', default=config['DEFAULT']['State_or_states'],
                         help="Please provide a list of states for mplstopo discovery. 'NY, MD'")
     parser.add_argument('-i', '--ciena_ipaddr', metavar='N', type=str, nargs='?', default=config['DEFAULT']['CIENA_ipaddr'],
@@ -78,6 +80,7 @@ def main():
         cienapassw = password
 
     current_time = str(datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
+    jsongets_folder = args.jsongets_folder
     archive_root = args.archive_root + '/captures/' + current_time
     planfiles_root = args.archive_root + '/planfiles/'
     start_time = time.time()
@@ -103,6 +106,7 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
     logging.info("Collection start time is " + current_time)
+    logging.debug("jsongets folder is: {}".format(args.jsongets_folder))
     logging.debug("Archive root is: {}".format(args.archive_root))
     logging.debug("Ciena ip address is: {}".format(args.ciena_ipaddr))
     logging.debug("Ciena user is: {}".format(args.ciena_user))
@@ -139,25 +143,29 @@ def main():
         logging.info("Cleaning files from last collection...")
         try:
             remove_tree('jsonfiles')
-            remove_tree('jsongets')
+            #remove_tree('jsongets')
+            remove_tree(jsongets_folder)
 
         except Exception as err:
             logging.info("No files to cleanup...")
         # Recreate output directories
         mkpath('jsonfiles')
-        mkpath('jsongets')
+        mkpath(jsongets_folder)
+        #mkpath('jsongets')
         mkpath(planfiles_root)
     else:
         # Create path for archive root and loggger
         mkpath(archive_root)
         mkpath(planfiles_root)
-        isdirExists = os.path.isdir('jsongets')
+        #isdirExists = os.path.isdir('jsongets')
+        isdirExists = os.path.isdir(jsongets_folder)
         #isfiledirExists = os.path.isdir('jsonfiles')
         if not isdirExists:
             logging.info(
                 "This is first time run. Creating jsongets and jsonfiles")
             mkpath('jsonfiles')
-            mkpath('jsongets')
+            #mkpath('jsongets')
+            mkpath(jsongets_folder)
         else:
             logging.info(
                 "Keeping collection files from previous collection, building plan file only...")

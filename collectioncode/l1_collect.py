@@ -15,6 +15,7 @@ from os import path
 # Setting up the properties file
 config = configparser.ConfigParser(interpolation=None)
 config.read('resources/config.ini')
+jsongets_folder = config['DEFAULT']['jsongets_folder']
 name = config['DEFAULT']['Site_name'].upper()
 sitename_bucket = 'ExtraNodes'
 node_key_val = {}
@@ -25,7 +26,8 @@ def get_l1_nodes(state_or_states_list):
     data, node_list, l1data = '', [], {}
     data = utils.open_file_load_data('jsonfiles/all_nodes.json')
     for node in data['data']:
-        fileName = 'jsongets/{}'.format('l1_fre_'+node['id']+'.json')
+        #fileName = 'jsongets/{}'.format('l1_fre_'+node['id']+'.json')
+        fileName = jsongets_folder + '/{}'.format('l1_fre_' + node['id'] + '.json')
         logging.debug('l1 filename is {}'.format(fileName))
         if path.exists(fileName):
             l1fredata = utils.open_file_load_data(fileName)
@@ -74,7 +76,8 @@ def get_l1_links(baseURL, cienauser, cienapassw, token, state_or_states_list):
         networkId = l1nodes['id']
         linkname_key_val, included, linkData, layer_key_val = {}, {}, {}, {}
         # Retrieve link info for each l1 node
-        fileName = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
+        #fileName = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
+        fileName = jsongets_folder + '/{}'.format('l1_fre_' + networkId + '.json')
         logging.debug('Filename :\n{}'.format(fileName))
         if path.exists(fileName):
             link_data = utils.open_file_load_data(fileName)
@@ -227,7 +230,8 @@ def get_l1_links_data(baseURL, cienauser, cienapassw, token, state_or_states_lis
         # save data for each network construct id
         if jsonmerged:
             filename = "l1_fre_"+networkConstrId+'.json'
-            with open('jsongets/{}'.format(filename), 'wb') as f:
+            #with open('jsongets/{}'.format(filename), 'wb') as f:
+            with open(jsongets_folder + '/{}'.format(filename), 'wb') as f:
                 f.write(json.dumps(jsonmerged, f, sort_keys=True,
                                 indent=4, separators=(',', ': ')))
                 f.close()
@@ -251,7 +255,8 @@ def get_l1_circuits(baseURL, cienauser, cienapassw, token):
     for l1nodes in l1nodesAll:
         # linkname_key_val = {}
         networkId = l1nodes['id']
-        filename = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
+        #filename = 'jsongets/{}'.format('l1_fre_'+networkId+'.json')
+        filename = jsongets_folder + '/{}'.format('l1_fre_'+networkId+'.json')
         logging.debug('filename to retrieve L1 circuits:\n{}'.format(filename))
         if path.exists(filename):
             all_links_dict = utils.open_file_load_data(filename)
@@ -505,8 +510,10 @@ def getPortDetails(start_node, startNodeId, startNodeName, end_node, endNodeId, 
     logging.info('Retrieve port info for L1 circuits')
     circuitName, portStartNode, portEndNode = '', '', ''
     dataStartNode, dataEndNode, includedDataA, includedDataB  = {}, {}, {}, {}
-    fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
-    fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
+    #fileNameA = 'jsongets/{}.json'.format('tpe_'+start_node)
+    #fileNameB = 'jsongets/{}.json'.format('tpe_'+end_node)
+    fileNameA = jsongets_folder + '/{}.json'.format('tpe_' + start_node)
+    fileNameB = jsongets_folder + '/{}.json'.format('tpe_' + end_node)
     if path.exists(fileNameA):
         portDataStartNode = utils.open_file_load_data(fileNameA)
         if portDataStartNode:
