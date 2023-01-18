@@ -67,7 +67,7 @@ def generateL1links(plan, l1linksdict):
         i += 1
 
 
-def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
+def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw, ch_id):
     l1portManager = plan.getNetwork().getL1Network().getL1PortManager()
     l1nodeAKey = L1NodeKey(l1nodeA)
     l1nodeBKey = L1NodeKey(l1nodeB)
@@ -92,6 +92,8 @@ def generateL1circuit(plan, name, l1nodeA, l1nodeB, l1hops, bw):
     l1circuitpathRec = L1CircuitPathRecord(l1CircKey=l1circKey, pathOption=1)
     l1circuitpathManager = plan.getNetwork().getL1Network().getL1CircuitPathManager()
     l1circuitpath = l1circuitpathManager.newL1CircuitPath(l1circuitpathRec)
+    l1circuitpath.setCentralFrequencyID(int(ch_id))
+    l1circuitpath.setSpectralWidthID(1)
 
     l1linkManager = plan.getNetwork().getL1Network().getL1LinkManager()
 
@@ -181,6 +183,10 @@ def generateL1circuits(plan, och_trails):
     nodemanager = plan.getNetwork().getNodeManager()
     for och_trail in och_trails:
         fdn = och_trail['fdn']
+        try:
+            ch_id = och_trail['ch_id']
+        except Exception as err:
+            logging.warn("Could not assign frequency for: " + fdn)
         logging.info("Generating L1 circuit for OCH Trail " + fdn)
         # TODO add actual capacity of wavelength to plan (hard coded to 200G now)
         # wavelength = och_trail['wavelength'] * 100
@@ -202,7 +208,7 @@ def generateL1circuits(plan, och_trails):
                 # except Exception as err:
                 #     logging.warn("Could not get site for " + lastl1node)
                 try:
-                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000)
+                    l1circuit = generateL1circuit(plan, fdn, firstl1node, lastl1node, l1hops, 200000, ch_id)
                 except Exception as err:
                     logging.critical(
                         "Could not generate L1 circuit for OCH Trail " + fdn)

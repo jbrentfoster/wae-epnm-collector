@@ -4,6 +4,7 @@ import re
 import json
 import logging
 import sys
+import csv
 import traceback
 import wae_api
 import configparser
@@ -119,9 +120,9 @@ def collection_router(collection_call):
                                           collection_call['epnmpassword'], collection_call['state_or_states'])
             thread_data.logger.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
-            thread_data.logger.info("Collection OTU links...")
-            collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                   collection_call['epnmpassword'])
+            # thread_data.logger.info("Collection OTU links...")
+            # collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+            #                        collection_call['epnmpassword'])
             ##### Not needed ################
             # thread_data.logger.info("Collection OCH links...")
             # collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -130,15 +131,15 @@ def collection_router(collection_call):
             # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
             #                                         collection_call['epnmpassword'])
             #################################
-            thread_data.logger.info("Adding OCH trails to OTU links...")
-            add_och_trails_to_otu_links()
-            thread_data.logger.info("Parsing OTN links from OTU link data...")
-            parse_otn_links()
-            thread_data.logger.info("Parsing ODU services from vc-optical data...")
-            parse_odu_services()
-            thread_data.logger.info("Getting multi-layer routes for OTN services...")
-            collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-                                                           collection_call['epnmpassword'], collection_call['state_or_states'])
+            # thread_data.logger.info("Adding OCH trails to OTU links...")
+            # add_och_trails_to_otu_links()
+            # thread_data.logger.info("Parsing OTN links from OTU link data...")
+            # parse_otn_links()
+            # thread_data.logger.info("Parsing ODU services from vc-optical data...")
+            # parse_odu_services()
+            # thread_data.logger.info("Getting multi-layer routes for OTN services...")
+            # collect_multilayer_route_odu_services_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+            #                                                collection_call['epnmpassword'], collection_call['state_or_states'])
     except Exception as err:
         thread_data.logger.propagate = True
         thread_data.logger.debug('Exception: Setting the build_plan_check variable to False')                                         
@@ -1917,10 +1918,11 @@ def parse_otn_links():
                         tmp_channel = {}
                         tmp_channel.setdefault('channel', channel.get('channel'))
                         tmp_channel.setdefault('node', tp.get('node'))
-                        if channel.get('termination-mode') == 'OTN':
-                            otn_channels.append(tmp_channel)
-                        elif channel.get('termination-mode') == 'ETHERNET_PACKET':
-                            mpls_channels.append(tmp_channel)
+                        otn_channels.append(tmp_channel)
+                        # if channel.get('termination-mode') == 'OTN':
+                        #     otn_channels.append(tmp_channel)
+                        # elif channel.get('termination-mode') == 'ETHERNET_PACKET':
+                        #     mpls_channels.append(tmp_channel)
 
         for otn_channel in otn_channels:
             if len(otn_channel) == 0: continue
@@ -2027,12 +2029,30 @@ def add_wavelength_vc_optical_och_trails():
             subtype = vc.get('vc.subtype')
             if subtype == "oc:och-nc":
                 if fdn == och_trail.get('trail-fdn'):
-                    och_trail.setdefault('wavelength', vc['vc.och-nc']['vc.wavelength'])
+                    och_trail['wavelength'] = vc['vc.och-nc']['vc.wavelength']
+                    # och_trail.setdefault('wavelength', vc['vc.och-nc']['vc.wavelength'])
+                    och_trail['frequency'] = vc['vc.och-nc']['vc.frequency']
+                    # och_trail.setdefault('frequency', vc['vc.och-nc']['vc.frequency'])
+                    ch_id = lookup_channel_id(vc['vc.och-nc']['vc.frequency'])
+                    och_trail['ch_id'] = ch_id
+                    continue
 
     thread_data.logger.info("Completed getting OCH Trails wavelengths...")
     with open("jsonfiles/och_trails.json", "wb") as f:
         f.write(json.dumps(och_trails, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
+def lookup_channel_id(frequency):
+    freq_str = str(frequency).split('.')[0]
+    channels = []
+    with open('collectioncode/freq_lookup.csv', 'rb') as csvfile:
+        reader = csv.DictReader(csvfile, dialect="excel")
+        for channel in reader:
+            channels.append(channel)
+        csvfile.close()
+    for ch in channels:
+        if ch['freq_ghz'] == freq_str:
+            return ch['ch_id']
+    return "error"
 
 def parse_odu_services():
     with open("jsongets/vc-optical.json", 'rb') as f:
