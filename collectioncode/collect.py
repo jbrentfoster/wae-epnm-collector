@@ -105,9 +105,9 @@ def collection_router(collection_call):
             logging.info("Starting to collect optical and OTN data")
             global thread_data
             thread_data.logger = logging.getLogger(collection_call['type'])
-            collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'],
-                                collection_call['epnmpassword'])
-            run_get_all_4k_nodes()
+            # collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'],
+            #                     collection_call['epnmpassword'])
+            # run_get_all_4k_nodes()
             thread_data.logger.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                            collection_call['epnmpassword'])
@@ -543,7 +543,7 @@ def collect4kNodes_json(baseURL, epnmuser, epnmpassword):
     startindex = 0
     jsonmerged = {}
     while incomplete:
-        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series&.startIndex=" + str(
+        uri = "/data/v1/cisco-resource-physical:node?product-series=Cisco Network Convergence System 4000 Series&.depth=1&.startIndex=" + str(
             startindex)
         # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
         # jsonaddition = json.loads(jsonresponse)
