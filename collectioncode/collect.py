@@ -105,20 +105,20 @@ def collection_router(collection_call):
             logging.info("Starting to collect optical and OTN data")
             global thread_data
             thread_data.logger = logging.getLogger(collection_call['type'])
-            # collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'],
-            #                     collection_call['epnmpassword'])
-            # run_get_all_4k_nodes()
-            thread_data.logger.info("Collecting optical virtual connections...")
+            collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                collection_call['epnmpassword'])
+            run_get_all_4k_nodes()
+            logging.info("Collecting optical virtual connections...")
             collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'],
                                            collection_call['epnmpassword'])
-            thread_data.logger.info("Parsing OCH-trails...")
+            logging.info("Parsing OCH-trails...")
             parse_vc_optical_och_trails()
-            thread_data.logger.info("Getting OCH-trails wavelengths...")
+            logging.info("Getting OCH-trails wavelengths...")
             add_wavelength_vc_optical_och_trails()
-            thread_data.logger.info("Collecting L1 paths for OCH-trails...")
+            logging.info("Collecting L1 paths for OCH-trails...")
             addL1hopstoOCHtrails_threaded(collection_call['baseURL'], collection_call['epnmuser'],
                                           collection_call['epnmpassword'], collection_call['state_or_states'])
-            thread_data.logger.info("Re-ordering L1 hops for OCH-trails...")
+            logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
             # thread_data.logger.info("Collection OTU links...")
             # collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -2028,7 +2028,11 @@ def add_wavelength_vc_optical_och_trails():
             fdn = vc.get('vc.fdn')
             subtype = vc.get('vc.subtype')
             if subtype == "oc:och-nc":
-                if fdn == och_trail.get('trail-fdn'):
+                try:
+                    tmp_fdn = och_trail.get('trail-fdn')[0]
+                except Exception as err:
+                    tmp_fdn = och_trail.get('trail-fdn')
+                if fdn == tmp_fdn:
                     och_trail['wavelength'] = vc['vc.och-nc']['vc.wavelength']
                     # och_trail.setdefault('wavelength', vc['vc.och-nc']['vc.wavelength'])
                     och_trail['frequency'] = vc['vc.och-nc']['vc.frequency']

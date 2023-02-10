@@ -54,7 +54,8 @@ def get_potential_seednode(state_or_states):
 
 def is_node_in_state(node_name, state):
     all_4k_nodes = open_file_load_data('jsonfiles/all_4k_nodes.json')
-    nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('group') if state in item.split('=')[-1]]
+    # nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('group') if state in item.split('=')[-1]]
+    nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('node') if True]
     for node in nodes_in_state_list:
         if node_name in node['node']:
             return True
