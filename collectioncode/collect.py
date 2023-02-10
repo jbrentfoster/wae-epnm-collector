@@ -1819,14 +1819,14 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
                 circuit_breaker1 = collectioncode.utils.Circuit_breaker(timeout_limit=timoutlimit)
                 jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
                 jsonaddition = json.loads(jsonresponse)
-                thread_data.logger.info("Received optical response : ")
+                logging.info("Received optical response : ")
                 counter = False
             except Timeout as ex:
-                thread_data.logger.error("Timeout Exception Raised: "+ str(ex))
-                thread_data.logger.error("Timeout Exceeption in VC Optical API CALL *********************")
-                thread_data.logger.info("Retry: " + str(retrycount)) 
+                logging.error("Timeout Exception Raised: "+ str(ex))
+                logging.error("Timeout Exceeption in VC Optical API CALL *********************")
+                logging.info("Retry: " + str(retrycount))
                 if retrycount == 5:
-                    thread_data.logger.info("Reached Retry count limit, Stop retrying and write data. ")
+                    logging.info("Reached Retry count limit, Stop retrying and write data. ")
                     counter = False
                     break
                 retrycount += 1
@@ -1836,7 +1836,7 @@ def collectvirtualconnections_json(baseURL, epnmuser, epnmpassword):
                 lastindex = jsonaddition.get('com.response-message').get('com.header').get('com.lastIndex')
             except Exception:
                 thread_data.logger.propagate = True
-                thread_data.logger.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
+                logging.error("\n\nGot a parsing error due to bad response from an API call. Including Traceback.\n==============================================================================\n")
                 raise
 
             if (lastindex - firstindex) == 99 and lastindex != -1:
@@ -1888,17 +1888,17 @@ def add_vcfdn_l3links(state_or_states):
                                             if parseintfnum(intf) == parseintfnum(v3.get('Local Intf')):
                                                 v3.setdefault('vc-fdn', fdn)
                                                 matched_fdn = True
-                                                thread_data.logger.info(
+                                                logging.info(
                                                     "Matched vc-fdn " + fdn + " for node " + k1 + " link " + k3)
                     if not matched_fdn:
                         pass
                 except KeyError:
-                    thread_data.logger.error("Could not get virtual connection for " + fdn)
+                    logging.error("Could not get virtual connection for " + fdn)
                 except TypeError:
-                    thread_data.logger.error("Could not get virtual connection for " + fdn)
+                    logging.error("Could not get virtual connection for " + fdn)
                 except AttributeError:
-                    thread_data.logger.error("Could not get virtual connection for " + fdn)
-        thread_data.logger.info("Completed collecting virtual connections...")
+                    logging.error("Could not get virtual connection for " + fdn)
+        logging.info("Completed collecting virtual connections...")
         with open("jsonfiles/{state}_l3Links_final.json".format(state=state.strip().replace(' ', '_')), "wb") as f:
             f.write(json.dumps(l3links, f, sort_keys=True, indent=4, separators=(',', ': ')))
 
