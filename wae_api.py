@@ -373,46 +373,54 @@ def main():
         waecode.planbuild.generateL1links(plan, l1linksdict)
 
         # Add 4K nodes (pure OTN) to plan (if any are duplicated from MPLS nodes skip it)
-        # logging.info("Adding 4k nodes to plan...")
-        # with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
-        #     four_k_nodes = json.load(f)
-        #     f.close()
-        # added_nodes = []
-        # l3nodes = []
-        # for k, v in four_k_nodes.items():
-        #     exists = waecode.planbuild.check_node_exists(plan,v['Name'])
-        #     if not exists:
-        #         tmpnode = {'Name': v['Name']}
-        #         if "cisco.com" in tmpnode['Name']:
-        #             new_name = tmpnode['Name'].split('.cisco.com')[0]
-        #             tmpnode['Name'] = new_name
-        #         added_nodes.append(tmpnode)
-        #         l3nodes.append({'Name': v['Name']})
-        #
-        # waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
+        logging.info("Adding 4k nodes to plan...")
+        with open("jsonfiles/4k-nodes_db.json", 'rb') as f:
+            four_k_nodes = json.load(f)
+            f.close()
+        added_nodes = []
+        l3nodes = []
+        for k, v in four_k_nodes.items():
+            exists = waecode.planbuild.check_node_exists(plan,v['Name'])
+            if not exists:
+                tmpnode = {'Name': v['Name']}
+                if "cisco.com" in tmpnode['Name']:
+                    new_name = tmpnode['Name'].split('.cisco.com')[0]
+                    tmpnode['Name'] = new_name
+                added_nodes.append(tmpnode)
+                l3nodes.append({'Name': v['Name']})
 
-        # # Set node coordinates
-        # logging.info("Setting node coordinates...")
-        # node_manager = plan.getNetwork().getNodeManager()
-        # with open("jsonfiles/all-nodes.json", 'rb') as f:
-        #     nodesdict = json.load(f)
-        #     f.close()
-        # for l3_node in l3nodes:
-        #     tmp_name = l3_node['Name']
-        #     tmp_node = next(
-        #         (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
-        #         None)
-        #     node = node_manager.getNode(NodeKey(l3_node['Name']))
-        #     if tmp_node:
-        #         node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
-        #         node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
+        waecode.planbuild.generateL3nodes(plan, l3nodelist=added_nodes)
+
+        # Set node coordinates
+        logging.info("Setting node coordinates...")
+        node_manager = plan.getNetwork().getNodeManager()
+        with open("jsonfiles/all-nodes.json", 'rb') as f:
+            nodesdict = json.load(f)
+            f.close()
+        for l3_node in l3nodes:
+            tmp_name = l3_node['Name']
+            tmp_node = next(
+                (item for item in nodesdict if item["name"] == tmp_name or item['name'].split('.')[0] == tmp_name),
+                None)
+            node = node_manager.getNode(NodeKey(l3_node['Name']))
+            if tmp_node:
+                node.setLatitude(tmp_node['Latitude']['fdtn.double-amount'])
+                node.setLongitude(tmp_node['Longitude']['fdtn.double-amount'])
 
         # Add OCH-Trails (wavelengths) to plan
-        # logging.info("Adding OCH Trails as L1 circuits to the plan...")
-        # with open("jsonfiles/och_trails.json", 'rb') as f:
-        #     och_trails = json.load(f)
-        #     f.close()
-        # waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
+        logging.info("Adding OCH Trails as L1 circuits to the plan...")
+        with open("jsonfiles/och_trails.json", 'rb') as f:
+            och_trails = json.load(f)
+            f.close()
+        waecode.planbuild.generateL1circuits(plan, och_trails=och_trails)
+
+        # Add circuits based on OTU links to the plan
+        logging.info("Adding OTU circuits to the plan...")
+        with open("jsonfiles/otn_links.json", 'rb') as f:
+            otn_links = json.load(f)
+            f.close()
+        waecode.planbuild.generate_OTN_circuits(plan, otn_links)
+
 
         # # Add OTN services to the plan
         # logging.info("Adding ODU services to the plan...")

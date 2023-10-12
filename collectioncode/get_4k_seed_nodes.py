@@ -23,7 +23,10 @@ def get_seed_nodes():
     for node in nodes_4k_dict.get("com.response-message").get("com.data").get("nd.node"):
         tmp_master = {}
         tmp_master.setdefault("node", node.get("nd.fdn"))
-        tmp_master.setdefault('group', node.get("nd.group"))
+        if node.get("nd.group"):
+            tmp_master.setdefault('group', node.get("nd.group"))
+        else:
+            tmp_master.setdefault('group', "No Group")
         json_list.append(tmp_master)
     return json_list
 
@@ -54,8 +57,8 @@ def get_potential_seednode(state_or_states):
 
 def is_node_in_state(node_name, state):
     all_4k_nodes = open_file_load_data('jsonfiles/all_4k_nodes.json')
-    # nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('group') if state in item.split('=')[-1]]
-    nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('node') if True]
+    nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('group') if state in item.split('=')[-1]]
+    # nodes_in_state_list = [node for node in all_4k_nodes for item in node.get('node') if True]
     for node in nodes_in_state_list:
         if node_name in node['node']:
             return True

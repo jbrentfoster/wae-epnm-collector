@@ -62,45 +62,45 @@ def collection_router(collection_call):
             thread_data.logger = logging.getLogger(collection_call['type'])
             thread_data.logger.info('Starting to collect LSPs')
             collectlsps_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-        if collection_call['type'] == "mpls":
-            logging.info("Starting to collect mpls data")
-            #Getting the mpls log object
-            global thread_data
-            thread_data.logger = logging.getLogger(collection_call['type'])
-            thread_data.logger.info('Starting to collect mpls data')
-            collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            thread_data.logger.info("Collecting MPLS topological links...")
-            collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            thread_data.logger.info("Collecting MPLS nodes...")
-            collectMPLSnodes()
-            thread_data.logger.info("Collecting MPLS topology...")
-            collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
-            thread_data.logger.info("Collecting ISIS hostnames...")
-            collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
-            process_hostnames(collection_call['state_or_states'])
-            thread_data.logger.info("Processing MPLS topology...")
-            processMPLS(collection_call['state_or_states'])
-            ## UPDATED code to implement the missing Circuits ########
-            counter = processMissingNodes(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
-            ###########################
-            thread_data.logger.info("Adding MPLS TL data to L3 links...")
-            try:
-                ####### Updated code to implement missing circuits 
-                # add_mpls_tl_data(collection_call['state_or_states'])
-                add_mpls_tl_data(collection_call['state_or_states'], counter)
-            except Exception as err:
-                thread_data.logger.propagate = True
-                thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
-                sys.exit("Collection error.  Halting execution.")
-
-            # thread_data.logger.info("Collecting L3 link termination points...")
-            # collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
-            #                                     collection_call['epnmpassword'], collection_call['state_or_states'])
-
-            thread_data.logger.info("Collecting optical virtual connections...")
-            collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
-            thread_data.logger.info("Adding vc-fdn to L3links...")
-            add_vcfdn_l3links(collection_call['state_or_states'])
+        # if collection_call['type'] == "mpls":
+        #     logging.info("Starting to collect mpls data")
+        #     #Getting the mpls log object
+        #     global thread_data
+        #     thread_data.logger = logging.getLogger(collection_call['type'])
+        #     thread_data.logger.info('Starting to collect mpls data')
+        #     collect4kNodes_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #     thread_data.logger.info("Collecting MPLS topological links...")
+        #     collect_mpls_links_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #     thread_data.logger.info("Collecting MPLS nodes...")
+        #     collectMPLSnodes()
+        #     thread_data.logger.info("Collecting MPLS topology...")
+        #     collect_mpls_topo_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+        #     thread_data.logger.info("Collecting ISIS hostnames...")
+        #     collect_hostnames_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+        #     process_hostnames(collection_call['state_or_states'])
+        #     thread_data.logger.info("Processing MPLS topology...")
+        #     processMPLS(collection_call['state_or_states'])
+        #     ## UPDATED code to implement the missing Circuits ########
+        #     counter = processMissingNodes(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'], collection_call['state_or_states'])
+        #     ###########################
+        #     thread_data.logger.info("Adding MPLS TL data to L3 links...")
+        #     try:
+        #         ####### Updated code to implement missing circuits
+        #         # add_mpls_tl_data(collection_call['state_or_states'])
+        #         add_mpls_tl_data(collection_call['state_or_states'], counter)
+        #     except Exception as err:
+        #         thread_data.logger.propagate = True
+        #         thread_data.logger.critical("MPLS topological links are not valid.  Halting execution.")
+        #         sys.exit("Collection error.  Halting execution.")
+        #
+        #     # thread_data.logger.info("Collecting L3 link termination points...")
+        #     # collect_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
+        #     #                                     collection_call['epnmpassword'], collection_call['state_or_states'])
+        #
+        #     thread_data.logger.info("Collecting optical virtual connections...")
+        #     collectvirtualconnections_json(collection_call['baseURL'], collection_call['epnmuser'], collection_call['epnmpassword'])
+        #     thread_data.logger.info("Adding vc-fdn to L3links...")
+        #     add_vcfdn_l3links(collection_call['state_or_states'])
         if collection_call['type'] == "optical":
             logging.info("Starting to collect optical and OTN data")
             global thread_data
@@ -120,9 +120,9 @@ def collection_router(collection_call):
                                           collection_call['epnmpassword'], collection_call['state_or_states'])
             logging.info("Re-ordering L1 hops for OCH-trails...")
             reorderl1hops_och_trails()
-            # thread_data.logger.info("Collection OTU links...")
-            # collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
-            #                        collection_call['epnmpassword'])
+            thread_data.logger.info("Collection OTU links...")
+            collect_otu_links_json(collection_call['baseURL'], collection_call['epnmuser'],
+                                   collection_call['epnmpassword'])
             ##### Not needed ################
             # thread_data.logger.info("Collection OCH links...")
             # collect_och_links_json(collection_call['baseURL'], collection_call['epnmuser'],
@@ -131,10 +131,10 @@ def collection_router(collection_call):
             # collect_otu_termination_points_threaded(collection_call['baseURL'], collection_call['epnmuser'],
             #                                         collection_call['epnmpassword'])
             #################################
-            # thread_data.logger.info("Adding OCH trails to OTU links...")
-            # add_och_trails_to_otu_links()
-            # thread_data.logger.info("Parsing OTN links from OTU link data...")
-            # parse_otn_links()
+            thread_data.logger.info("Adding OCH trails to OTU links...")
+            add_och_trails_to_otu_links()
+            thread_data.logger.info("Parsing OTN links from OTU link data...")
+            parse_otn_links()
             # thread_data.logger.info("Parsing ODU services from vc-optical data...")
             # parse_odu_services()
             # thread_data.logger.info("Getting multi-layer routes for OTN services...")
@@ -1940,7 +1940,7 @@ def parse_otn_links():
                     otn_link = {}
                     otn_link_ep = {}
                     otn_link.setdefault('name',
-                                        "OTN link " + otn_channel.get('node') + " to " + otn_channel_compare.get(
+                                        "OTU link " + otn_channel.get('node') + " to " + otn_channel_compare.get(
                                             'node') + " " + otn_channel.get('channel'))
                     # otn_link.setdefault('name', otu_link.get('fdn').split("=")[2] + " ODU4 channel " + str(ch))
                     try:
@@ -1949,6 +1949,7 @@ def parse_otn_links():
                         thread_data.logger.warn("Could not get OCH-Trail from OTU link for " + otu_link.get('fdn'))
                     try:
                         otn_link.setdefault('otu-link-fdn', otu_link.get('fdn'))
+                        otn_link.setdefault('intfbw', 100000)
                         otn_link_endpoints = []
                         otn_link_endpoints.append(
                             {'node': otn_channel.get('node'), 'channel': otn_channel.get('channel')})
@@ -2218,15 +2219,15 @@ def process_vcfdn(vcfdn_dict):
 
 def collectmultilayerroute_json(baseURL, epnmuser, epnmpassword, vcfdn):
     global thread_data
-    thread_data.logger = logging.getLogger('mpls')
+    thread_data.logger = logging.getLogger('optical')
     l1hops = {}
-    mpls_logger = logging.getLogger('mpls')
+    mpls_logger = logging.getLogger('optical')
     mpls_logger.info("Making API call to collect multi_layer route for vcFdn " + vcfdn)
     uri = "/data/v1/cisco-resource-network:virtual-connection-multi-layer-route?vcFdn=" + vcfdn
     try:
-        jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
-        # circuit_breaker1 = collectioncode.utils.Circuit_breaker()
-        # jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
+        # jsonresponse = collectioncode.utils.rest_get_json(baseURL, uri, epnmuser, epnmpassword)
+        circuit_breaker1 = collectioncode.utils.Circuit_breaker()
+        jsonresponse = circuit_breaker1.request(baseURL, uri, epnmuser, epnmpassword)
     except Exception as err:
         mpls_logger.warn("API call failed to retrieve multilayer route for vcFDN " + vcfdn)
         mpls_logger.warn("Check this vcFdn and debug with EPNM team if necessary.")

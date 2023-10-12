@@ -78,7 +78,7 @@ class Circuit_breaker:
                 try:
                     check_not_empty = True
                     r = requests.get(restURI, headers=headers, proxies=proxies, auth=(user, password), verify=False, timeout=self.timeout_limit, allow_redirects=True)
-                    collect.thread_data.logger.debug('The API response for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
+                    collect.thread_data.logger.debug('The API response (using circuit breaker) for URL {} is:\n{}'.format(restURI, json.dumps(r.json(), separators=(",",":"), indent=4)))
                     #Checking for empty responses
                     response_uni = json.dumps(r.json(), indent=2)
                     response = json.loads(response_uni)
